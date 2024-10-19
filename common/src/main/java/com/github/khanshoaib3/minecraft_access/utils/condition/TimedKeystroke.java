@@ -37,11 +37,4 @@ public abstract class TimedKeystroke extends Keystroke {
         super(condition, timing);
         this.interval = interval;
     }
-
-    /**
-     * Getter, for operating inner Interval instance.
-     */
-    public Interval interval() {
-        return this.interval;
-    }
 }
