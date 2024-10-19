@@ -73,10 +73,10 @@ public class AccessMenu {
 
     static {
         // other functions get one second interval
-        Arrays.fill(functionIntervals, Interval.ms(1000));
+        Arrays.fill(functionIntervals, Interval.sec(1));
         // two long-time-running find-the-closest-liquid-source functions need a long interval (10 seconds)
-        functionIntervals[4] = Interval.ms(10_000);
-        functionIntervals[5] = Interval.ms(10_000);
+        functionIntervals[4] = Interval.sec(10);
+        functionIntervals[5] = Interval.sec(10);
 
         for (int i = 0; i < 10; i++) {
             FUNCTIONS[i].keystroke.interval = functionIntervals[i];

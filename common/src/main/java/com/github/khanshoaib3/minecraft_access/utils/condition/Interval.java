@@ -16,9 +16,20 @@ public class Interval {
         this.isRunning = false;
     }
 
+    /**
+     * In milliseconds
+     */
     public static Interval ms(long delay) {
         // 1 milliseconds = 1*10^6 nanoseconds
         return new Interval(System.nanoTime(), delay * 1000_000);
+    }
+
+    /**
+     * In seconds
+     */
+    public static Interval sec(long delay) {
+        // 1 seconds = 1*10^9 nanoseconds
+        return new Interval(System.nanoTime(), delay * 1000_000_000);
     }
 
     public void reset() {
