@@ -25,7 +25,6 @@ import net.minecraft.world.biome.Biome;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -38,71 +37,53 @@ public class AccessMenu {
      */
     public static final double RAY_CAST_DISTANCE = 20.0;
     private static MinecraftClient minecraftClient;
-    private static final MenuKeystroke menuKey;
-    private static final IntervalKeystroke narrateTargetKey;
-    private static final IntervalKeystroke targetPositionKey;
-    private static final IntervalKeystroke lightLevelKey;
-    private static final IntervalKeystroke closestWaterSourceKey;
-    private static final IntervalKeystroke closestLavaSourceKey;
-    private static final IntervalKeystroke currentBiomeKey;
-    private static final IntervalKeystroke timeOfDayKey;
-    private static final IntervalKeystroke xpLevelKey;
-    private static final IntervalKeystroke refreshScreenReaderKey;
-    private static final IntervalKeystroke openConfigMenuKey;
+    private static final MenuKeystroke menuKey = new MenuKeystroke(KeyBindingsHandler.getInstance().accessMenuKey);
+    /**
+     * Access Menu function direct keys (configured in keybinding settings)
+     * and Access Menu shortcuts bar keys (alt + number keys)
+     * share cooldown interval.
+     */
     private static final Interval[] functionIntervals = new Interval[10];
-
-    // config keystroke conditions
-    static {
-        menuKey = new MenuKeystroke(KeyBindingsHandler.getInstance().accessMenuKey);
-        narrateTargetKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().narrateTarget);
-        targetPositionKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().targetPosition);
-        lightLevelKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().lightLevel);
-        closestWaterSourceKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().closestWaterSource);
-        closestLavaSourceKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().closestLavaSource);
-        currentBiomeKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().currentBiome);
-        timeOfDayKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().timeOfDay);
-        xpLevelKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().xpLevel);
-        refreshScreenReaderKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().refreshScreenReader);
-        openConfigMenuKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().openConfigMenu);
-
-        // Access Menu function direct keys (configured in keybinding settings)
-        // and Access Menu shortcuts bar keys (alt + number keys)
-        // share cooldown interval
-        functionIntervals[1] = narrateTargetKey.interval;
-        functionIntervals[2] = targetPositionKey.interval;
-        functionIntervals[3] = lightLevelKey.interval;
-        functionIntervals[4] = closestWaterSourceKey.interval;
-        functionIntervals[5] = closestLavaSourceKey.interval;
-        functionIntervals[6] = currentBiomeKey.interval;
-        functionIntervals[7] = timeOfDayKey.interval;
-        functionIntervals[8] = xpLevelKey.interval;
-        functionIntervals[9] = refreshScreenReaderKey.interval;
-        functionIntervals[0] = openConfigMenuKey.interval;
-
-        // other functions get three seconds interval
-        Arrays.fill(functionIntervals, Interval.ms(3000));
-        // these two long-time-running functions need a long interval (10 seconds)
-        closestLavaSourceKey.interval = Interval.ms(10_000);
-        closestWaterSourceKey.interval = Interval.ms(10_000);
-    }
 
     /**
      * Should be same order as {@link AccessMenuGUI#init()}
      */
-    private static final MenuFunction[] MENU_FUNCTIONS = new MenuFunction[]{
-            new MenuFunction(GLFW.GLFW_KEY_1, AccessMenu::getBlockAndFluidTargetInformation),
-            new MenuFunction(GLFW.GLFW_KEY_2, AccessMenu::getBlockAndFluidTargetPosition),
-            new MenuFunction(GLFW.GLFW_KEY_3, AccessMenu::getLightLevel),
-            new MenuFunction(GLFW.GLFW_KEY_4, () -> MainClass.fluidDetector.findClosestWaterSource(true)),
-            new MenuFunction(GLFW.GLFW_KEY_5, () -> MainClass.fluidDetector.findClosestLavaSource(true)),
-            new MenuFunction(GLFW.GLFW_KEY_6, AccessMenu::getBiome),
-            new MenuFunction(GLFW.GLFW_KEY_7, AccessMenu::getTimeOfDay),
-            new MenuFunction(GLFW.GLFW_KEY_8, AccessMenu::getXP),
-            new MenuFunction(GLFW.GLFW_KEY_9, () -> ScreenReaderController.refreshScreenReader(true)),
-            new MenuFunction(GLFW.GLFW_KEY_0, () -> MinecraftClient.getInstance().setScreen(new ConfigMenu("config_menu"))),
+    private static final MenuFunction[] FUNCTIONS = new MenuFunction[]{
+            new MenuFunction(1, new IntervalKeystroke(KeyBindingsHandler.getInstance().narrateTarget),
+                    AccessMenu::getBlockAndFluidTargetInformation),
+            new MenuFunction(2, new IntervalKeystroke(KeyBindingsHandler.getInstance().targetPosition),
+                    AccessMenu::getBlockAndFluidTargetPosition),
+            new MenuFunction(3, new IntervalKeystroke(KeyBindingsHandler.getInstance().lightLevel),
+                    AccessMenu::getLightLevel),
+            new MenuFunction(4, new IntervalKeystroke(KeyBindingsHandler.getInstance().closestWaterSource),
+                    () -> MainClass.fluidDetector.findClosestWaterSource(true)),
+            new MenuFunction(5, new IntervalKeystroke(KeyBindingsHandler.getInstance().closestLavaSource),
+                    () -> MainClass.fluidDetector.findClosestLavaSource(true)),
+            new MenuFunction(6, new IntervalKeystroke(KeyBindingsHandler.getInstance().currentBiome),
+                    AccessMenu::getBiome),
+            new MenuFunction(7, new IntervalKeystroke(KeyBindingsHandler.getInstance().timeOfDay),
+                    AccessMenu::getTimeOfDay),
+            new MenuFunction(8, new IntervalKeystroke(KeyBindingsHandler.getInstance().xpLevel),
+                    AccessMenu::getXP),
+            new MenuFunction(9, new IntervalKeystroke(KeyBindingsHandler.getInstance().refreshScreenReader),
+                    () -> ScreenReaderController.refreshScreenReader(true)),
+            new MenuFunction(0, new IntervalKeystroke(KeyBindingsHandler.getInstance().openConfigMenu),
+                    () -> MinecraftClient.getInstance().setScreen(new ConfigMenu("config_menu"))),
     };
 
-    private record MenuFunction(int numberKeyCode, Runnable func) {
+    static {
+        // other functions get one second interval
+        Arrays.fill(functionIntervals, Interval.ms(1000));
+        // two long-time-running find-the-closest-liquid-source functions need a long interval (10 seconds)
+        functionIntervals[4] = Interval.ms(10_000);
+        functionIntervals[5] = Interval.ms(10_000);
+
+        for (int i = 0; i < 10; i++) {
+            FUNCTIONS[i].keystroke.interval = functionIntervals[i];
+        }
+    }
+
+    private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
     }
 
     public void update() {
@@ -112,47 +93,32 @@ public class AccessMenu {
             if (minecraftClient.player == null) return;
 
             Screen currentScreen = minecraftClient.currentScreen;
-            if (Objects.isNull(currentScreen)) {
+            if (currentScreen == null) {
                 if (Screen.hasAltDown()) {
                     handleInMenuActions();
+                    return;
                 }
+
+                for (MenuFunction function : FUNCTIONS) {
+                    if (function.keystroke.canBeTriggered()) {
+                        function.func.run();
+                        return;
+                    }
+                }
+
+                // F3 + F4 triggers game mode changing function in vanilla game,
+                // will not open the menu under this situation.
+                boolean isF3KeyNotPressed = !KeyUtils.isF3Pressed();
+                if (menuKey.canOpenMenu() && isF3KeyNotPressed) {
+                    // The F4 is pressed before and released at current tick
+                    // To make the access menu open AFTER release the F4 key
+                    minecraftClient.setScreen(new AccessMenuGUI("access_menu"));
+                }
+
             } else if (currentScreen instanceof AccessMenuGUI) {
                 if (menuKey.closeMenuIfMenuKeyPressing()) return;
                 handleInMenuActions();
-            } else {
-                // other menus are opened
-                return;
             }
-
-            // F3 + F4 triggers game mode changing function in vanilla game,
-            // will not open the menu under this situation.
-            boolean isF3KeyNotPressed = !KeyUtils.isF3Pressed();
-            if (menuKey.canOpenMenu() && isF3KeyNotPressed) {
-                // The F4 is pressed before and released at current tick
-                // To make the access menu open AFTER release the F4 key
-                minecraftClient.setScreen(new AccessMenuGUI("access_menu"));
-            }
-
-            if (narrateTargetKey.canBeTriggered()) getBlockAndFluidTargetInformation();
-
-            if (targetPositionKey.canBeTriggered()) getBlockAndFluidTargetPosition();
-
-            if (lightLevelKey.canBeTriggered()) getLightLevel();
-
-            if (timeOfDayKey.canBeTriggered()) getTimeOfDay();
-
-            if (xpLevelKey.canBeTriggered()) getXP();
-
-            if (currentBiomeKey.canBeTriggered()) getBiome();
-
-            if (closestWaterSourceKey.canBeTriggered()) MainClass.fluidDetector.findClosestWaterSource(true);
-
-            if (closestLavaSourceKey.canBeTriggered()) MainClass.fluidDetector.findClosestLavaSource(true);
-
-            if (refreshScreenReaderKey.canBeTriggered()) ScreenReaderController.refreshScreenReader(true);
-
-            if (openConfigMenuKey.canBeTriggered()) MinecraftClient.getInstance().setScreen(new ConfigMenu("config_menu"));
-
         } catch (Exception e) {
             log.error("An error occurred in NarratorMenu.", e);
         }
@@ -163,11 +129,11 @@ public class AccessMenu {
         // listen to number keys pressing for executing corresponding functions
         // for the little performance improvement, will not use KeyUtils here.
         long handle = minecraftClient.getWindow().getHandle();
-        Stream.of(MENU_FUNCTIONS)
-                .filter(f -> InputUtil.isKeyPressed(handle, f.numberKeyCode))
+        Stream.of(FUNCTIONS)
+                .filter(f -> InputUtil.isKeyPressed(handle, f.number + GLFW.GLFW_KEY_0))
                 .findFirst()
                 .ifPresent(f -> {
-                    if (functionIntervals[f.numberKeyCode - GLFW.GLFW_KEY_0].isReady()) {
+                    if (functionIntervals[f.number].isReady()) {
                         f.func().run();
                     }
                 });
