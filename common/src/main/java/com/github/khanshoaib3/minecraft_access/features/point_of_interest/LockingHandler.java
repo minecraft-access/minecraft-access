@@ -83,7 +83,7 @@ public class LockingHandler {
         this.lockOnBlocks = map.isLockOnBlocks();
         this.speakDistance = map.isSpeakDistance();
         this.unlockingSound = map.isUnlockingSound();
-        this.interval.delay = map.getDelay();
+        this.interval.setDelay(map.getDelay(), Interval.Unit.Millisecond);
         this.aimAssistEnabled = map.isAimAssistEnabled();
         this.aimAssistAudioCuesEnabled = map.isAimAssistAudioCuesEnabled();
         this.aimAssistAudioCuesVolume = map.getAimAssistAudioCuesVolume();

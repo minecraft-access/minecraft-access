@@ -67,7 +67,7 @@ public class CameraControls {
     private static void loadConfigurations() {
         CameraControlsConfigMap map = CameraControlsConfigMap.getInstance();
         enabled = map.isEnabled();
-        interval.delay = map.getDelayInMilliseconds();
+        interval.setDelay(map.getDelayInMilliseconds(), Interval.Unit.Millisecond);
 
         float delta90Degrees = 600f; // 90 / 0.15
         normalRotatingDeltaAngle = delta90Degrees / (90 / map.getNormalRotatingAngle());

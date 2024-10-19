@@ -7,7 +7,7 @@ import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMa
  */
 public class Interval {
     protected long lastRunTime;
-    public long delay;
+    private long delay;
 
     protected Interval(long lastRunTime, long delayInNanoTime) {
         this.lastRunTime = lastRunTime;
@@ -19,7 +19,7 @@ public class Interval {
      */
     public static Interval ms(long delay) {
         // 1 milliseconds = 1*10^6 nanoseconds
-        return new Interval(System.nanoTime(), delay * 1000_000);
+        return new Interval(System.nanoTime(), Unit.Millisecond.toNano(delay));
     }
 
     /**
@@ -27,7 +27,7 @@ public class Interval {
      */
     public static Interval sec(long delay) {
         // 1 seconds = 1*10^9 nanoseconds
-        return new Interval(System.nanoTime(), delay * 1000_000_000);
+        return new Interval(System.nanoTime(), Unit.Second.toNano(delay));
     }
 
     /**
@@ -50,6 +50,25 @@ public class Interval {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void setDelay(long delay, Unit unit) {
+        this.delay = unit.toNano(delay);
+    }
+
+    public enum Unit {
+        Millisecond(1000_000),
+        Second(1000_000_000);
+
+        private final long factor;
+
+        Unit(long factor) {
+            this.factor = factor;
+        }
+
+        public long toNano(long value) {
+            return value * this.factor;
         }
     }
 }

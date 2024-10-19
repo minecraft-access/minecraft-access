@@ -123,7 +123,7 @@ public class ReadCrosshair {
         this.speakSide = rcMap.isSpeakSide();
         // affirmation for easier use
         this.speakingConsecutiveBlocks = !rcMap.isDisableSpeakingConsecutiveBlocks();
-        this.repeatSpeakingInterval.delay = rcMap.getRepeatSpeakingInterval();
+        this.repeatSpeakingInterval.setDelay(rcMap.getRepeatSpeakingInterval(), Interval.Unit.Millisecond);
         this.enableRelativePositionSoundCue = rcrMap.isEnabled();
         this.minSoundVolume = rcrMap.getMinSoundVolume();
         this.maxSoundVolume = rcrMap.getMaxSoundVolume();

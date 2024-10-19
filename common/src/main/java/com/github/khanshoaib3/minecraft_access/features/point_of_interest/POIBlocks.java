@@ -162,7 +162,7 @@ public class POIBlocks {
         this.playSound = poiBlocksConfigMap.isPlaySound();
         this.volume = poiBlocksConfigMap.getVolume();
         this.playSoundForOtherBlocks = poiBlocksConfigMap.isPlaySoundForOtherBlocks();
-        this.interval.delay = poiBlocksConfigMap.getDelay();
+        this.interval.setDelay(poiBlocksConfigMap.getDelay(), Interval.Unit.Millisecond);
     }
 
     private void checkBlock(BlockPos blockPos, int val) {

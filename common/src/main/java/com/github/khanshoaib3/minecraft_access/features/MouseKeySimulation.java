@@ -2,6 +2,7 @@ package com.github.khanshoaib3.minecraft_access.features;
 
 import com.github.khanshoaib3.minecraft_access.config.config_maps.MouseSimulationConfigMap;
 import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
+import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
 import com.github.khanshoaib3.minecraft_access.utils.condition.IntervalKeystroke;
 import com.github.khanshoaib3.minecraft_access.utils.condition.Keystroke;
 import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
@@ -55,8 +56,8 @@ public class MouseKeySimulation {
     private static void loadConfigurations() {
         MouseSimulationConfigMap map = MouseSimulationConfigMap.getInstance();
         enabled = map.isEnabled();
-        mouseScrolls[0].interval.delay = map.getScrollDelayInMilliseconds();
-        mouseScrolls[1].interval.delay = map.getScrollDelayInMilliseconds();
+        mouseScrolls[0].interval.setDelay(map.getScrollDelayInMilliseconds(), Interval.Unit.Millisecond);
+        mouseScrolls[1].interval.setDelay(map.getScrollDelayInMilliseconds(), Interval.Unit.Millisecond);
     }
 
     private static void execute() {
