@@ -52,7 +52,7 @@ public class AreaMapMenu {
     static {
         instance = new AreaMapMenu();
 
-        menuKey = new MenuKeystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().areaMapMenuKey));
+        menuKey = new MenuKeystroke(KeyBindingsHandler.getInstance().areaMapMenuKey);
 
         int keyInterval = AreaMapConfigMap.getInstance().getDelayInMilliseconds();
         int cursorMovingKeyIndex = 0;

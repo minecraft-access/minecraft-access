@@ -52,7 +52,7 @@ public class AccessMenu {
 
     // config keystroke conditions
     static {
-        menuKey = new MenuKeystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().accessMenuKey));
+        menuKey = new MenuKeystroke(KeyBindingsHandler.getInstance().accessMenuKey);
         narrateTargetKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().narrateTarget);
         targetPositionKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().targetPosition);
         currentBiomeKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().currentBiome);

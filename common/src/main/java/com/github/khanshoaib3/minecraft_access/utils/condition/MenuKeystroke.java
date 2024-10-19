@@ -1,6 +1,8 @@
 package com.github.khanshoaib3.minecraft_access.utils.condition;
 
+import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Objects;
@@ -20,6 +22,10 @@ public class MenuKeystroke extends Keystroke {
      * so if you slowly press down the MENU KEY while menu is opening, the menu will be opened again when you release the MENU KEY.
      */
     boolean isMenuJustClosed = false;
+
+    public MenuKeystroke(KeyBinding singleKey) {
+        this(() -> KeyUtils.isAnyPressed(singleKey));
+    }
 
     public MenuKeystroke(BooleanSupplier condition) {
         super(condition);
