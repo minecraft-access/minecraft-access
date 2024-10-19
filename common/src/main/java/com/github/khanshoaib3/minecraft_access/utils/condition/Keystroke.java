@@ -2,6 +2,7 @@ package com.github.khanshoaib3.minecraft_access.utils.condition;
 
 import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
 import net.minecraft.client.option.KeyBinding;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +104,7 @@ public class Keystroke {
     /**
      * Check if the timing condition is met.
      */
+    @Contract(pure = true)
     public boolean canBeTriggered() {
         boolean correctKeystrokeState = this.timing.happen(this);
         return correctKeystrokeState && otherTriggerConditions();

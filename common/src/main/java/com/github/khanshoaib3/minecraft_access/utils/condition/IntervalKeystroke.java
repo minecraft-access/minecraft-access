@@ -29,13 +29,13 @@ public class IntervalKeystroke extends TimedKeystroke {
      * @param timing    When the corresponding logic is triggered.
      * @param interval  The maximum interval between first and second keystroke, default is 750ms.
      */
-    @SuppressWarnings("unused")
     public IntervalKeystroke(BooleanSupplier condition, TriggeredAt timing, Interval interval) {
         super(condition, timing, interval);
     }
 
-    public boolean isCooledDownAndTriggered() {
-        return this.canBeTriggered() && interval.isReady();
+    @Override
+    public boolean canBeTriggered() {
+        return super.canBeTriggered() && interval.isReady();
     }
 
     /**

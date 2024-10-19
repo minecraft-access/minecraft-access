@@ -62,7 +62,7 @@ public class MouseKeySimulation {
 
     private static void execute() {
         MOUSE_SCROLL_ACTIONS.forEach(t -> {
-            if (t.getLeft().isCooledDownAndTriggered()) {
+            if (t.getLeft().canBeTriggered()) {
                 t.getRight().run();
             }
         });

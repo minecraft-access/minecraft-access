@@ -132,7 +132,7 @@ public class AreaMapMenu {
     private void handleInMenuActions() {
         // move cursor
         for (Pair<IntervalKeystroke, Orientation> p : CURSOR_MOVING_DIRECTIONS) {
-            if (p.getLeft().isCooledDownAndTriggered()) {
+            if (p.getLeft().canBeTriggered()) {
                 Orientation direction = p.getRight();
                 moveCursorTowards(direction);
                 return;

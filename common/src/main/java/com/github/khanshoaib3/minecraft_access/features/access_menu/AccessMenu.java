@@ -49,6 +49,8 @@ public class AccessMenu {
      * Should be same order as {@link AccessMenuGUI#init()}
      */
     private static final MenuFunction[] FUNCTIONS = new MenuFunction[]{
+            new MenuFunction(0, new IntervalKeystroke(KeyBindingsHandler.getInstance().openConfigMenu),
+                    () -> MinecraftClient.getInstance().setScreen(new ConfigMenu("config_menu"))),
             new MenuFunction(1, new IntervalKeystroke(KeyBindingsHandler.getInstance().narrateTarget),
                     AccessMenu::getBlockAndFluidTargetInformation),
             new MenuFunction(2, new IntervalKeystroke(KeyBindingsHandler.getInstance().targetPosition),
@@ -67,8 +69,6 @@ public class AccessMenu {
                     AccessMenu::getXP),
             new MenuFunction(9, new IntervalKeystroke(KeyBindingsHandler.getInstance().refreshScreenReader),
                     () -> ScreenReaderController.refreshScreenReader(true)),
-            new MenuFunction(0, new IntervalKeystroke(KeyBindingsHandler.getInstance().openConfigMenu),
-                    () -> MinecraftClient.getInstance().setScreen(new ConfigMenu("config_menu"))),
     };
 
     static {
