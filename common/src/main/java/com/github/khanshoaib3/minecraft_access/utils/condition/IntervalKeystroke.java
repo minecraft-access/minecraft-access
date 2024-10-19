@@ -1,11 +1,21 @@
 package com.github.khanshoaib3.minecraft_access.utils.condition;
 
+import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
+import net.minecraft.client.option.KeyBinding;
+
 import java.util.function.BooleanSupplier;
 
 /**
  * For keys that you can keep pressing and the function executes at intervals.
  */
 public class IntervalKeystroke extends TimedKeystroke {
+    /**
+     * Single key, {@link TriggeredAt#PRESSING}
+     */
+    public IntervalKeystroke(KeyBinding singleKey) {
+        this(() -> KeyUtils.isAnyPressed(singleKey), TriggeredAt.PRESSING);
+    }
+
     /**
      * @param condition Expression that checking if the key (combination) is pressed now.
      * @param timing    When the corresponding logic is triggered.

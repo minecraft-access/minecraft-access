@@ -8,6 +8,7 @@ import com.github.khanshoaib3.minecraft_access.screen_reader.ScreenReaderControl
 import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
 import com.github.khanshoaib3.minecraft_access.utils.NarrationUtils;
 import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
+import com.github.khanshoaib3.minecraft_access.utils.condition.IntervalKeystroke;
 import com.github.khanshoaib3.minecraft_access.utils.condition.Keystroke;
 import com.github.khanshoaib3.minecraft_access.utils.condition.MenuKeystroke;
 import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
@@ -52,16 +53,16 @@ public class AccessMenu {
     // config keystroke conditions
     static {
         menuKey = new MenuKeystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().accessMenuKey));
-        narrateTargetKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().narrateTarget));
-        targetPositionKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().targetPosition));
-        currentBiomeKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().currentBiome));
-        lightLevelKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().lightLevel));
-        closestLavaSourceKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().closestLavaSource));
-        closestWaterSourceKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().closestWaterSource));
-        timeOfDayKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().timeOfDay));
-        xpLevelKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().xpLevel));
-        refreshScreenReaderKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().refreshScreenReader));
-        openConfigMenuKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().openConfigMenu));
+        narrateTargetKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().narrateTarget);
+        targetPositionKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().targetPosition);
+        currentBiomeKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().currentBiome);
+        lightLevelKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().lightLevel);
+        closestLavaSourceKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().closestLavaSource);
+        closestWaterSourceKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().closestWaterSource);
+        timeOfDayKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().timeOfDay);
+        xpLevelKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().xpLevel);
+        refreshScreenReaderKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().refreshScreenReader);
+        openConfigMenuKey = new IntervalKeystroke(KeyBindingsHandler.getInstance().openConfigMenu);
     }
 
     /**
