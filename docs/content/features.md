@@ -1,5 +1,5 @@
 ---
-title: "Minecraft Access Features"
+title: "Features"
 ---
 
 This page contains details for all the features that are currently in the mod.
