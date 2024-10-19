@@ -1,5 +1,7 @@
 package com.github.khanshoaib3.minecraft_access.utils.condition;
 
+import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMap;
+
 /**
  * An auto-refresh countdown timer for controlling interval execution of features.
  */
@@ -30,6 +32,13 @@ public class Interval {
     public static Interval sec(long delay) {
         // 1 seconds = 1*10^9 nanoseconds
         return new Interval(System.nanoTime(), delay * 1000_000_000);
+    }
+
+    /**
+     * Use the value of {@link OtherConfigsMap#getMultipleClickSpeedInMilliseconds()} as delay
+     */
+    public static Interval defaultDelay() {
+        return Interval.ms(OtherConfigsMap.getInstance().getMultipleClickSpeedInMilliseconds());
     }
 
     public void reset() {

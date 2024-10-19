@@ -43,7 +43,7 @@ public class CameraControls {
     private static boolean enabled;
     private static float normalRotatingDeltaAngle;
     private static float modifiedRotatingDeltaAngle;
-    private static Interval interval;
+    private static final Interval interval = Interval.defaultDelay();
 
     private static final DoubleClick straightUpDoubleClick;
     private static final DoubleClick straightDownDoubleClick;
@@ -55,16 +55,10 @@ public class CameraControls {
     }
 
     public static void update() {
-        if (interval != null && interval.hasNotEnded()) return;
+        if (!interval.isReady()) return;
         loadConfigurations();
         if (!enabled) return;
-
-        try {
-            boolean wasAnyKeyPressed = keyListener();
-            if (wasAnyKeyPressed) interval.start();
-        } catch (Exception e) {
-            log.error("Error encountered in Camera Controls feature.", e);
-        }
+        keyListener();
     }
 
     /**
@@ -73,7 +67,7 @@ public class CameraControls {
     private static void loadConfigurations() {
         CameraControlsConfigMap map = CameraControlsConfigMap.getInstance();
         enabled = map.isEnabled();
-        interval = Interval.ms(map.getDelayInMilliseconds());
+        interval.delay = map.getDelayInMilliseconds();
 
         float delta90Degrees = 600f; // 90 / 0.15
         normalRotatingDeltaAngle = delta90Degrees / (90 / map.getNormalRotatingAngle());
@@ -83,7 +77,7 @@ public class CameraControls {
     /**
      * Handles the key inputs
      */
-    private static boolean keyListener() {
+    private static void keyListener() {
         boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
         boolean isRightAltPressed = KeyUtils.isRightAltPressed();
 
@@ -112,62 +106,49 @@ public class CameraControls {
         // these two blocks of logic should be ahead of the normal up/down logic
         if (isStraightUpKeyPressed || isUpKeyDoublePressedWithRightAlt) {
             rotateCameraTo(Orientation.UP);
-            return true;
         }
 
         if (isStraightDownKeyPressed || isDownKeyDoublePressedWithRightAlt) {
             rotateCameraTo(Orientation.DOWN);
-            return true;
         }
 
         if (isNorthKeyPressed) {
             rotateCameraTo(Orientation.NORTH);
-            return true;
         }
 
         if (isEastKeyPressed) {
             rotateCameraTo(Orientation.EAST);
-            return true;
         }
 
         if (isWestKeyPressed) {
             rotateCameraTo(Orientation.WEST);
-            return true;
         }
 
         if (isSouthKeyPressed) {
             rotateCameraTo(Orientation.SOUTH);
-            return true;
         }
 
         float rotateAngle = isLeftAltPressed ? modifiedRotatingDeltaAngle : normalRotatingDeltaAngle;
 
         if (isUpKeyPressed) {
             rotateCameraBy(rotateAngle, RotatingDirection.UP);
-            return true;
         }
 
         if (isRightKeyPressed) {
             rotateCameraBy(rotateAngle, RotatingDirection.RIGHT);
-            return true;
         }
 
         if (isDownKeyPressed) {
             rotateCameraBy(rotateAngle, RotatingDirection.DOWN);
-            return true;
         }
 
         if (isLeftKeyPressed) {
             rotateCameraBy(rotateAngle, RotatingDirection.LEFT);
-            return true;
         }
 
         if (isCenterCameraKeyPressed) {
             centerCamera(isLeftAltPressed);
-            return true;
         }
-
-        return false;
     }
 
     private enum RotatingDirection {
