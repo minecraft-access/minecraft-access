@@ -2,11 +2,11 @@ for (const el of document.querySelectorAll(".toggle[aria-controls]")) {
     const controls = document.getElementById(el.getAttribute("aria-controls"));
     const initialState = controls.classList.contains("collapsed");
     el.classList.toggle("collapsed", initialState);
-    el.setAttribute("aria-checked", (!initialState).toString());
+    el.setAttribute("aria-expanded", (!initialState).toString());
 
     function toggle() {
         const collapsed = controls.classList.toggle("collapsed");
-        el.setAttribute("aria-checked", (!collapsed).toString());
+        el.setAttribute("aria-expanded", (!collapsed).toString());
     }
 
     el.addEventListener("click", toggle);
