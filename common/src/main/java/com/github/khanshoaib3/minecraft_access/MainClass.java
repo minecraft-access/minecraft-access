@@ -1,7 +1,10 @@
 package com.github.khanshoaib3.minecraft_access;
 
 import com.github.khanshoaib3.minecraft_access.config.Config;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.*;
+import com.github.khanshoaib3.minecraft_access.config.config_maps.AccessMenuConfigMap;
+import com.github.khanshoaib3.minecraft_access.config.config_maps.InventoryControlsConfigMap;
+import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMap;
+import com.github.khanshoaib3.minecraft_access.config.config_maps.PlayerWarningConfigMap;
 import com.github.khanshoaib3.minecraft_access.features.*;
 import com.github.khanshoaib3.minecraft_access.features.access_menu.AccessMenu;
 import com.github.khanshoaib3.minecraft_access.features.inventory_controls.InventoryControls;
@@ -24,7 +27,6 @@ public class MainClass {
     public static final String MOD_ID = "minecraft_access";
     private static ScreenReaderInterface screenReader = null;
 
-    public static CameraControls cameraControls = null;
     public static InventoryControls inventoryControls = null;
     public static BiomeIndicator biomeIndicator = null;
     public static XPIndicator xpIndicator = null;
@@ -60,7 +62,6 @@ public class MainClass {
         if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
             MainClass.getScreenReader().say(msg, true);
 
-        MainClass.cameraControls = new CameraControls();
         MainClass.inventoryControls = new InventoryControls();
         MainClass.biomeIndicator = new BiomeIndicator();
         MainClass.xpIndicator = new XPIndicator();
@@ -109,9 +110,6 @@ public class MainClass {
         if (inventoryControls != null && InventoryControlsConfigMap.getInstance().isEnabled())
             inventoryControls.update();
 
-        if (cameraControls != null && CameraControlsConfigMap.getInstance().isEnabled())
-            cameraControls.update();
-
         ReadCrosshair.getInstance().tick();
 
         if (biomeIndicator != null && otherConfigsMap.isBiomeIndicatorEnabled())
@@ -127,6 +125,11 @@ public class MainClass {
         if (MinecraftClient.getInstance() != null && WorldUtils.getClientPlayer() != null) {
             HealthAndHunger.runOnTick();
             MouseKeySimulation.runOnTick();
+
+            if (MinecraftClient.getInstance().currentScreen == null) {
+                // These features are suppressed when there is any screen opening
+                CameraControls.update();
+            }
         }
 
         if (playerWarnings != null && PlayerWarningConfigMap.getInstance().isEnabled())

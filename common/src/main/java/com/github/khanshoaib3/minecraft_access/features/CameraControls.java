@@ -4,15 +4,17 @@ import com.github.khanshoaib3.minecraft_access.MainClass;
 import com.github.khanshoaib3.minecraft_access.config.config_maps.CameraControlsConfigMap;
 import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMap;
 import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
+import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
 import com.github.khanshoaib3.minecraft_access.utils.condition.DoubleClick;
 import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
 import com.github.khanshoaib3.minecraft_access.utils.position.Orientation;
 import com.github.khanshoaib3.minecraft_access.utils.position.PlayerPositionUtils;
 import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.util.math.Vec3d;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This feature adds the following key binds to control the camera.<br><br>
@@ -34,13 +36,14 @@ import net.minecraft.util.math.Vec3d;
  * 15) Right Alt + double Look Up Key or Look Straight Up Key (default: Keypad 0): Snaps the camera to the look above head direction.<br>
  * 16) Right Alt + double Look Down Key or Look Straight Down Key (default: Keypad .): Snaps the camera to the look down at feet direction.
  */
-@Slf4j
 public class CameraControls {
-    private MinecraftClient minecraftClient;
 
-    private float normalRotatingDeltaAngle;
-    private float modifiedRotatingDeltaAngle;
-    private Interval interval;
+    private static final Logger log = LoggerFactory.getLogger(CameraControls.class);
+
+    private static boolean enabled;
+    private static float normalRotatingDeltaAngle;
+    private static float modifiedRotatingDeltaAngle;
+    private static Interval interval;
 
     private static final DoubleClick straightUpDoubleClick;
     private static final DoubleClick straightDownDoubleClick;
@@ -51,19 +54,12 @@ public class CameraControls {
         straightDownDoubleClick = new DoubleClick(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().cameraControlsDown));
     }
 
-    public CameraControls() {
-        loadConfigurations();
-    }
-
-    public void update() {
+    public static void update() {
         if (interval != null && interval.hasNotEnded()) return;
+        loadConfigurations();
+        if (!enabled) return;
+
         try {
-            this.minecraftClient = MinecraftClient.getInstance();
-
-            if (minecraftClient == null) return;
-            if (minecraftClient.currentScreen != null) return; //Prevent running if any screen is opened
-
-            loadConfigurations();
             boolean wasAnyKeyPressed = keyListener();
             if (wasAnyKeyPressed) interval.start();
         } catch (Exception e) {
@@ -74,21 +70,20 @@ public class CameraControls {
     /**
      * Loads the configs from config.json
      */
-    private void loadConfigurations() {
-        float delta90Degrees = 600f; // 90 / 0.15
-
+    private static void loadConfigurations() {
         CameraControlsConfigMap map = CameraControlsConfigMap.getInstance();
+        enabled = map.isEnabled();
         interval = Interval.ms(map.getDelayInMilliseconds());
-        float normalRotatingAngle = map.getNormalRotatingAngle();
-        float modifiedRotatingAngle = map.getModifiedRotatingAngle();
-        normalRotatingDeltaAngle = delta90Degrees / (90 / normalRotatingAngle);
-        modifiedRotatingDeltaAngle = delta90Degrees / (90 / modifiedRotatingAngle);
+
+        float delta90Degrees = 600f; // 90 / 0.15
+        normalRotatingDeltaAngle = delta90Degrees / (90 / map.getNormalRotatingAngle());
+        modifiedRotatingDeltaAngle = delta90Degrees / (90 / map.getModifiedRotatingAngle());
     }
 
     /**
      * Handles the key inputs
      */
-    private boolean keyListener() {
+    private static boolean keyListener() {
         boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
         boolean isRightAltPressed = KeyUtils.isRightAltPressed();
 
@@ -198,20 +193,15 @@ public class CameraControls {
      * @param angle     by given angle
      * @param direction on given direction
      */
-    private void rotateCameraBy(float angle, RotatingDirection direction) {
-        if (minecraftClient.player == null) return;
-
+    private static void rotateCameraBy(float angle, RotatingDirection direction) {
         float horizontalAngleDelta = angle * direction.horizontalWight;
         float verticalAngleDelta = angle * direction.verticalWight;
+        log.debug("Rotating camera by x:{} y:{}", horizontalAngleDelta, verticalAngleDelta);
 
-        minecraftClient.player.changeLookDirection(horizontalAngleDelta, verticalAngleDelta);
-
-        // log and speak new facing direction
-        log.debug("Rotating camera by x:%d y:%d".formatted((int) horizontalAngleDelta, (int) verticalAngleDelta));
+        WorldUtils.getClientPlayer().changeLookDirection(horizontalAngleDelta, verticalAngleDelta);
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
-
         if (OtherConfigsMap.getInstance().isFacingDirectionEnabled()) {
             if (direction.isRotatingHorizontal && horizontalDirection != null)
                 MainClass.speakWithNarrator(horizontalDirection, true);
@@ -225,16 +215,13 @@ public class CameraControls {
      *
      * @param direction to given direction
      */
-    private void rotateCameraTo(Orientation direction) {
-        if (minecraftClient.player == null) return;
-
-        Vec3d playerBlockPosition = minecraftClient.player.getPos();
+    private static void rotateCameraTo(Orientation direction) {
+        ClientPlayerEntity player = WorldUtils.getClientPlayer();
+        Vec3d playerBlockPosition = player.getPos();
         Vec3d targetBlockPosition = playerBlockPosition.add(Vec3d.of(direction.vector));
+        player.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, targetBlockPosition);
 
-        minecraftClient.player.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, targetBlockPosition);
-
-        // log and speak new facing direction
-        log.debug("Rotating camera to: %s".formatted(direction.name()));
+        log.debug("Rotating camera to: {}", direction.name());
 
         if (OtherConfigsMap.getInstance().isFacingDirectionEnabled()) {
             if (direction.in(Orientation.LAYER.MIDDLE)) {
@@ -250,8 +237,7 @@ public class CameraControls {
      *
      * @param lookOpposite Whether to snap the opposite cardinal direction or not and centers it.
      */
-    private void centerCamera(boolean lookOpposite) {
-        if (minecraftClient.player == null) return;
+    private static void centerCamera(boolean lookOpposite) {
         Orientation o = PlayerPositionUtils.getHorizontalFacing();
         rotateCameraTo(lookOpposite ? o.getOpposite() : o);
     }
