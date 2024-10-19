@@ -40,7 +40,7 @@ public class LockingHandler {
     private BlockPos3d lockedOnBlock = null;
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
     private String entriesOfLockedOnBlock = "";
-    private Interval interval;
+    private final Interval interval = Interval.defaultDelay();
     private boolean aimAssistActive = false;
     // 0 = can't shoot, 1 = can shoot
     private int lastAimAssistCue = -1;
@@ -66,7 +66,7 @@ public class LockingHandler {
         this.onPOIMarkingNow = onMarking;
         loadConfigurations();
         if (!enabled) return;
-        if (interval != null && !interval.isReady()) return;
+        if (!interval.isReady()) return;
         try {
             mainLogic();
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class LockingHandler {
         this.lockOnBlocks = map.isLockOnBlocks();
         this.speakDistance = map.isSpeakDistance();
         this.unlockingSound = map.isUnlockingSound();
-        this.interval = Interval.ms(map.getDelay());
+        this.interval.delay = map.getDelay();
         this.aimAssistEnabled = map.isAimAssistEnabled();
         this.aimAssistAudioCuesEnabled = map.isAimAssistAudioCuesEnabled();
         this.aimAssistAudioCuesVolume = map.getAimAssistAudioCuesVolume();

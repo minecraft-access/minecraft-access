@@ -34,7 +34,7 @@ public class ReadCrosshair {
     private Vec3d previousSoundPos = Vec3d.ZERO;
     private boolean speakSide;
     private boolean speakingConsecutiveBlocks;
-    private Interval repeatSpeakingInterval;
+    private final Interval repeatSpeakingInterval = Interval.defaultDelay();
     private boolean enablePartialSpeaking;
     private boolean partialSpeakingWhitelistMode;
     private boolean partialSpeakingFuzzyMode;
@@ -123,7 +123,7 @@ public class ReadCrosshair {
         this.speakSide = rcMap.isSpeakSide();
         // affirmation for easier use
         this.speakingConsecutiveBlocks = !rcMap.isDisableSpeakingConsecutiveBlocks();
-        this.repeatSpeakingInterval = Interval.ms(rcMap.getRepeatSpeakingInterval());
+        this.repeatSpeakingInterval.delay = rcMap.getRepeatSpeakingInterval();
         this.enableRelativePositionSoundCue = rcrMap.isEnabled();
         this.minSoundVolume = rcrMap.getMinSoundVolume();
         this.maxSoundVolume = rcrMap.getMaxSoundVolume();

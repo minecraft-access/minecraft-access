@@ -53,7 +53,7 @@ import java.util.Optional;
 public class InventoryControls {
     private boolean autoOpenRecipeBook;
     private String rowAndColumnFormat;
-    private Interval interval;
+    private final Interval interval = Interval.defaultDelay();
     private MinecraftClient minecraftClient;
 
     private HandledScreenAccessor previousScreen = null;
@@ -93,7 +93,7 @@ public class InventoryControls {
     }
 
     public void update() {
-        if (interval != null && interval.hasNotEnded()) return;
+        if (interval.hasNotEnded()) return;
         this.minecraftClient = MinecraftClient.getInstance();
 
         if (minecraftClient == null) return;
@@ -170,7 +170,7 @@ public class InventoryControls {
         InventoryControlsConfigMap map = InventoryControlsConfigMap.getInstance();
         autoOpenRecipeBook = map.isAutoOpenRecipeBook();
         rowAndColumnFormat = map.getRowAndColumnFormat();
-        interval = Interval.ms(map.getDelayInMilliseconds());
+        interval.delay = map.getDelayInMilliseconds();
         speakFocusedSlotChanges = map.isSpeakFocusedSlotChanges();
     }
 
