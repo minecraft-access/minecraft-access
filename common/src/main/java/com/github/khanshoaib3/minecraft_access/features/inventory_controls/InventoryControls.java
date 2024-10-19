@@ -93,7 +93,7 @@ public class InventoryControls {
     }
 
     public void update() {
-        if (interval.hasNotEnded()) return;
+        if (!interval.isReady()) return;
         this.minecraftClient = MinecraftClient.getInstance();
 
         if (minecraftClient == null) return;
@@ -109,7 +109,7 @@ public class InventoryControls {
 
         try {
             loadConfigurations();
-            boolean wasAnyKeyPressed = keyListener();
+            keyListener();
 
             currentScreen = (HandledScreenAccessor) minecraftClient.currentScreen;
             currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
@@ -157,7 +157,6 @@ public class InventoryControls {
                 }
             }
 
-            if (wasAnyKeyPressed) interval.start();
         } catch (Exception e) {
             log.error("Error encountered in Inventory Controls feature.", e);
         }
@@ -178,7 +177,7 @@ public class InventoryControls {
      * Handles the key inputs.
      */
     @SuppressWarnings("CommentedOutCode")
-    private boolean keyListener() {
+    private void keyListener() {
         KeyBindingsHandler kbh = KeyBindingsHandler.getInstance();
         boolean isGroupKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsGroupKey);
         boolean isUpKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsUpKey);
@@ -201,7 +200,7 @@ public class InventoryControls {
                 if (isEnterPressed) {
                     setSearchBoxFocus(searchBox, false);
                     refreshGroupListAndSelectFirstGroup(true);
-                    return true;
+                    return;
                 }
             }
         }
@@ -214,7 +213,7 @@ public class InventoryControls {
                 if (isEnterPressed) {
                     setSearchBoxFocus(searchBox, false);
                     previousSlotText = "";
-                    return true;
+                    return;
                 }
             }
         }
@@ -226,7 +225,7 @@ public class InventoryControls {
                 if (isEnterPressed) {
                     setSearchBoxFocus(searchBox, false);
                     previousSlotText = "";
-                    return true;
+                    return;
                 }
             }
         }
@@ -238,18 +237,18 @@ public class InventoryControls {
                 if (isEnterPressed) {
                     setSearchBoxFocus(searchBox, false);
                     previousSlotText = "";
-                    return true;
+                    return;
                 }
             }
         }
         //</editor-fold>
 
-        if (disableInputForSearchBox) return false; // Skip other key inputs if using a search box
+        if (disableInputForSearchBox) return; // Skip other key inputs if using a search box
 
         if (isGroupKeyPressed) {
             log.debug("Group key pressed");
             changeGroup(!isLeftShiftPressed);
-            return true;
+            return;
         }
         if (isSwitchTabKeyPressed) {
             log.debug("Switch Tab key pressed");
@@ -258,7 +257,7 @@ public class InventoryControls {
             else if (currentScreen instanceof CreativeInventoryScreen)
                 changeCreativeInventoryTab(!isLeftShiftPressed);
 
-            return true;
+            return;
         }
         if (isUpKeyPressed) {
             log.debug("Up key pressed");
@@ -273,12 +272,12 @@ public class InventoryControls {
             } else {
                 focusSlotItemAt(FocusDirection.UP);
             }
-            return true;
+            return;
         }
         if (isRightKeyPressed) {
             log.debug("Right key pressed");
             focusSlotItemAt(FocusDirection.RIGHT);
-            return true;
+            return;
         }
         if (isDownKeyPressed) {
             log.debug("Down key pressed");
@@ -293,12 +292,12 @@ public class InventoryControls {
             } else {
                 focusSlotItemAt(FocusDirection.DOWN);
             }
-            return true;
+            return;
         }
         if (isLeftKeyPressed) {
             log.debug("Left key pressed");
             focusSlotItemAt(FocusDirection.LEFT);
-            return true;
+            return;
         }
         if (isTPressed) {
             if (CreativeInventoryScreenAccessor.getSelectedTab().getType() == ItemGroup.Type.SEARCH && currentScreen instanceof CreativeInventoryScreen creativeInventoryScreen) {
@@ -320,7 +319,7 @@ public class InventoryControls {
                 craftingScreen.setFocused(recipeBookWidget);
                 setSearchBoxFocus(((RecipeBookWidgetAccessor) recipeBookWidget).getSearchField(), true);
             }
-            return true;
+            return;
         }
         if (isToggleCraftableKeyPressed) {
             RecipeBookWidget recipeBookWidget = null;
@@ -330,8 +329,8 @@ public class InventoryControls {
                 recipeBookWidget = craftingScreen.getRecipeBookWidget();
             }
 
-            if (recipeBookWidget == null) return false;
-            if (!recipeBookWidget.isOpen()) return false;
+            if (recipeBookWidget == null) return;
+            if (!recipeBookWidget.isOpen()) return;
 
             ToggleButtonWidget toggleCraftableButton = ((RecipeBookWidgetAccessor) recipeBookWidget).getToggleCraftableButton();
 
@@ -347,10 +346,8 @@ public class InventoryControls {
             log.debug("Recipe toggle key pressed, Showing %s".formatted(toggleCraftableButton.isToggled() ? "all" : "craftable only"));
             MainClass.speakWithNarrator("Showing %s".formatted(toggleCraftableButton.isToggled() ? "all" : "craftable only"), true);
 
-            return true;
         }
 
-        return false;
     }
 
     private void clickPreviousRecipeBookPage(RecipeBookProvider screen) {
