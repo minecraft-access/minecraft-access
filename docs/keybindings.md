@@ -141,9 +141,9 @@ See also: [Feature Description](/docs/features.md#health-and-hunger)
 | `Narrate Target`  | B                  | Narrates the thing you are looking at                                   |
 | Upper number keys | not re-mappable    | When Access Menu is opened, execute corresponding Access Menu functions |
 
-| Key Combination           | Description                                 |
-|---------------------------|---------------------------------------------|
-| `Alt` + Upper number keys | Execute corresponding Access Menu functions |
+| Key Combination           | Description                                                                                                                                                       |
+|---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Alt` + Upper number keys | Execute corresponding Access Menu functions. PS: the `Find Closest Water/Lava Source` functions are not supported by this key combination since they lag the game |
 
 All functions in the Access Menu have unique keybindings that can be set in the game's controls settings menu.
 The only function that is bound by default is the narrate target function, and all other function keys are left up to you to bind if you want to use them.

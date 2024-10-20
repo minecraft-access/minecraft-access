@@ -74,13 +74,14 @@ public class AccessMenu {
     static {
         // other functions get one second interval
         Arrays.fill(functionIntervals, Interval.sec(1));
-        // two long-time-running find-the-closest-liquid-source functions need a long interval (10 seconds)
-        functionIntervals[4] = Interval.sec(10);
-        functionIntervals[5] = Interval.sec(10);
-
         for (int i = 0; i < 10; i++) {
             FUNCTIONS[i].keystroke.interval = functionIntervals[i];
         }
+
+        // the two long-time-running find-the-closest-liquid-source functions
+        // are disabled in "alt + number keys" combination
+        functionIntervals[4] = Interval.ms(0);
+        functionIntervals[5] = Interval.ms(0);
     }
 
     private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
