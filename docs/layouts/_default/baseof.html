@@ -39,11 +39,15 @@
 <div class="content" tabindex="-1">
     <div class="content-inner">
         <main>
-            <!-- This part is useless for the current size of the website and is causing some weirdness with screen readers, so I'm commenting it out for now
             <nav class="breadcrumbs" aria-label="Breadcrumbs">
                 <ol>
                     {{ range (collections.Append .Page .Page.Ancestors.Reverse) }}
                         <li>
+                            {{ if not .IsHome }}
+                            <span class="breadcrumbsArrow">
+                                {{ partial "icon" (dict "Icon" "chevron_right" "Label" "right arrow") }}
+                            </span>
+                            {{ end }}
                             <a href="{{ .RelPermalink }}" class="{{ if eq . $.Page }}current{{ end }}">
                                 {{ if .IsHome }}
                                     {{ partial "icon" (dict "Icon" "home" "Label" "home") }}
@@ -55,7 +59,6 @@
                     {{ end }}
                 </ol>
             </nav>
-        -->
             <h1>{{ .Page.Title }}</h1>
             {{ if .Page.Content }}
                 <p>
