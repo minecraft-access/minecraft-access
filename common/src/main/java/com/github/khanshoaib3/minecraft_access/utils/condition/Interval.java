@@ -45,6 +45,9 @@ public class Interval {
      * Check if the delay has cooled down. (Will auto-reset the timer if true)
      */
     public boolean isReady() {
+        // There is configuration that set to 0 to disable the timer
+        // ref: Read Crosshair - Repeat Speaking Interval (in milliseconds) (0 to disable)
+        if (delay == 0) return false;
         if (System.nanoTime() - lastRunTime > delay) {
             reset();
             return true;
