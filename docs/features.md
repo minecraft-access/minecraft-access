@@ -17,6 +17,7 @@ There is also a page for [viewing all sound effects](https://html-preview.github
 4. [Inventory Controls](#inventory-controls)
 5. [Points of Interest](#points-of-interest)
     * [POI Locking](#poi-locking)
+      * [Bow Aim Assist](#bow-aim-assist)
     * [POI Marking](#poi-marking)
 6. [Fall Detector](#fall-detector)
 7. [Access Menu](#access-menu)
@@ -151,7 +152,7 @@ Note that:
 * The mod will automatically stop locking on ladders when you start climbing them, so you can directly climb the ladder without manually pressing the unlock key.
 * The mod will automatically stop locking on blocks if they are destroyed or changed (for example, a [door](https://minecraft.wiki/w/Door) is opened or closed, or a [piston](https://minecraft.wiki/w/Piston) is activated).
 
-#### Bow aim assist
+#### Bow Aim Assist
 
 When you start drawing the bow, you will automatically lock onto the nearest hostile mob. A sound will play indicating if you can hit your target and how far the bow has been drawn.
 If the sound playing is a piano, you can shoot the target, and if it's a bass, you can't shoot the target. The sound will increase in pitch 3 times as you draw the bow, stopping when the bow is fully drawn.
