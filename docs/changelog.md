@@ -1,3 +1,62 @@
+Release v1.9.0 (2024-10)
+---------------------------
+
+@BrailleBennett, @douglassquirrel, @Molitvan, @emassey0135 made their first contributions in this release, many thanks!
+@TheSuperGamer20578 has accepted collaborator invitation, we've learned a lot from him.
+The future updates will accelerate due to the ample development resources.
+New contributors are welcome, there are never enough hands.
+
+### New Features
+
+- Speak current [perspective](https://minecraft.wiki/w/Third-person_view) when switched to [#314](https://github.com/khanshoaib3/minecraft-access/issues/314)
+- Add basic [bow aim assist](/docs/features.md#bow-aim-assist) [#212](https://github.com/khanshoaib3/minecraft-access/issues/212)
+- Jade Integration: Blocks and entities can now be narrated with Jade, providing much more detailed information.
+
+#### macOS support
+
+- Implement mouse simulation on MacOS [#22](https://github.com/khanshoaib3/minecraft-access/issues/22)
+- Warn the macOS user if Minecraft has not been granted the accessibility permission, which is needed for mouse simulation to work
+- Implement speech support on macOS with queuing and interruption support
+- Add a speech settings config menu with a speech rate option for changing the speech rate on macOS
+
+### Feature Updates
+
+- **BREAKING CHANGES**: Rename "Narrator Menu" aka "F4 Menu" to "Access Menu"
+- **BREAKING CHANGES**: Remove config "Enable Health n Hunger"
+- [Vault](https://minecraft.wiki/w/Vault) and [Trial Spawner](https://minecraft.wiki/w/Trial_Spawner) are added as POI blocks [#306](https://github.com/khanshoaib3/minecraft-access/issues/306)
+- Remove `Position Narrator Format` config since it seems duplicate with single number narrating formats
+- Access Menu Shortcuts bar: Now Access Menu functions can be triggered with Alt + upper number keys
+- Health And Hunger: Also speak air value when players are underwater
+
+### Bug Fixes
+
+- Let `Enable Facing Direction` config controls auto direction speaking in `Camera Controls` [#327](https://github.com/khanshoaib3/minecraft-access/issues/327)
+- Make the `Look Straight Back` key combination (left alt + numpad 5) works again [#328](https://github.com/khanshoaib3/minecraft-access/issues/328)
+- Fix mislabeled slots of [Smithing Table](https://minecraft.wiki/w/Smithing_Table)
+
+### Translation Changes
+
+- **BREAKING CHANGES**: [Weblate](https://hosted.weblate.org/engage/minecraft-access/) is now used for translations
+- Add four texts for speaking perspectives [I18N PR 37](https://github.com/khanshoaib3/minecraft-access-i18n/pull/37)
+- Add texts for the speech settings and speech rate buttons in the configuration menu
+- Add texts for the warning about the accessibility permission not being granted on macOS
+- Added 2 new text for the smithing table and removed the now unused one
+- Change air related I18N text for **Health And Hunger** changes
+
+### Others
+
+- Updated modpack setup instructions to describe when users might want or need a screen reader such as NVDA or JAWS
+- Added an error message when trying to run the mod server-side
+
+### Development Chores
+
+- **BREAKING CHANGES**: The I18N submodule has been merged into the main repo to make code contributions involving translations easier
+- Refactor `PlayerPositionUtils`
+- Enhance `build` workflow's edge case handling
+- @emassey0135 had implemented speech and mouse simulation support for macOS using JNA calls to the Objective-C runtime and other native macOS libraries, so no external libraries or tools need to be installed
+- Removed unnecessary use of Fabric api in a few random places
+- Deleted MainClassFabric because the mod does two completely different things depending on which side it's running on and a common entry point for both sides is not needed (and also unnecessarily complicates things with the server-side error message)
+
 Release v1.8.0 (2024-08)
 ---------------------------
 
