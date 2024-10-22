@@ -38,6 +38,8 @@ env:
   CHANGELOG_TEMP_PLATFORM: .changelog_platform.md
   MODRINTH_ID: jGzXyfdm
   CURSEFORGE_ID: 830055
+  # ref: https://github.com/Kir-Antipov/mc-publish?tab=readme-ov-file#version-type
+  RELEASE_TYPE: ${{ inputs.pre-release && 'beta' || 'release' }}
 
 jobs:
   test-and-build:
@@ -139,7 +141,6 @@ jobs:
       # "we do not recommend manually featuring any version"
       # ref: https://support.modrinth.com/en/articles/8793360-version-auto-featuring
       - name: Publish Fabric Version to Modrinth and CurseForge
-        if: ${{ !inputs.pre-release }}
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: ${{ env.MODRINTH_ID }}
@@ -151,6 +152,7 @@ jobs:
           changelog-file: ${{ env.CHANGELOG_TEMP_PLATFORM }}
           files: ${{ env.UPLOAD_PATH }}/*-fabric.jar
           version: ${{ env.MOD_GAME_VERSION }}-fabric
+          version-type: ${{ env.RELEASE_TYPE }}
           loaders: fabric
           game-versions: ${{ env.MINECRAFT_VERSION }}
           java: ${{ env.JAVA_VERSION }}
@@ -158,7 +160,6 @@ jobs:
           retry-delay: 60000
 
       - name: Publish NeoForge Version to Modrinth and CurseForge
-        if: ${{ !inputs.pre-release }}
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: ${{ env.MODRINTH_ID }}
@@ -170,6 +171,7 @@ jobs:
           changelog-file: ${{ env.CHANGELOG_TEMP_PLATFORM }}
           files: ${{ env.UPLOAD_PATH }}/*-neoforge.jar
           version: ${{ env.MOD_GAME_VERSION }}-neoforge
+          version-type: ${{ env.RELEASE_TYPE }}
           loaders: neoforge
           game-versions: ${{ env.MINECRAFT_VERSION }}
           java: ${{ env.JAVA_VERSION }}
