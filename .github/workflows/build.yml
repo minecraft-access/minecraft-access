@@ -59,30 +59,6 @@ jobs:
         with:
           ref: ${{ inputs.version == 'latest' && github.ref || inputs.version }}
 
-      - name: Fetch Latest Lang Assert
-        if: ${{ inputs.version == 'latest' }}
-        uses: actions/checkout@v4
-        with:
-          # ref: https://github.com/khanshoaib3/minecraft-access
-          repository: 'khanshoaib3/minecraft-access-i18n'
-          # Checkout the repo in mod's language assert path
-          path: './common/src/main/resources/assets/minecraft_access/lang'
-
-      - name: Fetch Lang Assert at Given Version
-        if: ${{ inputs.version != 'latest' }}
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.version }}
-          repository: 'khanshoaib3/minecraft-access-i18n'
-          path: './common/src/main/resources/assets/minecraft_access/lang'
-
-      - name: Remove Unnecessary Lang Repository Files
-        run: |
-          pushd .
-          cd ./common/src/main/resources/assets/minecraft_access/lang
-          ls | grep -vE "??_??\.json" | xargs rm
-          popd
-
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
