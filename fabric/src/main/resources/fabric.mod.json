@@ -17,11 +17,11 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "com.github.khanshoaib3.minecraft_access.fabric.MainClassFabric"
-    ],
     "client": [
       "com.github.khanshoaib3.minecraft_access.fabric.MinecraftAccessClient"
+    ],
+    "server": [
+      "com.github.khanshoaib3.minecraft_access.fabric.MinecraftAccessServer"
     ]
   },
   "mixins": [

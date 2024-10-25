@@ -4,8 +4,9 @@ import com.github.khanshoaib3.minecraft_access.config.Config;
 import com.github.khanshoaib3.minecraft_access.config.config_maps.*;
 import com.github.khanshoaib3.minecraft_access.features.*;
 import com.github.khanshoaib3.minecraft_access.features.inventory_controls.InventoryControls;
-import com.github.khanshoaib3.minecraft_access.features.narrator_menu.NarratorMenu;
+import com.github.khanshoaib3.minecraft_access.features.access_menu.AccessMenu;
 import com.github.khanshoaib3.minecraft_access.features.point_of_interest.POIMarking;
+import com.github.khanshoaib3.minecraft_access.features.read_crosshair.ReadCrosshair;
 import com.github.khanshoaib3.minecraft_access.screen_reader.ScreenReaderController;
 import com.github.khanshoaib3.minecraft_access.screen_reader.ScreenReaderInterface;
 import com.mojang.text2speech.Narrator;
@@ -28,7 +29,7 @@ public class MainClass {
     public static FacingDirection facingDirection = null;
     public static HealthNHunger healthNHunger = null;
     public static PlayerWarnings playerWarnings = null;
-    public static NarratorMenu narratorMenu = null;
+    public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
 
     public static boolean isNeoForge = false;
@@ -65,7 +66,7 @@ public class MainClass {
         MainClass.facingDirection = new FacingDirection();
         MainClass.healthNHunger = new HealthNHunger();
         MainClass.playerWarnings = new PlayerWarnings();
-        MainClass.narratorMenu = new NarratorMenu();
+        MainClass.accessMenu = new AccessMenu();
         MainClass.fluidDetector = new FluidDetector();
 
         // This executes when minecraft closes
@@ -111,7 +112,7 @@ public class MainClass {
         if (cameraControls != null && CameraControlsConfigMap.getInstance().isEnabled())
             cameraControls.update();
 
-        ReadCrosshair.getInstance().update();
+        ReadCrosshair.getInstance().tick();
 
         if (biomeIndicator != null && otherConfigsMap.isBiomeIndicatorEnabled())
             biomeIndicator.update();
@@ -129,8 +130,8 @@ public class MainClass {
         if (playerWarnings != null && PlayerWarningConfigMap.getInstance().isEnabled())
             playerWarnings.update();
 
-        if (narratorMenu != null && NarratorMenuConfigMap.getInstance().isEnabled())
-            narratorMenu.update();
+        if (accessMenu != null && NarratorMenuConfigMap.getInstance().isEnabled())
+            accessMenu.update();
 
         // POI Marking will handle POI Scan and POI Locking features inside it
         POIMarking.getInstance().update();

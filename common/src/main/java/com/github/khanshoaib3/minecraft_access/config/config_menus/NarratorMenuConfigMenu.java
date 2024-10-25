@@ -29,7 +29,7 @@ public class NarratorMenuConfigMenu extends BaseScreen {
                 });
         this.addDrawableChild(featureToggleButton);
 
-        ButtonWidget fluidDetectorButton = this.buildButtonWidget("minecraft_access.gui.narrator_menu_config_menu.button.fluid_detector_button",
+        ButtonWidget fluidDetectorButton = this.buildButtonWidget("minecraft_access.gui.access_menu_config_menu.button.fluid_detector_button",
                 (button) -> this.client.setScreen(new FluidDetectorConfigMenu("fluid_detector_config_menu", this)));
         this.addDrawableChild(fluidDetectorButton);
     }

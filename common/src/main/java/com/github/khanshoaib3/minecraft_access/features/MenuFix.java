@@ -3,8 +3,6 @@ package com.github.khanshoaib3.minecraft_access.features;
 import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
 import com.github.khanshoaib3.minecraft_access.utils.system.MouseUtils;
 import lombok.extern.slf4j.Slf4j;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.AddServerScreen;
@@ -25,7 +23,6 @@ import java.util.List;
  * This fixes the bug in which the mouse cursor interrupts when navigating through the screen elements
  * which results in infinite speaking of `Screen element x out of x` by the narrator
  */
-@Environment(EnvType.CLIENT)
 @Slf4j
 public class MenuFix {
     /**

@@ -14,8 +14,17 @@ public class KeyBindingsHandler {
     public KeyBinding healthNHungerNarrationKey;
     public KeyBinding lockingHandlerKey;
     public KeyBinding positionNarrationKey;
-    public KeyBinding narratorMenuKey;
-    public KeyBinding narratorMenuHotKey;
+    public KeyBinding accessMenuKey;
+    public KeyBinding narrateTarget;
+    public KeyBinding targetPosition;
+    public KeyBinding lightLevel;
+    public KeyBinding closestWaterSource;
+    public KeyBinding closestLavaSource;
+    public KeyBinding currentBiome;
+    public KeyBinding timeOfDay;
+    public KeyBinding xpLevel;
+    public KeyBinding refreshScreenReader;
+    public KeyBinding openConfigMenu;
     public KeyBinding directionNarrationKey;
 
     public KeyBinding cameraControlsUp;
@@ -435,17 +444,80 @@ public class KeyBindingsHandler {
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
-        narratorMenuKey = new KeyBinding(
-                "minecraft_access.keys.other.narrator_menu_key_name",
+        accessMenuKey = new KeyBinding(
+                "minecraft_access.keys.other.access_menu_key_name",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_F4,
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
-        narratorMenuHotKey = new KeyBinding(
-                "minecraft_access.keys.other.narrator_menu_hot_key_name",
+        narrateTarget = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.block_and_fluid_target_info",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_B,
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
+        targetPosition = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.block_and_fluid_target_position",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
+        lightLevel = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.light_level",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
+        closestWaterSource = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.find_water",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
+        closestLavaSource = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.find_lava",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
+        currentBiome = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.biome",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
+        timeOfDay = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.time_of_day",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
+        xpLevel = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.xp",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
+        refreshScreenReader = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.refresh_screen_reader",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
+        openConfigMenu = new KeyBinding(
+                "minecraft_access.access_menu.gui.button.open_config_menu",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
@@ -497,8 +569,17 @@ public class KeyBindingsHandler {
                 healthNHungerNarrationKey,
                 lockingHandlerKey,
                 positionNarrationKey,
-                narratorMenuKey,
-                narratorMenuHotKey,
+                accessMenuKey,
+                narrateTarget,
+                targetPosition,
+                lightLevel,
+                closestWaterSource,
+                closestLavaSource,
+                currentBiome,
+                timeOfDay,
+                xpLevel,
+                refreshScreenReader,
+                openConfigMenu,
                 directionNarrationKey);
     }
 }

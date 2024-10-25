@@ -1,5 +1,6 @@
 package com.github.khanshoaib3.minecraft_access.fabric;
 
+import com.github.khanshoaib3.minecraft_access.MainClass;
 import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -8,6 +9,8 @@ import net.minecraft.client.option.KeyBinding;
 public class MinecraftAccessClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+                MainClass.init();
+
         // Since 1.19.4 (that's when the Fabric add the condition code below):
         // It seems that Fabric loads classes in mod jars on-demand.
         // If the KeyBindingsHandler class is not invoked here, the static block of this class will not be executed.

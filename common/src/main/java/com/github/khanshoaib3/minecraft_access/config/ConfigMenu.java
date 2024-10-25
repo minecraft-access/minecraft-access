@@ -51,8 +51,8 @@ public class ConfigMenu extends BaseScreen {
                 (button) -> this.client.setScreen(new ReadCrosshairConfigMenu("read_crosshair_config_menu", this)));
         this.addDrawableChild(readCrosshairButton);
 
-        ButtonWidget narratorMenuButton = this.buildButtonWidget("minecraft_access.gui.config_menu.button.narrator_menu_button",
-                (button) -> this.client.setScreen(new NarratorMenuConfigMenu("narrator_menu_config_menu", this)));
+        ButtonWidget narratorMenuButton = this.buildButtonWidget("minecraft_access.gui.config_menu.button.access_menu_button",
+                (button) -> this.client.setScreen(new NarratorMenuConfigMenu("access_menu_config_menu", this)));
         this.addDrawableChild(narratorMenuButton);
 
 //        ButtonWidget areaMapButton = this.buildButtonWidget("minecraft_access.gui.config_menu.button.area_map_button",

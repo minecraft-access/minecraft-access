@@ -14,6 +14,8 @@ public class ReadCrosshairConfigMap {
 
     @SerializedName("Enabled")
     private boolean enabled;
+    @SerializedName("Use Jade")
+    private boolean useJade;
     @SerializedName("Speak Block Sides")
     private boolean speakSide;
     @SerializedName("Disable Speaking Consecutive Blocks With Same Name")
@@ -31,6 +33,7 @@ public class ReadCrosshairConfigMap {
     public static ReadCrosshairConfigMap buildDefault() {
         ReadCrosshairConfigMap m = new ReadCrosshairConfigMap();
         m.setEnabled(true);
+        m.setUseJade(true);
         m.setSpeakSide(true);
         m.setDisableSpeakingConsecutiveBlocks(false);
         m.setRepeatSpeakingInterval(0L);

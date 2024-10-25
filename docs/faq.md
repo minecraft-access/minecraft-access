@@ -89,7 +89,7 @@ See the [I18N Fallback Mechanism](/docs/features.md#i18n-fallback-mechanism) fea
 
 ## How can I contribute to I18N?
 
-We manage the translation of this mod in [another GitHub repository](https://github.com/khanshoaib3/minecraft-access-i18n#minecraft-access-i18n), take a look.
+We manage the translation of this mod with [Weblate](https://hosted.weblate.org/engage/minecraft-access/), take a look.
 
 ## Self-help guide for abnormal situations
 

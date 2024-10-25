@@ -10,8 +10,6 @@ import com.github.khanshoaib3.minecraft_access.utils.position.Orientation;
 import com.github.khanshoaib3.minecraft_access.utils.position.PlayerPositionUtils;
 import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
 import lombok.extern.slf4j.Slf4j;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.util.math.Vec3d;
@@ -36,7 +34,6 @@ import net.minecraft.util.math.Vec3d;
  * 15) Right Alt + double Look Up Key or Look Straight Up Key (default: Keypad 0): Snaps the camera to the look above head direction.<br>
  * 16) Right Alt + double Look Down Key or Look Straight Down Key (default: Keypad .): Snaps the camera to the look down at feet direction.
  */
-@Environment(EnvType.CLIENT)
 @Slf4j
 public class CameraControls {
     private MinecraftClient minecraftClient;
