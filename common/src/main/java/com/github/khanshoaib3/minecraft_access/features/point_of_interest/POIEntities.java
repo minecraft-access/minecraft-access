@@ -8,9 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.WaterCreatureEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -19,7 +25,6 @@ import net.minecraft.util.math.Box;
 
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.function.Predicate;
 
 /**
@@ -38,25 +43,21 @@ public class POIEntities {
     private Predicate<Entity> markedEntity = e -> false;
 
     public Map<String, POIGroup> builtInGroups = Map.of(
-        "passive", new POIGroup("Passive mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f, entity -> {
-            return entity instanceof PassiveEntity;
-        }, null),
-
-        "hostile", new POIGroup("Hostile entities", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 2f, entity -> {
-            return entity instanceof HostileEntity;
-        }, null),
-
-        "player", new POIGroup("Players", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f, entity -> {
-            return entity instanceof PlayerEntity;
-        }, null),
-
-        "vehicle", new POIGroup("Vehicles", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f, entity -> {
-            return entity instanceof VehicleEntity;
-        }, null),
-
-        "item", new POIGroup("Items", SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, 2f, entity -> {
-            return entity instanceof ItemEntity && entity.isOnGround();
-        }, null)
+            "yourPet", new POIGroup("Your Pets", SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f,                    entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid()), null),
+            "otherPet", new POIGroup("Other Pets", SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(), 1f,
+                    entity -> entity instanceof TameableEntity pet && pet.isTamed(), null),
+            "boss", new POIGroup("Bosses", SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 2f,
+                    entity -> entity instanceof MobEntity mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolemEntity), null),
+            "hostile", new POIGroup("Hostile Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 2f,
+                    entity -> entity instanceof HostileEntity || entity instanceof Angerable monster && (monster.hasAngerTime() || MinecraftClient.getInstance().player.getUuid().equals(monster.getAngryAt()) || MinecraftClient.getInstance().player.getUuid().equals(monster.getAttacker()) || monster.isUniversallyAngry(MinecraftClient.getInstance().player.getWorld())), null),
+            "passive", new POIGroup("Passive Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f,
+                    entity -> entity instanceof PassiveEntity || entity instanceof WaterCreatureEntity, null),
+            "player", new POIGroup("Players", SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), 1f,
+                    entity -> entity instanceof PlayerEntity, null),
+            "vehicle", new POIGroup("Vehicles", SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f,
+                    entity -> entity instanceof VehicleEntity, null),
+            "item", new POIGroup("Items", SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, 2f,
+                    entity -> entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED), null)
     );
 
     static {
@@ -99,8 +100,10 @@ public class POIEntities {
 
                 for (Entity e : entities) {
                     if (this.markedEntity.test(e)) {
-                        if (passiveGroup.isEntityInGroup(markedEntity)) this.playSoundAt(e.getBlockPos(), passiveGroup.getSound(), passiveGroup.getSoundPitch());
-                        if (hostileGroup.isEntityInGroup(markedEntity)) this.playSoundAt(e.getBlockPos(), hostileGroup.getSound(), hostileGroup.getSoundPitch());
+                        if (passiveGroup.isEntityInGroup(markedEntity))
+                            this.playSoundAt(e.getBlockPos(), passiveGroup.getSound(), passiveGroup.getSoundPitch());
+                        if (hostileGroup.isEntityInGroup(markedEntity))
+                            this.playSoundAt(e.getBlockPos(), hostileGroup.getSound(), hostileGroup.getSoundPitch());
                     }
                 }
 
