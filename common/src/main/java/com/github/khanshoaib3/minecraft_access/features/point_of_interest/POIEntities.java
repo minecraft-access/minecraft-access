@@ -43,7 +43,8 @@ public class POIEntities {
     private Predicate<Entity> markedEntity = e -> false;
 
     public Map<String, POIGroup> builtInGroups = Map.of(
-            "yourPet", new POIGroup("Your Pets", SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f,                    entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid()), null),
+            "yourPet", new POIGroup("Your Pets", SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f,
+                    entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid()), null),
             "otherPet", new POIGroup("Other Pets", SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(), 1f,
                     entity -> entity instanceof TameableEntity pet && pet.isTamed(), null),
             "boss", new POIGroup("Bosses", SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 2f,

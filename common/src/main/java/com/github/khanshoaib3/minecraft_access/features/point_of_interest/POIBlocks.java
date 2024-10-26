@@ -1,6 +1,7 @@
 package com.github.khanshoaib3.minecraft_access.features.point_of_interest;
 
 import com.github.khanshoaib3.minecraft_access.config.config_maps.POIBlocksConfigMap;
+import com.github.khanshoaib3.minecraft_access.config.config_maps.POIBlocksConfigMap;
 import com.github.khanshoaib3.minecraft_access.config.config_maps.POIMarkingConfigMap;
 import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
 import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
@@ -101,21 +102,10 @@ public class POIBlocks {
     private boolean onPOIMarkingNow = false;
 
     public Map<String, POIGroup> builtInGroups = Map.of(
-        "ore", new POIGroup("Ores", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) -> {
-            return oreBlockPredicates.stream().anyMatch(p -> p.test(block));
-        }),
-
-        "fluid", new POIGroup("Fluids", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> {
-            return this.detectFluidBlocks && block.getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && block.getFluidState().getLevel() == 8;
-        }),
-
-        "functional", new POIGroup("Functional blocks", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> {
-            return block.getBlock() instanceof ButtonBlock || block.getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(block));
-        }),
-
-        "gui", new POIGroup("Blocks with interface", SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), 0f, null, (block, pos) -> {
-            return block.createScreenHandlerFactory(world, pos) != null;
-        })
+        "ore", new POIGroup("Ores", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) -> oreBlockPredicates.stream().anyMatch(p -> p.test(block))),
+        "fluid", new POIGroup("Fluids", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> this.detectFluidBlocks && block.getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && block.getFluidState().getLevel() == 8),
+        "functional", new POIGroup("Functional blocks", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> block.getBlock() instanceof ButtonBlock || block.getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(block))),
+        "gui", new POIGroup("Blocks with interface", SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), 0f, null, (block, pos) -> block.createScreenHandlerFactory(world, pos) != null)
     );
 
     static {
