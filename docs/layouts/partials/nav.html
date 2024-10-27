@@ -2,7 +2,7 @@
     {{ if .Section.IsHome }}
         <li>
             <div class="nav-link {{ if eq .Section .CurrentPage }}active{{ end }}">
-                <a href="{{ .Section.RelPermalink }}">{{ default .Section.Path .Section.LinkTitle }}</a>
+                <a href="{{ .Section.RelPermalink }}" aria-current="{{ eq .Section $.CurrentPage }}">{{ default .Section.Path .Section.LinkTitle }}</a>
             </div>
         </li>
     {{ end }}
@@ -10,16 +10,16 @@
         <li>
             {{ if and .IsSection (not .Content) }}
                 <span class="nav-link toggle no-content"
-                      role="checkbox"
+                      role="button"
                       tabindex="0"
-                      aria-checked="{{ .IsAncestor $.CurrentPage }}"
+                      aria-current="{{ .IsAncestor $.CurrentPage }}"
                       aria-controls="section-list-{{ md5 . }}">
                     <span class="title">{{ default .Path .LinkTitle }}</span>
                     {{ partial "icon" (dict "Icon" "keyboard_arrow_down" "Label" "Dropdown toggle") }}
                 </span>
             {{ else }}
                 <div class="nav-link">
-                    <a href="{{ .RelPermalink }}" class="{{ if eq . $.CurrentPage }}active{{ end }}">{{ default .Path .LinkTitle }}</a>
+                    <a href="{{ .RelPermalink }}" aria-current="{{ eq . $.CurrentPage }}" class="{{ if eq . $.CurrentPage }}active{{ end }}">{{ default .Path .LinkTitle }}</a>
                     {{ if .IsSection }}
                         <button class="toggle"
                                 role="checkbox"

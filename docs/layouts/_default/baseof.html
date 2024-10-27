@@ -26,7 +26,7 @@
     {{ with resources.Get "logo.png" }}
         <img class="logo"
              src="{{ .RelPermalink }}"
-             alt="Minecraft Access logo. A retro games controller graphic over a blurred background of a snowy mountain village next to a spruce forrest.">
+             alt="Logo: A retro games controller over a blurred snowy mountain village next to a spruce forrest.">
     {{ end }}
     {{ if hugo.IsDevelopment }}
         <span class="pill warn" title="This is an unreleased development version of the site.">Development</span>
@@ -36,13 +36,18 @@
 <nav class="main-nav" aria-label="Site Navigation">
     {{ partial "nav.html" (dict "Section" (.Site.GetPage "/") "CurrentPage" .) }}
 </nav>
-<div class="content">
+<div class="content" tabindex="-1">
     <div class="content-inner">
         <main>
             <nav class="breadcrumbs" aria-label="Breadcrumbs">
                 <ol>
                     {{ range (collections.Append .Page .Page.Ancestors.Reverse) }}
                         <li>
+                            {{ if not .IsHome }}
+                            <span class="breadcrumbsArrow">
+                                {{ partial "icon" (dict "Icon" "chevron_right" "Label" "right arrow") }}
+                            </span>
+                            {{ end }}
                             <a href="{{ .RelPermalink }}" class="{{ if eq . $.Page }}current{{ end }}">
                                 {{ if .IsHome }}
                                     {{ partial "icon" (dict "Icon" "home" "Label" "home") }}

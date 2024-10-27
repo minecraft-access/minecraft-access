@@ -1,5 +1,5 @@
 ---
-title: "Minecraft Access Configuration"
+title: "Configuration"
 ---
 
 This page contains all the configuration that controls the features on-off and behavior.

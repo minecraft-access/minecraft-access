@@ -1,5 +1,5 @@
 ---
-title: "Minecraft Access Keybindings"
+title: "Keybindings"
 ---
 
 This page contains all the keybindings added by the mod.

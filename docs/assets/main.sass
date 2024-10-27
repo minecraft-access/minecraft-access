@@ -108,9 +108,6 @@ nav
 .active
   color: var(--link)
   font-weight: bold
-  &::after
-    @extend .sr-only
-    content: " (Active)"
 
 .content
   grid-area: content
@@ -169,15 +166,6 @@ main
     height: 2.5em
     list-style-type: none
     vertical-align: middle
-    li ~ li::before
-      content: "chevron_right"
-      //noinspection CssNoGenericFontName
-      font-family: "Material Symbols Outlined"
-      font-size: 1.5em
-      margin-inline: 0.2em
-      vertical-align: middle
-      color: var(--breadcrumb-chevrons)
-      font-weight: bold
   a
     color: var(--fg)
     text-decoration: none
@@ -187,6 +175,12 @@ main
       color: var(--link-hover)
     &.current:not(:hover)
       color: var(--link)
+  .breadcrumbsArrow
+      font-size: 1.5em
+      margin-inline: 0.2em
+      vertical-align: middle
+      color: var(--breadcrumb-chevrons)
+          font-weight: bold
 
 @media screen and (prefers-color-scheme: dark)
   \:root
