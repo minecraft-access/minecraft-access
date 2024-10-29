@@ -42,6 +42,11 @@ button
   border-radius: 1em
   margin-inline: 1em
 
+.text-clickable
+  color: var(--link)
+  &:hover
+    color: var(--link-hover)
+
 body
   background: var(--bg)
   color: var(--fg)
@@ -105,6 +110,7 @@ nav
   a
     color: inherit
     text-decoration: none
+
 .active
   color: var(--link)
   font-weight: bold

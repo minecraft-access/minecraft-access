@@ -7,3 +7,6 @@ disableKinds = ["taxonomy", "term", "rss"]
 ordered = true
 startLevel = 2
 endLevel = 4
+
+[security.http]
+mediaTypes = ["^audio/.+$"]
