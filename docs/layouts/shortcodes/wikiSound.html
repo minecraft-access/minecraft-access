@@ -1,5 +1,5 @@
-{{ if .IsNamedParams }}
-    {{ partial "wikiSound" (dict "Sound" (.Get "sound") "Pitch" (.Get "pitch")) }}
-{{ else }}
-    {{ partial "wikiSound" (dict "Sound" (.Get 0)) }}
-{{ end }}
+{{- if .IsNamedParams -}}
+    {{- partial "wikiSound" (dict "Sound" (.Get "sound") "Pitch" (.Get "pitch")) -}}
+{{- else -}}
+    {{- partial "wikiSound" (dict "Sound" (.Get 0)) -}}
+{{- end -}}

@@ -26,9 +26,12 @@
   width: 1px
 
 .icon
-  user-select: none
-  font-size: 1em
-  vertical-align: middle
+  line-height: 1
+  display: inline-block
+  .icon-inner
+    user-select: none
+    font-size: 1em
+    vertical-align: middle
 
 button
   background: none
@@ -146,6 +149,7 @@ nav
       margin: 1em auto 25vh auto
       article
         @import "content"
+        position: relative
         margin-top: 1em
         \:first-child
           margin-top: 0

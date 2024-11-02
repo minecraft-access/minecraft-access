@@ -1,7 +1,0 @@
-{{ $id := partial "unique-id" }}
-<button class="text-clickable" data-plays="sound-{{ $id }}">{{ partial "icon" (dict "Icon" "volume_up" "Label" "Play sound") }}</button>
-<audio id="sound-{{ $id }}" {{ with .Pitch }}data-pitch="{{ . }}"{{ end }}>
-    {{ range .Resources }}
-            <source src="{{ .RelPermalink }}" type="{{ .MediaType }}">
-    {{ end }}
-</audio>

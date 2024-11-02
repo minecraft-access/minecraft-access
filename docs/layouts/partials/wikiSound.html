@@ -1,4 +1,4 @@
-{{ partial "helpers/sound" (dict "Pitch" .Pitch "Resources" (slice
+{{- partial "internal/sound" (dict "Pitch" .Pitch "Resources" (slice
 (resources.GetRemote (replace "https://minecraft.wiki/images/%s.ogg" "%s" .Sound))
 (resources.GetRemote (replace "https://minecraft.wiki/images/transcoded/%s.ogg/%s.ogg.mp3" "%s" .Sound))
-)) }}
+)) -}}

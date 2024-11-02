@@ -1,5 +1,5 @@
 ---
-title: Home
+title: "Home"
 ---
 
 Minecraft Access is a [Minecraft](https://www.minecraft.net) mod that specifically helps visually impaired players play Minecraft.

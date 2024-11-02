@@ -1,49 +1,50 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}">
+<html lang="{{- .Site.LanguageCode -}}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, scale=1.0">
-    <title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
-    {{ with resources.Get "main.sass" | toCSS | minify | fingerprint }}
-        <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
-    {{ end }}
-    {{ with resources.Get "logo.png" | fingerprint }}
-        <link rel="shortcut icon" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
-        <meta property="og:image" content="{{ .RelPermalink }}">
-    {{ end }}
-    {{ with resources.Get "main.ts" | js.Build | minify | fingerprint }}
-        <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer blocking="render"></script>
-    {{ end }}
-    <meta property="theme-color" media="(prefers-color-scheme: dark)" content="#267547">
-    <meta property="theme-color" media="(prefers-color-scheme: light)" content="#40a849">
+    <title>{{- block "title" . -}}{{- .Site.Title -}}{{- end -}}</title>
+    {{- with resources.Get "main.sass" | toCSS | minify | fingerprint -}}
+        <link rel="stylesheet" href="{{- .RelPermalink -}}" integrity="{{- .Data.Integrity -}}">
+    {{- end -}}
+    {{- with resources.Get "logo.png" | fingerprint -}}
+        <link rel="shortcut icon" href="{{- .RelPermalink -}}" integrity="{{- .Data.Integrity -}}">{{- /**/ -}}
+        <meta property="og:image" content="{{- .RelPermalink -}}">
+    {{- end -}}
+    {{- with resources.Get "main.ts" | js.Build | minify | fingerprint -}}
+        <script src="{{- .RelPermalink -}}" integrity="{{- .Data.Integrity -}}" defer blocking="render"></script>
+    {{- end -}}
+    <meta property="theme-color" media="(prefers-color-scheme: dark)" content="#267547">{{- /**/ -}}
+    <meta property="theme-color" media="(prefers-color-scheme: light)" content="#40a849">{{- /**/ -}}
     <meta property="og:image:alt"
           content="Minecraft Access logo. A retro games controller graphic over a blurred background of a snowy mountain village next to a spruce forrest.">
-    {{ template "_internal/opengraph.html" . }}
-    {{ template "_internal/schema.html" . }}
-    {{ template "_internal/twitter_cards.html" . }}
+    {{- template "_internal/opengraph.html" . -}}
+    {{- template "_internal/schema.html" . -}}
+    {{- template "_internal/twitter_cards.html" . -}}
 </head>
 <body>
 <header>
-    {{ with resources.Get "logo.png" }}
+    {{- with resources.Get "logo.png" -}}
         <img class="logo"
-             src="{{ .RelPermalink }}"
+             src="{{- .RelPermalink -}}"
              alt="Logo: A retro games controller over a blurred snowy mountain village next to a spruce forrest.">
-    {{ end }}
-    <button class="toggle main-nav-toggle" aria-controls="main-nav-backdrop">
-        <span data-for-expanded="false">{{ partial "icon" (dict "Icon" "left_panel_open") }}</span>
-        <span data-for-expanded="true">{{ partial "icon" (dict "Icon" "left_panel_close") }}</span>
+    {{- end -}}
+    <button class="toggle main-nav-toggle" aria-controls="main-nav-backdrop">{{- /**/ -}}
+        <span data-for-expanded="false">{{- partial "icon" (dict "Icon" "left_panel_open") -}}</span>{{- /**/ -}}
+        <span data-for-expanded="true">{{- partial "icon" (dict "Icon" "left_panel_close") -}}</span>{{- /**/ -}}
+        <span class="sr-only">Navigation toggle</span>{{- /**/ -}}
     </button>
-    {{ if hugo.IsDevelopment }}
+    {{- if hugo.IsDevelopment -}}
         <span class="pill warn development" title="This is an unreleased development version of the site.">
-            {{ partial "icon" (dict "Icon" "experiment") }}
-            <span class="label">Development</span>
+            {{- partial "icon" (dict "Icon" "experiment" "Label" "Development") -}}
+            <span class="label" aria-hidden="true">Development</span>
         </span>
-    {{ end }}
-    <h1>{{ .Site.Title }}</h1>
+    {{- end -}}
+    <h1>{{- .Site.Title -}}</h1>
 </header>
 <div id="main-nav-backdrop" class="main-nav-backdrop collapsed" data-closes="main-nav-backdrop">
     <nav class="main-nav" aria-label="Site Navigation">
-        {{ partial "nav.html" (dict "Section" (.Site.GetPage "/") "CurrentPage" .) }}
+        {{- partial "nav" (dict "Section" (.Site.GetPage "/") "CurrentPage" .) -}}
     </nav>
 </div>
 <div class="content" tabindex="-1">
@@ -51,46 +52,45 @@
         <main>
             <nav class="breadcrumbs" aria-label="Breadcrumbs">
                 <ol>
-                    {{ range (collections.Append .Page .Page.Ancestors.Reverse) }}
+                    {{- range (collections.Append .Page .Page.Ancestors.Reverse) -}}
                         <li>
-                            {{ if not .IsHome }}
+                            {{- if not .IsHome -}}
                                 <span class="breadcrumbsArrow">
-                                {{ partial "icon" (dict "Icon" "chevron_right" "Label" "right arrow") }}
+                                {{- partial "icon" (dict "Icon" "chevron_right" "Label" "right arrow") -}}
                             </span>
-                            {{ end }}
-                            <a href="{{ .RelPermalink }}" class="{{ if eq . $.Page }}current{{ end }}">
-                                {{ if .IsHome }}
-                                    {{ partial "icon" (dict "Icon" "home" "Label" "home") }}
-                                {{ else }}
-                                    {{ .LinkTitle }}
-                                {{ end }}
+                            {{- end -}}
+                            <a href="{{- .RelPermalink -}}" class="{{- if eq . $.Page -}}current{{- end -}}">
+                                {{- if .IsHome -}}
+                                    {{- partial "icon" (dict "Icon" "home" "Label" "home") -}}
+                                {{- else -}}
+                                    {{- .LinkTitle -}}
+                                {{- end -}}
                             </a>
                         </li>
-                    {{ end }}
+                    {{- end -}}
                 </ol>
             </nav>
-            <h1>{{ .Page.Title }}</h1>
-            {{ if .Page.Content }}
+            <h1>{{- .Page.Title -}}</h1>
+            {{- if .Page.Content -}}
                 <p>
-                    Estimated reading time:
-                    {{ .Page.ReadingTime }} {{ if eq .Page.ReadingTime 1 }}minute{{ else }}minutes{{ end }}
+                    Estimated reading time:{{- " " -}}
+                    {{- .Page.ReadingTime -}}{{- " " -}}{{- if eq .Page.ReadingTime 1 -}}minute{{- else -}}minutes{{- end -}}
                 </p>
                 <p>
-                    Last modified:
-                    <time datetime="{{ .Page.Lastmod.UTC.Format "2006-01-02T15:04:05Z" }}">{{ .Page.Lastmod.UTC }}</time>
+                    Last modified: <time datetime="{{- .Page.Lastmod.UTC.Format "2006-01-02T15:04:05Z" -}}">{{- .Page.Lastmod.UTC -}}</time>
                 </p>
                 <p>
                     <a class="edit-link"
-                       href="https://github.com/khanshoaib3/minecraft-access/blob/1.21/docs/content/{{ .Page.File.Path }}">
-                        {{ partial "icon" (dict "Icon" "edit" "Hidden" true) }} Edit this page
+                       href="https://github.com/khanshoaib3/minecraft-access/blob/1.21/docs/content/{{- .Page.File.Path -}}">
+                        {{- partial "icon" (dict "Icon" "edit" "Hidden" true) -}} Edit this page
                     </a>
                 </p>
-            {{ end }}
-            <div class="table-of-contents-header">{{ partial "icon" (dict "Icon" "list") }} Contents</div>
+            {{- end -}}
+            <div class="table-of-contents-header">{{- partial "icon" (dict "Icon" "list") -}} Contents</div>
             <nav class="table-of-contents" aria-label="Table of Contents">
-                {{ strings.TrimSuffix "</nav>" (strings.TrimPrefix "<nav id=\"TableOfContents\">" .TableOfContents) | safeHTML }}
+                {{- strings.TrimSuffix "</nav>" (strings.TrimPrefix "<nav id=\"TableOfContents\">" .TableOfContents) | safeHTML -}}
             </nav>
-            {{ block "main" . }}{{ end }}
+            {{- block "main" . -}}{{- end -}}
         </main>
     </div>
 </div>

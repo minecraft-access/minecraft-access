@@ -1,10 +1,10 @@
-{{ $symbols := dict "note" "edit" "tip" "lightbulb" "important" "priority_high" "warning" "warning" "caution" "report" }}
-{{ $classes := dict "note" "note" "tip" "tip" "important" "info" "warning" "warn" "caution" "error" }}
+{{- $symbols := dict "note" "edit" "tip" "lightbulb" "important" "priority_high" "warning" "warning" "caution" "report" -}}
+{{- $classes := dict "note" "note" "tip" "tip" "important" "info" "warning" "warn" "caution" "error" -}}
 
-<blockquote class="alert {{ index $classes .AlertType }}">
+<blockquote class="alert {{- index $classes .AlertType -}}">
     <p class="alert-heading">
-        {{ partial "icon" (dict "Icon" (index $symbols .AlertType) "Hidden" true) }}
-        {{ default (title .AlertType) .AlertTitle }}
+        {{- partial "icon" (dict "Icon" (index $symbols .AlertType)) -}}
+        {{- default (title .AlertType) .AlertTitle -}}
     </p>
-    {{ .Text }}
+    {{- .Text -}}
 </blockquote>

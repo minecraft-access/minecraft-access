@@ -1,41 +1,40 @@
 <ul>
-    {{ if .Section.IsHome }}
+    {{- if .Section.IsHome -}}
         <li>
-            <div class="nav-link {{ if eq .Section .CurrentPage }}active{{ end }}">
-                <a href="{{ .Section.RelPermalink }}" aria-current="{{ eq .Section $.CurrentPage }}">{{ default .Section.Path .Section.LinkTitle }}</a>
+            <div class="nav-link{{- if eq .Section .CurrentPage -}} active{{- end -}}">
+                <a href="{{- .Section.RelPermalink -}}" aria-current="{{- eq .Section $.CurrentPage -}}">{{- default .Section.Path .Section.LinkTitle -}}</a>
             </div>
         </li>
-    {{ end }}
-    {{ range .Section.Pages.ByWeight }}
+    {{- end -}}
+    {{- range .Section.Pages.ByWeight -}}
         <li>
-            {{ if and .IsSection (not .Content) }}
+            {{- if and .IsSection (not .Content) -}}
                 <span class="nav-link toggle no-content"
                       role="button"
                       tabindex="0"
-                      aria-current="{{ .IsAncestor $.CurrentPage }}"
-                      aria-controls="section-list-{{ md5 . }}">
-                    <span class="title">{{ default .Path .LinkTitle }}</span>
-                    {{ partial "icon" (dict "Icon" "keyboard_arrow_down" "Label" "Dropdown toggle") }}
+                      aria-current="{{- .IsAncestor $.CurrentPage -}}"
+                      aria-controls="section-list-{{- md5 . -}}">
+                    <span class="title">{{- default .Path .LinkTitle -}}</span>
+                    {{- partial "icon" (dict "Icon" "keyboard_arrow_down" "Label" "Dropdown toggle") -}}
                 </span>
-            {{ else }}
+            {{- else -}}
                 <div class="nav-link">
-                    <a href="{{ .RelPermalink }}" aria-current="{{ eq . $.CurrentPage }}" class="{{ if eq . $.CurrentPage }}active{{ end }}">{{ default .Path .LinkTitle }}</a>
-                    {{ if .IsSection }}
+                    <a href="{{- .RelPermalink -}}" aria-current="{{- eq . $.CurrentPage -}}"{{- if eq . $.CurrentPage -}} class="active"{{- end -}}>{{- default .Path .LinkTitle -}}</a>
+                    {{- if .IsSection -}}
                         <button class="toggle"
-                                role="checkbox"
-                                aria-checked="{{ .IsAncestor $.CurrentPage }}"
-                                aria-controls="section-list-{{ md5 . }}">
-                            {{ partial "icon" (dict "Icon" "keyboard_arrow_down" "Label" "Dropdown toggle") }}
+                                aria-current="{{- .IsAncestor $.CurrentPage -}}"
+                                aria-controls="section-list-{{- md5 . -}}">
+                            {{- partial "icon" (dict "Icon" "keyboard_arrow_down" "Label" "Dropdown toggle") -}}
                         </button>
-                    {{ end }}
+                    {{- end -}}
                 </div>
-            {{ end }}
-            {{ if .IsSection }}
-                <div class="section-list {{ if not (or (eq . $.CurrentPage) (.IsAncestor $.CurrentPage)) }}collapsed{{ end }}"
-                     id="section-list-{{ md5 . }}">
-                    {{ partial "nav.html" (dict "Section" . "CurrentPage" $.CurrentPage) }}
+            {{- end -}}
+            {{- if .IsSection -}}
+                <div class="section-list{{- if not (or (eq . $.CurrentPage) (.IsAncestor $.CurrentPage)) -}} collapsed{{- end -}}"
+                     id="section-list-{{- md5 . -}}">
+                    {{- partial "nav" (dict "Section" . "CurrentPage" $.CurrentPage) -}}
                 </div>
-            {{ end }}
+            {{- end -}}
         </li>
-    {{ end }}
+    {{- end -}}
 </ul>

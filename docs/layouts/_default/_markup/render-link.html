@@ -1,8 +1,9 @@
 {{- $url := urls.Parse .Destination -}}
-<a href="{{ .Destination | safeURL }}"
-   title="{{ .Title }}"
-   {{ if $url.IsAbs }}rel="external" target="_blank"{{ end }}
->{{ .Text }}
+
+<a href="{{- .Destination | safeURL -}}"
+   title="{{- .Title -}}"
+   {{- if $url.IsAbs -}}rel="external" target="_blank"{{- end -}}
+>{{- .Text -}}
     {{- if and $url.IsAbs (not (or
     (partial "inline/path-prefix" (dict "Url" $url "Host" "github.com" "Path" "/khanshoaib3"))
     (partial "inline/path-prefix" (dict "Url" $url "Host" "modrinth.com" "Path" "/mod/minecraft-access"))
@@ -11,14 +12,15 @@
     (partial "inline/path-prefix" (dict "Url" $url "Host" "legacy.curseforge.com" "Path" "/minecraft/mc-mods/blind-accessibility"))
     (partial "inline/path-prefix" (dict "Url" $url "Host" "x.com" "Path" "/shoaib_mk0"))
     (partial "inline/path-prefix" (dict "Url" $url "Host" "patreon.com" "Path" "/shoaibkhan"))
-    )) }}
-        {{ partial "icon" (dict "Icon" "arrow_outward" "Label" "(External)") }}
-    {{ end }}</a>
+    )) -}}
+        {{- " " -}}{{- partial "icon" (dict "Icon" "arrow_outward" "Label" "(External)") -}}
+    {{- end -}}
+</a>
 
-{{- define "partials/inline/path-exact.html" }}
-    {{ return (and (eq (strings.TrimPrefix "www." (strings.ToLower .Url.Hostname)) .Host) (eq (strings.ToLower .Url.Path) .Path)) }}
-{{ end -}}
+{{- define "partials/inline/path-exact.html" -}}
+    {{- return (and (eq (strings.TrimPrefix "www." (strings.ToLower .Url.Hostname)) .Host) (eq (strings.ToLower .Url.Path) .Path)) -}}
+{{- end -}}
 
-{{- define "partials/inline/path-prefix.html" }}
-    {{ return (and (eq (strings.TrimPrefix "www." (strings.ToLower .Url.Hostname)) .Host) (strings.HasPrefix (strings.ToLower .Url.Path) .Path)) }}
-{{ end -}}
+{{- define "partials/inline/path-prefix.html" -}}
+    {{- return (and (eq (strings.TrimPrefix "www." (strings.ToLower .Url.Hostname)) .Host) (strings.HasPrefix (strings.ToLower .Url.Path) .Path)) -}}
+{{- end -}}

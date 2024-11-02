@@ -1,7 +1,7 @@
-{{ define "title"}}{{ default .Page.Path .Page.Title }} | {{ .Site.Title }}{{ end }}
+{{- define "title" -}}{{- default .Page.Path .Page.Title -}} | {{- .Site.Title -}}{{- end -}}
 
-{{ define "main" }}
+{{- define "main" -}}
     <article>
         {{- .Content -}}
     </article>
-{{ end }}
+{{- end -}}

@@ -1,2 +1,6 @@
-<span class="icon material-symbols-{{ default "outlined" .Style }} {{ .Class }}"
-      aria-label="{{ .Label }}" aria-hidden="{{ default "true" .Hidden }}">{{ .Icon }}</span>
+<span class="icon">{{- /**/ -}}
+    <span class="icon-inner material-symbols-{{- default "outlined" .Style -}}" aria-hidden="true">{{- .Icon -}}</span>
+    {{- with .Label -}}
+        <span class="sr-only">{{- . -}}</span>
+    {{- end -}}
+</span>{{- /**/ -}}
