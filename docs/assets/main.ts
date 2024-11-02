@@ -35,12 +35,11 @@ for (const el of document.querySelectorAll(".toggle[aria-controls]")) {
 // Table of contents highlighting
 const headings = Array.from(document.querySelectorAll(".content h2, .content h3, .content h4")).reverse() as HTMLElement[];
 const toc = document.getElementsByClassName("table-of-contents")[0];
-const content = document.getElementsByClassName("content")[0];
-content.addEventListener("scroll", () => {
+document.addEventListener("scroll", () => {
     for (const el of toc.getElementsByTagName("a")) {
         el.classList.remove("active");
     }
-    const heading = headings.filter(el => (el.offsetTop - el.clientHeight * 3) < content.scrollTop)[0];
+    const heading = headings.filter(el => (el.offsetTop + el.parentElement.offsetTop - el.clientHeight*3) < document.scrollingElement.scrollTop)[0];
     if (heading === undefined) {
         return;
     }

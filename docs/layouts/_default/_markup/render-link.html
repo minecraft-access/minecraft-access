@@ -1,7 +1,7 @@
 {{- $url := urls.Parse .Destination -}}
 
 <a href="{{- .Destination | safeURL -}}"
-   title="{{- .Title -}}"
+   {{- with .Title -}}title="{{- . -}}"{{- end -}}
    {{- if $url.IsAbs -}}rel="external" target="_blank"{{- end -}}
 >{{- .Text -}}
     {{- if and $url.IsAbs (not (or
@@ -12,8 +12,8 @@
     (partial "inline/path-prefix" (dict "Url" $url "Host" "legacy.curseforge.com" "Path" "/minecraft/mc-mods/blind-accessibility"))
     (partial "inline/path-prefix" (dict "Url" $url "Host" "x.com" "Path" "/shoaib_mk0"))
     (partial "inline/path-prefix" (dict "Url" $url "Host" "patreon.com" "Path" "/shoaibkhan"))
-    )) -}}
-        {{- " " -}}{{- partial "icon" (dict "Icon" "arrow_outward" "Label" "(External)") -}}
+    )) }}
+        {{ partial "icon" (dict "Icon" "arrow_outward" "Label" "(External)") -}}
     {{- end -}}
 </a>
 

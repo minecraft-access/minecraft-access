@@ -2,7 +2,7 @@
 <html lang="{{- .Site.LanguageCode -}}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{- block "title" . -}}{{- .Site.Title -}}{{- end -}}</title>
     {{- with resources.Get "main.sass" | toCSS | minify | fingerprint -}}
         <link rel="stylesheet" href="{{- .RelPermalink -}}" integrity="{{- .Data.Integrity -}}">
@@ -29,7 +29,7 @@
              src="{{- .RelPermalink -}}"
              alt="Logo: A retro games controller over a blurred snowy mountain village next to a spruce forrest.">
     {{- end -}}
-    <button class="toggle main-nav-toggle" aria-controls="main-nav-backdrop">{{- /**/ -}}
+    <button class="toggle main-nav-toggle" aria-controls="main-nav-container">{{- /**/ -}}
         <span data-for-expanded="false">{{- partial "icon" (dict "Icon" "left_panel_open") -}}</span>{{- /**/ -}}
         <span data-for-expanded="true">{{- partial "icon" (dict "Icon" "left_panel_close") -}}</span>{{- /**/ -}}
         <span class="sr-only">Navigation toggle</span>{{- /**/ -}}
@@ -42,57 +42,60 @@
     {{- end -}}
     <h1>{{- .Site.Title -}}</h1>
 </header>
-<div id="main-nav-backdrop" class="main-nav-backdrop collapsed" data-closes="main-nav-backdrop">
+<div id="main-nav-container" class="main-nav-container collapsed" data-closes="main-nav-container">
     <nav class="main-nav" aria-label="Site Navigation">
         {{- partial "nav" (dict "Section" (.Site.GetPage "/") "CurrentPage" .) -}}
     </nav>
 </div>
-<div class="content" tabindex="-1">
-    <div class="content-inner">
-        <main>
-            <nav class="breadcrumbs" aria-label="Breadcrumbs">
-                <ol>
-                    {{- range (collections.Append .Page .Page.Ancestors.Reverse) -}}
-                        <li>
-                            {{- if not .IsHome -}}
-                                <span class="breadcrumbsArrow">
+<nav class="breadcrumbs" aria-label="Breadcrumbs">
+    <ol>
+        {{- range (collections.Append .Page .Page.Ancestors.Reverse) -}}
+            <li>
+                {{- if not .IsHome -}}
+                    <span class="breadcrumbsArrow">
                                 {{- partial "icon" (dict "Icon" "chevron_right" "Label" "right arrow") -}}
                             </span>
-                            {{- end -}}
-                            <a href="{{- .RelPermalink -}}" class="{{- if eq . $.Page -}}current{{- end -}}">
-                                {{- if .IsHome -}}
-                                    {{- partial "icon" (dict "Icon" "home" "Label" "home") -}}
-                                {{- else -}}
-                                    {{- .LinkTitle -}}
-                                {{- end -}}
-                            </a>
-                        </li>
+                {{- end -}}
+                <a href="{{- .RelPermalink -}}" class="{{- if eq . $.Page -}}current{{- end -}}">
+                    {{- if .IsHome -}}
+                        {{- partial "icon" (dict "Icon" "home" "Label" "home") -}}
+                    {{- else -}}
+                        {{- .LinkTitle -}}
                     {{- end -}}
-                </ol>
-            </nav>
-            <h1>{{- .Page.Title -}}</h1>
-            {{- if .Page.Content -}}
-                <p>
-                    Estimated reading time:{{- " " -}}
-                    {{- .Page.ReadingTime -}}{{- " " -}}{{- if eq .Page.ReadingTime 1 -}}minute{{- else -}}minutes{{- end -}}
-                </p>
-                <p>
-                    Last modified: <time datetime="{{- .Page.Lastmod.UTC.Format "2006-01-02T15:04:05Z" -}}">{{- .Page.Lastmod.UTC -}}</time>
-                </p>
-                <p>
-                    <a class="edit-link"
-                       href="https://github.com/khanshoaib3/minecraft-access/blob/1.21/docs/content/{{- .Page.File.Path -}}">
-                        {{- partial "icon" (dict "Icon" "edit" "Hidden" true) -}} Edit this page
-                    </a>
-                </p>
-            {{- end -}}
-            <div class="table-of-contents-header">{{- partial "icon" (dict "Icon" "list") -}} Contents</div>
-            <nav class="table-of-contents" aria-label="Table of Contents">
-                {{- strings.TrimSuffix "</nav>" (strings.TrimPrefix "<nav id=\"TableOfContents\">" .TableOfContents) | safeHTML -}}
-            </nav>
-            {{- block "main" . -}}{{- end -}}
-        </main>
-    </div>
+                </a>
+            </li>
+        {{- end -}}
+    </ol>
+</nav>
+<div class="heading">
+    <h1>{{- .Page.Title -}}</h1>
+    {{- if .Page.Content -}}
+        <p>
+            Estimated reading time:{{- " " -}}
+            {{- .Page.ReadingTime }} {{ if eq .Page.ReadingTime 1 -}}minute{{- else -}}minutes{{- end -}}
+        </p>
+        <p>
+            Last modified:
+            <time datetime="{{- .Page.Lastmod.UTC.Format "2006-01-02T15:04:05Z" -}}">{{- .Page.Lastmod.UTC -}}</time>
+        </p>
+        <p>
+            <a class="edit-link"
+               href="https://github.com/khanshoaib3/minecraft-access/blob/1.21/docs/content/{{- .Page.File.Path -}}">
+                {{- partial "icon" (dict "Icon" "edit" "Hidden" true) }} Edit this page
+            </a>
+        </p>
+    {{- end -}}
+</div>
+<div class="table-of-contents-container">
+    <div class="table-of-contents-header">{{- partial "icon" (dict "Icon" "list") }} Contents</div>
+    <nav class="table-of-contents" aria-label="Table of Contents">
+        {{- strings.TrimSuffix "</nav>" (strings.TrimPrefix "<nav id=\"TableOfContents\">" .TableOfContents) | safeHTML -}}
+    </nav>
+</div>
+<div class="content" tabindex="-1">
+    <main>
+        {{- block "main" . -}}{{- end -}}
+    </main>
 </div>
 </body>
 </html>

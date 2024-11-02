@@ -48,6 +48,7 @@ button
   align-items: center
   gap: 0.25em
   font-size: 0.75em
+  white-space: nowrap
   .icon
     font-size: 1.5em
 
@@ -67,10 +68,9 @@ body
   color: var(--fg)
   font-family: $font-regular
   display: grid
-  grid-template: "head head" 3em "nav content" auto / 30ch auto
-  width: 100vw
-  height: 100vh
+  grid-template: "head head head head head" 3em "nav . . . ." 1em "nav . breadcrumbs . toc" 3em "nav . heading . toc" minmax(0, auto) "nav . content . toc" minmax(0, auto) "nav . . . toc" minmax(25vh, auto) / 30ch minmax(1em, auto) minmax(auto, 100ch) minmax(1em, auto) 35ch
   position: relative
+  min-height: 100vh
 
 header
   grid-area: head
@@ -80,6 +80,9 @@ header
   align-items: center
   background: var(--header)
   gap: 0.5em
+  position: sticky
+  top: 0
+  z-index: 100
   > *
     margin-inline: 0 !important
   h1
@@ -93,10 +96,13 @@ header
   .icon
     font-size: 1.5em
 
-.main-nav-backdrop
+.main-nav-container
   grid-area: nav
   .main-nav
-    height: 100%
+    position: sticky
+    top: 3em
+    height: calc(100vh - 3em)
+    max-height: 100%
     border-right: var(--border)
     background: var(--sidebar)
     padding-block: 1em
@@ -139,20 +145,17 @@ nav
   color: var(--link)
   font-weight: bold
 
+.heading
+  grid-area: heading
+
 .content
-  padding-inline: 1em
-  overflow-y: auto
-  .content-inner
-    margin-right: 39ch
-    > main
-      max-width: 100ch
-      margin: 1em auto 25vh auto
-      article
-        @import "content"
-        position: relative
-        margin-top: 1em
-        \:first-child
-          margin-top: 0
+  grid-area: content
+  > main
+    article
+      @import "content"
+      position: relative
+      \:first-child
+        margin-top: 0
 
 main
   text-align: justify
@@ -167,37 +170,38 @@ main
     margin-right: 0.25em
     margin-block: 0.5em
 
-.table-of-contents-header
-  display: none
-  margin-inline: 0.5em
-  border: var(--dropdown-border)
-  padding: 0.5em 1em
-  .icon
-    font-size: 1.5em
-    margin-right: 0.25em
-
-.table-of-contents
-  width: 35ch
-  position: fixed
-  right: 2em
-  top: 4em
-  padding-left: 1em
-  border-left: var(--dropdown-border)
-  text-align: left
-  max-height: calc(100vh - 5em)
-  ol
-    list-style-type: none
-  ol ol
-    margin-left: 2em
-  a
-    display: block
-    padding-block: 0.3em
-    &:hover
-      color: var(--link-hover)
+.table-of-contents-container
+  grid-area: toc
+  .table-of-contents-header
+    display: none
+    margin-inline: 0.5em
+    border: var(--dropdown-border)
+    padding: 0.5em 1em
+    .icon
+      font-size: 1.5em
+      margin-right: 0.25em
+  .table-of-contents
+    position: sticky
+    top: 4em
+    max-height: calc(100vh - 5em)
+    margin-bottom: 1em
+    border-left: var(--dropdown-border)
+    text-align: left
+    padding: 0.5em 1em
+    ol
+      list-style-type: none
+    ol ol
+      margin-left: 2em
+    a
+      display: block
+      padding-block: 0.3em
+      &:hover
+        color: var(--link-hover)
 
 .breadcrumbs
-  margin-bottom: 0.5em
+  grid-area: breadcrumbs
   font-size: 1.1em
+  margin-block: auto
   ol
     display: flex
     flex-direction: row
@@ -222,38 +226,37 @@ main
       font-weight: bold
 
 @media screen and (max-width: 140ch)
-  .content .content-inner
-    margin-right: 1ch
+  body
+    grid-template: "head head head head" 3em "nav . . ." 1em "nav . breadcrumbs ." 3em "nav . heading ." minmax(0, auto) "nav . toc ." minmax(0, auto) "nav . content ." minmax(0, auto) "nav . . ." minmax(25vh, auto) / 30ch minmax(1em, auto) minmax(auto, 100ch) minmax(1em, auto)
 
-  .table-of-contents-header
-    display: block
-
-  .table-of-contents
-    display: block
-    position: static
-    width: unset
-    max-height: unset
-    border: var(--dropdown-border)
-    padding: 1em
-    margin: 0 0.5em 0.5em 0.5em
+  .table-of-contents-container
+    .table-of-contents-header
+      display: block
+    .table-of-contents
+      position: static
+      max-height: unset
+      border: var(--dropdown-border)
+      padding: 1em
+      margin: 0 0.5em 0.5em 0.5em
 
 @media screen and (max-width: 90ch)
   body
-    grid-template: "head" 3em "content" auto / auto
+    grid-template: "head head head" 3em ". . ." 1em ". breadcrumbs ." 3em ". heading ." minmax(0, auto) ". toc ." minmax(0, auto) ". content ." minmax(0, auto) ". . ." minmax(25vh, auto) / minmax(1em, auto) minmax(auto, 100ch) minmax(1em, auto)
 
   .main-nav-toggle
     display: block
 
-  .main-nav-backdrop
-    grid-area: content
-    position: absolute
-    height: 100%
+  .main-nav-container
+    grid-row-start: head-end
+    position: fixed
     width: 100%
+    height: 100%
     backdrop-filter: blur(2px) brightness(70%)
-    transition: backdrop-filter 250ms ease-in-out, visibility 250ms
+    transition: backdrop-filter 250ms ease-out, visibility 250ms
+    z-index: 100
     .main-nav
       width: 30ch
-      transition: transform 250ms ease-in-out
+      transition: transform 250ms ease-out
     &.collapsed
       visibility: hidden
       backdrop-filter: none
@@ -282,11 +285,14 @@ main
 
 @media print
   body
-    display: block
-  header
-    height: 3em
-  .main-nav
+    grid-template: "head head head" 3em ". . ." 1em ". breadcrumbs ." 3em ". heading ." minmax(0, auto) ". toc ." minmax(0, auto) ". content ." minmax(0, auto) ". . ." minmax(25vh, auto) / 1em auto 1em
+
+  .main-nav-container
     display: none
+
+  header
+    position: static
+
   .content
     max-height: unset
     .content-inner
@@ -297,35 +303,35 @@ main
           a:hover
             text-decoration: none
             color: var(--link)
-  .table-of-contents
-    display: block
-    position: static
-    width: 100%
-    max-height: unset
-    border-left: none
-    padding: 0
-    margin-block: 2em
-    &::before
-      content: "Contents"
-      font-weight: bold
-      font-size: 1.5em
+
+  .table-of-contents-container
+    .table-of-contents-header
       display: block
-    a
-      padding-block: 0
-      &:hover
-        color: inherit
-    ol
-      list-style-type: decimal
-      margin-left: 2.5em
+    .table-of-contents
+      position: static
+      max-height: unset
+      border: var(--dropdown-border)
+      padding: 1em
+      margin: 0 0.5em 0.5em 0.5em
+      a
+        padding-block: 0
+        &:hover
+          color: inherit
       ol
-        list-style-type: lower-alpha
+        list-style-type: decimal
+        margin-left: 2.5em
         ol
-          list-style-type: lower-roman
+          list-style-type: lower-alpha
+          ol
+            list-style-type: lower-roman
+
   .active
     color: inherit
     font-weight: normal
+
   .edit-link
     display: none
+
   .breadcrumbs
     a
       &:hover

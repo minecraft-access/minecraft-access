@@ -1,7 +1,7 @@
 <ul>
     {{- if .Section.IsHome -}}
         <li>
-            <div class="nav-link{{- if eq .Section .CurrentPage -}} active{{- end -}}">
+            <div class="nav-link{{- if eq .Section .CurrentPage }} active{{- end -}}">
                 <a href="{{- .Section.RelPermalink -}}" aria-current="{{- eq .Section $.CurrentPage -}}">{{- default .Section.Path .Section.LinkTitle -}}</a>
             </div>
         </li>
@@ -19,7 +19,7 @@
                 </span>
             {{- else -}}
                 <div class="nav-link">
-                    <a href="{{- .RelPermalink -}}" aria-current="{{- eq . $.CurrentPage -}}"{{- if eq . $.CurrentPage -}} class="active"{{- end -}}>{{- default .Path .LinkTitle -}}</a>
+                    <a href="{{- .RelPermalink -}}" aria-current="{{- eq . $.CurrentPage -}}"{{- if eq . $.CurrentPage }} class="active"{{- end -}}>{{- default .Path .LinkTitle -}}</a>
                     {{- if .IsSection -}}
                         <button class="toggle"
                                 aria-current="{{- .IsAncestor $.CurrentPage -}}"
@@ -30,7 +30,7 @@
                 </div>
             {{- end -}}
             {{- if .IsSection -}}
-                <div class="section-list{{- if not (or (eq . $.CurrentPage) (.IsAncestor $.CurrentPage)) -}} collapsed{{- end -}}"
+                <div class="section-list{{- if not (or (eq . $.CurrentPage) (.IsAncestor $.CurrentPage)) }} collapsed{{- end -}}"
                      id="section-list-{{- md5 . -}}">
                     {{- partial "nav" (dict "Section" . "CurrentPage" $.CurrentPage) -}}
                 </div>
