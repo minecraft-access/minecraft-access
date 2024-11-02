@@ -5,17 +5,30 @@ for (const el of document.querySelectorAll(".toggle[aria-controls]")) {
     el.classList.toggle("collapsed", initialState);
     el.setAttribute("aria-expanded", (!initialState).toString());
 
-    function toggle() {
-        const collapsed = controls.classList.toggle("collapsed");
-        el.setAttribute("aria-expanded", (!collapsed).toString());
+    function toggle(expanded?: boolean) {
+        if (expanded === undefined) {
+            expanded = controls.classList.contains("collapsed");
+        }
+        controls.classList.toggle("collapsed", !expanded);
+        el.setAttribute("aria-expanded", (expanded).toString());
     }
 
-    el.addEventListener("click", toggle);
-    el.addEventListener("keyup", (e: KeyboardEvent) => {
-        if (e.code === "Enter" || e.code === "Space") {
-            toggle();
+    el.addEventListener("click", () => toggle());
+    if (!(el instanceof HTMLButtonElement)) {
+        el.addEventListener("keyup", (e: KeyboardEvent) => {
+            if (e.code === "Enter" || e.code === "Space") {
+                toggle();
+            }
+        });
+    }
+
+    for (const closer of document.querySelectorAll(`[data-closes=${controls.id}]`)) {
+        if (closer === controls) {
+            closer.addEventListener("click", (e) => e.target === closer && toggle(false));
+        } else {
+            closer.addEventListener("click", () => toggle(false));
         }
-    });
+    }
 }
 
 

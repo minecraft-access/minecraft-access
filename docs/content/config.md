@@ -65,13 +65,13 @@ See also: [Feature Description]({{% relref "/features#relative-position-sound-cu
 
 ### Partial Speaking
 
-| Configuration   | Default Value                            | Description                                                                                                            |
-|-----------------|------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
-| Enabled         | true                                     | Whether to enable this feature                                                                                         |
-| White List Mode | true                                     | If true, only speak what have been configured. Set to false for blacklist mode, only not speak what you've configured  |
-| Fuzzy Mode      | true                                     | Whether to do fuzzy matching, for example `bed` will match all colors of beds, `door` will match all textures of doors |
-| Target Mode     | `block`                                  | Which type would you like to apply this feature to, either `all`, `entity` or `block`                                  |
-| Targets         | [`slab`,`planks`,`block`,`stone`,`sign`] | Indicated what to be spoken                                                                                            |
+| Configuration   | Default Value                                                                                            | Description                                                                                                            |
+|-----------------|----------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Enabled         | true                                                                                                     | Whether to enable this feature                                                                                         |
+| White List Mode | true                                                                                                     | If true, only speak what have been configured. Set to false for blacklist mode, only not speak what you've configured  |
+| Fuzzy Mode      | true                                                                                                     | Whether to do fuzzy matching, for example `bed` will match all colors of beds, `door` will match all textures of doors |
+| Target Mode     | `block`                                                                                                  | Which type would you like to apply this feature to, either `all`, `entity` or `block`                                  |
+| Targets         | [`slab`,&ZeroWidthSpace;`planks`,&ZeroWidthSpace;`block`,&ZeroWidthSpace;`stone`,&ZeroWidthSpace;`sign`] | Indicated what to be spoken                                                                                            |
 
 The `Targets` config can only be configured in `config.json` file.
 Values are written in Minecraft resource location format, the so-called
