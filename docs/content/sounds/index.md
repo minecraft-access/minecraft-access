@@ -18,8 +18,8 @@ Sounds can be played by pressing the play button.
 |-------------------------------------------------------------------------|---------------------------------------------------------------------------|
 | Position of functional blocks without screens (e.g. [Door], [Ladder])   | {{< wikiSound sound="Note_block_bit" pitch=2 >}} Beeping electronic sound |
 | Position of functional blocks that have screens (e.g. [Crafting Table]) | {{< wikiSound sound="Note_block_banjo" pitch=0.5 >}} String sound         |
-| Position of [Ore] blocks                                                | {{< wikiSound "Pop" >}} Bubbling sound                                    |
-| Position of [dropped items]                                             | {{< wikiSound sound="Click" pitch=2 >}} Click sound                       |
+| Position of [ore] blocks                                                | {{< wikiSound sound="Pop" pitch=.5 >}} Bubbling sound                                    |
+| Position of [dropped items]                                             | {{< wikiSound sound="Click" pitch=1.5 >}} Click sound                       |
 | Position of [passive mobs] (animals)                                    | {{< wikiSound sound="Note_block_bell" pitch=0.5 >}} Low pitch bell sound  |
 | Position of [hostile mobs] (monsters)                                   | {{< wikiSound sound="Note_block_bell" pitch=2 >}} High pitch bell sound   |
 | Unlocking action in POI locking feature                                 | {{< sound sound="Note_block_bass_drum_pitch2" >}} Drum sound              |
@@ -45,7 +45,7 @@ the [Minecraft Usage Guidelines] apply.
 [Door]: https://minecraft.wiki/w/Door
 [Ladder]: https://minecraft.wiki/w/Ladder
 [Crafting Table]: https://minecraft.wiki/w/Crafting_table
-[Ore]: https://minecraft.wiki/w/Ore
+[ore]: https://minecraft.wiki/w/Ore
 [dropped items]: https://minecraft.wiki/w/Item_(entity)
 [passive mobs]: https://minecraft.wiki/w/Mob?so=search#Passive_mobs
 [hostile mobs]: https://minecraft.wiki/w/Mob?so=search#Hostile_mobs
