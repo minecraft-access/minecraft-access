@@ -80,5 +80,14 @@ public class PlayerWarningsConfigMenu extends BaseScreen {
                 ),
                 (button) -> this.client.setScreen(new ValueEntryMenu(c4, this)));
         this.addDrawableChild(airThresholdButton);
+
+        ValueEntryMenu.ValueConfig c5 = new ValueEntryMenu.ValueConfig(() -> PlayerWarningConfigMap.getInstance().getFrostThreshold(),
+                (v) -> PlayerWarningConfigMap.getInstance().setFrostThreshold(Float.parseFloat(v)),
+                ValueEntryMenu.ValueType.FLOAT);
+        ButtonWidget frostThresholdButton = this.buildButtonWidget(
+                I18n.translate("minecraft_access.gui.common.button.button_with_float_value", I18n.translate("minecraft_access.gui.player_warnings_config_menu.button.frost_threshold_button"), initMap.getFrostThreshold()
+                ),
+                (button) -> this.client.setScreen(new ValueEntryMenu(c5, this)));
+        this.addDrawableChild(frostThresholdButton);
     }
 }

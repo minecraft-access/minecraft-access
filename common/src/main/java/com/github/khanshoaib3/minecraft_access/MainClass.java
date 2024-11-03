@@ -27,7 +27,7 @@ public class MainClass {
     public static BiomeIndicator biomeIndicator = null;
     public static XPIndicator xpIndicator = null;
     public static FacingDirection facingDirection = null;
-    public static HealthNHunger healthNHunger = null;
+    public static PlayerStatus playerStatus = null;
     public static PlayerWarnings playerWarnings = null;
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
@@ -64,7 +64,7 @@ public class MainClass {
         MainClass.biomeIndicator = new BiomeIndicator();
         MainClass.xpIndicator = new XPIndicator();
         MainClass.facingDirection = new FacingDirection();
-        MainClass.healthNHunger = new HealthNHunger();
+        MainClass.playerStatus = new PlayerStatus();
         MainClass.playerWarnings = new PlayerWarnings();
         MainClass.accessMenu = new AccessMenu();
         MainClass.fluidDetector = new FluidDetector();
@@ -124,8 +124,8 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (healthNHunger != null && otherConfigsMap.isHealthNHungerEnabled())
-            healthNHunger.update();
+        if (playerStatus != null && otherConfigsMap.isHealthNHungerEnabled())
+            playerStatus.update();
 
         if (playerWarnings != null && PlayerWarningConfigMap.getInstance().isEnabled())
             playerWarnings.update();

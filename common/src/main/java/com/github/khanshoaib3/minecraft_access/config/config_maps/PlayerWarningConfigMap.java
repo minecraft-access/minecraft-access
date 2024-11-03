@@ -24,6 +24,8 @@ public class PlayerWarningConfigMap {
     private double hungerThreshold;
     @SerializedName("Air Threshold")
     private double airThreshold;
+    @SerializedName("Air Threshold")
+    private double frostThreshold;
 
     private PlayerWarningConfigMap() {
     }
@@ -41,6 +43,7 @@ public class PlayerWarningConfigMap {
         defaultPlayerWarningConfigMap.setSecondHealthThreshold(3.0);
         defaultPlayerWarningConfigMap.setHungerThreshold(3.0);
         defaultPlayerWarningConfigMap.setAirThreshold(3.0);
+        defaultPlayerWarningConfigMap.setFrostThreshold(30.0);
 
         setInstance(defaultPlayerWarningConfigMap);
         return defaultPlayerWarningConfigMap;
