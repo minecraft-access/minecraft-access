@@ -29,6 +29,7 @@ Edit: https://github.com/khanshoaib3/minecraft-access-i18n/pull/39 should be mer
 - Add translation identifiers for the speech settings and speech rate buttons in the configuration menu
 - Add a translation identifier for the warning about the accessibility permission not being granted on MacOS
 - Added 2 new keys for the smithing table and removed the now unused one
+- [Weblate](https://hosted.weblate.org/engage/minecraft-access/) is now used for translations.
 
 ### Others
 
@@ -44,3 +45,4 @@ I have implemented speech and mouse simulation support for MacOS using JNA calls
 There is a corresponding pull request in the i18n repo that should be merged alongside this
 - Removed unnecessary use of Fabric api in a few random places
 - Deleted MainClassFabric because the mod does two completely different things depending on which side it's running on and a common entry point for both sides is not needed (and also unnecessarily complicates things with the server-side error message)
+- The I18N submodule has been merged into the main repo to make code contributions involving translations easier.
