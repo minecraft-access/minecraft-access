@@ -24,7 +24,7 @@ public class PlayerWarningConfigMap {
     private double hungerThreshold;
     @SerializedName("Air Threshold")
     private double airThreshold;
-    @SerializedName("Air Threshold")
+    @SerializedName("Frost Threshold")
     private double frostThreshold;
 
     private PlayerWarningConfigMap() {
