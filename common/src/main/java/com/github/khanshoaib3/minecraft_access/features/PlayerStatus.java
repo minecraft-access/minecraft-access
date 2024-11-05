@@ -35,7 +35,7 @@ public class PlayerStatus {
                 double hunger = minecraftClient.player.getHungerManager().getFoodLevel() / 2.0;
                 double maxHunger = 20.0 / 2.0;
                 double armor = minecraftClient.player.getArmor();
-                double air = minecraftClient.player.getAir() / 30.0;
+                double air = Math.max(0, minecraftClient.player.getAir() / 30.0);
                 double maxAir = minecraftClient.player.getMaxAir() / 30.0;
                 double frostExposurePercent = minecraftClient.player.getFreezingScale() * 100.0;
 
