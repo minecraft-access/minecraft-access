@@ -152,8 +152,9 @@ public class ReadCrosshair {
     private CrosshairNarrator getNarrator() {
         if (useJade) {
             try {
+                Class.forName("snownee.jade.overlay.WailaTickHandler");
                 return Jade.getInstance();
-            } catch (NoClassDefFoundError ignored) {
+            } catch (ClassNotFoundException ignored) {
             }
         }
         return MCAccess.getInstance();
