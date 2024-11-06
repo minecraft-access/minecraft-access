@@ -182,6 +182,7 @@
   "minecraft_access.player_status.base": "%1$.1f out of %2$.1f Health, %3$.1f out of %4$.1f Hunger, %5$.1f Armor",
   "minecraft_access.player_status.base_with_absorption": "%1$.1f+%2$.1f out of %3$.1f Health, %4$.1f out of %5$.1f Hunger, %6$.1f Armor",
   "minecraft_access.player_status.frost": ", %1$f%% Frost Exposure",
+  "minecraft_access.player_status.no_conditional_status": "No conditional statuses to speak",
   "minecraft_access.inventory_controls.Unknown": "Unknown",
   "minecraft_access.inventory_controls.direction_down": "Down",
   "minecraft_access.inventory_controls.direction_left": "Left",
