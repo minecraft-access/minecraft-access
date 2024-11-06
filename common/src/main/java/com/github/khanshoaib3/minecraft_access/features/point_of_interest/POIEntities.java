@@ -112,9 +112,11 @@ public class POIEntities {
             }
 
             for (POIGroup group : builtInGroups.values()) {
-                group.filterEntities(entities);
-                for (Entity e : group.getEntities().values()) {
-                    this.playSoundAt(e.getBlockPos(), group.getSound(), group.getSoundPitch());
+                for (Entity e : entities) {
+                    if (group.isEntityInGroup(e)) {
+                        this.playSoundAt(e.getBlockPos(), group.getSound(), group.getSoundPitch());
+                        entities.remove(e);
+                    }
                 }
             }
         } catch (Exception e) {

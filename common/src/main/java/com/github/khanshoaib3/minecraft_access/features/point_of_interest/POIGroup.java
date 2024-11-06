@@ -57,7 +57,9 @@ public class POIGroup {
         blocks.clear();
         for (BlockPos p : blockPositions) {
             BlockState b = WorldUtils.getClientWorld().getBlockState(p);
-            if (blockFilter.apply(b, p)) blocks.put(p, b);
+            if (blockFilter.apply(b, p)) {
+                blocks.put(p, b);
+            }
         }
     }
 
@@ -72,7 +74,6 @@ public class POIGroup {
         return distanceEntity;
     }
 
-    // this is never used due to the current logic of POIBlocks
     public TreeMap<BlockPos, BlockState> getBlocks() {
         return blocks;
     }
