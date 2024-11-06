@@ -160,15 +160,15 @@ These configs are under `Other Configurations` section in the config file and co
 
 See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [keybindings]({{% relref "/keybindings#position-narrator" %}})
 
-## Health n Hunger
+## Player Status
 
 This config is under `Other Configurations` section in the config file and config menu.
 
 | Configuration          | Default Value | Description                    |
 |------------------------|---------------|--------------------------------|
-| Enable Health n Hunger | true          | Whether to enable this feature |
+| Enable PlayerStatus | true          | Whether to enable this feature |
 
-See also: [Feature Description]({{% relref "/features#health-n-hunger" %}}), [keybindings]({{% relref "/keybindings#health-n-hunger" %}})
+See also: [Feature Description]({{% relref "/features#player-status" %}}), [keybindings]({{% relref "/keybindings#player-status" %}})
 
 ## Player Warnings
 

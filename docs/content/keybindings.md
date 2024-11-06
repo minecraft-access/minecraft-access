@@ -115,13 +115,17 @@ See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 
 See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [Configuration]({{% relref "/config#position-narrator" %}})
 
-## Health n Hunger
+## Speak Player Status
 
 | Single Key                       | Default Keybinding | Description                                  |
 |----------------------------------|--------------------|----------------------------------------------|
-| `Speak Player Health and Hunger` | R                  | Speak the player's current health and hunger |
+| `Speak Player Status` | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
 
-See also: [Feature Description]({{% relref "/features#health-n-hunger" %}}), [Configuration]({{% relref "/config#health-n-hunger" %}})
+| Key Combination  | Description               |
+|------------------|---------------------------|
+| `Left Alt` + `R` | Speak only the conditional statuses of the player like air and frost exposure |
+
+See also: [Feature Description]({{% relref "/features#player-status" %}}), [Configuration]({{% relref "/config#player-status" %}})
 
 ## Access Menu
 

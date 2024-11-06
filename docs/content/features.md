@@ -171,7 +171,7 @@ so you will need to bind the ones you want to use yourself.
 
 See also: [Configuration]({{% relref "/config#access-menu" %}}), [Keybindings]({{% relref "/keybindings#access-menu" %}})
 
-## Player Status
+## Player Condition
 
 Some features that help you understand the status of the character you control.
 
@@ -181,11 +181,11 @@ Minecraft has a built-in [absolute coordinate system](https://minecraft.wiki/w/C
 
 See also: [Configuration]({{% relref "/config#position-narrator" %}}), [Keybindings]({{% relref "/keybindings#position-narrator" %}})
 
-### Health n Hunger
+### Player Status
 
-This feature adds a key to speak your health and hunger.
+This feature adds a key to speak your current status, which includes things like health, hunger, armor, air remaining (if in water), etc.
 
-See also: [Configuration]({{% relref "/config#health-n-hunger" %}}), [Keybindings]({{% relref "/keybindings#health-n-hunger" %}})
+See also: [Configuration]({{% relref "/config#health-n-hunger" %}}), [Keybindings]({{% relref "/keybindings#player-status" %}})
 
 ### Player Warnings
 
