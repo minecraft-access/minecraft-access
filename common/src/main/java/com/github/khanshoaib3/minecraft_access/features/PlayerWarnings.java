@@ -86,7 +86,7 @@ public class PlayerWarnings {
         }
 
         if (health <= secondHealthThreshold && health > 0 && isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
-            isHealthBelowSecondThreshold  =true;
+            isHealthBelowSecondThreshold = true;
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.player_warnings.health_low", health, maxHealth), true);
             if (playSound) minecraftClient.player.playSound(SoundEvents.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
         }
