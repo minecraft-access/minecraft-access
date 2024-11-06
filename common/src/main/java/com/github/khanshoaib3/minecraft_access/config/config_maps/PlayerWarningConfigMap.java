@@ -42,7 +42,7 @@ public class PlayerWarningConfigMap {
         defaultPlayerWarningConfigMap.setFirstHealthThreshold(6.0);
         defaultPlayerWarningConfigMap.setSecondHealthThreshold(3.0);
         defaultPlayerWarningConfigMap.setHungerThreshold(3.0);
-        defaultPlayerWarningConfigMap.setAirThreshold(3.0);
+        defaultPlayerWarningConfigMap.setAirThreshold(5.0);
         defaultPlayerWarningConfigMap.setFrostThreshold(30.0);
 
         setInstance(defaultPlayerWarningConfigMap);

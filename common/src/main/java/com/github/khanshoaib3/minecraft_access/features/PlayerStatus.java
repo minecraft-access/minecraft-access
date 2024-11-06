@@ -30,24 +30,30 @@ public class PlayerStatus {
             if (minecraftClient.currentScreen != null) return;
 
             if (narrationKey.canBeTriggered()) {
-                double health = minecraftClient.player.getHealth() / 2;
-                double maxHealth = minecraftClient.player.getMaxHealth() / 2.0;
-                double hunger = minecraftClient.player.getHungerManager().getFoodLevel() / 2.0;
-                double maxHunger = 20.0 / 2.0;
-                double armor = minecraftClient.player.getArmor();
-                double air = Math.max(0, minecraftClient.player.getAir() / 30.0);
-                double maxAir = minecraftClient.player.getMaxAir() / 30.0;
-                double frostExposurePercent = minecraftClient.player.getFreezingScale() * 100.0;
+                double health = Math.round((minecraftClient.player.getHealth() / 2.0) * 10.0) / 10.0;
+                double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
+                double absorption = Math.round((minecraftClient.player.getAbsorptionAmount() / 2.0) * 10.0) / 10.0;
+                double hunger = Math.round((minecraftClient.player.getHungerManager().getFoodLevel() / 2.0) * 10.0) / 10.0;
+                double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
+                double armor = Math.round((minecraftClient.player.getArmor() / 2.0) * 10.0) / 10.0;
+                double air = Math.round((minecraftClient.player.getAir() / 20.0) * 10.0) / 10.0;
+                double maxAir = Math.round((minecraftClient.player.getMaxAir() / 20.0) * 10.0) / 10.0;
+                double frostExposurePercent = Math.round((minecraftClient.player.getFreezingScale() * 100.0) * 10.0) / 10.0;
 
-                String toSpeak = I18n.translate("minecraft_access.player_status.base", health, maxHealth, hunger, maxHunger, armor);
+                String toSpeak;
 
-                if ((minecraftClient.player.isSubmergedInWater() || minecraftClient.player.getAir() < minecraftClient.player.getMaxAir()) && !minecraftClient.player.canBreatheInWater())
-                toSpeak += I18n.translate("minecraft_access.player_status.air", air, maxAir);
+                if(absorption > 0) {
+                    toSpeak = I18n.translate("minecraft_access.player_status.base_with_absorption", health, absorption, maxHealth, hunger, maxHunger, armor);
+                } else {
+                    toSpeak = I18n.translate("minecraft_access.player_status.base", health, maxHealth, hunger, maxHunger, armor);
+                }
+                if ((minecraftClient.player.isSubmergedInWater() || minecraftClient.player.getAir() < minecraftClient.player.getMaxAir()) && !minecraftClient.player.canBreatheInWater()) {
+                    air = Math.max(air, 0.0);
+                    toSpeak += I18n.translate("minecraft_access.player_status.air", air, maxAir);
+                }
 
                 if ((minecraftClient.player.inPowderSnow || frostExposurePercent > 0) && minecraftClient.player.canFreeze())
                     toSpeak += I18n.translate("minecraft_access.player_status.frost", frostExposurePercent);
-            //toSpeak += I18n.translate("minecraft_access.player_status.frost", minecraftClient.player.getFrozenTicks(), minecraftClient.player.getMinFreezeDamageTicks());
-            //toSpeak += " scale is " + minecraftClient.player.getFreezingScale();
 
                 MainClass.speakWithNarrator(toSpeak, true);
             }

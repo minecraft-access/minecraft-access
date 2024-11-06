@@ -46,13 +46,13 @@ public class PlayerWarnings {
 
             loadConfigurations();
 
-            double health = minecraftClient.player.getHealth() / 2.0;
-            double maxHealth = minecraftClient.player.getMaxHealth() / 2.0;
-            double hunger = minecraftClient.player.getHungerManager().getFoodLevel() / 2.0;
-            double maxHunger = 20 / 2.0;
-            double air = minecraftClient.player.getAir() / 30.0;
-            double maxAir = minecraftClient.player.getMaxAir() / 30.0;
-            double frostExposurePercent = minecraftClient.player.getFreezingScale() * 100.0;
+            double health = Math.round((minecraftClient.player.getHealth() / 2.0) * 10.0) / 10.0;
+            double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
+            double hunger = Math.round((minecraftClient.player.getHungerManager().getFoodLevel() / 2.0) * 10.0) / 10.0;
+            double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
+            double air = Math.round((minecraftClient.player.getAir() / 20.0) * 10.0) / 10.0;
+            double maxAir = Math.round((minecraftClient.player.getMaxAir() / 20.0) * 10.0) / 10.0;
+            double frostExposurePercent = Math.round((minecraftClient.player.getFreezingScale() * 100.0) * 10.0) / 10.0;
 
             healthWarning(health, maxHealth);
 
@@ -79,55 +79,56 @@ public class PlayerWarnings {
     private void healthWarning(double health, double maxHealth) {
         if (minecraftClient.player == null) return;
 
-        if (health < firstHealthThreshold && health > secondHealthThreshold && !isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
+        if (health <= firstHealthThreshold && health > secondHealthThreshold && !isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowFirstThreshold = true;
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.player_warnings.health_low", health, maxHealth), true);
             if (playSound) minecraftClient.player.playSound(SoundEvents.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
         }
 
-        if (health < secondHealthThreshold && health > 0 && isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
+        if (health <= secondHealthThreshold && health > 0 && isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowSecondThreshold  =true;
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.player_warnings.health_low", health, maxHealth), true);
             if (playSound) minecraftClient.player.playSound(SoundEvents.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
         }
 
-        if (isHealthBelowFirstThreshold && health >= firstHealthThreshold) isHealthBelowFirstThreshold = false;
-        if (isHealthBelowSecondThreshold && health >= secondHealthThreshold) isHealthBelowSecondThreshold = false;
+        if (isHealthBelowFirstThreshold && health > firstHealthThreshold) isHealthBelowFirstThreshold = false;
+        if (isHealthBelowSecondThreshold && health > secondHealthThreshold) isHealthBelowSecondThreshold = false;
     }
 
     private void hungerWarning(double hunger, double maxHunger) {
         if (minecraftClient.player == null) return;
 
-        if (hunger < hungerThreshold && hunger > 0 && !isFoodBelowThreshold) {
+        if (hunger <= hungerThreshold && hunger > 0 && !isFoodBelowThreshold) {
             isFoodBelowThreshold = true;
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.player_warnings.hunger_low", hunger, maxHunger), true);
             if (playSound) minecraftClient.player.playSound(SoundEvents.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
         }
 
-        if (isFoodBelowThreshold && hunger >= hungerThreshold) isFoodBelowThreshold = false;
+        if (isFoodBelowThreshold && hunger > hungerThreshold) isFoodBelowThreshold = false;
     }
 
     private void airWarning(double air, double maxAir) {
+        air = Math.max(air, 0.0);
         if (minecraftClient.player == null) return;
 
-        if (air < airThreshold && air > 0 && !isAirBelowThreshold) {
+        if (air <= airThreshold && air > 0 && !isAirBelowThreshold) {
             isAirBelowThreshold = true;
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.player_warnings.air_low", air, maxAir), true);
             if (playSound) minecraftClient.player.playSound(SoundEvents.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
         }
 
-        if (isAirBelowThreshold && air >= airThreshold) isAirBelowThreshold = false;
+        if (isAirBelowThreshold && air > airThreshold) isAirBelowThreshold = false;
     }
 
     private void frostWarning(double frostExposurePercent) {
         if (minecraftClient.player == null) return;
 
-        if (frostExposurePercent > frostThreshold && frostExposurePercent < 100 && !isFrostAboveThreshold) {
+        if (frostExposurePercent >= frostThreshold && frostExposurePercent < 100 && !isFrostAboveThreshold) {
             isFrostAboveThreshold = true;
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.player_warnings.frost_low", frostExposurePercent), true);
             if (playSound) minecraftClient.player.playSound(SoundEvents.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
         }
 
-        if (isFrostAboveThreshold && frostExposurePercent <= frostThreshold) isFrostAboveThreshold = false;
+        if (isFrostAboveThreshold && frostExposurePercent < frostThreshold) isFrostAboveThreshold = false;
     }
 }
