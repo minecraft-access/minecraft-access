@@ -105,7 +105,7 @@ public class NarrationUtils {
             }
         }
 
-        if (!Strings.isBlank(equipments.toString())) {
+        if (!equipments.isEmpty()) {
             String wordConnection = I18n.translate("minecraft_access.other.words_connection");
             var values = Map.of("entity", text, "equipments", String.join(wordConnection, equipments));
             //noinspection SuperfluousFormat
