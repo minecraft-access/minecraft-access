@@ -424,7 +424,7 @@ public class KeyBindingsHandler {
      */
     private void initializeOtherKeybindings() {
         speakPlayerStatusKey = new KeyBinding(
-                "minecraft_access.keys.other.health_n_hunger_key_name",
+                "minecraft_access.keys.other.player_status_key_name",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_R,
                 OTHER_GROUP_TRANSLATION_KEY
