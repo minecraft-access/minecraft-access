@@ -25,8 +25,8 @@ public class OtherConfigsMap {
     private boolean xpIndicatorEnabled;
     @SerializedName("Enable Facing Direction")
     private boolean facingDirectionEnabled;
-    @SerializedName("Enable Health n Hunger")
-    private boolean healthNHungerEnabled;
+    @SerializedName("Enable Player Status")
+    private boolean playerStatusEnabled;
     @SerializedName("Enable Position Narrator")
     private boolean positionNarratorEnabled;
     @SerializedName("Command Suggestion Narrator Format")
@@ -86,7 +86,7 @@ public class OtherConfigsMap {
         defaultOtherConfigsMap.setBiomeIndicatorEnabled(true);
         defaultOtherConfigsMap.setXpIndicatorEnabled(true);
         defaultOtherConfigsMap.setFacingDirectionEnabled(true);
-        defaultOtherConfigsMap.setHealthNHungerEnabled(true);
+        defaultOtherConfigsMap.setPlayerStatusEnabled(true);
         defaultOtherConfigsMap.setPositionNarratorEnabled(true);
         defaultOtherConfigsMap.setCommandSuggestionNarratorFormat(DEFAULT_COMMAND_SUGGESTION_FORMAT);
         defaultOtherConfigsMap.setUse12HourTimeFormat(false);

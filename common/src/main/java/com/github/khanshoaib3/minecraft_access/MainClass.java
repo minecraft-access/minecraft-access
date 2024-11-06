@@ -124,7 +124,7 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (playerStatus != null && otherConfigsMap.isHealthNHungerEnabled())
+        if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled())
             playerStatus.update();
 
         if (playerWarnings != null && PlayerWarningConfigMap.getInstance().isEnabled())
