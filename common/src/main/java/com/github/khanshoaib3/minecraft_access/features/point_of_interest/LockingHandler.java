@@ -104,7 +104,14 @@ public class LockingHandler {
         }
 
         if (lockedOnBlock != null) {
-            BlockState blockState = minecraftClient.world.getBlockState(WorldUtils.blockPosOf(lockedOnBlock.getAccuratePosition()));
+            BlockPos blockPos = WorldUtils.blockPosOf(lockedOnBlock.getAccuratePosition());
+            BlockState blockState = minecraftClient.world.getBlockState(blockPos);
+
+            if (blockState.isAir()) {
+                unlock(true);
+                return;
+            }
+            // Check if the block state has changed
 
             if (unlockFromLadderIfClimbingOnIt(blockState)) return;
 
