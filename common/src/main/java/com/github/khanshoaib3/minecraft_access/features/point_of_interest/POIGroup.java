@@ -79,10 +79,35 @@ public class POIGroup {
     }
 
     public boolean isBlockInGroup(BlockState block, BlockPos pos) {
-        return blockFilter.apply(block, pos);
+        boolean result = blockFilter.apply(block, pos);
+        if (result) blocks.put(pos, block);
+        return result;
     }
 
     public boolean isEntityInGroup(Entity entity) {
-        return entityFilter.apply(entity);
+        boolean result = entityFilter.apply(entity);
+        if (result) entities.add(entity);
+        return result;
+    }
+
+    public void clearBlocks() {
+        blocks.clear();
+    }
+
+    public void clearEntities() {
+        entities.clear();
+    }
+
+    public void clear() {
+        blocks.clear();
+        entities.clear();
+    }
+
+    public void addBlock(BlockState block, BlockPos pos) {
+        blocks.put(pos, block);
+    }
+
+    public void addEntity(Entity entity) {
+        entities.add(entity);
     }
 }
