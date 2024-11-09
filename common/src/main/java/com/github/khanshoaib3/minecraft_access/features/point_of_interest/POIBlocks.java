@@ -102,7 +102,8 @@ public class POIBlocks {
     private boolean onPOIMarkingNow = false;
 
     public Map<String, POIGroup> builtInGroups = Map.of(
-        "ore", new POIGroup("Ores", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) -> oreBlockPredicates.stream().anyMatch(p -> p.test(block))),
+        "marked", new POIGroup("Marked blocks", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) -> onPOIMarkingNow && markedBlock.test(block)),
+    "ore", new POIGroup("Ores", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) -> oreBlockPredicates.stream().anyMatch(p -> p.test(block))),
         "fluid", new POIGroup("Fluids", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> this.detectFluidBlocks && block.getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && block.getFluidState().getLevel() == 8),
         "functional", new POIGroup("Functional blocks", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> block.getBlock() instanceof ButtonBlock || block.getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(block))),
         "gui", new POIGroup("Blocks with interface", SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), 0f, null, (block, pos) -> block.createScreenHandlerFactory(world, pos) != null)
@@ -145,6 +146,10 @@ public class POIBlocks {
             fluidBlocks = new TreeMap<>();
             otherBlocks = new TreeMap<>();
             markedBlocks = new TreeMap<>();
+
+            for (POIGroup group : builtInGroups.values()) {
+                group.clearBlocks();
+            }    
 
             // Player position is where player's leg be
             checkedBlocks = new HashSet<>();
@@ -194,18 +199,33 @@ public class POIBlocks {
             return;
         }
 
-        String soundType = checkAndPutIntoMap(blockPos, blockState);
+        // String soundType = checkAndPutIntoMap(blockPos, blockState);
         // playSoundAtBlock(blockPos, soundType);
 
-        if (!playSound) return;
-        if (playSoundForOtherBlocks) {
-            for (POIGroup group : builtInGroups.values()) {
-                if (group.isBlockInGroup(blockState, blockPos)) world.playSound(player, blockPos, group.getSound(), SoundCategory.BLOCKS, volume, group.getSoundPitch());
+        boolean shouldPlayMarkedOnly = onPOIMarkingNow && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled();
+
+        for (POIGroup group : builtInGroups.values()) {
+            if (group.isBlockInGroup(blockState, blockPos)) {
+                if (playSound && playSoundForOtherBlocks && !shouldPlayMarkedOnly) {
+                    world.playSound(player, blockPos, group.getSound(), SoundCategory.BLOCKS, volume, group.getSoundPitch());
+                }
             }
-        } else {
+        }
+
+        if (playSound && !playSoundForOtherBlocks && !shouldPlayMarkedOnly) {
             POIGroup oreGroup = builtInGroups.get("ore");
 
-            if (oreGroup.isBlockInGroup(blockState, blockPos)) world.playSound(player, blockPos, oreGroup.getSound(), SoundCategory.BLOCKS, volume, oreGroup.getSoundPitch());
+            for (BlockPos pos : oreGroup.getBlocks().keySet()) {
+                world.playSound(player, pos, oreGroup.getSound(), SoundCategory.BLOCKS, volume, oreGroup.getSoundPitch());
+            }
+        }
+
+        if (shouldPlayMarkedOnly) {
+            POIGroup markedGroup = builtInGroups.get("marked");
+
+            for (BlockPos pos : markedGroup.getBlocks().keySet()) {
+                world.playSound(player, pos, markedGroup.getSound(), SoundCategory.BLOCKS, volume, markedGroup.getSoundPitch());
+            }
         }
     }
 
@@ -300,14 +320,17 @@ public class POIBlocks {
     }
 
     public List<TreeMap<Double, Vec3d>> getLockingCandidates() {
-        if (onPOIMarkingNow) {
-            if (POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
-                return List.of(markedBlocks);
-            } else {
-                return List.of(markedBlocks, doorBlocks, buttonBlocks, ladderBlocks, leverBlocks, trapDoorBlocks, otherBlocks, oreBlocks, fluidBlocks);
-            }
-        } else {
-            return List.of(doorBlocks, buttonBlocks, ladderBlocks, leverBlocks, trapDoorBlocks, otherBlocks, oreBlocks, fluidBlocks);
+        List<TreeMap<Double, Vec3d>> results = new ArrayList<>();
+
+        if (onPOIMarkingNow && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
+            results.add(builtInGroups.get("marked").getBlocks(true));
+            return results;
         }
-    }
+
+        for (POIGroup group : builtInGroups.values()) {
+            results.add(group.getBlocks(true));
+        }
+
+        return results;
+   }
 }

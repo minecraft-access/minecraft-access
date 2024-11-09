@@ -9,6 +9,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.function.Function;
 
+import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
 import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class POIGroup {
     private SoundEvent sound;
     private float soundPitch;
     private List<Entity> entities = new ArrayList<>();
-    private TreeMap<BlockPos, BlockState> blocks;
+    private TreeMap<BlockPos, BlockState> blocks = new TreeMap<>();
     private Function<Entity, Boolean> entityFilter;
     private BlockFilter blockFilter;
 
@@ -76,6 +77,19 @@ public class POIGroup {
 
     public TreeMap<BlockPos, BlockState> getBlocks() {
         return blocks;
+    }
+
+    public TreeMap<Double, Vec3d> getBlocks(boolean asDistanceAndVec3d) {
+        TreeMap<Double, Vec3d> results = new TreeMap<>();
+
+        for (BlockPos pos : blocks.keySet()) {
+            Vec3d vecPos = pos.toCenterPos();
+            Double distance = WorldUtils.getClientPlayer().getEyePos().distanceTo(vecPos);
+
+            results.put(distance, vecPos);
+        }
+
+        return results;
     }
 
     public boolean isBlockInGroup(BlockState block, BlockPos pos) {
