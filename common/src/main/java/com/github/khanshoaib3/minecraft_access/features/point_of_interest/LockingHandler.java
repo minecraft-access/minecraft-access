@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EyeOfEnderEntity;
@@ -97,13 +98,34 @@ public class LockingHandler {
         if (minecraftClient.world == null) return;
         if (minecraftClient.currentScreen != null) return;
 
+        handleLockingKeyPressing();
+        lookAtLockedTarget();
+        bowAimingAssist();
+    }
+
+    private void handleLockingKeyPressing() {
+        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().lockingHandlerKey);
+        if (isLockingKeyPressed && Screen.hasAltDown()) {
+            if (lockedOnEntity != null || lockedOnBlock != null) {
+                unlock(true);
+                interval.beReady();
+            }
+        } else if (isLockingKeyPressed) {
+            relock();
+            interval.reset();
+        } else {
+            interval.beReady();
+        }
+    }
+
+    private void lookAtLockedTarget() {
         if (lockedOnEntity != null) {
             if (unlockFromDeadEntity()) return;
             PlayerUtils.lookAt(lockedOnEntity);
         }
 
         if (lockedOnBlock != null) {
-            BlockState blockState = minecraftClient.world.getBlockState(WorldUtils.blockPosOf(lockedOnBlock.getAccuratePosition()));
+            BlockState blockState = WorldUtils.getClientWorld().getBlockState(WorldUtils.blockPosOf(lockedOnBlock.getAccuratePosition()));
 
             if (unlockFromLadderIfClimbingOnIt(blockState)) return;
 
@@ -120,21 +142,14 @@ public class LockingHandler {
                 unlock(true);
             }
         }
+    }
 
-        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().lockingHandlerKey);
-        if (isLockingKeyPressed && Screen.hasAltDown()) {
-            if (lockedOnEntity != null || lockedOnBlock != null) {
-                unlock(true);
-                interval.beReady();
-            }
-        } else if (isLockingKeyPressed) {
-            relock();
-            interval.reset();
-        } else {
-            interval.beReady();
-        }
-
-        if (aimAssistEnabled && !aimAssistActive && minecraftClient.player.isUsingItem() && minecraftClient.player.getActiveItem().getItem() instanceof BowItem) {
+    /**
+     * Automatically locks on to the nearest hostile entity when the player is pulling a bow.
+     */
+    private void bowAimingAssist() {
+        ClientPlayerEntity player = WorldUtils.getClientPlayer();
+        if (aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getActiveItem().getItem() instanceof BowItem) {
             TreeMap<Double, Entity> scannedHostileMobsMap = POIEntities.getInstance().getAimAssistTargetCandidates();
             if (!scannedHostileMobsMap.isEmpty()) {
                 Entity entity = scannedHostileMobsMap.firstEntry().getValue();
@@ -144,7 +159,7 @@ public class LockingHandler {
             }
         }
 
-        if (aimAssistActive && !minecraftClient.player.isUsingItem()) {
+        if (aimAssistActive && !player.isUsingItem()) {
             unlock(false);
             aimAssistActive = false;
             lastAimAssistCue = -1;
@@ -152,14 +167,14 @@ public class LockingHandler {
         }
 
         if (aimAssistAudioCuesEnabled && aimAssistActive) {
-            float bowPullingProgress = BowItem.getPullProgress(minecraftClient.player.getItemUseTime());
+            float bowPullingProgress = BowItem.getPullProgress(player.getItemUseTime());
 
             int bowState = -1;
             if (bowPullingProgress >= 0f && bowPullingProgress < 0.50f) bowState = 0;
             if (bowPullingProgress >= 0.50f && bowPullingProgress < 1f) bowState = 1;
             if (bowPullingProgress == 1f) bowState = 2;
 
-            if (PlayerUtils.isPlayerCanSee(minecraftClient.player.getEyePos(), PlayerUtils.currentEntityLookingAtPosition, lockedOnEntity)) {
+            if (PlayerUtils.isPlayerCanSee(player.getEyePos(), PlayerUtils.currentEntityLookingAtPosition, lockedOnEntity)) {
                 if (lastAimAssistCue != 1 || bowState != lastBowState) {
                     PlayerUtils.playSoundOnPlayer(SoundEvents.BLOCK_NOTE_BLOCK_PLING, aimAssistAudioCuesVolume, bowState);
                     lastAimAssistCue = 1;
