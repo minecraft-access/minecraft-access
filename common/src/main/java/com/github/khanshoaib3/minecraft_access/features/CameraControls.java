@@ -103,52 +103,67 @@ public class CameraControls {
         boolean isStraightDownKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsStraightDown);
         boolean isDownKeyDoublePressedWithRightAlt = isRightAltPressed && straightDownDoubleClick.canBeTriggered();
 
+        boolean anyFunctionTriggered = false;
+
         // these two blocks of logic should be ahead of the normal up/down logic
         if (isStraightUpKeyPressed || isUpKeyDoublePressedWithRightAlt) {
+            anyFunctionTriggered = true;
             rotateCameraTo(Orientation.UP);
         }
 
         if (isStraightDownKeyPressed || isDownKeyDoublePressedWithRightAlt) {
+            anyFunctionTriggered = true;
             rotateCameraTo(Orientation.DOWN);
         }
 
         if (isNorthKeyPressed) {
+            anyFunctionTriggered = true;
             rotateCameraTo(Orientation.NORTH);
         }
 
         if (isEastKeyPressed) {
+            anyFunctionTriggered = true;
             rotateCameraTo(Orientation.EAST);
         }
 
         if (isWestKeyPressed) {
+            anyFunctionTriggered = true;
             rotateCameraTo(Orientation.WEST);
         }
 
         if (isSouthKeyPressed) {
+            anyFunctionTriggered = true;
             rotateCameraTo(Orientation.SOUTH);
         }
 
         float rotateAngle = isLeftAltPressed ? modifiedRotatingDeltaAngle : normalRotatingDeltaAngle;
 
         if (isUpKeyPressed) {
+            anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.UP);
         }
 
         if (isRightKeyPressed) {
+            anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.RIGHT);
         }
 
         if (isDownKeyPressed) {
+            anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.DOWN);
         }
 
         if (isLeftKeyPressed) {
+            anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.LEFT);
         }
 
         if (isCenterCameraKeyPressed) {
+            anyFunctionTriggered = true;
             centerCamera(isLeftAltPressed);
         }
+
+        interval.adjustNextReadyTimeBy(anyFunctionTriggered);
     }
 
     private enum RotatingDirection {

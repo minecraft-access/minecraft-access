@@ -125,9 +125,13 @@ public class LockingHandler {
         if (isLockingKeyPressed && Screen.hasAltDown()) {
             if (lockedOnEntity != null || lockedOnBlock != null) {
                 unlock(true);
+                interval.beReady();
             }
         } else if (isLockingKeyPressed) {
             relock();
+            interval.reset();
+        } else {
+            interval.beReady();
         }
 
         if (aimAssistEnabled && !aimAssistActive && minecraftClient.player.isUsingItem() && minecraftClient.player.getActiveItem().getItem() instanceof BowItem) {

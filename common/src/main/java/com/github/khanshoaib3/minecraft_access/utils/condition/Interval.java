@@ -1,12 +1,13 @@
 package com.github.khanshoaib3.minecraft_access.utils.condition;
 
 import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMap;
+import com.github.khanshoaib3.minecraft_access.features.CameraControls;
 
 /**
  * An auto-refresh countdown timer for controlling interval execution of features.
  */
 public class Interval {
-    protected long lastRunTime;
+    public long lastRunTime;
     private long delay;
 
     protected Interval(long lastRunTime, long delayInNanoTime) {
@@ -73,5 +74,30 @@ public class Interval {
         public long toNano(long value) {
             return value * this.factor;
         }
+    }
+
+    /**
+     * When the interval is used at the scope of whole feature, e.g. {@link CameraControls},
+     * in which the feature is manually triggered by player's keystrokes while having a rate limitation,
+     * this method is called at the end of feature logic to adjust the next feature execution time.
+     *
+     * @param anyFunctionTriggered whether any function of the feature has been triggered in this tick
+     */
+    public void adjustNextReadyTimeBy(boolean anyFunctionTriggered) {
+        if (anyFunctionTriggered) {
+            // make the next action to be executed after one complete interval
+            reset();
+        } else {
+            // immediately ready for next tick
+            beReady();
+        }
+    }
+
+
+    /**
+     * Make the interval ready immediately
+     */
+    public void beReady() {
+        lastRunTime = 0;
     }
 }
