@@ -18,11 +18,13 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EyeOfEnderEntity;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.item.BowItem;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -40,7 +42,7 @@ public class LockingHandler {
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlock = null;
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
-    private String entriesOfLockedOnBlock = "";
+    private Map<Property<?>, Comparable<?>> entriesOfLockedOnBlock;
     private Interval interval;
     private boolean aimAssistActive = false;
     // 0 = can't shoot, 1 = can shoot
@@ -108,11 +110,11 @@ public class LockingHandler {
 
             if (unlockFromLadderIfClimbingOnIt(blockState)) return;
 
-            // Entries are different shape of blocks when they're in different states,
+            // Entries are different properties of blocks when they're in different states,
             // for example, opened chest and closed chest are different states of chest block,
             // they are different entries when invoking getEntries().
-            String entries = blockState.getEntries().toString();
-            boolean entriesOfLockedBlockNotChanged = entries.equalsIgnoreCase(entriesOfLockedOnBlock);
+            Map<Property<?>, Comparable<?>> entries = blockState.getEntries();
+            boolean entriesOfLockedBlockNotChanged = entries.values() == entriesOfLockedOnBlock.values();
 
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears)
                 PlayerUtils.lookAt(lockedOnBlock);
@@ -175,7 +177,7 @@ public class LockingHandler {
 
     private void unlock(boolean speak) {
         lockedOnEntity = null;
-        entriesOfLockedOnBlock = "";
+        entriesOfLockedOnBlock = null;
         lockedOnBlock = null;
         isLockedOnWhereEyeOfEnderDisappears = false;
 
@@ -286,7 +288,7 @@ public class LockingHandler {
         unlock(false);
 
         BlockState blockState = WorldUtils.getClientWorld().getBlockState(WorldUtils.blockPosOf(position));
-        entriesOfLockedOnBlock = blockState.getEntries().toString();
+        entriesOfLockedOnBlock = blockState.getEntries();
 
         Vec3d absolutePosition = position;
         Block blockType = blockState.getBlock();
