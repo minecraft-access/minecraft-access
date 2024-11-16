@@ -10,7 +10,6 @@ import net.minecraft.util.math.Vec3d;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
 import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
 
 import java.util.ArrayList;
@@ -18,9 +17,10 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class POIGroup {
-    private String name;
-    private SoundEvent sound;
-    private float soundPitch;
+    public final String name;
+    public final SoundEvent sound;
+    public final float soundPitch;
+
     private List<Entity> entities = new ArrayList<>();
     private TreeMap<BlockPos, BlockState> blocks = new TreeMap<>();
     private Function<Entity, Boolean> entityFilter;
@@ -32,18 +32,6 @@ public class POIGroup {
         this.soundPitch = soundPitch;
         this.entityFilter = entityFilter;
         this.blockFilter = blockFilter;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public SoundEvent getSound() {
-        return sound;
-    }
-
-    public float getSoundPitch() {
-        return soundPitch;
     }
 
     public void filterEntities(List<Entity> scannedEntities) {

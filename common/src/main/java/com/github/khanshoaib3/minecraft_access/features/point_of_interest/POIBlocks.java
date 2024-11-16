@@ -184,7 +184,7 @@ public class POIBlocks {
         for (POIGroup group : builtInGroups.values()) {
             if (group.isBlockInGroup(blockState, blockPos)) {
                 if (playSound && playSoundForOtherBlocks && !shouldPlayMarkedOnly) {
-                    world.playSound(player, blockPos, group.getSound(), SoundCategory.BLOCKS, volume, group.getSoundPitch());
+                    world.playSound(player, blockPos, group.sound, SoundCategory.BLOCKS, volume, group.soundPitch);
                 }
             }
         }
@@ -193,7 +193,7 @@ public class POIBlocks {
             POIGroup oreGroup = builtInGroups.get("ore");
 
             for (BlockPos pos : oreGroup.getBlocks().keySet()) {
-                world.playSound(player, pos, oreGroup.getSound(), SoundCategory.BLOCKS, volume, oreGroup.getSoundPitch());
+                world.playSound(player, pos, oreGroup.sound, SoundCategory.BLOCKS, volume, oreGroup.soundPitch);
             }
         }
 
@@ -201,7 +201,7 @@ public class POIBlocks {
             POIGroup markedGroup = builtInGroups.get("marked");
 
             for (BlockPos pos : markedGroup.getBlocks().keySet()) {
-                world.playSound(player, pos, markedGroup.getSound(), SoundCategory.BLOCKS, volume, markedGroup.getSoundPitch());
+                world.playSound(player, pos, markedGroup.sound, SoundCategory.BLOCKS, volume, markedGroup.soundPitch);
             }
         }
     }
