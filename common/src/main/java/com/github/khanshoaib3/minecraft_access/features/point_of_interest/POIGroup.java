@@ -94,16 +94,16 @@ public class POIGroup {
     }
 
     public void clearBlocks() {
-        blocks.clear();
+        blocks = new TreeMap<>();
     }
 
     public void clearEntities() {
-        entities.clear();
+        entities = new ArrayList<>();
     }
 
     public void clear() {
-        blocks.clear();
-        entities.clear();
+        blocks = new TreeMap<>();
+        entities = new ArrayList<>();
     }
 
     public void addBlock(BlockState block, BlockPos pos) {
