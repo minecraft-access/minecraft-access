@@ -18,7 +18,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EyeOfEnderEntity;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.item.BowItem;
 
@@ -28,7 +27,7 @@ import java.util.TreeMap;
 import java.util.Map;
 
 /**
- * Locks on to the narest entity or block.<br><br>
+ * Locks on to the nearest entity or block.<br><br>
  * Keybindings and combinations:<br>
  * 1. Locking Key (default: Y) = Locks onto the nearest entity or block<br>
  * 2. Alt key + Locking Key = Unlocks from the currently locked entity or block<br>
