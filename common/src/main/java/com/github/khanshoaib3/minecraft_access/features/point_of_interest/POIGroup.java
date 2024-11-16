@@ -7,6 +7,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
@@ -23,9 +24,9 @@ public class POIGroup {
     private List<Entity> entities = new ArrayList<>();
     private TreeMap<BlockPos, BlockState> blocks = new TreeMap<>();
     private Function<Entity, Boolean> entityFilter;
-    private BlockFilter blockFilter;
+    private BiFunction<BlockState, BlockPos, Boolean> blockFilter;
 
-    public POIGroup(String name, SoundEvent sound, float soundPitch, Function<Entity, Boolean> entityFilter, BlockFilter blockFilter) {
+    public POIGroup(String name, SoundEvent sound, float soundPitch, Function<Entity, Boolean> entityFilter, BiFunction<BlockState, BlockPos, Boolean> blockFilter) {
         this.name = name;
         this.sound = sound;
         this.soundPitch = soundPitch;
