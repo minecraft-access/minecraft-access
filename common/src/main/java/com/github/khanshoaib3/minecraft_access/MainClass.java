@@ -114,11 +114,11 @@ public class MainClass {
 
         ReadCrosshair.getInstance().tick();
 
-        if (biomeIndicator != null && otherConfigsMap.isBiomeIndicatorEnabled())
-            biomeIndicator.update();
-
         if (xpIndicator != null && otherConfigsMap.isXpIndicatorEnabled())
             xpIndicator.update();
+
+        if (biomeIndicator != null && otherConfigsMap.isBiomeIndicatorEnabled())
+            biomeIndicator.update();
 
         facingDirection.update();
 
