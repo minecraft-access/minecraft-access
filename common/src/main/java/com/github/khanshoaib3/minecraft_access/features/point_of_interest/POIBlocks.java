@@ -182,7 +182,7 @@ public class POIBlocks {
         boolean shouldPlayMarkedOnly = onPOIMarkingNow && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled();
 
         for (POIGroup group : builtInGroups.values()) {
-            if (group.isBlockInGroup(blockState, blockPos)) {
+            if (group.checkAndAddBlock(blockState, blockPos)) {
                 if (playSound && playSoundForOtherBlocks && !shouldPlayMarkedOnly) {
                     world.playSound(player, blockPos, group.sound, SoundCategory.BLOCKS, volume, group.soundPitch);
                 }

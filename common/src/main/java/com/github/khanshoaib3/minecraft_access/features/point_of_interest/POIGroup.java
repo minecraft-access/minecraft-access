@@ -81,13 +81,13 @@ public class POIGroup {
         return results;
     }
 
-    public boolean isBlockInGroup(BlockState block, BlockPos pos) {
+    public boolean checkAndAddBlock(BlockState block, BlockPos pos) {
         boolean result = blockFilter.apply(block, pos);
         if (result) blocks.put(pos, block);
         return result;
     }
 
-    public boolean isEntityInGroup(Entity entity) {
+    public boolean checkAndAddEntity(Entity entity) {
         boolean result = entityFilter.apply(entity);
         if (result) entities.add(entity);
         return result;

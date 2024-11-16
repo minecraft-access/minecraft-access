@@ -101,9 +101,9 @@ public class POIEntities {
 
                 for (Entity e : entities) {
                     if (this.markedEntity.test(e)) {
-                        if (passiveGroup.isEntityInGroup(markedEntity))
+                        if (passiveGroup.checkAndAddEntity(markedEntity))
                             this.playSoundAt(e.getBlockPos(), passiveGroup.sound, passiveGroup.soundPitch);
-                        if (hostileGroup.isEntityInGroup(markedEntity))
+                        if (hostileGroup.checkAndAddEntity(markedEntity))
                             this.playSoundAt(e.getBlockPos(), hostileGroup.sound, hostileGroup.soundPitch);
                     }
                 }
@@ -113,7 +113,7 @@ public class POIEntities {
 
             for (POIGroup group : builtInGroups.values()) {
                 for (Entity e : entities) {
-                    if (group.isEntityInGroup(e)) {
+                    if (group.checkAndAddEntity(e)) {
                         this.playSoundAt(e.getBlockPos(), group.sound, group.soundPitch);
                         entities.remove(e);
                     }
