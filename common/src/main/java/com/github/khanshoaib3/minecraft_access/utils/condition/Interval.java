@@ -93,7 +93,6 @@ public class Interval {
         }
     }
 
-
     /**
      * Make the interval ready immediately
      */

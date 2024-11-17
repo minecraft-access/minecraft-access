@@ -90,7 +90,6 @@ public abstract class BookEditScreenMixin {
         }
 
         if (minecraft_access$spaceKey.isPressed()) {
-
             if (this.signing) {
                 if (this.cancelButton.isHovered()) {
                     this.cancelButton.onPress();

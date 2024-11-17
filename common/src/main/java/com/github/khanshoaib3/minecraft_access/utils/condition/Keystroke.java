@@ -154,7 +154,7 @@ public class Keystroke {
      * Let this method handle state updates,
      * no need to manually call the update method in every feature.
      */
-    public static void updateAllInstantsState() {
+    public static void updateInstances() {
         instances.forEach(Keystroke::updateStateForNextTick);
     }
 }

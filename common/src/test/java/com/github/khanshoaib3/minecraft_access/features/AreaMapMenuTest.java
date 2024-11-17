@@ -290,7 +290,7 @@ class AreaMapMenuTest {
 
     private void oneTickForward() {
         AreaMapMenu.getInstance().execute(mockClient.mockito());
-        Keystroke.updateAllInstantsState();
+        Keystroke.updateInstances();
     }
 
     /**

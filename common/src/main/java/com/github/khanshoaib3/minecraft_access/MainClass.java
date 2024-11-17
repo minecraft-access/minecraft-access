@@ -146,7 +146,7 @@ public class MainClass {
         // TODO remove feature flag after complete
         // AreaMapMenu.getInstance().update();
 
-        Keystroke.updateAllInstantsState();
+        Keystroke.updateInstances();
     }
 
     /**
