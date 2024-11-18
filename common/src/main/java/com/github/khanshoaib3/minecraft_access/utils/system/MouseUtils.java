@@ -126,34 +126,12 @@ public class MouseUtils {
         doNativeMouseAction("left click", true,
                 "xdotool click 1",
                 (i) -> {
-                    // Get the current position of the mouse by creating an empty event and getting its location
-                    Pointer dummyEvent = i.CGEventCreate(new Pointer(0));
-                    CoreGraphicsInterface.CGPoint.ByValue position = i.CGEventGetLocation(dummyEvent);
-                    coreFoundationInstance.CFRelease(dummyEvent);
-
-                    // Create the mouse down event
-                    Pointer event = i.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.leftMouseDown.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
-
-                    // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-
-                    // Wait 15 ms before releasing the button
+                    leftDown();
                     try {
-                    TimeUnit.MILLISECONDS.sleep(15);
+                        TimeUnit.MILLISECONDS.sleep(15);
                     } catch (Exception ignored) {
                     }
-
-                    // Create the mouse up event
-                    event = i.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.leftMouseUp.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
-
-                    // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
+                    leftUp();
                 },
                 (i) -> {
                     i.mouse_event(WindowsMouseEventFlags.LEFTDOWN.getValue(), 0, 0, 0, 0);
