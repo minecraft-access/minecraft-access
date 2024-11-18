@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 @Slf4j
 public class MouseUtils {
     private static user32dllInterface user32dllInstance = null;
-    private static CoreGraphicsInterface coreGraphicsInstance = null;
+    private static CGWrapper cgWrapper = null;
     private static CoreFoundationInterface coreFoundationInstance = null;
     private static ApplicationServicesInterface applicationServicesInstance = null;
 
@@ -83,10 +83,10 @@ public class MouseUtils {
 
                     // Create the event
                     // Mouse button is ignored
-                    Pointer event = i.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.mouseMoved.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
+                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.mouseMoved.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
 
                     // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
+                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
 
                     // Release the event so CoreFoundation can free it
                     coreFoundationInstance.CFRelease(event);
@@ -147,16 +147,13 @@ public class MouseUtils {
         doNativeMouseAction("left down", true,
                 "xdotool mousedown 1",
                 (i) -> {
-                    // Get the current position of the mouse by creating an empty event and getting its location
-                    Pointer dummyEvent = i.CGEventCreate(new Pointer(0));
-                    CoreGraphicsInterface.CGPoint.ByValue position = i.CGEventGetLocation(dummyEvent);
-                    coreFoundationInstance.CFRelease(dummyEvent);
+                    var position = i.getNativeMousePosition();
 
                     // Create the event
-                    Pointer event = i.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.leftMouseDown.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
+                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.leftMouseDown.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
 
                     // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
+                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
 
                     // Release the event so CoreFoundation can free it
                     coreFoundationInstance.CFRelease(event);
@@ -172,16 +169,13 @@ public class MouseUtils {
         doNativeMouseAction("left up", true,
                 "xdotool mouseup 1",
                 (i) -> {
-                    // Get the current position of the mouse by creating an empty event and getting its location
-                    Pointer dummyEvent = i.CGEventCreate(new Pointer(0));
-                    CoreGraphicsInterface.CGPoint.ByValue position = i.CGEventGetLocation(dummyEvent);
-                    coreFoundationInstance.CFRelease(dummyEvent);
+                    var position = i.getNativeMousePosition();
 
                     // Create the event
-                    Pointer event = i.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.leftMouseUp.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
+                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.leftMouseUp.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
 
                     // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
+                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
 
                     // Release the event so CoreFoundation can free it
                     coreFoundationInstance.CFRelease(event);
@@ -241,16 +235,13 @@ public class MouseUtils {
         doNativeMouseAction("middle down", true,
                 "xdotool mousedown 2",
                 (i) -> {
-                    // Get the current position of the mouse by creating an empty event and getting its location
-                    Pointer dummyEvent = i.CGEventCreate(new Pointer(0));
-                    CoreGraphicsInterface.CGPoint.ByValue position = i.CGEventGetLocation(dummyEvent);
-                    coreFoundationInstance.CFRelease(dummyEvent);
+                    var position = i.getNativeMousePosition();
 
                     // Create the event
-                    Pointer event = i.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.otherMouseDown.getValue(), position, CoreGraphicsMouseButtons.center.getValue());
+                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.otherMouseDown.getValue(), position, CoreGraphicsMouseButtons.center.getValue());
 
                     // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
+                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
 
                     // Release the event so CoreFoundation can free it
                     coreFoundationInstance.CFRelease(event);
@@ -266,16 +257,13 @@ public class MouseUtils {
         doNativeMouseAction("middle up", true,
                 "xdotool mouseup 2",
                 (i) -> {
-                    // Get the current position of the mouse by creating an empty event and getting its location
-                    Pointer dummyEvent = i.CGEventCreate(new Pointer(0));
-                    CoreGraphicsInterface.CGPoint.ByValue position = i.CGEventGetLocation(dummyEvent);
-                    coreFoundationInstance.CFRelease(dummyEvent);
+                    var position = i.getNativeMousePosition();
 
                     // Create the event
-                    Pointer event = i.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.otherMouseUp.getValue(), position, CoreGraphicsMouseButtons.center.getValue());
+                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.otherMouseUp.getValue(), position, CoreGraphicsMouseButtons.center.getValue());
 
                     // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
+                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
 
                     // Release the event so CoreFoundation can free it
                     coreFoundationInstance.CFRelease(event);
@@ -334,16 +322,13 @@ public class MouseUtils {
         doNativeMouseAction("right down", true,
                 "xdotool mousedown 3",
                 (i) -> {
-                    // Get the current position of the mouse by creating an empty event and getting its location
-                    Pointer dummyEvent = i.CGEventCreate(new Pointer(0));
-                    CoreGraphicsInterface.CGPoint.ByValue position = i.CGEventGetLocation(dummyEvent);
-                    coreFoundationInstance.CFRelease(dummyEvent);
+                    var position = i.getNativeMousePosition();
 
                     // Create the event
-                    Pointer event = i.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.rightMouseDown.getValue(), position, CoreGraphicsMouseButtons.right.getValue());
+                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.rightMouseDown.getValue(), position, CoreGraphicsMouseButtons.right.getValue());
 
                     // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
+                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
 
                     // Release the event so CoreFoundation can free it
                     coreFoundationInstance.CFRelease(event);
@@ -359,16 +344,13 @@ public class MouseUtils {
         doNativeMouseAction("right up", true,
                 "xdotool mouseup 3",
                 (i) -> {
-                    // Get the current position of the mouse by creating an empty event and getting its location
-                    Pointer dummyEvent = i.CGEventCreate(new Pointer(0));
-                    CoreGraphicsInterface.CGPoint.ByValue position = i.CGEventGetLocation(dummyEvent);
-                    coreFoundationInstance.CFRelease(dummyEvent);
+                    var position = i.getNativeMousePosition();
 
                     // Create the event
-                    Pointer event = i.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.rightMouseUp.getValue(), position, CoreGraphicsMouseButtons.right.getValue());
+                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.rightMouseUp.getValue(), position, CoreGraphicsMouseButtons.right.getValue());
 
                     // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
+                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
 
                     // Release the event so CoreFoundation can free it
                     coreFoundationInstance.CFRelease(event);
@@ -385,10 +367,10 @@ public class MouseUtils {
                 "xdotool click 4",
                 (i) -> {
                     // Create an event that scrolls the wheel up by 1 line
-                    Pointer event = i.CGEventCreateScrollWheelEvent(new Pointer(0), CoreGraphicsScrollEventUnits.line.getValue(), 1, 1);
+                    Pointer event = i.cgInstance.CGEventCreateScrollWheelEvent(new Pointer(0), CoreGraphicsScrollEventUnits.line.getValue(), 1, 1);
 
                     // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
+                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
 
                     // Release the event so CoreFoundation can free it
                     coreFoundationInstance.CFRelease(event);
@@ -405,10 +387,10 @@ public class MouseUtils {
                 "xdotool click 5",
                 (i) -> {
                     // Create an event that scrolls the wheel down by 1 line
-                    Pointer event = i.CGEventCreateScrollWheelEvent(new Pointer(0), CoreGraphicsScrollEventUnits.line.getValue(), 1, -1);
+                                Pointer event = i.cgInstance.CGEventCreateScrollWheelEvent(new Pointer(0), CoreGraphicsScrollEventUnits.line.getValue(), 1, -1);
 
                     // Send the event
-                    i.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
+                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
 
                     // Release the event so CoreFoundation can free it
                     coreFoundationInstance.CFRelease(event);
@@ -416,7 +398,7 @@ public class MouseUtils {
                 (i) -> i.mouse_event(WindowsMouseEventFlags.WHEEL.getValue(), 0, 0, -120, 0));
     }
 
-    private static void doNativeMouseAction(String name, boolean logCoordinates, String linuxXdotCommand, Consumer<CoreGraphicsInterface> macOSAction, Consumer<user32dllInterface> windowsAction) {
+    private static void doNativeMouseAction(String name, boolean logCoordinates, String linuxXdotCommand, Consumer<CGWrapper> macOSAction, Consumer<user32dllInterface> windowsAction) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         if (minecraftClient == null)
             return;
@@ -426,7 +408,7 @@ public class MouseUtils {
             String coordinates = "";
             if (logCoordinates) {
                 int x = (int) minecraftClient.mouse.getX(), y = (int) minecraftClient.mouse.getY();
-                coordinates = " on x:%d y:%d".formatted(x, y);
+                coordinates = " at minecraft x:%d y:%d".formatted(x, y);
             }
            log.debug("Performing " + name + coordinates);
 
@@ -434,7 +416,7 @@ public class MouseUtils {
             if (OsUtils.isLinux()) {
                 Runtime.getRuntime().exec(linuxXdotCommand);
             } else if (OsUtils.isMacOS()) {
-                if (coreGraphicsInstance == null) initializeCoreGraphics();
+                if (cgWrapper == null) initializeCoreGraphics();
 
         // Check if the accessibility permission has been granted
         // If not, mouse simulation will not work, so inform the user
@@ -444,7 +426,12 @@ public class MouseUtils {
             return;
         }
 
-                macOSAction.accept(coreGraphicsInstance);
+		if (logCoordinates) {
+			var p = cgWrapper.getNativeMousePosition();
+			String nativeCoordinates = " at native x:%f y:%f".formatted(p.x, p.y);
+			log.debug("\nPerforming " + name + nativeCoordinates);
+		}
+		macOSAction.accept(cgWrapper);
             } else if (OsUtils.isWindows()) {
                 if (user32dllInstance == null) initializeUser32dll();
                 windowsAction.accept(user32dllInstance);
@@ -505,7 +492,7 @@ public class MouseUtils {
             return;
 
         try {
-            coreGraphicsInstance = Native.load("CoreGraphics", CoreGraphicsInterface.class);
+            cgWrapper =new CGWrapper(Native.load("CoreGraphics", CoreGraphicsInterface.class));
             coreFoundationInstance = Native.load("CoreFoundation", CoreFoundationInterface.class);
             applicationServicesInstance = Native.load("ApplicationServices", ApplicationServicesInterface.class);
         } catch (Exception e) {
