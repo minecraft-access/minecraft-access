@@ -689,4 +689,21 @@ public class MouseUtils {
         // https://developer.apple.com/documentation/applicationservices/1460720-axisprocesstrusted
         byte AXIsProcessTrusted();
     }
+
+    private static class CGWrapper {
+        private         CoreGraphicsInterface cgInstance;
+        public CGWrapper(CoreGraphicsInterface instance) {
+            cgInstance = instance;
+        }
+
+        /**
+         * Creates a pointer event, extracts the x,y coordinates of its location, frees the event and then returns the coordinates
+         */
+        public CoreGraphicsInterface.CGPoint.ByValue getNativeMousePosition(){
+            Pointer dummyEvent = cgInstance.CGEventCreate(new Pointer(0));
+            var position = cgInstance.CGEventGetLocation(dummyEvent);
+            coreFoundationInstance.CFRelease(dummyEvent);
+            return position;
+        }
+    }
 }
