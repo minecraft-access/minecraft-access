@@ -48,7 +48,7 @@ public class MouseSimulationMenu extends BaseScreen {
                 (button) -> {
                     MouseSimulationConfigMap map = MouseSimulationConfigMap.getInstance();
                     map.setMacMouseFix(!map.getMacMouseFix());
-                    button.setMessage(Text.of(getMacMouseFixKey(map.isEnabled())));
+                    button.setMessage(Text.of(I18n.translate(getMacMouseFixKey(map.getMacMouseFix()))));
                     Config.getInstance().writeJSON();
                 });
         this.addDrawableChild(macMouseFixToggleButton);
