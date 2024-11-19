@@ -153,6 +153,8 @@
   "minecraft_access.gui.read_crosshair_config_menu.button.speak_block_sides_button": "Speak Block Sides",
   "minecraft_access.gui.read_crosshair_config_menu.button.use_jade_button": "Use Jade",
   "minecraft_access.gui.read_crosshair_config_menu.button.use_jade_button.unavailable": "Use Jade: Unavailable",
+  "minecraft_access.gui.mouse_simulation.button.toggle_mac_mouse_fix_button.enabled": "Use MacOS mouse fix: Enabled",
+  "minecraft_access.gui.mouse_simulation.button.toggle_mac_mouse_fix_button.disabled": "Use MacOS mouse fix: Disabled",
   "minecraft_access.gui.screen.access_menu": "Access Menu",
   "minecraft_access.gui.screen.access_menu_config_menu": "Access Menu Configs Menu",
   "minecraft_access.gui.screen.area_map_config_menu": "Area Map Configs Menu",
