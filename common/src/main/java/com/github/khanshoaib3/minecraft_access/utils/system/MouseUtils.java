@@ -1,6 +1,7 @@
 package com.github.khanshoaib3.minecraft_access.utils.system;
 
 import com.github.khanshoaib3.minecraft_access.MainClass;
+import com.github.khanshoaib3.minecraft_access.config.config_maps.MouseSimulationConfigMap;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -405,9 +406,16 @@ public class MouseUtils {
         if (client == null) return new Coordinates(x, y);
         Window window = client.getWindow();
         if (window == null) return new Coordinates(x, y);
+		MouseSimulationConfigMap config = MouseSimulationConfigMap.getInstance();
 
-        int realX = (int) (window.getX() + (x * window.getScaleFactor()));
-        int realY = (int) (window.getY() + (y * window.getScaleFactor()));
+        int realX, realY;
+		if (config.getMacMouseFix()) {
+			realX = (int) ((x * window.getScaleFactor()));
+			realY = (int) ((y * window.getScaleFactor()));						
+		} else {
+			realX = (int) (window.getX() + (x * window.getScaleFactor()));
+			realY = (int) (window.getY() + (y * window.getScaleFactor()));
+		}
         return new Coordinates(realX, realY);
     }
 
