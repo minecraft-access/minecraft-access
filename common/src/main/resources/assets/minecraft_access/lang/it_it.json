@@ -152,7 +152,7 @@
   "minecraft_access.gui.screen.relative_position_sound_cue_menu": "Menu di configurazione del segnale acustico della posizione relativa",
   "minecraft_access.gui.screen.value_entry_menu": "Inserimento valore Menu",
   "minecraft_access.gui.value_entry_menu.info_text": "Premere il tasto Invio per accettare e il tasto Esci per annullare.\tValore: %s",
-  "minecraft_access.health_and_hunger.format": "La salute è %s. La fame è %s",
+  "minecraft_access.healthHunger.format": "La salute è %s. La fame è %s",
   "minecraft_access.inventory_controls.Unknown": "Sconosciuto",
   "minecraft_access.inventory_controls.direction_down": "Giu",
   "minecraft_access.inventory_controls.direction_left": "Sinistra",

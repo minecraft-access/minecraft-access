@@ -62,6 +62,21 @@ public class OtherConfigMenu extends BaseScreen {
                 true);
         this.addDrawableChild(speakFacingDirectionButton);
 
+        ButtonWidget healthNHungerButton = this.buildButtonWidget(
+                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isHealthNHungerEnabled() ? "enabled" : "disabled"),
+                        I18n.translate("minecraft_access.gui.other_config_menu.button.health_n_hunger_button")
+                ),
+                (button) -> {
+                    OtherConfigsMap map = OtherConfigsMap.getInstance();
+                    map.setHealthNHungerEnabled(!map.isHealthNHungerEnabled());
+                    Config.getInstance().writeJSON();
+                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isHealthNHungerEnabled() ? "enabled" : "disabled"),
+                            I18n.translate("minecraft_access.gui.other_config_menu.button.health_n_hunger_button")
+                    )));
+                },
+                true);
+        this.addDrawableChild(healthNHungerButton);
+
         ButtonWidget positionNarratorButton = this.buildButtonWidget(
                 I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isPositionNarratorEnabled() ? "enabled" : "disabled"),
                         I18n.translate("minecraft_access.gui.other_config_menu.button.position_narrator_button")

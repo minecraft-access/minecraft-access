@@ -177,7 +177,7 @@
   "minecraft_access.gui.screen.value_entry_menu": "数值输入菜单",
   "minecraft_access.gui.speech_settings_config_menu.button.speech_rate": "语音速度（百分比）",
   "minecraft_access.gui.value_entry_menu.info_text": "按回车键确认，或按ESC退出键取消。\t当前值： %s",
-  "minecraft_access.health_and_hunger.format": "健康 %s，饥饿 %s。",
+  "minecraft_access.healthHunger.format": "健康 %s，饥饿 %s。",
   "minecraft_access.inventory_controls.Unknown": "未知",
   "minecraft_access.inventory_controls.direction_down": "下",
   "minecraft_access.inventory_controls.direction_left": "左",

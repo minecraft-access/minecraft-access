@@ -22,7 +22,7 @@ There is also a page for [viewing all sound effects](https://html-preview.github
 7. [Access Menu](#access-menu)
 8. [Play Status](#player-status)
     * [Position Narrator](#position-narrator)
-    * [Health And Hunger](#health-and-hunger)
+    * [Health n Hunger](#health-n-hunger)
     * [Player Warnings](#player-warnings)
 9. [Book Editing](#book-editing)
 10. [Speak Text Editing](#speak-text-editing)
@@ -207,11 +207,11 @@ Minecraft has a built-in [absolute coordinate system](https://minecraft.wiki/w/C
 
 See also: [Configuration](/docs/config.md#position-narrator), [Keybindings](/docs/keybindings.md#position-narrator)
 
-### Health And Hunger
+### Health n Hunger
 
-This feature adds a key to speak your [health](https://minecraft.wiki/w/Health) and [hunger](https://minecraft.wiki/w/Hunger), it also speaks remaining [air](https://minecraft.wiki/w/Damage#Drowning) when you're underwater.
+This feature adds a key to speak your health and hunger.
 
-See also: [Keybindings](/docs/keybindings.md#health-and-hunger)
+See also: [Configuration](/docs/config.md#health-n-hunger), [Keybindings](/docs/keybindings.md#health-n-hunger)
 
 ### Player Warnings
 

@@ -11,7 +11,7 @@ import java.util.Set;
  * Initializes all the keybindings used in the mod.
  */
 public class KeyBindingsHandler {
-    public KeyBinding healthAndHungerNarrationKey;
+    public KeyBinding healthNHungerNarrationKey;
     public KeyBinding lockingHandlerKey;
     public KeyBinding positionNarrationKey;
     public KeyBinding accessMenuKey;
@@ -423,7 +423,7 @@ public class KeyBindingsHandler {
      * 9) Left Alt + Z = Speaks only the z position.<br>
      */
     private void initializeOtherKeybindings() {
-        healthAndHungerNarrationKey = new KeyBinding(
+        healthNHungerNarrationKey = new KeyBinding(
                 "minecraft_access.keys.other.health_n_hunger_key_name",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_R,
@@ -566,7 +566,7 @@ public class KeyBindingsHandler {
 //                        areaMapDownKey,
 //                        areaMapResetCursorKey,
 //                        areaMapMapLockKey,
-                healthAndHungerNarrationKey,
+                healthNHungerNarrationKey,
                 lockingHandlerKey,
                 positionNarrationKey,
                 accessMenuKey,

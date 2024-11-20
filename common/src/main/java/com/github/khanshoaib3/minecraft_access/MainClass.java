@@ -123,7 +123,7 @@ public class MainClass {
         PositionNarrator.getInstance().update();
 
         if (MinecraftClient.getInstance() != null && WorldUtils.getClientPlayer() != null) {
-            HealthAndHunger.runOnTick();
+            new HealthNHunger().update();
             MouseKeySimulation.runOnTick();
 
             if (MinecraftClient.getInstance().currentScreen == null) {

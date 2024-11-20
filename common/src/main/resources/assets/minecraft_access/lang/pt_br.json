@@ -136,7 +136,7 @@
   "minecraft_access.gui.screen.read_crosshair_config_menu": "Menú de configurações de leitura de mira",
   "minecraft_access.gui.screen.value_entry_menu": "Entrada de valor menu",
   "minecraft_access.gui.value_entry_menu.info_text": "pressione enter para confirmar e escape para cancelar.\tValor: %s",
-  "minecraft_access.health_and_hunger.format": "%s saúde. %s Fome",
+  "minecraft_access.healthHunger.format": "%s saúde. %s Fome",
   "minecraft_access.inventory_controls.Unknown": "Desconhecido",
   "minecraft_access.inventory_controls.direction_down": "Abaixo",
   "minecraft_access.inventory_controls.direction_left": "A esquerda",

@@ -16,7 +16,7 @@ You may want to take a look at [all the original controls](https://minecraft.wik
 3. [Inventory Controls](#inventory-controls)
 4. [Point of Interest](#point-of-interest)
 5. [Position Narrator](#position-narrator)
-6. [Health And Hunger](#health-and-hunger)
+6. [Health n Hunger](#health-n-hunger)
 7. [Access Menu](#access-menu)
 8. [Book Editing](#book-editing)
 9. [Speak Chat Messages](#speak-chat-messages)
@@ -125,13 +125,13 @@ See also: [Feature Description](/docs/features.md#points-of-interest),
 
 See also: [Feature Description](/docs/features.md#position-narrator), [Configuration](/docs/config.md#position-narrator)
 
-## Health And Hunger
+## Health n Hunger
 
-| Single Key                       | Default Keybinding | Description                                       |
-|----------------------------------|--------------------|---------------------------------------------------|
-| `Speak Player Health and Hunger` | R                  | Speak the player's current health, hunger and air |
+| Single Key                       | Default Keybinding | Description                                  |
+|----------------------------------|--------------------|----------------------------------------------|
+| `Speak Player Health and Hunger` | R                  | Speak the player's current health and hunger |
 
-See also: [Feature Description](/docs/features.md#health-and-hunger)
+See also: [Feature Description](/docs/features.md#health-n-hunger), [Configuration](/docs/config.md#health-n-hunger)
 
 ## Access Menu
 

@@ -177,7 +177,7 @@
   "minecraft_access.gui.screen.value_entry_menu": "Value Entry Menu",
   "minecraft_access.gui.speech_settings_config_menu.button.speech_rate": "Speech Rate (percent)",
   "minecraft_access.gui.value_entry_menu.info_text": "Press enter key to accept and escape key to cancel.\tValue: %s",
-  "minecraft_access.health_and_hunger.format": "Health is %s. Hunger is %s",
+  "minecraft_access.healthHunger.format": "Health is %s. Hunger is %s",
   "minecraft_access.inventory_controls.Unknown": "Unknown",
   "minecraft_access.inventory_controls.direction_down": "Down",
   "minecraft_access.inventory_controls.direction_left": "Left",

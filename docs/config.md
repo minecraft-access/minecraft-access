@@ -21,11 +21,12 @@ or click `Reset Config` button in the `Config Menu`.
 4. [Inventory Controls](#inventory-controls)
 5. [Point of Interest](#point-of-interest)
 6. [Position Narrator](#position-narrator)
-7. [Player Warnings](#player-warnings)
-8. [Fall Detector](#fall-detector)
-9. [Access Menu](#access-menu)
-   * [Fluid Detector](#fluid-detector)
-10. [Other Configurations](#other-configurations)
+7. [Health n Hunger](#health-n-hunger)
+8. [Player Warnings](#player-warnings)
+9. [Fall Detector](#fall-detector)
+10. [Access Menu](#access-menu)
+    * [Fluid Detector](#fluid-detector)
+11. [Other Configurations](#other-configurations)
 
 ## Camera Controls
 
@@ -173,6 +174,16 @@ These configs are under `Other Configurations` section in the config file and co
 | Position Narrator Format | `{x}x, {y}y, {z}z` | The speaking format of the position, `{x}`, `{y}`, `{z}` represent the corresponding axis's position |
 
 See also: [Feature Description](/docs/features.md#position-narrator), [keybindings](/docs/keybindings.md#position-narrator)
+
+## Health n Hunger
+
+This config is under `Other Configurations` section in the config file and config menu.
+
+| Configuration          | Default Value | Description                    |
+|------------------------|---------------|--------------------------------|
+| Enable Health n Hunger | true          | Whether to enable this feature |
+
+See also: [Feature Description](/docs/features.md#health-n-hunger), [keybindings](/docs/keybindings.md#health-n-hunger)
 
 ## Player Warnings
 
