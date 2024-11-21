@@ -117,7 +117,7 @@ is for providing user information to client side game when developing.
         * `minecraft_access.accesswidener`: Yet another configuration.
         * `minecraft_access-common.mixins.json`: Mixin configuration that tells the Mixin framework where to find Mixin classes under `common` directory.
         * `assets/minecraft_access`: Contains custom resource files of this mod, structured in the [Minecraft Resource Pack](https://minecraft.wiki/w/Resource_pack) format.
-            * `lang`: The I18N text used by this mod for narration purpose, managed with Weblate.
+            * `lang`: The I18N text used by this mod for narration purpose, managed with [Weblate].
     * `src/test`: Unit test suite.
 * `fabric`: Gradle subproject, Fabric-dependent mod code.
     * `build.gradle`: Gradle build script of Fabric version mod.
