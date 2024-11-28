@@ -329,6 +329,6 @@
   "minecraft_access.wolf_variant.spotted": "Spotted",
   "minecraft_access.wolf_variant.striped": "Striped",
   "minecraft_access.wolf_variant.woods": "Woods",
-  "minecraft_access.xp_indicator.decreased": "Player XP decreased to %s",
-  "minecraft_access.xp_indicator.increased": "Player XP increased to %s"
+  "minecraft_access.xp_indicator.decreased": "Player XP level decreased to %s",
+  "minecraft_access.xp_indicator.increased": "Player XP level increased to %s"
 }
