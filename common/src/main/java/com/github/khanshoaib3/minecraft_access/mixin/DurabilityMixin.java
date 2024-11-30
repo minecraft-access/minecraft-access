@@ -26,6 +26,6 @@ public class DurabilityMixin {
 
         int totalDurability = itemStack.getMaxDamage();
         int remainingDurability = totalDurability - itemStack.getDamage();
-        list.add(1, Text.of((I18n.translate("minecraft_access.other.durability", remainingDurability, totalDurability).formatted(Formatting.GREEN))));
+        list.add(1, Text.of((I18n.translate("item.durability", remainingDurability, totalDurability).formatted(Formatting.GREEN))));
     }
 }

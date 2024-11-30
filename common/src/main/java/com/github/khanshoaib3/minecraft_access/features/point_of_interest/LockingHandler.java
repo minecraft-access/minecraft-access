@@ -183,7 +183,7 @@ public class LockingHandler {
             if (this.unlockingSound) {
                 PlayerUtils.playSoundOnPlayer(SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM, 0.4f, 2f);
             } else {
-                MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.locking.unlocked"), true);
+                MainClass.speakWithNarrator(I18n.translate("narrator.button.difficulty_lock.unlocked"), true);
             }
         }
     }
