@@ -151,7 +151,7 @@ public class NarrationUtils {
 
     private static String getSheepInfo(SheepEntity sheepEntity, String currentQuery) {
         String dyedColor = sheepEntity.getColor().getName();
-        String translatedColor = I18n.translate("minecraft_access.color." + dyedColor);
+        String translatedColor = I18n.translate("color.minecraft." + dyedColor);
         String shearable = sheepEntity.isShearable() ?
                 I18n.translate("minecraft_access.read_crosshair.shearable", currentQuery) :
                 I18n.translate("minecraft_access.read_crosshair.not_shearable", currentQuery);
