@@ -12,13 +12,13 @@ import net.minecraft.client.gui.screen.recipebook.AnimatedResultButton;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.search.SearchManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.*;
@@ -307,7 +307,6 @@ public class GroupGenerator {
         }
 
         if (screen instanceof LoomScreen loomScreen) {
-            // TODO add tutorial on wiki
             // Refer to LoomScreen.java -->> drawBackground()
             int i = screen.getX();
             int j = screen.getY();
@@ -365,8 +364,14 @@ public class GroupGenerator {
             int i = enchantmentScreenHandler.getLapisCount();
             for (int j = 0; j < 3; ++j) {
                 int k = enchantmentScreenHandler.enchantmentPower[j];
-                Optional<RegistryEntry.Reference<Enchantment>> optional = MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(enchantmentScreenHandler.enchantmentId[j]);
                 int l = enchantmentScreenHandler.enchantmentLevel[j];
+                // copied from 1.21.3 EnchantmentScreen.render() L172
+                Optional<RegistryEntry.Reference<Enchantment>> optional = MinecraftClient.getInstance()
+                        .world
+                        .getRegistryManager()
+                        .getOrThrow(RegistryKeys.ENCHANTMENT)
+                        .getEntry(l);
+
                 int m = j + 1;
                 if (optional.isEmpty()) break;
                 StringBuilder clueText = new StringBuilder(Text.translatable("container.enchant.clue", Enchantment.getName(optional.get(), l)).formatted(Formatting.WHITE).getString());
@@ -648,8 +653,12 @@ public class GroupGenerator {
         List<AnimatedResultButton> slots = ((RecipeBookResultsAccessor) recipeBookWidgetAccessor.getRecipesArea()).getResultButtons();
 
         //<editor-fold desc="Get the recipe list (refer to RecipeBookWidget.java -->> refreshResults())">
-        List<RecipeResultCollection> list = recipeBookWidgetAccessor.getRecipeBook().getResultsForGroup(recipeBookWidgetAccessor.getCurrentTab().getCategory());
-        list.forEach(resultCollection -> resultCollection.computeCraftables(recipeBookWidgetAccessor.getRecipeFinder(), recipeBookWidgetAccessor.getCraftingScreenHandler().getCraftingWidth(), recipeBookWidgetAccessor.getCraftingScreenHandler().getCraftingHeight(), recipeBookWidgetAccessor.getRecipeBook()));
+        List<RecipeResultCollection> list = recipeBookWidgetAccessor.getRecipeBook().getResultsForCategory(recipeBookWidgetAccessor.getCurrentTab().getCategory());
+        AbstractRecipeScreenHandler craftingScreenHandler = recipeBookWidgetAccessor.getCraftingScreenHandler();
+        list.forEach(resultCollection -> {
+            RecipeFinder recipeFinder = recipeBookWidgetAccessor.getRecipeFinder();
+            resultCollection.computeCraftables(recipeFinder, craftingScreenHandler.getCraftingWidth(), craftingScreenHandler.getCraftingHeight(), recipeBookWidgetAccessor.getRecipeBook());
+        });
         ArrayList<RecipeResultCollection> finalRecipeSearchResultList = Lists.newArrayList(list);
         finalRecipeSearchResultList.removeIf(resultCollection -> !resultCollection.isInitialized());
         finalRecipeSearchResultList.removeIf(resultCollection -> !resultCollection.hasFittingRecipes());
@@ -661,7 +670,7 @@ public class GroupGenerator {
                 finalRecipeSearchResultList.removeIf(recipeResultCollection -> !objectSet.contains(recipeResultCollection));
             }
         }
-        if (recipeBookWidgetAccessor.getRecipeBook().isFilteringCraftable(recipeBookWidgetAccessor.getCraftingScreenHandler())) {
+        if (recipeBookWidgetAccessor.getRecipeBook().isFilteringCraftable(craftingScreenHandler)) {
             finalRecipeSearchResultList.removeIf(resultCollection -> !resultCollection.hasCraftableRecipes());
         }
         //</editor-fold>
