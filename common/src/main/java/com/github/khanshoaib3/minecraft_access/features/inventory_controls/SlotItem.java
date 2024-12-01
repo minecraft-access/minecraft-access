@@ -2,6 +2,7 @@ package com.github.khanshoaib3.minecraft_access.features.inventory_controls;
 
 import com.github.khanshoaib3.minecraft_access.mixin.LoomScreenAccessor;
 import com.github.khanshoaib3.minecraft_access.mixin.MerchantScreenAccessor;
+import com.github.khanshoaib3.minecraft_access.mixin.SingleStackRecipeAccessor;
 import com.github.khanshoaib3.minecraft_access.mixin.StonecutterScreenAccessor;
 import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.client.MinecraftClient;
@@ -14,7 +15,7 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.StonecuttingRecipe;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.recipe.display.CuttingRecipeDisplay;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
@@ -94,11 +95,14 @@ public class SlotItem {
         }
 
         if (MinecraftClient.getInstance().currentScreen instanceof StonecutterScreen stonecutterScreen) {
-            List<RecipeEntry<StonecuttingRecipe>> list = stonecutterScreen.getScreenHandler().getAvailableRecipes();
+            List<CuttingRecipeDisplay.GroupEntry<StonecuttingRecipe>> list = stonecutterScreen.getScreenHandler().getAvailableRecipes().entries();
             if (list.isEmpty()) return "";
 
             int scrollOffset = ((StonecutterScreenAccessor) stonecutterScreen).getScrollOffset();
-            ItemStack item = list.get(recipeOrTradeIndex + scrollOffset).value().getResult(DynamicRegistryManager.EMPTY);
+            Optional<RecipeEntry<StonecuttingRecipe>> recipe = list.get(recipeOrTradeIndex + scrollOffset).recipe().recipe();
+            if (recipe.isEmpty()) return "";
+            StonecuttingRecipe recipe1 = recipe.get().value();
+            ItemStack item = ((SingleStackRecipeAccessor) recipe1).getResult();
             List<Text> toolTip = Screen.getTooltipFromItem(MinecraftClient.getInstance(), item);
             StringBuilder toolTipString = new StringBuilder();
             for (Text text : toolTip) {
