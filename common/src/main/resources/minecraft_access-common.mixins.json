@@ -4,7 +4,6 @@
   "package": "com.github.khanshoaib3.minecraft_access.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "AnimatedResultButtonAccessor",
     "AnimatedResultButtonMixin",
     "AnvilScreenAccessor",
     "AnvilScreenMixin",
