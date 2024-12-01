@@ -23,6 +23,7 @@ public class POIMarking {
     private static final POIBlocks poiBlocks;
     private static final POIEntities poiEntities;
     private static final LockingHandler lockingHandler;
+    private static final ObjectTracker objectTracker;
     private boolean onMarking = false;
     private Entity markedEntity = null;
     private Block markedBlock = null;
@@ -32,6 +33,7 @@ public class POIMarking {
         poiBlocks = POIBlocks.getInstance();
         poiEntities = POIEntities.getInstance();
         lockingHandler = LockingHandler.getInstance();
+        objectTracker = ObjectTracker.getInstance();
     }
 
     /**
@@ -60,6 +62,7 @@ public class POIMarking {
         poiEntities.update(onMarking, markedEntity);
         // Locking Handler (POI Locking) should be after POI Scan features
         lockingHandler.update(onMarking);
+        objectTracker.update();
     }
 
     private void mark() {

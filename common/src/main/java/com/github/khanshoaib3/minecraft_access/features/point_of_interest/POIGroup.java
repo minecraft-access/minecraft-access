@@ -27,6 +27,10 @@ public class POIGroup {
     private BiFunction<BlockState, BlockPos, Boolean> blockFilter;
 
     public POIGroup(String name, SoundEvent sound, float soundPitch, Function<Entity, Boolean> entityFilter, BiFunction<BlockState, BlockPos, Boolean> blockFilter) {
+        if (entityFilter != null && blockFilter != null) {
+            throw new IllegalArgumentException("POI groups can only have one filter type");
+        }
+
         this.name = name;
         this.sound = sound;
         this.soundPitch = soundPitch;
@@ -112,5 +116,21 @@ public class POIGroup {
 
     public void addEntity(Entity entity) {
         entities.add(entity);
+    }
+
+    public static enum GroupType {
+        ENTITY,
+        BLOCK
+    }
+
+    public GroupType getType() {
+        if (entityFilter != null) return GroupType.ENTITY;
+        if (blockFilter != null) return GroupType.BLOCK;
+
+        return null;
+    }
+
+    public boolean isEmpty() {
+        return entities.isEmpty() && blocks.isEmpty();
     }
 }
