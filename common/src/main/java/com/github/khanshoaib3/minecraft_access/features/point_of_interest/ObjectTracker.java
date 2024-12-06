@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import com.github.khanshoaib3.minecraft_access.MainClass;
 import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
 import com.github.khanshoaib3.minecraft_access.utils.NarrationUtils;
+import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
 import com.github.khanshoaib3.minecraft_access.utils.condition.Keystroke;
 import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
 
@@ -13,6 +14,7 @@ import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 public class ObjectTracker {
@@ -68,11 +70,15 @@ public class ObjectTracker {
             case ENTITY:
                 Entity entity = currentGroup.getEntities().values().stream().toList().get(currentObjectIndex);
                 MainClass.speakWithNarrator(NarrationUtils.narrateEntity(entity), true);
-                return;
+
+                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, entity.getPos());
+                break;
             case BLOCK:
                 BlockPos block = currentGroup.getBlocks().keySet().stream().toList().get(currentObjectIndex);
                 MainClass.speakWithNarrator(NarrationUtils.narrateBlock(block, null), true);
-                return;
+
+                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, block.toCenterPos());
+                break;
         }
     }
 
@@ -109,8 +115,6 @@ public class ObjectTracker {
                 }
 
                 currentObjectIndex += step;
-                MainClass.speakWithNarrator(NarrationUtils.narrateEntity(entities.get(currentObjectIndex)), true);
-
                 break;
                 case BLOCK:
             List<BlockPos> blocks = currentGroup.getBlocks().keySet().stream().toList();
@@ -126,9 +130,9 @@ public class ObjectTracker {
             }
 
             currentObjectIndex += step;
-            MainClass.speakWithNarrator(NarrationUtils.narrateBlock(blocks.get(currentObjectIndex), null), true);
-
             break;
         }
+
+        narrateCurrentObject();
     }
 }
