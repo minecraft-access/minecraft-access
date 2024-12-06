@@ -45,7 +45,7 @@ public class ObjectTracker {
         if (minecraftClient.world == null) return;
         if (minecraftClient.currentScreen != null) return;
 
-        if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject();
+        if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
         if (nextItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(1);
         if (previousItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(-1);
@@ -58,24 +58,24 @@ public class ObjectTracker {
         narrateCurrentObjectKeyPressed.updateStateForNextTick();
     }
 
-    private void narrateCurrentObject() {
+    private void narrateCurrentObject(boolean interupt) {
         POIGroup currentGroup = groups.get(currentGroupIndex);
 
         if (currentGroup.isEmpty()) {
-            MainClass.speakWithNarrator("No objects in current group", true);
+            MainClass.speakWithNarrator("No objects in current group", interupt);
             return;
         }
 
         switch (currentGroup.getType()) {
             case ENTITY:
                 Entity entity = currentGroup.getEntities().values().stream().toList().get(currentObjectIndex);
-                MainClass.speakWithNarrator(NarrationUtils.narrateEntity(entity), true);
+                MainClass.speakWithNarrator(NarrationUtils.narrateEntity(entity), interupt);
 
                 WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, entity.getPos());
                 break;
             case BLOCK:
                 BlockPos block = currentGroup.getBlocks().keySet().stream().toList().get(currentObjectIndex);
-                MainClass.speakWithNarrator(NarrationUtils.narrateBlock(block, null), true);
+                MainClass.speakWithNarrator(NarrationUtils.narrateBlock(block, null), interupt);
 
                 WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, block.toCenterPos());
                 break;
@@ -85,16 +85,20 @@ public class ObjectTracker {
     private void moveGroup(int step) {
         if ((currentGroupIndex + step) > (groups.size() - 1)) {
             MainClass.speakWithNarrator("End of list", true);
+            MainClass.speakWithNarrator(groups.get(currentGroupIndex).name, false);
             return;
         }
 
         if ((currentGroupIndex + step) < 0) {
             MainClass.speakWithNarrator("Start of list", true);
+            MainClass.speakWithNarrator(groups.get(currentGroupIndex).name, false);
             return;
         }
 
         currentGroupIndex += step;
+        currentObjectIndex = 0;
         MainClass.speakWithNarrator(groups.get(currentGroupIndex).name, true);
+        narrateCurrentObject(false);
     }
 
     private void moveObject(int step) {
@@ -106,11 +110,14 @@ public class ObjectTracker {
 
                 if ((currentObjectIndex + step) > (entities.size() - 1)) {
                     MainClass.speakWithNarrator("End of list", true);
+                    currentObjectIndex = entities.size() - 1;
+                    narrateCurrentObject(false);
                     return;
                 }
 
                 if ((currentObjectIndex + step) < 0) {
                     MainClass.speakWithNarrator("Start of list", true);
+                    narrateCurrentObject(false);
                     return;
                 }
 
@@ -121,11 +128,14 @@ public class ObjectTracker {
 
             if ((currentObjectIndex + step) > (blocks.size() - 1)) {
                 MainClass.speakWithNarrator("End of list", true);
+                currentObjectIndex = blocks.size() - 1;
+                narrateCurrentObject(false);
                 return;
             }
 
             if ((currentObjectIndex + step) < 0) {
                 MainClass.speakWithNarrator("Start of list", true);
+                narrateCurrentObject(false);
                 return;
             }
 
@@ -133,6 +143,6 @@ public class ObjectTracker {
             break;
         }
 
-        narrateCurrentObject();
+        narrateCurrentObject(true);
     }
 }
