@@ -23,6 +23,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -42,24 +43,41 @@ public class POIEntities {
     private boolean onPOIMarkingNow = false;
     private Predicate<Entity> markedEntity = e -> false;
 
-    public Map<String, POIGroup> builtInGroups = Map.of(
-            "yourPet", new POIGroup("Your Pets", SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f,
-                    entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid()), null),
-            "otherPet", new POIGroup("Other Pets", SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(), 1f,
-                    entity -> entity instanceof TameableEntity pet && pet.isTamed(), null),
-            "boss", new POIGroup("Bosses", SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 2f,
-                    entity -> entity instanceof MobEntity mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolemEntity), null),
-            "hostile", new POIGroup("Hostile Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 2f,
-                    entity -> entity instanceof HostileEntity || entity instanceof Angerable monster && (monster.hasAngerTime() || MinecraftClient.getInstance().player.getUuid().equals(monster.getAngryAt()) || MinecraftClient.getInstance().player.getUuid().equals(monster.getAttacker()) || monster.isUniversallyAngry(MinecraftClient.getInstance().player.getWorld())), null),
-            "passive", new POIGroup("Passive Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f,
-                    entity -> entity instanceof PassiveEntity || entity instanceof WaterCreatureEntity, null),
-            "player", new POIGroup("Players", SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), 1f,
-                    entity -> entity instanceof PlayerEntity, null),
-            "vehicle", new POIGroup("Vehicles", SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f,
-                    entity -> entity instanceof VehicleEntity, null),
-            "item", new POIGroup("Items", SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, 2f,
-                    entity -> entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED), null)
+    public Map<String, POIGroup> builtInGroups = new LinkedHashMap<>();
+
+    {
+        builtInGroups.put("boss", new POIGroup("Bosses", SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 2f,
+            entity -> entity instanceof MobEntity mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolemEntity), null)
+        );
+
+        builtInGroups.put("hostile", new POIGroup("Hostile Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 2f,
+            entity -> entity instanceof HostileEntity || entity instanceof Angerable monster && (monster.hasAngerTime() || MinecraftClient.getInstance().player.getUuid().equals(monster.getAngryAt()) || MinecraftClient.getInstance().player.getUuid().equals(monster.getAttacker()) || monster.isUniversallyAngry(MinecraftClient.getInstance().player.getWorld())), null)
+        );
+
+            builtInGroups.put("passive", new POIGroup("Passive Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f,
+            entity -> entity instanceof PassiveEntity || entity instanceof WaterCreatureEntity, null)
+            );
+
+            builtInGroups.put("player", new POIGroup("Players", SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), 1f,
+            entity -> entity instanceof PlayerEntity, null)
+            );
+
+            builtInGroups.put("item", new POIGroup("Items", SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, 2f,
+            entity -> entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED), null)
+            );
+
+            builtInGroups.put("yourPet", new POIGroup("Your Pets", SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f,
+            entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid()), null)
+        );
+
+        builtInGroups.put("otherPet", new POIGroup("Other Pets", SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(), 1f,
+            entity -> entity instanceof TameableEntity pet && pet.isTamed(), null)
+        );
+
+        builtInGroups.put("vehicle", new POIGroup("Vehicles", SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f,
+        entity -> entity instanceof VehicleEntity, null)
     );
+    }
 
     static {
         instance = new POIEntities();

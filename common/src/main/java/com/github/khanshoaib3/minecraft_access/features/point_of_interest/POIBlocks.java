@@ -91,13 +91,29 @@ public class POIBlocks {
     private Predicate<BlockState> markedBlock = state -> false;
     private boolean onPOIMarkingNow = false;
 
-    public Map<String, POIGroup> builtInGroups = Map.of(
-        "marked", new POIGroup("Marked blocks", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) -> onPOIMarkingNow && markedBlock.test(block)),
-    "ore", new POIGroup("Ores", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) -> oreBlockPredicates.stream().anyMatch(p -> p.test(block))),
-        "fluid", new POIGroup("Fluids", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> this.detectFluidBlocks && block.getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && block.getFluidState().getLevel() == 8),
-        "functional", new POIGroup("Functional blocks", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> block.getBlock() instanceof ButtonBlock || block.getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(block))),
-        "gui", new POIGroup("Blocks with interface", SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), 0f, null, (block, pos) -> block.createScreenHandlerFactory(world, pos) != null)
+    public Map<String, POIGroup> builtInGroups = new LinkedHashMap<>();
+
+    {
+        builtInGroups.put("marked", new POIGroup("Marked blocks", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) ->
+        onPOIMarkingNow && markedBlock.test(block))
+        );
+
+        builtInGroups.put("ore", new POIGroup("Ores", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) ->
+            oreBlockPredicates.stream().anyMatch(p -> p.test(block)))
+        );
+
+        builtInGroups.put("functional", new POIGroup("Functional blocks", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) ->
+            block.getBlock() instanceof ButtonBlock || block.getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(block)))
+        );
+
+        builtInGroups.put("gui", new POIGroup("Blocks with interface", SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), 0f, null, (block, pos) ->
+            block.createScreenHandlerFactory(world, pos) != null)
+        );
+
+        builtInGroups.put("fluid", new POIGroup("Fluids", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) ->
+        this.detectFluidBlocks && block.getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && block.getFluidState().getLevel() == 8)
     );
+    }
 
     static {
         try {
