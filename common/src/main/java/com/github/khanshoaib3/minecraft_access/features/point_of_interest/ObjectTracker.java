@@ -1,6 +1,8 @@
 package com.github.khanshoaib3.minecraft_access.features.point_of_interest;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.github.khanshoaib3.minecraft_access.MainClass;
@@ -25,13 +27,21 @@ public class ObjectTracker {
     private Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerPreviousItem), Keystroke.TriggeredAt.PRESSED);
     private Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNarrateCurrentObject), Keystroke.TriggeredAt.PRESSED);
 
-    private List<POIGroup> groups = getPOIGroups();
+    private List<POIGroup> groups = new ArrayList<>();
 
     private List<POIGroup> getPOIGroups() {
-        return Stream.concat(
+        List<POIGroup> groupList = Stream.concat(
             POIEntities.getInstance().builtInGroups.values().stream(),
             POIBlocks.getInstance().builtInGroups.values().stream()
         ).toList();
+
+        List<POIGroup> result = new ArrayList<>();
+
+        for (POIGroup group : groupList) {
+            if (!group.isEmpty()) result.add(group);
+        }
+
+        return result;
     }
 
     private int currentGroupIndex = 0;
@@ -44,6 +54,8 @@ public class ObjectTracker {
         if (minecraftClient.player == null) return;
         if (minecraftClient.world == null) return;
         if (minecraftClient.currentScreen != null) return;
+
+        updateGroups();
 
         if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
@@ -58,7 +70,15 @@ public class ObjectTracker {
         narrateCurrentObjectKeyPressed.updateStateForNextTick();
     }
 
+    private void updateGroups() {
+        groups = getPOIGroups();
+
+        if (!groups.isEmpty() && currentGroupIndex > groups.size() - 1) currentGroupIndex = 0;
+    }
+
     private void narrateCurrentObject(boolean interupt) {
+        if (checkAndSpeakIfAllGroupsEmpty()) return;
+
         POIGroup currentGroup = groups.get(currentGroupIndex);
 
         if (currentGroup.isEmpty()) {
@@ -83,6 +103,8 @@ public class ObjectTracker {
     }
 
     private void moveGroup(int step) {
+        if (checkAndSpeakIfAllGroupsEmpty()) return;
+
         if ((currentGroupIndex + step) > (groups.size() - 1)) {
             MainClass.speakWithNarrator("End of list", true);
             MainClass.speakWithNarrator(groups.get(currentGroupIndex).name, false);
@@ -102,6 +124,8 @@ public class ObjectTracker {
     }
 
     private void moveObject(int step) {
+        if (checkAndSpeakIfAllGroupsEmpty()) return;
+
         POIGroup currentGroup = groups.get(currentGroupIndex);
 
         switch (currentGroup.getType()) {
@@ -144,5 +168,13 @@ public class ObjectTracker {
         }
 
         narrateCurrentObject(true);
+    }
+
+    private boolean checkAndSpeakIfAllGroupsEmpty() {
+        if (groups.isEmpty()) {
+            MainClass.speakWithNarrator("No points of interest detected", true);
+
+            return true;
+        } else return false;
     }
 }
