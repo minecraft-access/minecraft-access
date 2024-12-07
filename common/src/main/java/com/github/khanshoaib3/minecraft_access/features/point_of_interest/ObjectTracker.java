@@ -177,4 +177,17 @@ public class ObjectTracker {
             return true;
         } else return false;
     }
+
+    public Object getCurrentObject() {
+        POIGroup group = groups.get(currentGroupIndex);
+
+        switch (group.getType()) {
+            case ENTITY:
+                return group.getEntities().values();
+            case BLOCK:
+                return group.getBlocks().keySet().stream().toList().get(currentObjectIndex);
+        }
+
+        return null;
+    }
 }

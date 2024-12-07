@@ -18,6 +18,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EyeOfEnderEntity;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.item.BowItem;
 
@@ -189,6 +190,19 @@ public class LockingHandler {
     }
 
     private void relock() {
+        Object target = ObjectTracker.getInstance().getCurrentObject();
+
+        if (target instanceof Entity) {
+            lockOnEntity((Entity)target);
+        }
+
+        if (target instanceof BlockPos) {
+            BlockPos targetPos = (BlockPos)target;
+
+            lockOnBlock(targetPos.toCenterPos());
+        }
+
+        /* Commented out for now, will be used again in the future
         Map<String, POIGroup> entityGroups = POIEntities.getInstance().builtInGroups;
         for (POIGroup group : entityGroups.values()) {
             TreeMap<Double, Entity> map = group.getEntities();
@@ -201,6 +215,7 @@ public class LockingHandler {
         if (this.lockOnBlocks || onPOIMarkingNow) {
             findAndLockOnNearestBlock();
         }
+            */
     }
 
     /**
