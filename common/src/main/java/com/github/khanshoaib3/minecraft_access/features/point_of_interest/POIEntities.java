@@ -107,6 +107,10 @@ public class POIEntities {
             if (minecraftClient.world == null) return;
             if (minecraftClient.currentScreen != null) return; //Prevent running if any screen is opened
 
+            for (POIGroup group : builtInGroups.values()) {
+                group.clearEntities();
+            }    
+
             log.debug("POIEntities started.");
 
             // Copied from PlayerEntity.tickMovement()
