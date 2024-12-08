@@ -42,6 +42,11 @@ dependencies {
     modApi include("net.fabricmc.fabric-api:fabric-resource-loader-v0:${rootProject.fabric_resource_loader_version}")
     modApi include("net.fabricmc.fabric-api:fabric-key-binding-api-v1:${rootProject.fabric_key_binding_api_version}")
 
+    // Dependent on Tolk.jar from the Tolk repo:
+    // https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip
+    implementation files('../common/lib/Tolk.jar')
+    include files('../common/lib/Tolk.jar')
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }

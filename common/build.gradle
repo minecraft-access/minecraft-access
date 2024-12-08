@@ -38,12 +38,15 @@ dependencies {
 
     modImplementation 'maven.modrinth:jade:15.1.5+fabric'
 
-    // lombok that makes the life easier
-    // https://projectlombok.org/setup/gradle
+    // https://projectlombok.org
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    // Dependent on Tolk.jar from the Tolk repo:
+    // https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip
+    implementation files('lib/Tolk.jar')
 
     // dependent on log4j for dynamic changing
     implementation 'org.apache.logging.log4j:log4j-api:2.22.1'
