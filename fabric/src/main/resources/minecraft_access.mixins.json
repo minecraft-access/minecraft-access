@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.github.khanshoaib3.minecraft_access.fabric.mixin",
+  "package": "io.github.minecraft_access.minecraft_access.fabric.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],
