@@ -6,7 +6,7 @@ plugins {
     //
     // Latest Test Compatibility: gradle version 8.x shadow version 8.0.0+
     // ref: https://github.com/johnrengelman/shadow
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.gradleup.shadow" version "8.3.5"
 }
 
 architectury {
@@ -50,8 +50,8 @@ dependencies {
 
     // Dependent on Tolk.jar from the Tolk repo:
     // https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip
-    implementation files('../common/lib/Tolk.jar')
-    forgeRuntimeLibrary files('../common/lib/Tolk.jar')
+    implementation "com.davykager.tolk:Tolk:1.0.0"
+    forgeRuntimeLibrary "com.davykager.tolk:Tolk:1.0.0"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }

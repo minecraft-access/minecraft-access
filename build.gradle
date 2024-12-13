@@ -4,7 +4,7 @@ plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     // From developers of architectury: "shouldn't hardcode the loom version, just put *-SNAPSHOT"
     // ref: https://maven.architectury.dev/dev/architectury/architectury-loom/
-    id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.9-SNAPSHOT" apply false
 }
 
 architectury {
@@ -37,12 +37,17 @@ allprojects {
     version = rootProject.mod_version
     group = rootProject.maven_group
 
+
+    // Add repositories to retrieve artifacts from in here.
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    // for more information about repositories.
     repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
+        maven {
+            name "granny"
+            url "https://repo.granny.dev/releases"
+        }
     }
 
     tasks.withType(JavaCompile).configureEach {
