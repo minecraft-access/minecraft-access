@@ -71,10 +71,6 @@
     <h1>{{- .Page.Title -}}</h1>
     {{- if .Page.Content -}}
         <p>
-            Estimated reading time:{{- " " -}}
-            {{- .Page.ReadingTime }} {{ if eq .Page.ReadingTime 1 -}}minute{{- else -}}minutes{{- end -}}
-        </p>
-        <p>
             Last modified:
             <time datetime="{{- .Page.Lastmod.UTC.Format "2006-01-02T15:04:05Z" -}}">{{- .Page.Lastmod.UTC -}}</time>
         </p>
