@@ -183,7 +183,7 @@ public class ObjectTracker {
 
         switch (group.getType()) {
             case ENTITY:
-                return group.getEntities().values();
+                return group.getEntities().values().stream().toList().get(currentObjectIndex);
             case BLOCK:
                 return group.getBlocks().keySet().stream().toList().get(currentObjectIndex);
         }
