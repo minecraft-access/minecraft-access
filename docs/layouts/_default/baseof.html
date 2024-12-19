@@ -53,7 +53,7 @@
             <li>
                 {{- if not .IsHome -}}
                     <span class="breadcrumbsArrow">
-                                {{- partial "icon" (dict "Icon" "chevron_right" "Label" "right arrow") -}}
+                                {{- partial "icon" (dict "Icon" "chevron_right") -}}
                             </span>
                 {{- end -}}
                 <a href="{{- .RelPermalink -}}" class="{{- if eq . $.Page -}}current{{- end -}}">

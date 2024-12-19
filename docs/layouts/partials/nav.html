@@ -15,7 +15,7 @@
                       aria-current="{{- .IsAncestor $.CurrentPage -}}"
                       aria-controls="section-list-{{- md5 . -}}">
                     <span class="title">{{- default .Path .LinkTitle -}}</span>
-                    {{- partial "icon" (dict "Icon" "keyboard_arrow_down" "Label" "Dropdown toggle") -}}
+                    {{- partial "icon" (dict "Icon" "keyboard_arrow_down") -}}
                 </span>
             {{- else -}}
                 <div class="nav-link">
@@ -24,7 +24,7 @@
                         <button class="toggle"
                                 aria-current="{{- .IsAncestor $.CurrentPage -}}"
                                 aria-controls="section-list-{{- md5 . -}}">
-                            {{- partial "icon" (dict "Icon" "keyboard_arrow_down" "Label" "Dropdown toggle") -}}
+                            {{- partial "icon" (dict "Icon" "keyboard_arrow_down") -}}
                         </button>
                     {{- end -}}
                 </div>
