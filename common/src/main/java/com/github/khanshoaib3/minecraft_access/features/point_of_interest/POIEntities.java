@@ -109,7 +109,7 @@ public class POIEntities {
 
             for (POIGroup group : builtInGroups.values()) {
                 group.clearEntities();
-            }    
+            }
 
             log.debug("POIEntities started.");
 
@@ -137,7 +137,8 @@ public class POIEntities {
                 for (Entity e : entities) {
                     if (group.checkAndAddEntity(e)) {
                         this.playSoundAt(e.getBlockPos(), group.sound, group.soundPitch);
-                        entities.remove(e);
+                        // Todo: Figure out why is this line causing only the nearest entity to get added into the group
+                        // entities.remove(e);
                     }
                 }
             }
