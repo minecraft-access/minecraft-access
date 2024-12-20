@@ -16,9 +16,6 @@ public class BiomeIndicator {
     @Nullable
     private String previousBiome = null;
 
-    public BiomeIndicator() {
-    }
-
     public void update() {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         if (minecraftClient == null) return;

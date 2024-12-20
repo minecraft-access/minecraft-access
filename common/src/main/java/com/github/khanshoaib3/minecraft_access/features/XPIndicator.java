@@ -15,9 +15,6 @@ public class XPIndicator {
     @Nullable
     private Integer previousXPLevel = null;
 
-    public XPIndicator() {
-    }
-
     public void update() {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         if (minecraftClient == null) return;
