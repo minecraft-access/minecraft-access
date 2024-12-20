@@ -6,7 +6,7 @@ plugins {
     //
     // Latest Test Compatibility: gradle version 8.x shadow version 8.0.0+
     // ref: https://github.com/johnrengelman/shadow
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.gradleup.shadow" version "8.3.5"
 }
 
 architectury {
