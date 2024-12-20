@@ -32,6 +32,8 @@
     "MobSpawnerLogicAccessor",
     "PageTurnWidgetMixin",
     "RecipeBookResultsAccessor",
+    "RecipeBookResultsMixin",
+    "RecipeBookScreenAccessor",
     "RecipeBookWidgetAccessor",
     "ScreenMixin",
     "ScreenNarratorMixin",

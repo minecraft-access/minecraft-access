@@ -2,8 +2,6 @@ package com.github.khanshoaib3.minecraft_access.features.inventory_controls;
 
 import com.github.khanshoaib3.minecraft_access.mixin.*;
 import com.google.common.base.CaseFormat;
-import com.google.common.collect.Lists;
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -11,8 +9,6 @@ import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.gui.screen.recipebook.AnimatedResultButton;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.search.SearchManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
@@ -34,6 +30,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class GroupGenerator {
+
+    /**
+     * Saved by RecipeBookResultsMixin
+     */
+    public static List<RecipeResultCollection> recipesOnTheScreen;
 
     public static List<SlotsGroup> generateGroupsFromSlots(HandledScreenAccessor screen) {
         if (screen instanceof CreativeInventoryScreen creativeInventoryScreen) {
@@ -307,7 +308,6 @@ public class GroupGenerator {
         }
 
         if (screen instanceof LoomScreen loomScreen) {
-            // TODO add tutorial on wiki
             // Refer to LoomScreen.java -->> drawBackground()
             int i = screen.getX();
             int j = screen.getY();
@@ -365,8 +365,14 @@ public class GroupGenerator {
             int i = enchantmentScreenHandler.getLapisCount();
             for (int j = 0; j < 3; ++j) {
                 int k = enchantmentScreenHandler.enchantmentPower[j];
-                Optional<RegistryEntry.Reference<Enchantment>> optional = MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(enchantmentScreenHandler.enchantmentId[j]);
                 int l = enchantmentScreenHandler.enchantmentLevel[j];
+                // copied from 1.21.3 EnchantmentScreen.render() L172
+                Optional<RegistryEntry.Reference<Enchantment>> optional = MinecraftClient.getInstance()
+                        .world
+                        .getRegistryManager()
+                        .getOrThrow(RegistryKeys.ENCHANTMENT)
+                        .getEntry(l);
+
                 int m = j + 1;
                 if (optional.isEmpty()) break;
                 StringBuilder clueText = new StringBuilder(Text.translatable("container.enchant.clue", Enchantment.getName(optional.get(), l)).formatted(Formatting.WHITE).getString());
@@ -631,42 +637,20 @@ public class GroupGenerator {
 
     private static @NotNull List<SlotsGroup> inventoryAndCraftingScreensGroups(@NotNull HandledScreenAccessor screen) {
         List<SlotsGroup> foundGroups = commonGroups(screen);
-        RecipeBookWidget recipeBookWidget = null;
-        if (screen instanceof InventoryScreen inventoryScreen) {
-            recipeBookWidget = inventoryScreen.getRecipeBookWidget();
-        } else if (screen instanceof CraftingScreen craftingScreen) {
-            recipeBookWidget = craftingScreen.getRecipeBookWidget();
-        }
 
+        RecipeBookWidget<?> recipeBookWidget = null;
+        if (screen instanceof RecipeBookScreen<?> recipeBookScreen) {
+            recipeBookWidget = ((RecipeBookScreenAccessor) recipeBookScreen).getRecipeBook();
+        }
         if (recipeBookWidget == null || !recipeBookWidget.isOpen()) {
             return foundGroups;
         }
 
         RecipeBookWidgetAccessor recipeBookWidgetAccessor = (RecipeBookWidgetAccessor) recipeBookWidget;
-
         SlotsGroup recipesGroup = new SlotsGroup("recipes", null);
         List<AnimatedResultButton> slots = ((RecipeBookResultsAccessor) recipeBookWidgetAccessor.getRecipesArea()).getResultButtons();
 
-        //<editor-fold desc="Get the recipe list (refer to RecipeBookWidget.java -->> refreshResults())">
-        List<RecipeResultCollection> list = recipeBookWidgetAccessor.getRecipeBook().getResultsForGroup(recipeBookWidgetAccessor.getCurrentTab().getCategory());
-        list.forEach(resultCollection -> resultCollection.computeCraftables(recipeBookWidgetAccessor.getRecipeFinder(), recipeBookWidgetAccessor.getCraftingScreenHandler().getCraftingWidth(), recipeBookWidgetAccessor.getCraftingScreenHandler().getCraftingHeight(), recipeBookWidgetAccessor.getRecipeBook()));
-        ArrayList<RecipeResultCollection> finalRecipeSearchResultList = Lists.newArrayList(list);
-        finalRecipeSearchResultList.removeIf(resultCollection -> !resultCollection.isInitialized());
-        finalRecipeSearchResultList.removeIf(resultCollection -> !resultCollection.hasFittingRecipes());
-        String string = recipeBookWidgetAccessor.getSearchField().getText();
-        if (!string.isEmpty()) {
-            ClientPlayNetworkHandler clientPlayNetworkHandler = MinecraftClient.getInstance().getNetworkHandler();
-            if (clientPlayNetworkHandler != null) {
-                ObjectLinkedOpenHashSet<RecipeResultCollection> objectSet = new ObjectLinkedOpenHashSet<>(clientPlayNetworkHandler.getSearchManager().getRecipeOutputReloadFuture().findAll(string.toLowerCase(Locale.ROOT)));
-                finalRecipeSearchResultList.removeIf(recipeResultCollection -> !objectSet.contains(recipeResultCollection));
-            }
-        }
-        if (recipeBookWidgetAccessor.getRecipeBook().isFilteringCraftable(recipeBookWidgetAccessor.getCraftingScreenHandler())) {
-            finalRecipeSearchResultList.removeIf(resultCollection -> !resultCollection.hasCraftableRecipes());
-        }
-        //</editor-fold>
-
-        for (int i = 0; i < slots.size() && i < finalRecipeSearchResultList.size(); i++) {
+        for (int i = 0; i < slots.size() && i < GroupGenerator.recipesOnTheScreen.size(); i++) {
             AnimatedResultButton animatedResultButton = slots.get(i);
             int realX = animatedResultButton.getX() - screen.getX() + 10;
             int realY = animatedResultButton.getY() - screen.getY() + 10;
