@@ -34,13 +34,9 @@ configurations {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    // Use this part of fabric api to generate asserts to resource packs,
-    // so the lang resources can be loaded.
-    // Use jij Jar-in-Jar style to dependent on this part,
-    // so we needn't to depend on whole fabric-api.
-    // ref: https://fabricmc.net/wiki/documentation:fabric_loom#dependency_configurations
-    modApi include("net.fabricmc.fabric-api:fabric-resource-loader-v0:${rootProject.fabric_resource_loader_version}")
-    modApi include("net.fabricmc.fabric-api:fabric-key-binding-api-v1:${rootProject.fabric_key_binding_api_version}")
+    modImplementation include("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
+
+    modImplementation include("dev.architectury:architectury-fabric:${project.architectury_api_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
