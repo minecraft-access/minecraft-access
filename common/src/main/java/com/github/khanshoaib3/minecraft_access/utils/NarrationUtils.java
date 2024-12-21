@@ -21,6 +21,7 @@ import net.minecraft.entity.passive.*;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
@@ -54,7 +55,6 @@ public class NarrationUtils {
         String variant = getVariantInfo(entity);
         if (!Strings.isBlank(variant)) {
             Map<String, String> map = Map.of("variant", variant, "animal", type);
-            //noinspection SuperfluousFormat
             type = I18n.translate("minecraft_access.other.animal_variant_format", map);
         }
 
@@ -89,10 +89,10 @@ public class NarrationUtils {
         }
 
         if (entity instanceof LivingEntity livingEntity) {
-            for (var equipment : livingEntity.getEquippedItems()) {
+            for (ItemStack equipment : livingEntity.getEquippedItems()) {
                 if (equipment.isEmpty())
                     continue;
-                String equipmentName = I18n.translate(equipment.getTranslationKey());
+                String equipmentName = equipment.getName().getString();
                 equipments.add(equipmentName);
             }
         }
@@ -108,7 +108,6 @@ public class NarrationUtils {
         if (!Strings.isBlank(equipments.toString())) {
             String wordConnection = I18n.translate("minecraft_access.other.words_connection");
             var values = Map.of("entity", text, "equipments", String.join(wordConnection, equipments));
-            //noinspection SuperfluousFormat
             text = I18n.translate("minecraft_access.other.entity_with_equipments", values);
         }
 
