@@ -167,7 +167,7 @@ jobs:
         run: |
           git pull https://hosted.weblate.org/git/minecraft-access/mod/
       - name: Update Changelog
-        if: inputs.prerelease
+        if: "!inputs.prerelease"
         env:
           CHANGELOG: ${{ steps.changelog.outputs.result }}
         # language=bash
