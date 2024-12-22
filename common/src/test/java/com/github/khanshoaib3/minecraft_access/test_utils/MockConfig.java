@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.test_utils;
+package org.mcaccess.minecraftaccess.test_utils;
 
-import com.github.khanshoaib3.minecraft_access.config.Config;
+import org.mcaccess.minecraftaccess.config.Config;
 
 /**
  * Do not access json file to reduce the test suite execution time.

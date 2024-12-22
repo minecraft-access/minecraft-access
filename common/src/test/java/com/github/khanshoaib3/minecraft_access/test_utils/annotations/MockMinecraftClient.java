@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.test_utils.annotations;
+package org.mcaccess.minecraftaccess.test_utils.annotations;
 
-import com.github.khanshoaib3.minecraft_access.test_utils.MockMinecraftClientWrapper;
-import com.github.khanshoaib3.minecraft_access.test_utils.extensions.MockMinecraftClientExtension;
+import org.mcaccess.minecraftaccess.test_utils.MockMinecraftClientWrapper;
+import org.mcaccess.minecraftaccess.test_utils.extensions.MockMinecraftClientExtension;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

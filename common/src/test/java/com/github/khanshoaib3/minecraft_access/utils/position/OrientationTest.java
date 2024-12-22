@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.utils.position;
+package org.mcaccess.minecraftaccess.utils.position;
 
 import org.junit.jupiter.api.Test;
 

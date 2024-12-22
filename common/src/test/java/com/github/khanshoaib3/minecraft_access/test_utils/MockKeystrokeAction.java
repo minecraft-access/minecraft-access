@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.test_utils;
+package org.mcaccess.minecraftaccess.test_utils;
 
-import com.github.khanshoaib3.minecraft_access.utils.condition.Keystroke;
-import com.github.khanshoaib3.minecraft_access.utils.condition.MenuKeystroke;
+import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
+import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.lang.reflect.Field;

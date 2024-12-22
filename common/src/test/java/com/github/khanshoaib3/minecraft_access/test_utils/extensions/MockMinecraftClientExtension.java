@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.test_utils.extensions;
+package org.mcaccess.minecraftaccess.test_utils.extensions;
 
-import com.github.khanshoaib3.minecraft_access.test_utils.MockMinecraftClientWrapper;
-import com.github.khanshoaib3.minecraft_access.test_utils.annotations.MockMinecraftClient;
+import org.mcaccess.minecraftaccess.test_utils.MockMinecraftClientWrapper;
+import org.mcaccess.minecraftaccess.test_utils.annotations.MockMinecraftClient;
 import net.minecraft.Bootstrap;
 import net.minecraft.client.MinecraftClient;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -31,7 +31,7 @@ public class MockMinecraftClientExtension implements BeforeTestExecutionCallback
 
         Object testInstance = extensionContext.getRequiredTestInstance();
         Arrays.stream(testInstance.getClass().getDeclaredFields())
-                .filter(f -> f.isAnnotationPresent(com.github.khanshoaib3.minecraft_access.test_utils.annotations.MockMinecraftClient.class))
+                .filter(f -> f.isAnnotationPresent(org.mcaccess.minecraftaccess.test_utils.annotations.MockMinecraftClient.class))
                 .forEach(f -> {
                     try {
                         f.trySetAccessible();

@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.test_utils.extensions;
+package org.mcaccess.minecraftaccess.test_utils.extensions;
 
-import com.github.khanshoaib3.minecraft_access.config.Config;
-import com.github.khanshoaib3.minecraft_access.test_utils.MockConfig;
+import org.mcaccess.minecraftaccess.config.Config;
+import org.mcaccess.minecraftaccess.test_utils.MockConfig;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;

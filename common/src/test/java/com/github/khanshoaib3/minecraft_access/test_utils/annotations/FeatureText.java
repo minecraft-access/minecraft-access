@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.test_utils.annotations;
+package org.mcaccess.minecraftaccess.test_utils.annotations;
 
-import com.github.khanshoaib3.minecraft_access.test_utils.extensions.*;
+import org.mcaccess.minecraftaccess.test_utils.extensions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 

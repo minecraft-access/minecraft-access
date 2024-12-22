@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.test_utils.extensions;
+package org.mcaccess.minecraftaccess.test_utils.extensions;
 
-import com.github.khanshoaib3.minecraft_access.test_utils.MockInterval;
-import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.test_utils.MockInterval;
+import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;

@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.test_utils;
+package org.mcaccess.minecraftaccess.test_utils;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;

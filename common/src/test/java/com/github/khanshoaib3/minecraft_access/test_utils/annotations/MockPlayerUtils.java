@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.test_utils.annotations;
+package org.mcaccess.minecraftaccess.test_utils.annotations;
 
-import com.github.khanshoaib3.minecraft_access.test_utils.extensions.MockPlayerUtilsExtension;
-import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
+import org.mcaccess.minecraftaccess.test_utils.extensions.MockPlayerUtilsExtension;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mockito.MockedStatic;
 
 import java.lang.annotation.ElementType;
