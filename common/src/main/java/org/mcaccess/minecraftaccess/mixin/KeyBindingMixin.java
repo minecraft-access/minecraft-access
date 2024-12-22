@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;

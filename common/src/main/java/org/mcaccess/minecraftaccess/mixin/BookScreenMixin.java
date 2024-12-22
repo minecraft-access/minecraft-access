@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;

@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
-import com.github.khanshoaib3.minecraft_access.config.ConfigMenu;
+import org.mcaccess.minecraftaccess.config.ConfigMenu;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CommandBlockScreen;

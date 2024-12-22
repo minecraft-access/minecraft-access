@@ -1,12 +1,12 @@
-package com.github.khanshoaib3.minecraft_access.features.inventory_controls;
+package org.mcaccess.minecraftaccess.features.inventory_controls;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.InventoryControlsConfigMap;
-import com.github.khanshoaib3.minecraft_access.mixin.*;
-import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
-import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
-import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
-import com.github.khanshoaib3.minecraft_access.utils.system.MouseUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
+import org.mcaccess.minecraftaccess.mixin.*;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.*;

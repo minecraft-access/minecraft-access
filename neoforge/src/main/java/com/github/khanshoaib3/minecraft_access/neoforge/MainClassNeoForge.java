@@ -1,9 +1,9 @@
-package com.github.khanshoaib3.minecraft_access.neoforge;
+package org.mcaccess.minecraftaccess.neoforge;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
+import org.mcaccess.minecraftaccess.MainClass;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;

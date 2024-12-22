@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.utils.system;
+package org.mcaccess.minecraftaccess.utils.system;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
+import org.mcaccess.minecraftaccess.MainClass;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;

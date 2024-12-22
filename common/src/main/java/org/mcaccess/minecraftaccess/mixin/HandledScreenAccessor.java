@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.ScreenHandler;

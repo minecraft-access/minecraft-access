@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.config;
+package org.mcaccess.minecraftaccess.config;
 
-import com.github.khanshoaib3.minecraft_access.config.config_maps.*;
+import org.mcaccess.minecraftaccess.config.config_maps.*;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;

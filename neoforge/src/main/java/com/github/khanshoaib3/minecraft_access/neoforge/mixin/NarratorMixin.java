@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.neoforge.mixin;
+package org.mcaccess.minecraftaccess.neoforge.mixin;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
+import org.mcaccess.minecraftaccess.MainClass;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.NarratorMode;
 import net.minecraft.client.toast.SystemToast;

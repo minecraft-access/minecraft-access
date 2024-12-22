@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.utils;
+package org.mcaccess.minecraftaccess.utils;
 
-import com.github.khanshoaib3.minecraft_access.features.point_of_interest.BlockPos3d;
+import org.mcaccess.minecraftaccess.features.point_of_interest.BlockPos3d;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;

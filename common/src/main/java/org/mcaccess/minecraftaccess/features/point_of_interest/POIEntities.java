@@ -1,9 +1,9 @@
-package com.github.khanshoaib3.minecraft_access.features.point_of_interest;
+package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import com.github.khanshoaib3.minecraft_access.config.config_maps.POIEntitiesConfigMap;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.POIMarkingConfigMap;
-import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
-import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
+import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;

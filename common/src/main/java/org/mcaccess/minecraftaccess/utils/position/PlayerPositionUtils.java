@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.utils.position;
+package org.mcaccess.minecraftaccess.utils.position;
 
-import com.github.khanshoaib3.minecraft_access.utils.NarrationUtils;
-import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;

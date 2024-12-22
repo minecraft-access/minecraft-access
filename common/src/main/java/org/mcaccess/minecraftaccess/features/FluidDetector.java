@@ -1,8 +1,8 @@
-package com.github.khanshoaib3.minecraft_access.features;
+package org.mcaccess.minecraftaccess.features;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.FluidDetectorConfigMap;
-import com.github.khanshoaib3.minecraft_access.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.FluidDetectorConfigMap;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

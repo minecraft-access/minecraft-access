@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.screen_reader;
+package org.mcaccess.minecraftaccess.screen_reader;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.utils.system.OsUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.system.OsUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 

@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Language;

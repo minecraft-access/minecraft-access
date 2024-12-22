@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.fabric;
+package org.mcaccess.minecraftaccess.fabric;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;

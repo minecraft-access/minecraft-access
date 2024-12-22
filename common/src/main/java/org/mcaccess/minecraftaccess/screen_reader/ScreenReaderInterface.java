@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.screen_reader;
+package org.mcaccess.minecraftaccess.screen_reader;
 
 
 public interface ScreenReaderInterface {

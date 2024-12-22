@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMap;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

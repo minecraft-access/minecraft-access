@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.features.inventory_controls;
+package org.mcaccess.minecraftaccess.features.inventory_controls;
 
-import com.github.khanshoaib3.minecraft_access.mixin.*;
+import org.mcaccess.minecraftaccess.mixin.*;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;

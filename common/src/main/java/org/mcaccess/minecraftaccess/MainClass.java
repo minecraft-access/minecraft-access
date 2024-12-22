@@ -1,14 +1,14 @@
-package com.github.khanshoaib3.minecraft_access;
+package org.mcaccess.minecraftaccess;
 
-import com.github.khanshoaib3.minecraft_access.config.Config;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.*;
-import com.github.khanshoaib3.minecraft_access.features.*;
-import com.github.khanshoaib3.minecraft_access.features.inventory_controls.InventoryControls;
-import com.github.khanshoaib3.minecraft_access.features.access_menu.AccessMenu;
-import com.github.khanshoaib3.minecraft_access.features.point_of_interest.POIMarking;
-import com.github.khanshoaib3.minecraft_access.features.read_crosshair.ReadCrosshair;
-import com.github.khanshoaib3.minecraft_access.screen_reader.ScreenReaderController;
-import com.github.khanshoaib3.minecraft_access.screen_reader.ScreenReaderInterface;
+import org.mcaccess.minecraftaccess.config.Config;
+import org.mcaccess.minecraftaccess.config.config_maps.*;
+import org.mcaccess.minecraftaccess.features.*;
+import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
+import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
+import org.mcaccess.minecraftaccess.features.point_of_interest.POIMarking;
+import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
+import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
+import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import com.mojang.text2speech.Narrator;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
@@ -151,10 +151,10 @@ public class MainClass {
         boolean debugMode = OtherConfigsMap.getInstance().isDebugMode();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
-                Configurator.setLevel("com.github.khanshoaib3.minecraft_access", Level.DEBUG);
+                Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);
             }
         } else if (log.isDebugEnabled()) {
-            Configurator.setLevel("com.github.khanshoaib3.minecraft_access", Level.INFO);
+            Configurator.setLevel("org.mcaccess.minecraftaccess", Level.INFO);
         }
     }
 

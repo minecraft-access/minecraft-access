@@ -1,12 +1,12 @@
-package com.github.khanshoaib3.minecraft_access.features.read_crosshair;
+package org.mcaccess.minecraftaccess.features.read_crosshair;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.RCPartialSpeakingConfigMap;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.RCRelativePositionSoundCueConfigMap;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.ReadCrosshairConfigMap;
-import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
-import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
-import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.RCPartialSpeakingConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.RCRelativePositionSoundCueConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.ReadCrosshairConfigMap;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
+import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.Registries;

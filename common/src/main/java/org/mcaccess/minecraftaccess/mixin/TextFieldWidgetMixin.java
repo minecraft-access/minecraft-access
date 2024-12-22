@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
+import org.mcaccess.minecraftaccess.MainClass;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.apache.logging.log4j.util.Strings;

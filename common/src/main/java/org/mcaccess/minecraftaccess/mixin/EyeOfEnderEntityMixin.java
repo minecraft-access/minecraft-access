@@ -1,8 +1,8 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.POILockingConfigMap;
-import com.github.khanshoaib3.minecraft_access.features.point_of_interest.LockingHandler;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
+import org.mcaccess.minecraftaccess.features.point_of_interest.LockingHandler;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;

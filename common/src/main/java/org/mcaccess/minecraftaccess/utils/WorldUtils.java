@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.utils;
+package org.mcaccess.minecraftaccess.utils;
 
-import com.github.khanshoaib3.minecraft_access.utils.position.PlayerPositionUtils;
+import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

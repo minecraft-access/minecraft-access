@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.utils.condition;
+package org.mcaccess.minecraftaccess.utils.condition;
 
 /**
  * An auto-refresh countdown timer for controlling interval execution of features.

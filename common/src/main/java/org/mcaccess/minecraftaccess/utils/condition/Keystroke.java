@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.utils.condition;
+package org.mcaccess.minecraftaccess.utils.condition;
 
 import java.util.Optional;
 import java.util.function.BooleanSupplier;

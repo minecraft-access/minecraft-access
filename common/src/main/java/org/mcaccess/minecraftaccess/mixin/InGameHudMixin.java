@@ -1,10 +1,10 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMap;
-import com.github.khanshoaib3.minecraft_access.features.SpeakHeldItem;
-import com.github.khanshoaib3.minecraft_access.utils.StringUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
+import org.mcaccess.minecraftaccess.features.SpeakHeldItem;
+import org.mcaccess.minecraftaccess.utils.StringUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.item.ItemStack;

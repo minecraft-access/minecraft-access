@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.utils.condition;
+package org.mcaccess.minecraftaccess.utils.condition;
 
-import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMap;
+import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;

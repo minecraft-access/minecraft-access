@@ -1,10 +1,10 @@
-package com.github.khanshoaib3.minecraft_access.features.point_of_interest;
+package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.POIMarkingConfigMap;
-import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
-import com.github.khanshoaib3.minecraft_access.utils.NarrationUtils;
-import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;

@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.utils;
+package org.mcaccess.minecraftaccess.utils;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;

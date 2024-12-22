@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.features;
+package org.mcaccess.minecraftaccess.features;
 
-import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
-import com.github.khanshoaib3.minecraft_access.utils.system.MouseUtils;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.TitleScreen;

@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.features.area_map_menu;
+package org.mcaccess.minecraftaccess.features.area_map_menu;
 
-import com.github.khanshoaib3.minecraft_access.utils.BaseScreen;
+import org.mcaccess.minecraftaccess.utils.BaseScreen;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.Objects;

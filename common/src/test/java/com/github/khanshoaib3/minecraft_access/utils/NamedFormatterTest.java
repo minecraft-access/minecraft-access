@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.utils;
+package org.mcaccess.minecraftaccess.utils;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

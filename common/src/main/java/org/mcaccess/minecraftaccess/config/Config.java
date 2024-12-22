@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.config;
+package org.mcaccess.minecraftaccess.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

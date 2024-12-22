@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.utils;
+package org.mcaccess.minecraftaccess.utils;
 
-import com.github.khanshoaib3.minecraft_access.mixin.MobSpawnerLogicAccessor;
-import com.github.khanshoaib3.minecraft_access.utils.position.Orientation;
+import org.mcaccess.minecraftaccess.mixin.MobSpawnerLogicAccessor;
+import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BeehiveBlockEntity;

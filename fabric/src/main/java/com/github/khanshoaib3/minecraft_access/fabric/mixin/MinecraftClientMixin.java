@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.fabric.mixin;
+package org.mcaccess.minecraftaccess.fabric.mixin;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
+import org.mcaccess.minecraftaccess.MainClass;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

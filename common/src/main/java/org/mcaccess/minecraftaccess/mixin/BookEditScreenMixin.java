@@ -1,10 +1,10 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.utils.StringUtils;
-import com.github.khanshoaib3.minecraft_access.utils.condition.Keystroke;
-import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
-import com.github.khanshoaib3.minecraft_access.utils.system.MouseUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.StringUtils;
+import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;

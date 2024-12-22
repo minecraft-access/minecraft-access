@@ -1,8 +1,8 @@
-package com.github.khanshoaib3.minecraft_access.features.inventory_controls;
+package org.mcaccess.minecraftaccess.features.inventory_controls;
 
-import com.github.khanshoaib3.minecraft_access.mixin.LoomScreenAccessor;
-import com.github.khanshoaib3.minecraft_access.mixin.MerchantScreenAccessor;
-import com.github.khanshoaib3.minecraft_access.mixin.StonecutterScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.LoomScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.MerchantScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.StonecutterScreenAccessor;
 import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;

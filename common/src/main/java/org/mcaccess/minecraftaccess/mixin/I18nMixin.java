@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
-import com.github.khanshoaib3.minecraft_access.utils.NamedFormatter;
+import org.mcaccess.minecraftaccess.utils.NamedFormatter;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Language;
 import org.spongepowered.asm.mixin.Mixin;

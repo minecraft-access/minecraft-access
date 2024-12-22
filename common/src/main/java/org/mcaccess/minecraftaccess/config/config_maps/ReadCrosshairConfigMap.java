@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.config.config_maps;
+package org.mcaccess.minecraftaccess.config.config_maps;
 
-import com.github.khanshoaib3.minecraft_access.config.Config;
+import org.mcaccess.minecraftaccess.config.Config;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;

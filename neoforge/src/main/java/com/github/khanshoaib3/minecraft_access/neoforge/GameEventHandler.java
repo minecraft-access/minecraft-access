@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.neoforge;
+package org.mcaccess.minecraftaccess.neoforge;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
+import org.mcaccess.minecraftaccess.MainClass;
 import net.minecraft.client.MinecraftClient;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

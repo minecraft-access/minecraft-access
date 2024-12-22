@@ -1,9 +1,9 @@
-package com.github.khanshoaib3.minecraft_access.features.access_menu;
+package org.mcaccess.minecraftaccess.features.access_menu;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.ConfigMenu;
-import com.github.khanshoaib3.minecraft_access.screen_reader.ScreenReaderController;
-import com.github.khanshoaib3.minecraft_access.utils.BaseScreen;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.ConfigMenu;
+import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
+import org.mcaccess.minecraftaccess.utils.BaseScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;

@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.features.read_crosshair;
+package org.mcaccess.minecraftaccess.features.read_crosshair;
 
 import net.minecraft.util.hit.HitResult;
 import org.jetbrains.annotations.NotNull;

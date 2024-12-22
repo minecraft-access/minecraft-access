@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.features.point_of_interest;
+package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.state.property.Property;

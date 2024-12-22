@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.features.read_crosshair;
+package org.mcaccess.minecraftaccess.features.read_crosshair;
 
-import com.github.khanshoaib3.minecraft_access.utils.NarrationUtils;
-import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;

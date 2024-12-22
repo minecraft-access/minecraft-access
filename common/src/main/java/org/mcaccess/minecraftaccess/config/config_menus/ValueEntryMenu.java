@@ -1,8 +1,8 @@
-package com.github.khanshoaib3.minecraft_access.config.config_menus;
+package org.mcaccess.minecraftaccess.config.config_menus;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.Config;
-import com.github.khanshoaib3.minecraft_access.utils.BaseScreen;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.Config;
+import org.mcaccess.minecraftaccess.utils.BaseScreen;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;

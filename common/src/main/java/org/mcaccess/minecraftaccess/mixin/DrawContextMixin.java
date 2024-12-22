@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.InventoryControlsConfigMap;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;

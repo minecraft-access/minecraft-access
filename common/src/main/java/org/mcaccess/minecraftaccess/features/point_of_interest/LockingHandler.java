@@ -1,14 +1,14 @@
-package com.github.khanshoaib3.minecraft_access.features.point_of_interest;
+package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.POILockingConfigMap;
-import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
-import com.github.khanshoaib3.minecraft_access.utils.NarrationUtils;
-import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
-import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
-import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
-import com.github.khanshoaib3.minecraft_access.utils.position.PlayerPositionUtils;
-import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
+import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.block.*;

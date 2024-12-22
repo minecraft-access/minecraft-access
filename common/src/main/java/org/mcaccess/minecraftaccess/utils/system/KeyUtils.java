@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.utils.system;
+package org.mcaccess.minecraftaccess.utils.system;
 
-import com.github.khanshoaib3.minecraft_access.mixin.KeyBindingAccessor;
+import org.mcaccess.minecraftaccess.mixin.KeyBindingAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;

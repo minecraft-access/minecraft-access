@@ -1,11 +1,11 @@
-package com.github.khanshoaib3.minecraft_access.features;
+package org.mcaccess.minecraftaccess.features;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
-import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
-import com.github.khanshoaib3.minecraft_access.utils.condition.IntervalKeystroke;
-import com.github.khanshoaib3.minecraft_access.utils.condition.Keystroke;
-import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
+import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;

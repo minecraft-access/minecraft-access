@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.fabric;
+package org.mcaccess.minecraftaccess.fabric;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.loader.impl.util.log.Log;

@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.utils;
+package org.mcaccess.minecraftaccess.utils;
 
 import java.util.Map;
 import java.util.regex.Pattern;

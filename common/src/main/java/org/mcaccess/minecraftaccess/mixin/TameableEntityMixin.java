@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
+import org.mcaccess.minecraftaccess.MainClass;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.passive.TameableEntity;
 import org.spongepowered.asm.mixin.Mixin;

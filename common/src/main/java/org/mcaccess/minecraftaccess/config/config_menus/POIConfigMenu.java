@@ -1,11 +1,11 @@
-package com.github.khanshoaib3.minecraft_access.config.config_menus;
+package org.mcaccess.minecraftaccess.config.config_menus;
 
-import com.github.khanshoaib3.minecraft_access.config.Config;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.POIBlocksConfigMap;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.POIEntitiesConfigMap;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.POILockingConfigMap;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.POIMarkingConfigMap;
-import com.github.khanshoaib3.minecraft_access.utils.BaseScreen;
+import org.mcaccess.minecraftaccess.config.Config;
+import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
+import org.mcaccess.minecraftaccess.utils.BaseScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;

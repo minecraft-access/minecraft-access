@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.screen_reader;
+package org.mcaccess.minecraftaccess.screen_reader;
 
-import com.github.khanshoaib3.minecraft_access.config.config_maps.SpeechSettingsConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.SpeechSettingsConfigMap;
 import java.lang.ProcessHandle;
 import com.sun.jna.Library;
 import com.sun.jna.Native;

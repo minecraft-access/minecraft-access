@@ -1,8 +1,8 @@
-package com.github.khanshoaib3.minecraft_access.features;
+package org.mcaccess.minecraftaccess.features;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMap;
-import com.github.khanshoaib3.minecraft_access.features.inventory_controls.InventoryControls;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
+import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 

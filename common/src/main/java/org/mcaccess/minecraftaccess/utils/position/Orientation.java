@@ -1,6 +1,6 @@
-package com.github.khanshoaib3.minecraft_access.utils.position;
+package org.mcaccess.minecraftaccess.utils.position;
 
-import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 

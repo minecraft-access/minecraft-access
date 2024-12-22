@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.screen_reader;
+package org.mcaccess.minecraftaccess.screen_reader;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;

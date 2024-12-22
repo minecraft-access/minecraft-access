@@ -1,14 +1,14 @@
-package com.github.khanshoaib3.minecraft_access.features;
+package org.mcaccess.minecraftaccess.features;
 
-import com.github.khanshoaib3.minecraft_access.MainClass;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.CameraControlsConfigMap;
-import com.github.khanshoaib3.minecraft_access.config.config_maps.OtherConfigsMap;
-import com.github.khanshoaib3.minecraft_access.utils.KeyBindingsHandler;
-import com.github.khanshoaib3.minecraft_access.utils.condition.DoubleClick;
-import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
-import com.github.khanshoaib3.minecraft_access.utils.position.Orientation;
-import com.github.khanshoaib3.minecraft_access.utils.position.PlayerPositionUtils;
-import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.CameraControlsConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.condition.DoubleClick;
+import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.position.Orientation;
+import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
