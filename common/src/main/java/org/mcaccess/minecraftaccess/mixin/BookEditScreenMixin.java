@@ -88,11 +88,8 @@ public abstract class BookEditScreenMixin {
         if (minecraft_access$tabKey.isPressed()) {
             minecraft_access$switchMouseHoveredButton();
         }
-        // update the state
-        minecraft_access$tabKey.updateStateForNextTick();
 
         if (minecraft_access$spaceKey.isPressed()) {
-            minecraft_access$spaceKey.updateStateForNextTick();
             if (this.signing) {
                 if (this.cancelButton.isHovered()) {
                     this.cancelButton.onPress();
@@ -100,7 +97,6 @@ public abstract class BookEditScreenMixin {
                 }
                 if (this.finalizeButton.isHovered()) {
                     this.finalizeButton.onPress();
-                    return;
                 }
             } else {
                 if (this.doneButton.isHovered()) {
@@ -109,12 +105,9 @@ public abstract class BookEditScreenMixin {
                 }
                 if (this.signButton.isHovered()) {
                     this.signButton.onPress();
-                    return;
                 }
             }
         }
-        // update the state
-        minecraft_access$spaceKey.updateStateForNextTick();
     }
 
     /**
@@ -189,25 +182,25 @@ public abstract class BookEditScreenMixin {
             }
             case GLFW.GLFW_KEY_UP: {
                 this.moveUpLine();
-                speakCurrentLineContent();
+                minecraft_access$speakCurrentLineContent();
                 cir.setReturnValue(true);
                 return;
             }
             case GLFW.GLFW_KEY_DOWN: {
                 this.moveDownLine();
-                speakCurrentLineContent();
+                minecraft_access$speakCurrentLineContent();
                 cir.setReturnValue(true);
                 return;
             }
             case GLFW.GLFW_KEY_PAGE_UP: {
                 this.previousPageButton.onPress();
-                speakCurrentPageContent();
+                minecraft_access$speakCurrentPageContent();
                 cir.setReturnValue(true);
                 return;
             }
             case GLFW.GLFW_KEY_PAGE_DOWN: {
                 this.nextPageButton.onPress();
-                speakCurrentPageContent();
+                minecraft_access$speakCurrentPageContent();
                 cir.setReturnValue(true);
                 return;
             }
@@ -232,21 +225,21 @@ public abstract class BookEditScreenMixin {
     }
 
     @Unique
-    private void speakCurrentLineContent() {
-        String pageText = getPageText();
+    private void minecraft_access$speakCurrentLineContent() {
+        String pageText = minecraft_access$getPageText();
         int cursor = this.currentPageSelectionManager.getSelectionStart();
         String lineText = StringUtils.getLineTextWhereTheCursorIsLocatedIn(pageText, cursor);
         MainClass.speakWithNarratorIfNotEmpty(lineText, true);
     }
 
     @Unique
-    private String getPageText() {
+    private String minecraft_access$getPageText() {
         return this.pages.get(this.currentPage).trim();
     }
 
     @Unique
-    private void speakCurrentPageContent() {
-        String pageText = getPageText();
+    private void minecraft_access$speakCurrentPageContent() {
+        String pageText = minecraft_access$getPageText();
         MutableText pageIndicatorText = Text.translatable("book.pageIndicator", this.currentPage + 1, this.pages.size());
         pageText = "%s\n\n%s".formatted(pageText, pageIndicatorText.getString());
         MainClass.speakWithNarratorIfNotEmpty(pageText, true);
@@ -254,6 +247,6 @@ public abstract class BookEditScreenMixin {
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void speakPageContentWhileOpeningScreen(CallbackInfo ci) {
-        speakCurrentPageContent();
+        minecraft_access$speakCurrentPageContent();
     }
 }

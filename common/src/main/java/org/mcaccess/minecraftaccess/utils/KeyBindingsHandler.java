@@ -416,7 +416,7 @@ public class KeyBindingsHandler {
      * 2) Alt key + Locking Key = Unlocks from the currently locked entity or block<br>
      * 3) Speak Facing Direction Key (default: H) = Speaks the player facing direction.
      * 4) Speak Player Health and Hunger Key (default: R) = Speaks the health and hunger.
-     * 5) Narrator Menu Key (default: F4) = Opens a menu with few options.
+     * 5) Access Menu Key (default: F4) = Opens a menu with few options.
      * 6) Speak Player Position Key (default: G) = Speaks the player's x y and z position.<br>
      * 7) Left Alt + X = Speaks only the x position.<br>
      * 8) Left Alt + C = Speaks only the y position.<br>

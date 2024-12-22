@@ -21,7 +21,7 @@ public class AccessMenuGUI extends BaseScreen {
      * The order of buttons initialization should be the same as {@link AccessMenu#MENU_FUNCTIONS}
      */
     @Override
-    protected void init() {
+    public void init() {
         super.init();
 
         ButtonWidget blockAndFluidTargetInformationButton = this.buildButtonWidget("1", "minecraft_access.access_menu.gui.button.block_and_fluid_target_info",
@@ -52,7 +52,7 @@ public class AccessMenuGUI extends BaseScreen {
                 (button) -> AccessMenu.getTimeOfDay());
         this.addDrawableChild(timeOfDayButton);
 
-            ButtonWidget xpButton = this.buildButtonWidget("8", "minecraft_access.access_menu.gui.button.xp",
+        ButtonWidget xpButton = this.buildButtonWidget("8", "minecraft_access.access_menu.gui.button.xp",
                 (button) -> AccessMenu.getXP());
         this.addDrawableChild(xpButton);
 

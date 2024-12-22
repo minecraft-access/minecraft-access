@@ -36,7 +36,7 @@ public class POIEntities {
     private int range;
     private boolean playSound;
     private float volume;
-    private Interval interval;
+    private final Interval interval = Interval.defaultDelay();
     private boolean enabled;
 
     private static final POIEntities instance;
@@ -61,7 +61,7 @@ public class POIEntities {
         loadConfigurations();
 
         if (!enabled) return;
-        if (interval != null && !interval.isReady()) return;
+        if (!interval.isReady()) return;
 
         try {
             MinecraftClient minecraftClient = MinecraftClient.getInstance();
@@ -141,7 +141,7 @@ public class POIEntities {
         this.range = map.getRange();
         this.playSound = map.isPlaySound();
         this.volume = map.getVolume();
-        this.interval = Interval.inMilliseconds(map.getDelay(), this.interval);
+        this.interval.setDelay(map.getDelay(), Interval.Unit.Millisecond);
     }
 
     private void setMarkedEntity(Entity entity) {

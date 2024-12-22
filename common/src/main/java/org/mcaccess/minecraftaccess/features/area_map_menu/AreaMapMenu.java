@@ -52,7 +52,7 @@ public class AreaMapMenu {
     static {
         instance = new AreaMapMenu();
 
-        menuKey = new MenuKeystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().areaMapMenuKey));
+        menuKey = new MenuKeystroke(KeyBindingsHandler.getInstance().areaMapMenuKey);
 
         int keyInterval = AreaMapConfigMap.getInstance().getDelayInMilliseconds();
         int cursorMovingKeyIndex = 0;
@@ -64,7 +64,7 @@ public class AreaMapMenu {
                 new Pair<>(Orientation.UP, () -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().areaMapUpKey)),
                 new Pair<>(Orientation.DOWN, () -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().areaMapDownKey))
         )) {
-            cursorMovingKeys[cursorMovingKeyIndex] = new IntervalKeystroke(p.getRight(), Keystroke.TriggeredAt.PRESSING, Interval.inMilliseconds(keyInterval));
+            cursorMovingKeys[cursorMovingKeyIndex] = new IntervalKeystroke(p.getRight(), Keystroke.TriggeredAt.PRESSING, Interval.ms(keyInterval));
             CURSOR_MOVING_DIRECTIONS.add(new Pair<>(cursorMovingKeys[cursorMovingKeyIndex], p.getLeft()));
             cursorMovingKeyIndex += 1;
         }
@@ -104,16 +104,8 @@ public class AreaMapMenu {
             if (client.currentScreen instanceof AreaMapMenuGUI) {
                 if (menuKey.closeMenuIfMenuKeyPressing()) return;
                 handleInMenuActions();
-            } else {
-                // other menus is opened currently, won't open the menu
-                return;
             }
         }
-
-        menuKey.updateStateForNextTick();
-        cursorResetKey.updateStateForNextTick();
-        mapLockKey.updateStateForNextTick();
-        Arrays.stream(cursorMovingKeys).forEach(IntervalKeystroke::updateStateForNextTick);
     }
 
     private void updateConfigs() {
@@ -123,7 +115,7 @@ public class AreaMapMenu {
         this.horizontalBound = map.getHorizontalBound();
 
         // set key intervals
-        Arrays.stream(cursorMovingKeys).forEach(k -> k.setInterval(Interval.inMilliseconds(map.getDelayInMilliseconds(), k.interval())));
+        Arrays.stream(cursorMovingKeys).forEach(k -> k.interval.setDelay(map.getDelayInMilliseconds(), Interval.Unit.Millisecond));
     }
 
     private void openAreaMapMenu() {
@@ -140,7 +132,7 @@ public class AreaMapMenu {
     private void handleInMenuActions() {
         // move cursor
         for (Pair<IntervalKeystroke, Orientation> p : CURSOR_MOVING_DIRECTIONS) {
-            if (p.getLeft().isCooledDownAndTriggered()) {
+            if (p.getLeft().canBeTriggered()) {
                 Orientation direction = p.getRight();
                 moveCursorTowards(direction);
                 return;
@@ -169,7 +161,7 @@ public class AreaMapMenu {
         if (!checkCursorWithinDistanceBound(nextStep)) return;
 
         this.cursor = nextStep;
-       log.debug("Cursor moves " + direction + ": " + cursor);
+        log.debug("Cursor moves {}: {}", direction, cursor);
         String blockDescription = NarrationUtils.narrateBlock(this.cursor, "");
         MainClass.speakWithNarrator(blockDescription, true);
         // TODO Alt + speak position key
@@ -181,7 +173,7 @@ public class AreaMapMenu {
         int distanceOnX = Math.abs(playerPos.getX() - nextStep.getX());
         int distanceOnY = Math.abs(playerPos.getY() - nextStep.getY());
         int distanceOnZ = Math.abs(playerPos.getZ() - nextStep.getZ());
-        if(distanceOnX > horizontalBound || distanceOnZ > horizontalBound || distanceOnY > verticalBound) {
+        if (distanceOnX > horizontalBound || distanceOnZ > horizontalBound || distanceOnY > verticalBound) {
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.area_map.cursor_reach_bound"), true);
             return false;
         }

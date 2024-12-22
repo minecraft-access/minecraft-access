@@ -96,7 +96,7 @@ public class POIBlocks {
     private boolean playSound;
     private float volume;
     private boolean playSoundForOtherBlocks;
-    private Interval interval;
+    private final Interval interval = Interval.defaultDelay();
     private Predicate<BlockState> markedBlock = state -> false;
     private boolean onPOIMarkingNow = false;
 
@@ -119,7 +119,7 @@ public class POIBlocks {
             loadConfigurations();
 
             if (!this.enabled) return;
-            if (interval != null && !interval.isReady()) return;
+            if (!interval.isReady()) return;
 
             MinecraftClient client = MinecraftClient.getInstance();
             if (client == null) return;
@@ -162,7 +162,7 @@ public class POIBlocks {
         this.playSound = poiBlocksConfigMap.isPlaySound();
         this.volume = poiBlocksConfigMap.getVolume();
         this.playSoundForOtherBlocks = poiBlocksConfigMap.isPlaySoundForOtherBlocks();
-        this.interval = Interval.inMilliseconds(poiBlocksConfigMap.getDelay(), this.interval);
+        this.interval.setDelay(poiBlocksConfigMap.getDelay(), Interval.Unit.Millisecond);
     }
 
     private void checkBlock(BlockPos blockPos, int val) {

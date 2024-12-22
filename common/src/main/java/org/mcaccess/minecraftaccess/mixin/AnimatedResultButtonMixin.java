@@ -26,7 +26,7 @@ public class AnimatedResultButtonMixin {
     String minecraft_access$previousItemName = "";
 
     @Unique
-    private final Interval minecraft_access$interval = Interval.inMilliseconds(5000);
+    private final Interval minecraft_access$interval = Interval.ms(5000);
 
     //    @Inject(at = @At("HEAD"), method = "appendNarrations", cancellable = true) // Pre 1.19.3
     @Inject(at = @At("HEAD"), method = "appendClickableNarrations", cancellable = true) // From 1.19.3

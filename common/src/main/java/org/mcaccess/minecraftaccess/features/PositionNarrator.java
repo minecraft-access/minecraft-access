@@ -60,11 +60,6 @@ public class PositionNarrator {
                 MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXYZPosition(), true);
             }
 
-            KeyX.updateStateForNextTick();
-            KeyC.updateStateForNextTick();
-            KeyZ.updateStateForNextTick();
-            positionNarrationKey.updateStateForNextTick();
-
         } catch (Exception e) {
             log.error("An error occurred in PositionNarrator.", e);
         }

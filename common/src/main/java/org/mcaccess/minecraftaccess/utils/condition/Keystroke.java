@@ -1,5 +1,11 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
+import net.minecraft.client.option.KeyBinding;
+import org.jetbrains.annotations.Contract;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
@@ -9,6 +15,9 @@ import java.util.function.Function;
  * For keys that only execute once until released and pressed again.
  */
 public class Keystroke {
+
+    protected static final List<Keystroke> instances = new ArrayList<>();
+
     /**
      * Save the state of keystroke at the previous tick.
      */
@@ -31,6 +40,13 @@ public class Keystroke {
     protected int triggeredCount;
 
     /**
+     * Single key, {@link TriggeredAt#PRESSING}
+     */
+    public Keystroke(KeyBinding singleKey) {
+        this(() -> KeyUtils.isAnyPressed(singleKey), TriggeredAt.PRESSING);
+    }
+
+    /**
      * Use this class as a condition checker.
      * Suitable for complex cases that there are other conditions that determine the logic is triggered or not.
      *
@@ -51,6 +67,7 @@ public class Keystroke {
         this.condition = condition;
         this.timing = Optional.ofNullable(timing).orElse(TriggeredAt.PRESSING);
         this.triggeredCount = 0;
+        instances.add(this);
     }
 
     /**
@@ -87,6 +104,7 @@ public class Keystroke {
     /**
      * Check if the timing condition is met.
      */
+    @Contract(pure = true)
     public boolean canBeTriggered() {
         boolean correctKeystrokeState = this.timing.happen(this);
         return correctKeystrokeState && otherTriggerConditions();
@@ -101,9 +119,9 @@ public class Keystroke {
 
     /**
      * When the corresponding logic is triggered.<br>
-     *          --- released (short) ---><br>
+     * --- released (short) ---><br>
      * pressing (long)               not-pressing (long)<br>
-     *          <--- pressed (short) ---
+     * <--- pressed (short) ---
      */
     public enum TriggeredAt {
         PRESSING(Keystroke::isPressing, Keystroke::isNotPressing),
@@ -130,5 +148,13 @@ public class Keystroke {
         public boolean aboutToHappen(Keystroke keystroke) {
             return this.preCondition.apply(keystroke);
         }
+    }
+
+    /**
+     * Let this method handle state updates,
+     * no need to manually call the update method in every feature.
+     */
+    public static void updateInstances() {
+        instances.forEach(Keystroke::updateStateForNextTick);
     }
 }

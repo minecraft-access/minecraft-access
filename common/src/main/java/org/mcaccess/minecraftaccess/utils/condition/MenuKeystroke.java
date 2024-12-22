@@ -1,6 +1,9 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
+import org.jetbrains.annotations.Contract;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
@@ -20,10 +23,15 @@ public class MenuKeystroke extends Keystroke {
      */
     boolean isMenuJustClosed = false;
 
+    public MenuKeystroke(KeyBinding singleKey) {
+        this(() -> KeyUtils.isAnyPressed(singleKey));
+    }
+
     public MenuKeystroke(BooleanSupplier condition) {
         super(condition);
     }
 
+    @Contract(pure = true)
     public boolean canOpenMenu() {
         return isReleased() && !isMenuJustClosed;
     }

@@ -56,7 +56,6 @@ public class FallDetector {
             if (minecraftClient.player == null) return;
             if (minecraftClient.world == null) return;
             if (minecraftClient.currentScreen != null) return;
-            if (minecraftClient.player.isFallFlying()) return;
             if (minecraftClient.player.isSubmergedInWater()) return;
             if (minecraftClient.player.isSwimming()) return;
             if (minecraftClient.player.isInSwimmingPose()) return;

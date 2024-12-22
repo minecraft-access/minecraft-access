@@ -53,7 +53,7 @@ import java.util.Optional;
 public class InventoryControls {
     private boolean autoOpenRecipeBook;
     private String rowAndColumnFormat;
-    private Interval interval;
+    private final Interval interval = Interval.defaultDelay();
     private MinecraftClient minecraftClient;
 
     private HandledScreenAccessor previousScreen = null;
@@ -93,7 +93,7 @@ public class InventoryControls {
     }
 
     public void update() {
-        if (interval != null && !interval.hasEnded()) return;
+        if (!interval.isReady()) return;
         this.minecraftClient = MinecraftClient.getInstance();
 
         if (minecraftClient == null) return;
@@ -109,7 +109,7 @@ public class InventoryControls {
 
         try {
             loadConfigurations();
-            boolean wasAnyKeyPressed = keyListener();
+            interval.adjustNextReadyTimeBy(keyListener());
 
             currentScreen = (HandledScreenAccessor) minecraftClient.currentScreen;
             currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
@@ -157,7 +157,6 @@ public class InventoryControls {
                 }
             }
 
-            if (wasAnyKeyPressed) interval.start();
         } catch (Exception e) {
             log.error("Error encountered in Inventory Controls feature.", e);
         }
@@ -170,7 +169,7 @@ public class InventoryControls {
         InventoryControlsConfigMap map = InventoryControlsConfigMap.getInstance();
         autoOpenRecipeBook = map.isAutoOpenRecipeBook();
         rowAndColumnFormat = map.getRowAndColumnFormat();
-        interval = Interval.inMilliseconds(map.getDelayInMilliseconds(), interval);
+        interval.setDelay(map.getDelayInMilliseconds(), Interval.Unit.Millisecond);
         speakFocusedSlotChanges = map.isSpeakFocusedSlotChanges();
     }
 
@@ -244,7 +243,7 @@ public class InventoryControls {
         }
         //</editor-fold>
 
-        if (disableInputForSearchBox) return false; // Skip other key inputs if using a search box
+        if (disableInputForSearchBox) return true; // Skip other key inputs if using a search box
 
         if (isGroupKeyPressed) {
             log.debug("Group key pressed");
@@ -330,8 +329,8 @@ public class InventoryControls {
                 recipeBookWidget = craftingScreen.getRecipeBookWidget();
             }
 
-            if (recipeBookWidget == null) return false;
-            if (!recipeBookWidget.isOpen()) return false;
+            if (recipeBookWidget == null) return true;
+            if (!recipeBookWidget.isOpen()) return true;
 
             ToggleButtonWidget toggleCraftableButton = ((RecipeBookWidgetAccessor) recipeBookWidget).getToggleCraftableButton();
 
@@ -344,9 +343,8 @@ public class InventoryControls {
             MouseUtils.moveAndLeftClick(p.x(), p.y());
             moveToSlotItem(currentSlotItem, 100);
 
-            log.debug("Recipe toggle key pressed, Showing %s".formatted(toggleCraftableButton.isToggled() ? "all" : "craftable only"));
+            log.debug("Recipe toggle key pressed, Showing {}", toggleCraftableButton.isToggled() ? "all" : "craftable only");
             MainClass.speakWithNarrator("Showing %s".formatted(toggleCraftableButton.isToggled() ? "all" : "craftable only"), true);
-
             return true;
         }
 

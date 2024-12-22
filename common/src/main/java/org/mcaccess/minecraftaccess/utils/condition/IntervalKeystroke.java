@@ -1,16 +1,19 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
+import net.minecraft.client.option.KeyBinding;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 import java.util.function.BooleanSupplier;
 
 /**
  * For keys that you can keep pressing and the function executes at intervals.
  */
-public class IntervalKeystroke extends KeystrokeTiming {
+public class IntervalKeystroke extends TimedKeystroke {
     /**
-     * @param condition Expression that checking if the key (combination) is pressed now.
+     * Single key, {@link TriggeredAt#PRESSING}
      */
-    public IntervalKeystroke(BooleanSupplier condition) {
-        super(condition);
+    public IntervalKeystroke(KeyBinding singleKey) {
+        this(() -> KeyUtils.isAnyPressed(singleKey), TriggeredAt.PRESSING);
     }
 
     /**
@@ -26,13 +29,13 @@ public class IntervalKeystroke extends KeystrokeTiming {
      * @param timing    When the corresponding logic is triggered.
      * @param interval  The maximum interval between first and second keystroke, default is 750ms.
      */
-    @SuppressWarnings("unused")
     public IntervalKeystroke(BooleanSupplier condition, TriggeredAt timing, Interval interval) {
         super(condition, timing, interval);
     }
 
-    public boolean isCooledDownAndTriggered() {
-        return this.canBeTriggered() && interval.isReady();
+    @Override
+    public boolean canBeTriggered() {
+        return super.canBeTriggered() && interval.isReady();
     }
 
     /**

@@ -179,4 +179,40 @@ public class PlayerUtils {
         ClientPlayerEntity player = WorldUtils.getClientPlayer();
         return Math.min(player.getBlockInteractionRange(), player.getEntityInteractionRange());
     }
+
+    /**
+     * One full ham icon = two hunger points
+     * <a href="https://minecraft.wiki/w/Hunger">wiki</a>
+     *
+     * @return number of ham shank in HUD
+     */
+    public static double getHunger() {
+        ClientPlayerEntity player = WorldUtils.getClientPlayer();
+        double hungerPoints = player.getHungerManager().getFoodLevel();
+        return hungerPoints / 2;
+    }
+
+    /**
+     * One full heart = two health points
+     * <a href="https://minecraft.wiki/w/Health">wiki</a>
+     *
+     * @return number of heart in HUD
+     */
+    public static double getHearts() {
+        ClientPlayerEntity player = WorldUtils.getClientPlayer();
+        double healthPoints = player.getHealth();
+        return healthPoints / 2;
+    }
+
+    /**
+     * Air supply value is keeping at 300 when player's head is in the air.
+     * <a href="https://minecraft.wiki/w/Damage#Drowning">wiki</a>
+     *
+     * @return number of bubble in HUD
+     */
+    public static long getAir() {
+        ClientPlayerEntity player = WorldUtils.getClientPlayer();
+        double air = player.getAir();
+        return Math.round((air / 30) * 10) / 10;
+    }
 }

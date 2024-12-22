@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 /**
@@ -20,7 +19,7 @@ public class MockIntervalExtension implements BeforeAllCallback, AfterAllCallbac
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         this.ms = Mockito.mockStatic(Interval.class);
-        this.ms.when(() -> Interval.inMilliseconds(anyLong(), any())).thenReturn(MockInterval.ALWAYS_READY);
+        this.ms.when(() -> Interval.ms(anyLong())).thenReturn(MockInterval.ALWAYS_READY);
     }
 
     @Override
