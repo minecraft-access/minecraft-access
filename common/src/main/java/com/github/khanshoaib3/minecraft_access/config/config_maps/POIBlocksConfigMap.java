@@ -42,7 +42,7 @@ public class POIBlocksConfigMap {
         m.setRange(6);
         m.setPlaySound(true);
         m.setVolume(0.25f);
-        m.setPlaySoundForOtherBlocks(false);
+        m.setPlaySoundForOtherBlocks(true);
         m.setDelay(3000);
 
         setInstance(m);
