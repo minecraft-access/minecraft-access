@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class SpeakHeldItem {
     private String previousItemName = "";
     private int previousItemCount = 0;
-    public static final Function<String, String> HOTBAR_I18N = toSpeak -> I18n.translate("minecraft_access.other.hotbar", toSpeak);
+    public static final Function<String, String> HOTBAR_I18N = toSpeak -> I18n.translate("minecraft_access.other.selected", toSpeak);
     public static final Function<String, String> EMPTY_SLOT_I18N = toSpeak -> I18n.translate("minecraft_access.inventory_controls.empty_slot", toSpeak);
 
     public void speakHeldItem(ItemStack currentStack, int heldItemTooltipFade) {

@@ -67,8 +67,8 @@ public class InventoryControls {
     private boolean speakFocusedSlotChanges = true;
 
     private enum FocusDirection {
-        UP(I18n.translate("minecraft_access.inventory_controls.direction_up")),
-        DOWN(I18n.translate("minecraft_access.inventory_controls.direction_down")),
+        UP(I18n.translate("gui.up")),
+        DOWN(I18n.translate("gui.down")),
         LEFT(I18n.translate("minecraft_access.inventory_controls.direction_left")),
         RIGHT(I18n.translate("minecraft_access.inventory_controls.direction_right"));
 
