@@ -26,10 +26,7 @@ public class BiomeIndicator {
         RegistryEntry<Biome> var27 = minecraftClient.world.getBiome(minecraftClient.player.getBlockPos());
         String name = I18n.translate(getBiomeName(var27));
 
-        if (previousBiome == null) {
-            previousBiome = name;
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.biome", name), true);
-        } else if (!previousBiome.equalsIgnoreCase(name)) {
+        if (!name.equalsIgnoreCase(previousBiome)) {
             previousBiome = name;
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.biome", name), true);
         }
