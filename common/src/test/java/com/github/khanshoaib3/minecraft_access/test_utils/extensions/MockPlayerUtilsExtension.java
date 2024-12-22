@@ -1,9 +1,9 @@
-package com.github.khanshoaib3.minecraft_access.test_utils.extensions;
+package org.mcaccess.minecraftaccess.test_utils.extensions;
 
 
-import com.github.khanshoaib3.minecraft_access.test_utils.ExtensionUtils;
-import com.github.khanshoaib3.minecraft_access.test_utils.annotations.MockPlayerUtils;
-import com.github.khanshoaib3.minecraft_access.utils.PlayerUtils;
+import org.mcaccess.minecraftaccess.test_utils.ExtensionUtils;
+import org.mcaccess.minecraftaccess.test_utils.annotations.MockPlayerUtils;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.AfterEachCallback;

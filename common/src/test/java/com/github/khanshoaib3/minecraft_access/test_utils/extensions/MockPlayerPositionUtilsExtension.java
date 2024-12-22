@@ -1,8 +1,8 @@
-package com.github.khanshoaib3.minecraft_access.test_utils.extensions;
+package org.mcaccess.minecraftaccess.test_utils.extensions;
 
-import com.github.khanshoaib3.minecraft_access.test_utils.ExtensionUtils;
-import com.github.khanshoaib3.minecraft_access.test_utils.annotations.MockPlayerPositionUtils;
-import com.github.khanshoaib3.minecraft_access.utils.position.PlayerPositionUtils;
+import org.mcaccess.minecraftaccess.test_utils.ExtensionUtils;
+import org.mcaccess.minecraftaccess.test_utils.annotations.MockPlayerPositionUtils;
+import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;

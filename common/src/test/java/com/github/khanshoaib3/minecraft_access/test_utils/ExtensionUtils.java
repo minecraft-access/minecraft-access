@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.test_utils;
+package org.mcaccess.minecraftaccess.test_utils;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.MockedStatic;

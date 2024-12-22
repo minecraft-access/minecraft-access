@@ -1,7 +1,7 @@
-package com.github.khanshoaib3.minecraft_access.test_utils.annotations;
+package org.mcaccess.minecraftaccess.test_utils.annotations;
 
-import com.github.khanshoaib3.minecraft_access.test_utils.extensions.MockPlayerPositionUtilsExtension;
-import com.github.khanshoaib3.minecraft_access.utils.position.PlayerPositionUtils;
+import org.mcaccess.minecraftaccess.test_utils.extensions.MockPlayerPositionUtilsExtension;
+import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mockito.MockedStatic;
 
 import java.lang.annotation.ElementType;

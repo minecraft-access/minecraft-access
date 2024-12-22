@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.benchmarks;
+package org.mcaccess.minecraftaccess.benchmarks;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
