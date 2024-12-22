@@ -134,7 +134,7 @@ is for providing user information to client side game when developing.
 
 ### Program Structure
 
-The root package class path of this project is `com.github.khanshoaib3.minecraft_access`,
+The root package class path of this project is `org.mcaccess.minecraftaccess`,
 below I'll use relative paths to describe code.
 
 There are two types of logic in this project, classified by the execution entry point.

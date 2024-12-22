@@ -38,6 +38,8 @@ dependencies {
 
     modImplementation 'maven.modrinth:jade:15.1.5+fabric'
 
+    modImplementation "dev.architectury:architectury:${project.architectury_api_version}"
+
     // lombok that makes the life easier
     // https://projectlombok.org/setup/gradle
     compileOnly 'org.projectlombok:lombok:1.18.30'
