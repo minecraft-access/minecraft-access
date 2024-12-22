@@ -26,7 +26,8 @@ public class XPIndicator {
         if (previousXPLevel == null) {
             previousXPLevel = currentXPLevel;
             return;
-        } else if (previousXPLevel == currentXPLevel) {
+        }
+        if (previousXPLevel == currentXPLevel) {
             return;
         }
 
