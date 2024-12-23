@@ -45,5 +45,6 @@ jobs:
           name: "minecraft-access"
           path: "./*.jar"
       - uses: actions/attest-build-provenance@v1
+        if: github.event_name != 'pull_request'
         with:
           subject-path: "./*.jar"
