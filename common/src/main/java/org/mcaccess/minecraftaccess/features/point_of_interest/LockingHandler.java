@@ -152,9 +152,9 @@ public class LockingHandler {
     private void bowAimingAssist() {
         ClientPlayerEntity player = WorldUtils.getClientPlayer();
         if (aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getActiveItem().getItem() instanceof BowItem) {
-            TreeMap<Double, Entity> scannedHostileMobsMap = POIEntities.getInstance().getAimAssistTargetCandidates();
-            if (!scannedHostileMobsMap.isEmpty()) {
-                Entity entity = scannedHostileMobsMap.firstEntry().getValue();
+            TreeMap<Double, Entity> hostileEntities = POIEntities.getInstance().builtInGroups.get("hostile").getEntities();
+            if (!hostileEntities.isEmpty()) {
+                Entity entity = hostileEntities.firstEntry().getValue();
                 if (lockOnEntity(entity)) {
                     aimAssistActive = true;
                 }
@@ -206,8 +206,9 @@ public class LockingHandler {
     }
 
     private void relock() {
-        List<TreeMap<Double, Entity>> scannedEntityMaps = POIEntities.getInstance().getLockingCandidates();
-        for (TreeMap<Double, Entity> map : scannedEntityMaps) {
+        Map<String, POIGroup> entityGroups = POIEntities.getInstance().builtInGroups;
+        for (POIGroup group : entityGroups.values()) {
+            TreeMap<Double, Entity> map = group.getEntities();
             if (!map.isEmpty()) {
                 Entity entity = map.firstEntry().getValue();
                 if (lockOnEntity(entity)) return;
