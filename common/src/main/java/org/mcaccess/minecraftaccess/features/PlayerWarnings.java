@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.features;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.PlayerWarningConfigMap;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
@@ -46,20 +47,14 @@ public class PlayerWarnings {
 
             loadConfigurations();
 
-            double health = Math.round((minecraftClient.player.getHealth() / 2.0) * 10.0) / 10.0;
             double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
-            double hunger = Math.round((minecraftClient.player.getHungerManager().getFoodLevel() / 2.0) * 10.0) / 10.0;
             double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
-            double air = Math.round((minecraftClient.player.getAir() / 20.0) * 10.0) / 10.0;
             double maxAir = Math.round((minecraftClient.player.getMaxAir() / 20.0) * 10.0) / 10.0;
             double frostExposurePercent = Math.round((minecraftClient.player.getFreezingScale() * 100.0) * 10.0) / 10.0;
 
-            healthWarning(health, maxHealth);
-
-            hungerWarning(hunger, maxHunger);
-
-            airWarning(air, maxAir);
-
+            healthWarning(PlayerUtils.getHearts(), maxHealth);
+            hungerWarning(PlayerUtils.getHunger(), maxHunger);
+            airWarning(PlayerUtils.getAir(), maxAir);
             frostWarning(frostExposurePercent);
         } catch (Exception e) {
             log.error("An error occurred in PlayerWarnings.", e);

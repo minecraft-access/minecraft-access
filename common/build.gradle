@@ -24,7 +24,7 @@ repositories {
 }
 
 architectury {
-    common(rootProject.enabled_platforms.split(","))
+    common("fabric", "neoforge")
 }
 
 loom {
@@ -65,4 +65,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // Since JDK 21
+    // ref: https://stackoverflow.com/questions/77951485/getting-a-java-agent-has-been-loaded-warning-in-intellij-after-upgrading-jdk-17
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
 }

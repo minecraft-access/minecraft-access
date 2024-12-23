@@ -31,14 +31,6 @@ public class KeyUtils {
         return IntStream.of(keyCodes).anyMatch(c -> InputUtil.isKeyPressed(handle, c));
     }
 
-    @SuppressWarnings("unused")
-    public static boolean isAllPressed(int... keyCodes) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        if (minecraftClient == null) return false;
-        long handle = minecraftClient.getWindow().getHandle();
-        return IntStream.of(keyCodes).allMatch(c -> InputUtil.isKeyPressed(handle, c));
-    }
-
     /**
      * This works even if the keybinding is duplicate i.e. another keybinding has the same key bound to it.<br>
      * <a href="https://minecraft.wiki/w/Key_codes">Vanilla Keybinding instance translation keys in Minecraft</a><br>
@@ -50,31 +42,19 @@ public class KeyUtils {
      * our multiple-keybindings-on-one-key usage is not supported.
      */
     public static boolean isAnyPressed(KeyBinding... keyBindings) {
-        return Arrays.stream(keyBindings).anyMatch(b -> {
-                    int keyCode = ((KeyBindingAccessor) b).getBoundKey().getCode();
-                    if (keyCode > 7) {
-                        // If this keybinding is bound to a keyboard-key,
-                        // let's use our key-pressing-check logic to circumvent the limitation.
-                        return KeyUtils.isOnePressed(keyCode);
-                    } else {
-                        // If this keybinding is bound to a non-keyboard key, execute the original method.
-                        return b.isPressed();
-                    }
-                }
-        );
+        return Arrays.stream(keyBindings).anyMatch(KeyUtils::isKeyPressed);
     }
 
-    @SuppressWarnings("unused")
-    public static boolean isAllPressed(KeyBinding... keyBindings) {
-        return Arrays.stream(keyBindings).allMatch(b -> {
-                    int keyCode = ((KeyBindingAccessor) b).getBoundKey().getCode();
-                    if (keyCode > 7) {
-                        return KeyUtils.isOnePressed(keyCode);
-                    } else {
-                        return b.isPressed();
-                    }
-                }
-        );
+    private static boolean isKeyPressed(KeyBinding b) {
+        int keyCode = ((KeyBindingAccessor) b).getBoundKey().getCode();
+        if (keyCode > 7) {
+            // If this keybinding is bound to a keyboard-key,
+            // let's use our key-pressing-check logic to circumvent the limitation.
+            return KeyUtils.isOnePressed(keyCode);
+        } else {
+            // If this keybinding is bound to a non-keyboard key, execute the original method.
+            return b.isPressed();
+        }
     }
 
     public static boolean isF3Pressed() {

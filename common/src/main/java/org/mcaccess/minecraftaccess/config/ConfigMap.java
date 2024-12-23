@@ -28,8 +28,8 @@ public class ConfigMap {
     private FallDetectorConfigMap fallDetectorConfigMap;
     @SerializedName("Read Crosshair")
     private ReadCrosshairConfigMap readCrosshairConfigMap;
-    @SerializedName("Narrator Menu")
-    private NarratorMenuConfigMap narratorMenuConfigMap;
+    @SerializedName("Access Menu")
+    private AccessMenuConfigMap accessMenuConfigMap;
     @SerializedName("Area Map")
     private AreaMapConfigMap areaMapConfigMap;
     @SerializedName("Other Configurations")
@@ -46,7 +46,7 @@ public class ConfigMap {
         m.fallDetectorConfigMap = FallDetectorConfigMap.buildDefault();
         m.readCrosshairConfigMap = ReadCrosshairConfigMap.buildDefault();
         m.otherConfigsMap = OtherConfigsMap.buildDefault();
-        m.narratorMenuConfigMap = NarratorMenuConfigMap.buildDefault();
+        m.accessMenuConfigMap = AccessMenuConfigMap.buildDefault();
         m.areaMapConfigMap = AreaMapConfigMap.buildDefault();
         return m;
     }
@@ -57,7 +57,7 @@ public class ConfigMap {
         FallDetectorConfigMap.setInstance(map.fallDetectorConfigMap);
         InventoryControlsConfigMap.setInstance(map.inventoryControlsConfigMap);
         MouseSimulationConfigMap.setInstance(map.mouseSimulationConfigMap);
-        NarratorMenuConfigMap.setInstance(map.narratorMenuConfigMap);
+        AccessMenuConfigMap.setInstance(map.accessMenuConfigMap);
         OtherConfigsMap.setInstance(map.otherConfigsMap);
         PlayerWarningConfigMap.setInstance(map.playerWarningConfigMap);
         POIConfigMap.setInstance(map.poiConfigMap);
@@ -107,10 +107,10 @@ public class ConfigMap {
         if (Objects.isNull(this.fallDetectorConfigMap)) {
             this.fallDetectorConfigMap = FallDetectorConfigMap.buildDefault();
         }
-        if (Objects.isNull(this.narratorMenuConfigMap)) {
-            this.narratorMenuConfigMap = NarratorMenuConfigMap.buildDefault();
+        if (Objects.isNull(this.accessMenuConfigMap)) {
+            this.accessMenuConfigMap = AccessMenuConfigMap.buildDefault();
         } else {
-            this.narratorMenuConfigMap.resetMissingSectionsToDefault();
+            this.accessMenuConfigMap.resetMissingSectionsToDefault();
         }
 //        if (Objects.isNull(this.areaMapConfigMap)) {
 //            this.areaMapConfigMap = AreaMapConfigMap.buildDefault();

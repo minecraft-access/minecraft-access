@@ -58,7 +58,7 @@ public class InventoryControls {
     private boolean autoOpenRecipeBook;
     @Getter
     private String rowAndColumnFormat;
-    private Interval interval;
+    private final Interval interval = Interval.defaultDelay();
     private MinecraftClient minecraftClient;
 
     private HandledScreenAccessor previousScreen = null;
@@ -95,7 +95,7 @@ public class InventoryControls {
     }
 
     public void update() {
-        if (interval != null && !interval.hasEnded()) return;
+        if (!interval.isReady()) return;
         this.minecraftClient = MinecraftClient.getInstance();
 
         if (minecraftClient == null) return;
@@ -116,7 +116,7 @@ public class InventoryControls {
             currentRecipeBookWidget = getRecipeBookWidget(minecraftClient.currentScreen);
             currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
 
-            boolean wasAnyKeyPressed = keyListener();
+            interval.adjustNextReadyTimeBy(keyListener());
 
             // On screen open
             if (previousScreen != currentScreen) {
@@ -151,7 +151,6 @@ public class InventoryControls {
                 }
             }
 
-            if (wasAnyKeyPressed) interval.start();
         } catch (Exception e) {
             log.error("Error encountered in Inventory Controls feature.", e);
         }
@@ -171,7 +170,7 @@ public class InventoryControls {
         InventoryControlsConfigMap map = InventoryControlsConfigMap.getInstance();
         autoOpenRecipeBook = map.isAutoOpenRecipeBook();
         rowAndColumnFormat = map.getRowAndColumnFormat();
-        interval = Interval.inMilliseconds(map.getDelayInMilliseconds(), interval);
+        interval.setDelay(map.getDelayInMilliseconds(), Interval.Unit.Millisecond);
         speakFocusedSlotChanges = map.isSpeakFocusedSlotChanges();
     }
 
@@ -230,7 +229,7 @@ public class InventoryControls {
         }
         //</editor-fold>
 
-        if (disableInputForSearchBox) return false; // Skip other key inputs if using a search box
+        if (disableInputForSearchBox) return true; // Skip other key inputs if using a search box
 
         if (isGroupKeyPressed) {
             log.debug("Group key pressed");

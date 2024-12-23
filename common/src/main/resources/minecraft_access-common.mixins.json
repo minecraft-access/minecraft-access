@@ -41,6 +41,7 @@
     "SelectionManagerMixin",
     "SlotAccessor",
     "StonecutterScreenAccessor",
+    "MinecraftClientMixin",
     "TameableEntityMixin",
     "TextFieldWidgetAccessor",
     "TextFieldWidgetMixin"

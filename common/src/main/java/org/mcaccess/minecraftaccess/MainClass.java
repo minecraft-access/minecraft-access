@@ -1,7 +1,10 @@
 package org.mcaccess.minecraftaccess;
 
 import org.mcaccess.minecraftaccess.config.Config;
-import org.mcaccess.minecraftaccess.config.config_maps.*;
+import org.mcaccess.minecraftaccess.config.config_maps.AccessMenuConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
+import org.mcaccess.minecraftaccess.config.config_maps.PlayerWarningConfigMap;
 import org.mcaccess.minecraftaccess.features.*;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
@@ -9,6 +12,8 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.POIMarking;
 import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
+import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import com.mojang.text2speech.Narrator;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
@@ -22,7 +27,6 @@ public class MainClass {
     public static final String MOD_ID = "minecraft_access";
     private static ScreenReaderInterface screenReader = null;
 
-    public static CameraControls cameraControls = null;
     public static InventoryControls inventoryControls = null;
     public static BiomeIndicator biomeIndicator = null;
     public static XPIndicator xpIndicator = null;
@@ -59,7 +63,6 @@ public class MainClass {
         if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
             MainClass.getScreenReader().say(msg, true);
 
-        MainClass.cameraControls = new CameraControls();
         MainClass.inventoryControls = new InventoryControls();
         MainClass.biomeIndicator = new BiomeIndicator();
         MainClass.xpIndicator = new XPIndicator();
@@ -94,7 +97,6 @@ public class MainClass {
 
         changeLogLevelBaseOnDebugConfig();
 
-        // TODO change attack and use keys on startup and add startup features to config.json
         if (!MainClass.alreadyDisabledAdvancementKey && minecraftClient.options != null) {
             minecraftClient.options.advancementsKey.setBoundKey(InputUtil.fromTranslationKey("key.keyboard.unknown"));
             MainClass.alreadyDisabledAdvancementKey = true;
@@ -109,9 +111,6 @@ public class MainClass {
         if (inventoryControls != null && InventoryControlsConfigMap.getInstance().isEnabled())
             inventoryControls.update();
 
-        if (cameraControls != null && CameraControlsConfigMap.getInstance().isEnabled())
-            cameraControls.update();
-
         ReadCrosshair.getInstance().tick();
 
         if (xpIndicator != null && otherConfigsMap.isXpIndicatorEnabled())
@@ -124,13 +123,23 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled())
-            playerStatus.update();
+        if (MinecraftClient.getInstance() != null && WorldUtils.getClientPlayer() != null) {
+            if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
+                playerStatus.update();
+            }
+
+            MouseKeySimulation.runOnTick();
+
+            if (MinecraftClient.getInstance().currentScreen == null) {
+                // These features are suppressed when there is any screen opening
+                CameraControls.update();
+            }
+        }
 
         if (playerWarnings != null && PlayerWarningConfigMap.getInstance().isEnabled())
             playerWarnings.update();
 
-        if (accessMenu != null && NarratorMenuConfigMap.getInstance().isEnabled())
+        if (accessMenu != null && AccessMenuConfigMap.getInstance().isEnabled())
             accessMenu.update();
 
         // POI Marking will handle POI Scan and POI Locking features inside it
@@ -138,10 +147,10 @@ public class MainClass {
 
         FallDetector.getInstance().update();
 
-        MouseKeySimulation.getInstance().update();
-
         // TODO remove feature flag after complete
         // AreaMapMenu.getInstance().update();
+
+        Keystroke.updateInstances();
     }
 
     /**

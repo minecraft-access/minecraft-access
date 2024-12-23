@@ -21,7 +21,7 @@ public class PlayerStatus {
             () -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().speakPlayerStatusKey),
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
-            Interval.inMilliseconds(3000));
+            Interval.ms(3000));
 
     public void update() {
         try {

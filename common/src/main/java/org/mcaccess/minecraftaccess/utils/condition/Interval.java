@@ -1,36 +1,41 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
+import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
+import org.mcaccess.minecraftaccess.features.CameraControls;
+
 /**
  * An auto-refresh countdown timer for controlling interval execution of features.
  */
 public class Interval {
-    protected long lastRunTime;
-    private final long delay;
-    private boolean isRunning;
-    private final boolean disabled;
+    public long lastRunTime;
+    private long delay;
 
     protected Interval(long lastRunTime, long delayInNanoTime) {
         this.lastRunTime = lastRunTime;
         this.delay = delayInNanoTime;
-        this.disabled = delayInNanoTime == 0;
-        this.isRunning = false;
     }
 
     /**
-     * Build or update instance according to delay config.
-     *
-     * @param delay    config value
-     * @param previous the interval class variable
+     * In milliseconds
      */
-    public static Interval inMilliseconds(long delay, Interval... previous) {
-        if (previous == null || previous.length == 0 || previous[0] == null) {
-            // 1 milliseconds = 1*10^6 nanoseconds
-            return new Interval(System.nanoTime(), delay * 1000_000);
-        } else {
-            Interval interval = previous[0];
-            boolean configChanged = delay * 1000_000 != interval.delay;
-            return configChanged ? Interval.inMilliseconds(delay) : interval;
-        }
+    public static Interval ms(long delay) {
+        // 1 milliseconds = 1*10^6 nanoseconds
+        return new Interval(System.nanoTime(), Unit.Millisecond.toNano(delay));
+    }
+
+    /**
+     * In seconds
+     */
+    public static Interval sec(long delay) {
+        // 1 seconds = 1*10^9 nanoseconds
+        return new Interval(System.nanoTime(), Unit.Second.toNano(delay));
+    }
+
+    /**
+     * Use the value of {@link OtherConfigsMap#getMultipleClickSpeedInMilliseconds()} as delay
+     */
+    public static Interval defaultDelay() {
+        return Interval.ms(OtherConfigsMap.getInstance().getMultipleClickSpeedInMilliseconds());
     }
 
     public void reset() {
@@ -41,8 +46,9 @@ public class Interval {
      * Check if the delay has cooled down. (Will auto-reset the timer if true)
      */
     public boolean isReady() {
-        if (disabled) return false;
-
+        // There is configuration that set to 0 to disable the timer
+        // ref: Read Crosshair - Repeat Speaking Interval (in milliseconds) (0 to disable)
+        if (delay == 0) return false;
         if (System.nanoTime() - lastRunTime > delay) {
             reset();
             return true;
@@ -51,24 +57,46 @@ public class Interval {
         }
     }
 
-    /**
-     * Check if the delay has cooled down. (This will not auto-reset the timer, that will have to be done by calling the start() method)
-     *
-     * @return true if the delay timer has stopped or cooled down.
-     */
-    public boolean hasEnded() {
-        if (!this.isRunning) return true;
-        if (!this.isReady()) return false;
+    public void setDelay(long delay, Unit unit) {
+        this.delay = unit.toNano(delay);
+    }
 
-        this.isRunning = false;
-        return true;
+    public enum Unit {
+        Millisecond(1000_000),
+        Second(1000_000_000);
+
+        private final long factor;
+
+        Unit(long factor) {
+            this.factor = factor;
+        }
+
+        public long toNano(long value) {
+            return value * this.factor;
+        }
     }
 
     /**
-     * Starts or resets the delay timer. This is recommended to be used when there is a key input.
+     * When the interval is used at the scope of whole feature, e.g. {@link CameraControls},
+     * in which the feature is manually triggered by player's keystrokes while having a rate limitation,
+     * this method is called at the end of feature logic to adjust the next feature execution time.
+     *
+     * @param anyFunctionTriggered whether any function of the feature has been triggered in this tick
      */
-    public void start() {
-        this.isRunning = true;
-        reset();
+    public void adjustNextReadyTimeBy(boolean anyFunctionTriggered) {
+        if (anyFunctionTriggered) {
+            // make the next action to be executed after one complete interval
+            reset();
+        } else {
+            // immediately ready for next tick
+            beReady();
+        }
+    }
+
+    /**
+     * Make the interval ready immediately
+     */
+    public void beReady() {
+        lastRunTime = 0;
     }
 }
