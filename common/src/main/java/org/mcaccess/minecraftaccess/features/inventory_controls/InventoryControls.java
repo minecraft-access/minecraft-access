@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
+import net.minecraft.data.Main;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
 import org.mcaccess.minecraftaccess.mixin.*;
@@ -67,10 +68,10 @@ public class InventoryControls {
     private boolean speakFocusedSlotChanges = true;
 
     private enum FocusDirection {
-        UP(I18n.translate("gui.up")),
-        DOWN(I18n.translate("gui.down")),
-        LEFT(I18n.translate("minecraft_access.inventory_controls.direction_left")),
-        RIGHT(I18n.translate("minecraft_access.inventory_controls.direction_right"));
+        UP("gui.up"),
+        DOWN("gui.down"),
+        LEFT("minecraft_access.inventory_controls.direction_left"),
+        RIGHT("minecraft_access.inventory_controls.direction_right");
 
         private final String value;
 
@@ -118,11 +119,9 @@ public class InventoryControls {
             if (previousScreen != currentScreen) {
                 previousScreen = currentScreen;
                 if (currentScreen instanceof AnvilScreen anvilScreen) {
-                    // since 1.20.x
                     setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getNameField(), false);
                 }
                 if (currentScreen instanceof CreativeInventoryScreen creativeInventoryScreen) {
-                    // since 1.20.x
                     TextFieldWidget searchBox = ((CreativeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox();
                     if (searchBox.isActive()) {
                         setSearchBoxFocus(searchBox, false);
@@ -138,7 +137,6 @@ public class InventoryControls {
                 }
 
                 if (autoOpenRecipeBook && recipeBookWidget != null) {
-                    // since 1.20.x
                     if (!recipeBookWidget.isOpen()) recipeBookWidget.toggleOpen();
                     setSearchBoxFocus(((RecipeBookWidgetAccessor) recipeBookWidget).getSearchField(), false);
                 }
@@ -193,7 +191,6 @@ public class InventoryControls {
 
         //<editor-fold desc="When using a search box">
         if (currentScreen instanceof CreativeInventoryScreen creativeInventoryScreen) {
-            // since 1.20.x
             TextFieldWidget searchBox = ((CreativeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox();
             if (searchBox.isActive()) {
                 disableInputForSearchBox = true;
@@ -206,7 +203,6 @@ public class InventoryControls {
         }
 
         if (currentScreen instanceof AnvilScreen anvilScreen) {
-            // since 1.20.x
             TextFieldWidget searchBox = ((AnvilScreenAccessor) anvilScreen).getNameField();
             if (searchBox.isActive()) {
                 disableInputForSearchBox = true;
@@ -218,7 +214,6 @@ public class InventoryControls {
             }
         }
         if (currentScreen instanceof InventoryScreen inventoryScreen && inventoryScreen.getRecipeBookWidget().isOpen()) {
-            // since 1.20.x
             TextFieldWidget searchBox = ((RecipeBookWidgetAccessor) inventoryScreen.getRecipeBookWidget()).getSearchField();
             if (searchBox.isActive()) {
                 disableInputForSearchBox = true;
@@ -230,7 +225,6 @@ public class InventoryControls {
             }
         }
         if (currentScreen instanceof CraftingScreen craftingScreen && craftingScreen.getRecipeBookWidget().isOpen()) {
-            // since 1.20.x
             TextFieldWidget searchBox = ((RecipeBookWidgetAccessor) craftingScreen.getRecipeBookWidget()).getSearchField();
             if (searchBox.isActive()) {
                 disableInputForSearchBox = true;
@@ -301,21 +295,15 @@ public class InventoryControls {
         }
         if (isTPressed) {
             if (CreativeInventoryScreenAccessor.getSelectedTab().getType() == ItemGroup.Type.SEARCH && currentScreen instanceof CreativeInventoryScreen creativeInventoryScreen) {
-                // since 1.20.x
                 setSearchBoxFocus(((CreativeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox(), true);
             } else if (currentScreen instanceof AnvilScreen anvilScreen) {
-                // since 1.20.x
                 setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getNameField(), true);
             } else if (currentScreen instanceof InventoryScreen inventoryScreen && inventoryScreen.getRecipeBookWidget().isOpen()) {
-                // since 1.20.x
                 RecipeBookWidget recipeBookWidget = inventoryScreen.getRecipeBookWidget();
-                // resolve can-not-enter-characters-issue https://github.com/khanshoaib3/minecraft-access/issues/67
                 inventoryScreen.setFocused(recipeBookWidget);
                 setSearchBoxFocus(((RecipeBookWidgetAccessor) recipeBookWidget).getSearchField(), true);
             } else if (currentScreen instanceof CraftingScreen craftingScreen && craftingScreen.getRecipeBookWidget().isOpen()) {
-                // since 1.20.x
                 RecipeBookWidget recipeBookWidget = craftingScreen.getRecipeBookWidget();
-                // resolve can-not-enter-characters-issue https://github.com/khanshoaib3/minecraft-access/issues/67
                 craftingScreen.setFocused(recipeBookWidget);
                 setSearchBoxFocus(((RecipeBookWidgetAccessor) recipeBookWidget).getSearchField(), true);
             }
@@ -334,17 +322,18 @@ public class InventoryControls {
 
             ToggleButtonWidget toggleCraftableButton = ((RecipeBookWidgetAccessor) recipeBookWidget).getToggleCraftableButton();
 
-//            int x = toggleCraftableButton.x + 8;
-//            int y = toggleCraftableButton.y + 4;
             int x = toggleCraftableButton.getX() + 8;
             int y = toggleCraftableButton.getY() + 4;
 
             MouseUtils.Coordinates p = MouseUtils.calcRealPositionOfWidget(x, y);
             MouseUtils.moveAndLeftClick(p.x(), p.y());
             moveToSlotItem(currentSlotItem, 100);
-
             log.debug("Recipe toggle key pressed, Showing {}", toggleCraftableButton.isToggled() ? "all" : "craftable only");
-            MainClass.speakWithNarrator("Showing %s".formatted(toggleCraftableButton.isToggled() ? "all" : "craftable only"), true);
+            if (toggleCraftableButton.isToggled()) {
+                MainClass.speakWithNarrator(I18n.translate("gui.recipebook.toggleRecipes.all"), true);
+            } else {
+                MainClass.speakWithNarrator(((RecipeBookWidgetAccessor) recipeBookWidget).callGetToggleCraftableButtonText().getString(), true);
+            }
             return true;
         }
 
@@ -352,8 +341,6 @@ public class InventoryControls {
     }
 
     private void clickPreviousRecipeBookPage(RecipeBookProvider screen) {
-        // int x = ((RecipeBookResultsAccessor) ((RecipeBookWidgetAccessor) craftingScreen.getRecipeBookWidget()).getRecipesArea()).getPrevPageButton().x + 3; // Pre 1.19.3
-        // int y = ((RecipeBookResultsAccessor) ((RecipeBookWidgetAccessor) craftingScreen.getRecipeBookWidget()).getRecipesArea()).getPrevPageButton().y + 3; // Pre 1.19.3
         RecipeBookResultsAccessor area = (RecipeBookResultsAccessor) ((RecipeBookWidgetAccessor) screen.getRecipeBookWidget()).getRecipesArea();
         int x = area.getPrevPageButton().getX() + 3; // From 1.19.3
         int y = area.getPrevPageButton().getY() + 3; // From 1.19.3
@@ -363,8 +350,6 @@ public class InventoryControls {
     }
 
     private void clickNextRecipeBookPage(RecipeBookProvider screen) {
-        // int x = ((RecipeBookResultsAccessor) ((RecipeBookWidgetAccessor) craftingScreen.getRecipeBookWidget()).getRecipesArea()).getNextPageButton().x + 3; // Pre 1.19.3
-        // int y = ((RecipeBookResultsAccessor) ((RecipeBookWidgetAccessor) craftingScreen.getRecipeBookWidget()).getRecipesArea()).getNextPageButton().y + 3; // Pre 1.19.3
         RecipeBookResultsAccessor area = (RecipeBookResultsAccessor) ((RecipeBookWidgetAccessor) screen.getRecipeBookWidget()).getRecipesArea();
         int x = area.getNextPageButton().getX() + 3; // From 1.19.3
         int y = area.getNextPageButton().getY() + 3; // From 1.19.3
@@ -390,7 +375,7 @@ public class InventoryControls {
 
         SlotItem slotItem = getGroupItemInDirection(focusDirection);
         if (slotItem == null) {
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.inventory_controls.no_slot_in_direction", focusDirection.getString()), true);
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.inventory_controls.no_slot_in_direction", I18n.translate(focusDirection.getString())), true);
             return;
         }
 

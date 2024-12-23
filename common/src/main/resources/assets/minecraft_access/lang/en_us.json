@@ -15,6 +15,7 @@
     "minecraft_access.access_menu.gui.button.time_of_day": "Time of Day",
     "minecraft_access.access_menu.gui.button.xp": "XP Level",
     "minecraft_access.access_menu.light_level": "Light level is, %s",
+    "minecraft_access.access_menu.screen_reader_refreshed": "Screen reader refreshed",
     "minecraft_access.access_menu.target_missed": "Too far",
     "minecraft_access.access_menu.time_of_day": "Time is, %s",
     "minecraft_access.access_menu.time_of_day_am": "Time is, %s A.M.",

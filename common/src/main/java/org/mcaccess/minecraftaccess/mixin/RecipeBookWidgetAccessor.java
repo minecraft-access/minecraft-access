@@ -8,8 +8,10 @@ import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.List;
 
@@ -38,4 +40,8 @@ public interface RecipeBookWidgetAccessor {
 
     @Accessor
     ToggleButtonWidget getToggleCraftableButton();
+
+    @Invoker
+    Text callGetToggleCraftableButtonText();
 }
+
