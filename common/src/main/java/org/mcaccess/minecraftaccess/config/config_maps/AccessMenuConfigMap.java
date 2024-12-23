@@ -9,35 +9,35 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class NarratorMenuConfigMap {
+public class AccessMenuConfigMap {
 
-    private static NarratorMenuConfigMap instance;
+    private static AccessMenuConfigMap instance;
 
     @SerializedName("Enabled")
     private boolean enabled;
     @SerializedName("Fluid Detector")
     private FluidDetectorConfigMap fluidDetectorConfigMap;
 
-    private NarratorMenuConfigMap() {
+    private AccessMenuConfigMap() {
     }
 
-    public static NarratorMenuConfigMap getInstance() {
+    public static AccessMenuConfigMap getInstance() {
         if (instance == null) Config.getInstance().loadConfig();
         return instance;
     }
 
-    public static void setInstance(NarratorMenuConfigMap map) {
+    public static void setInstance(AccessMenuConfigMap map) {
         FluidDetectorConfigMap.setInstance(map.fluidDetectorConfigMap);
         instance = map;
     }
 
-    public static NarratorMenuConfigMap buildDefault() {
-        NarratorMenuConfigMap defaultNarratorMenuConfigMap = new NarratorMenuConfigMap();
-        defaultNarratorMenuConfigMap.setEnabled(true);
-        defaultNarratorMenuConfigMap.fluidDetectorConfigMap = FluidDetectorConfigMap.buildDefault();
+    public static AccessMenuConfigMap buildDefault() {
+        AccessMenuConfigMap defaultAccessMenuConfigMap = new AccessMenuConfigMap();
+        defaultAccessMenuConfigMap.setEnabled(true);
+        defaultAccessMenuConfigMap.fluidDetectorConfigMap = FluidDetectorConfigMap.buildDefault();
 
-        setInstance(defaultNarratorMenuConfigMap);
-        return defaultNarratorMenuConfigMap;
+        setInstance(defaultAccessMenuConfigMap);
+        return defaultAccessMenuConfigMap;
     }
 
     public void resetMissingSectionsToDefault() {

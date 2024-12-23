@@ -1,8 +1,5 @@
 package org.mcaccess.minecraftaccess.features;
 
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.util.math.Vec3d;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.CameraControlsConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
@@ -13,6 +10,9 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
+import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
  * 16) Right Alt + double Look Down Key or Look Straight Down Key (default: Keypad .): Snaps the camera to the look down at feet direction.
  */
 public class CameraControls {
-
     private static final Logger log = LoggerFactory.getLogger(CameraControls.class);
 
     private static boolean enabled;

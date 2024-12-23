@@ -1,16 +1,5 @@
 package org.mcaccess.minecraftaccess.features.access_menu;
 
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.ConfigMenu;
 import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
@@ -23,6 +12,17 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
