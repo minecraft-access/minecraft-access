@@ -2,9 +2,9 @@ package org.mcaccess.minecraftaccess.features;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
-import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
+import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 
 import java.util.function.Function;
 
