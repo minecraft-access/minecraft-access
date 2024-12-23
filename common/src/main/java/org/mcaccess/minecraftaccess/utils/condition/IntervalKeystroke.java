@@ -1,7 +1,7 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
-import net.minecraft.client.option.KeyBinding;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+import net.minecraft.client.option.KeyBinding;
 
 import java.util.function.BooleanSupplier;
 
