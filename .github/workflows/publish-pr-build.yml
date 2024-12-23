@@ -1,0 +1,55 @@
+name: Publish PR Build
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+
+jobs:
+  build:
+    name: Build
+    if: >
+      github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'bedrock-breakers')
+      || github.event.action == 'labeled' && github.event.label.name == 'bedrock-breakers'
+    uses: ./.github/workflows/build.yml
+    with:
+      ref: ${{ github.event.pull_request.merge_commit_sha || github.event.pull_request.head.sha }}
+  publish:
+    name: Publish Build
+    needs:
+      - build
+    uses: ./.github/workflows/publish-build.yml
+    secrets: inherit
+    with:
+      title: "Pull Request #${{ github.event.number }} Build #${{ github.run_number }} [${{ github.event.pull_request.head.user.login }}:${{ github.event.pull_request.head.ref }}]"
+      tag: ${{ vars.PR_TAG }}
+      colour: 15136066
+      url: ${{ github.event.pull_request.html_url }}
+      message: ${{ vars.PR_BUILD_MESSAGE }}
+      description: ${{ github.event.pull_request.body }}
+      # language=json
+      fields: |
+        [
+          {
+            "name": "Pull Request",
+            "value": "[**#${{ github.event.number }}:**](${{ github.event.pull_request.html_url }}) ${{ github.event.pull_request.title }}",
+            "inline": false
+          },
+          {
+            "name": "Branch",
+            "value": "`${{ github.event.pull_request.head.user.login }}:${{ github.event.pull_request.head.ref }}`",
+            "inline": false
+          },
+          {
+            "name": "Author",
+            "value": "${{ github.event.pull_request.user.name }} [@${{ github.event.pull_request.user.login }}](${{ github.event.pull_request.user.html_url }})",
+            "inline": true
+          },
+          {
+            "name": "Build Number",
+            "value": "#${{ github.run_number }}",
+            "inline": true
+          }
+        ]

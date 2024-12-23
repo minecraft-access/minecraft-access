@@ -1,10 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.github.khanshoaib3.minecraft_access.mixin",
+  "package": "org.mcaccess.minecraftaccess.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "AnimatedResultButtonAccessor",
     "AnimatedResultButtonMixin",
     "AnvilScreenAccessor",
     "AnvilScreenMixin",
@@ -33,6 +32,8 @@
     "MobSpawnerLogicAccessor",
     "PageTurnWidgetMixin",
     "RecipeBookResultsAccessor",
+    "RecipeBookResultsMixin",
+    "RecipeBookScreenAccessor",
     "RecipeBookWidgetAccessor",
     "ScreenMixin",
     "ScreenNarratorMixin",
@@ -40,11 +41,15 @@
     "SelectionManagerMixin",
     "SlotAccessor",
     "StonecutterScreenAccessor",
+    "MinecraftClientMixin",
     "TameableEntityMixin",
     "TextFieldWidgetAccessor",
     "TextFieldWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "SingleStackRecipeAccessor"
+  ]
 }
