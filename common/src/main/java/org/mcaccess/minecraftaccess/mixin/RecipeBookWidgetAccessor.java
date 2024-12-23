@@ -5,8 +5,10 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.List;
 
@@ -26,4 +28,7 @@ public interface RecipeBookWidgetAccessor {
 
     @Accessor
     ToggleButtonWidget getToggleCraftableButton();
+
+    @Invoker
+    Text callGetToggleCraftableButtonText();
 }
