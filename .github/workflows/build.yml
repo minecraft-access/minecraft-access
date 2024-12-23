@@ -1,156 +1,49 @@
-# For running this workflow to build previous version of mod,
-# [lang repo](https://github.com/khanshoaib3/minecraft-access-i18n)
-# must have same version tag (git tag) as target build version.
-name: Build Mod Files
-
+name: Publish PR Build
 on:
-  # workflow_dispatch: You can trigger it manually from the Actions page
-  # ref: https://docs.github.com/en/actions/using-workflows/manually-running-a-workflow
-  workflow_dispatch:
-    inputs:
-      version:
-        default: 'latest'
-        required: false
-        description: Version to be published (git tag like 'v1.5.2-1.20.4', DO use default value to build the latest version)
-
-  # workflow_call: Or it will be triggered by release workflow
-  # ref: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call
   workflow_call:
     inputs:
-      jdk-version:
+      ref:
+        type: string
         required: true
-        type: string
-      build-files-cache-key:
-        required: true
-        type: string
-      version:
-        default: 'latest'
-        required: false
-        type: string
 
 env:
-  FABRIC_PATH: fabric/build/libs
-  NEOFORGE_PATH: neoforge/build/libs
-  MOD_FILE_PREFIX: minecraft-access-
-  UPLOAD_PATH: upload
-  JDK_VERSION: ${{ inputs.jdk-version || '21' }}
+  JAVA_VERSION: 21
+  JAVA_DISTRIBUTION: temurin
 
 jobs:
-  test:
-    name: Run Test Suite
-    uses: ./.github/workflows/test.yml
-    with:
-      # Context "env" is not allowed here
-      # Available contexts are "github", "inputs", "matrix", "needs", "strategy", "vars"
-      # ref: https://docs.github.com/en/actions/learn-github-actions/contexts#context-availability
-      jdk-version: ${{ inputs.jdk-version || '21' }}
-
   build:
-    # Run build job only if test job is successfully passed
-    # ref: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idneeds
-    #
-    # ref='' for default value (HEAD of main branch) of checkout action
-    # ref: https://github.com/actions/checkout
-    name: Run Gradle Build and Preserve Build Files
-    needs: test
+    name: Build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.version == 'latest' && github.ref || inputs.version }}
-
-      - name: Fetch Latest Lang Assert
-        if: ${{ inputs.version == 'latest' }}
-        uses: actions/checkout@v4
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+      - uses: actions/setup-java@v4
         with:
-          # ref: https://github.com/khanshoaib3/minecraft-access
-          repository: 'khanshoaib3/minecraft-access-i18n'
-          # Checkout the repo in mod's language assert path
-          path: './common/src/main/resources/assets/minecraft_access/lang'
-
-      - name: Fetch Lang Assert at Given Version
-        if: ${{ inputs.version != 'latest' }}
-        uses: actions/checkout@v4
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+      - uses: gradle/actions/setup-gradle@v4
         with:
-          ref: ${{ inputs.version }}
-          repository: 'khanshoaib3/minecraft-access-i18n'
-          path: './common/src/main/resources/assets/minecraft_access/lang'
-
-      - name: Remove Unnecessary Lang Repository Files
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
+      - name: Build
+        # language=bash
         run: |
-          pushd .
-          cd ./common/src/main/resources/assets/minecraft_access/lang
-          ls | grep -vE "??_??\.json" | xargs rm
-          popd
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+          ./gradlew clean build -x test
+          shopt -s extglob
+          cp ./!(common)/build/libs/*+!(*-*).jar .
+      - uses: actions/upload-artifact@v4
         with:
-          java-version: ${{ env.JDK_VERSION }}
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Build Mod with Gradle
-        run: ./gradlew build
-
-      - name: Set Environment Variables
-        # Get current time in YYYYMMDD-HHMMSS format
-        # Get mod version from gradle.properties
-        run: |
-          echo "BUILD_TIME=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
-          echo "MOD_VERSION=$(grep "mod_version" gradle.properties | cut -d'=' -f2)" >> $GITHUB_ENV
-
-      - name: Move All Build Files to Upload Directory
-        if: ${{ !inputs.build-files-cache-key }}
-        # Add platform suffix for fabric and neoforge build files with mv command
-        # Copy build files into upload directory
-        run: |
-          upload_path=${{ github.WORKSPACE }}/${{ env.UPLOAD_PATH }}
-          mkdir -p ${upload_path}
-          fabric_lib_path=${{ github.WORKSPACE }}/${{ env.FABRIC_PATH }}
-          neoforge_lib_path=${{ github.WORKSPACE }}/${{ env.NEOFORGE_PATH }}
-          if [ -d ${fabric_lib_path} ]; then
-            cd ${fabric_lib_path}
-            for f in *.jar; do mv -- "$f" "${f%.jar}-fabric.jar"; done
-            cp *.jar ${upload_path}
-          fi
-          if [ -d ${neoforge_lib_path} ]; then
-            cd ${{ github.WORKSPACE }}/${{ env.NEOFORGE_PATH }}
-            for f in *.jar; do mv -- "$f" "${f%.jar}-neoforge.jar"; done
-            cp *.jar ${upload_path}
-          fi
-
-      - name: Move Only Mod Files to Upload Directory
-        if: ${{ inputs.build-files-cache-key }}
-        # Remove shadow and source files for only matching mod file with in cp command
-        # Add platform suffix for fabric and neoforge mod files with cp command
-        # Copy mod files into upload directory
-        run: |
-          mkdir -p ${{ env.UPLOAD_PATH }}
-          fabric_mod_path=${{ env.FABRIC_PATH }}/${{ env.MOD_FILE_PREFIX }}${{ env.MOD_VERSION }}.jar
-          neoforge_mod_path=${{ env.NEOFORGE_PATH }}/${{ env.MOD_FILE_PREFIX }}${{ env.MOD_VERSION }}.jar
-          upload_path=${{ env.UPLOAD_PATH }}/${{ env.MOD_FILE_PREFIX }}${{ env.MOD_VERSION }}
-          if [ -f ${fabric_mod_path} ]; then
-            mv ${fabric_mod_path} ${upload_path}-fabric.jar
-          fi
-          if [ -f ${neoforge_mod_path} ]; then
-            mv ${neoforge_mod_path} ${upload_path}-neoforge.jar
-          fi
-
-      # Then we can download them from workflow result page
-      - name: Upload Mod Files To Artifact
-        # Only run artifact upload when triggered manually
-        if: ${{ !inputs.build-files-cache-key }}
-        uses: actions/upload-artifact@v4
+          name: "minecraft-access"
+          path: "./*.jar"
+      - uses: actions/attest-build-provenance@v1
         with:
-          # Name of zip file that we download from workflow result page
-          name: minecraft-access-mod-${{ env.BUILD_TIME }}
-          path: ${{ env.UPLOAD_PATH }}
-
-      - name: Cache Mod Files for Publishing
-        # Only run file cache when triggered by release workflow
-        if: ${{ inputs.build-files-cache-key }}
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ env.UPLOAD_PATH }}
-          key: ${{ inputs.build-files-cache-key || env.MOD_VERSION }}
+          subject-path: "./*.jar"
