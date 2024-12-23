@@ -2,7 +2,7 @@ package org.mcaccess.minecraftaccess.config.config_menus;
 
 import org.mcaccess.minecraftaccess.config.Config;
 import org.mcaccess.minecraftaccess.config.config_maps.FluidDetectorConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.NarratorMenuConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.AccessMenuConfigMap;
 import org.mcaccess.minecraftaccess.utils.BaseScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -18,11 +18,11 @@ public class NarratorMenuConfigMenu extends BaseScreen {
     protected void init() {
         super.init();
 
-        NarratorMenuConfigMap initMap = NarratorMenuConfigMap.getInstance();
+        AccessMenuConfigMap initMap = AccessMenuConfigMap.getInstance();
 
         ButtonWidget featureToggleButton = this.buildButtonWidget("minecraft_access.gui.common.button.feature_toggle_button." + (initMap.isEnabled() ? "enabled" : "disabled"),
                 (button) -> {
-                    NarratorMenuConfigMap map = NarratorMenuConfigMap.getInstance();
+                    AccessMenuConfigMap map = AccessMenuConfigMap.getInstance();
                     map.setEnabled(!map.isEnabled());
                     Config.getInstance().writeJSON();
                     button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.feature_toggle_button." + (map.isEnabled() ? "enabled" : "disabled"))));

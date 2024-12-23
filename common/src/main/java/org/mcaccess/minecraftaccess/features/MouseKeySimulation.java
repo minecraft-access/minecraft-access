@@ -7,8 +7,6 @@ import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 

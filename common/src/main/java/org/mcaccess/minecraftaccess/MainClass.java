@@ -1,15 +1,8 @@
 package org.mcaccess.minecraftaccess;
 
-import com.mojang.text2speech.Narrator;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.util.Strings;
 import org.mcaccess.minecraftaccess.config.Config;
+import org.mcaccess.minecraftaccess.config.config_maps.AccessMenuConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.NarratorMenuConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.mcaccess.minecraftaccess.config.config_maps.PlayerWarningConfigMap;
 import org.mcaccess.minecraftaccess.features.*;
@@ -21,6 +14,13 @@ import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
+import com.mojang.text2speech.Narrator;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.util.Strings;
 
 @Slf4j
 public class MainClass {
@@ -123,11 +123,11 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled())
-            playerStatus.update();
-
         if (MinecraftClient.getInstance() != null && WorldUtils.getClientPlayer() != null) {
-            new PlayerStatus().update();
+            if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
+                playerStatus.update();
+            }
+
             MouseKeySimulation.runOnTick();
 
             if (MinecraftClient.getInstance().currentScreen == null) {
@@ -139,7 +139,7 @@ public class MainClass {
         if (playerWarnings != null && PlayerWarningConfigMap.getInstance().isEnabled())
             playerWarnings.update();
 
-        if (accessMenu != null && NarratorMenuConfigMap.getInstance().isEnabled())
+        if (accessMenu != null && AccessMenuConfigMap.getInstance().isEnabled())
             accessMenu.update();
 
         // POI Marking will handle POI Scan and POI Locking features inside it
