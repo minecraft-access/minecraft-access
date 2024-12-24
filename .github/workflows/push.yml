@@ -1,0 +1,65 @@
+name: Push
+on:
+  push:
+  pull_request:
+
+env:
+  JAVA_VERSION: 21
+  JAVA_DISTRIBUTION: temurin
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+    with:
+      ref: ${{ github.ref }}
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
+      - name: Test
+        # language=bash
+        run: ./gradlew clean test
+  publish:
+    name: Publish Build
+    needs:
+      - build
+      - test
+    if: |
+      github.event_name == 'push' && github.ref_protected && github.ref_type == 'branch'
+    uses: ./.github/workflows/publish-build.yml
+    secrets: inherit
+    with:
+      title: "Snapshot #${{ github.run_number }} [${{ github.ref_name }}]"
+      tag: ${{ vars.SNAPSHOT_TAG }}
+      colour: 4360181
+      url: ${{ github.event.compare }}
+      message: ${{ vars.SNAPSHOT_MESSAGE }}
+      description: "```\n${{ join(github.event.commits.*.message, '\n```\n```\n') }}\n```"
+      # language=json
+      fields: |
+        [
+          {
+            "name": "Branch",
+            "value": "`${{ github.ref_name }}`",
+            "inline": true
+          },
+          {
+            "name": "Build Number",
+            "value": "#${{ github.run_number }}",
+            "inline": true
+          }
+        ]

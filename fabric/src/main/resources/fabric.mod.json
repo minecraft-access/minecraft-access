@@ -18,10 +18,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.github.khanshoaib3.minecraft_access.fabric.MinecraftAccessClient"
+      "org.mcaccess.minecraftaccess.fabric.MinecraftAccessClient"
     ],
     "server": [
-      "com.github.khanshoaib3.minecraft_access.fabric.MinecraftAccessServer"
+      "org.mcaccess.minecraftaccess.fabric.MinecraftAccessServer"
     ]
   },
   "mixins": [
