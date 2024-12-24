@@ -1,8 +1,8 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
@@ -18,14 +18,12 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.vehicle.VehicleEntity;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
+import java.util.Optional;
 
 /**
  * Scans the area for entities, groups them and plays a sound at their location.
@@ -38,100 +36,104 @@ public class POIEntities {
     private final Interval interval = Interval.defaultDelay();
     private boolean enabled;
 
-    private static final POIEntities instance;
-    private boolean onPOIMarkingNow = false;
-    private Predicate<Entity> markedEntity = e -> false;
+    private static final POIEntities INSTANCE = new POIEntities();
+    private @Nullable Class<? extends Entity> marked = null;
 
-    public Map<String, POIGroup> builtInGroups = Map.of(
-            "yourPet", new POIGroup("Your Pets", SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f,
-                    entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid()), null),
-            "otherPet", new POIGroup("Other Pets", SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(), 1f,
-                    entity -> entity instanceof TameableEntity pet && pet.isTamed(), null),
-            "boss", new POIGroup("Bosses", SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 2f,
-                    entity -> entity instanceof MobEntity mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolemEntity), null),
-            "hostile", new POIGroup("Hostile Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 2f,
-                    entity -> entity instanceof HostileEntity || entity instanceof Angerable monster && (monster.hasAngerTime() || MinecraftClient.getInstance().player.getUuid().equals(monster.getAngryAt()) || MinecraftClient.getInstance().player.getUuid().equals(monster.getAttacker())), null),
-            "passive", new POIGroup("Passive Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f,
-                    entity -> entity instanceof PassiveEntity || entity instanceof WaterCreatureEntity, null),
-            "player", new POIGroup("Players", SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), 1f,
-                    entity -> entity instanceof PlayerEntity, null),
-            "vehicle", new POIGroup("Vehicles", SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f,
-                    entity -> entity instanceof VehicleEntity, null),
-            "item", new POIGroup("Items", SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, 2f,
-                    entity -> entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED), null)
+    public final POIGroup<Entity> hostileGroup = new POIGroup<>(
+            SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(),
+            2f,
+            entity -> entity instanceof HostileEntity || entity instanceof Angerable monster && (monster.hasAngerTime() || MinecraftClient.getInstance().player.getUuid().equals(monster.getAngryAt()) || MinecraftClient.getInstance().player.getUuid().equals(monster.getAttacker()))
     );
 
-    static {
-        instance = new POIEntities();
-    }
+    @SuppressWarnings("unchecked")
+    final POIGroup<Entity>[] groups = new POIGroup[] {
+            new POIGroup<Entity>(// Your Pets
+                    SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(),
+                    1f,
+                    entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid())
+            ),
+            new POIGroup<Entity>(// Other Pets
+                    SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(),
+                    1f,
+                    entity -> entity instanceof TameableEntity pet && pet.isTamed()
+            ),
+            new POIGroup<Entity>(// Bosses
+                    SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(),
+                    2f,
+                    entity -> entity instanceof MobEntity mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolemEntity)
+            ),
+            hostileGroup,
+            new POIGroup<Entity>(// Passive Mobs
+                    SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(),
+                    0f,
+                    entity -> entity instanceof PassiveEntity || entity instanceof WaterCreatureEntity
+            ),
+            new POIGroup<Entity>(// Players
+                    SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(),
+                    1f,
+                    entity -> entity instanceof PlayerEntity
+            ),
+            new POIGroup<Entity>(// Vehicles
+                    SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(),
+                    1f,
+                    entity -> entity instanceof VehicleEntity
+            ),
+            new POIGroup<Entity>(// Items
+                    SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON,
+                    2f,
+                    entity -> entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED)
+            ),
+    };
 
     public static POIEntities getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     private POIEntities() {
         loadConfigurations();
     }
 
-    public void update(boolean onMarking, Entity markedEntity) {
-        this.onPOIMarkingNow = onMarking;
-        if (onPOIMarkingNow) setMarkedEntity(markedEntity);
+    public void update(boolean isMarking, Entity markedEntity) {
+        if (isMarking) setMarked(markedEntity);
         loadConfigurations();
 
         if (!enabled) return;
         if (!interval.isReady()) return;
 
-        try {
-            MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
 
-            if (minecraftClient == null) return;
-            if (minecraftClient.player == null) return;
-            if (minecraftClient.world == null) return;
-            if (minecraftClient.currentScreen != null) return; //Prevent running if any screen is opened
+        if (minecraftClient == null) return;
+        if (minecraftClient.player == null) return;
+        if (minecraftClient.world == null) return;
+        if (minecraftClient.currentScreen != null) return; //Prevent running if any screen is opened
 
-            for (POIGroup group : builtInGroups.values()) {
-                group.clearEntities();
-            }    
+        log.debug("POIEntities started.");
 
-            log.debug("POIEntities started.");
+        for (POIGroup<Entity> group : groups) {
+            group.clear();
+        }
 
-            // Copied from PlayerEntity.tickMovement()
-            Box scanBox = minecraftClient.player.getBoundingBox().expand(range, range, range);
-            List<Entity> entities = minecraftClient.world.getOtherEntities(minecraftClient.player, scanBox);
+        Box scanBox = minecraftClient.player.getBoundingBox().expand(range, range, range);
+        List<Entity> entities = minecraftClient.world.getOtherEntities(minecraftClient.player, scanBox);
 
-            if (onPOIMarkingNow && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
-                POIGroup passiveGroup = builtInGroups.get("passive");
-                POIGroup hostileGroup = builtInGroups.get("hostile");
+        for (POIGroup<Entity> group : groups) {
+            entities.removeIf(group::add);
+        }
 
-                for (Entity e : entities) {
-                    if (this.markedEntity.test(e)) {
-                        if (passiveGroup.checkAndAddEntity(markedEntity))
-                            this.playSoundAt(e.getBlockPos(), passiveGroup.sound, passiveGroup.soundPitch);
-                        if (hostileGroup.checkAndAddEntity(markedEntity))
-                            this.playSoundAt(e.getBlockPos(), hostileGroup.sound, hostileGroup.soundPitch);
-                    }
+        for (POIGroup<Entity> group : groups) {
+            for (Entity entity : group.getItems()) {
+                if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled() && !(marked == null || marked.isInstance(entity))) {
+                    continue;
                 }
-
-                return;
+                playSoundAt(entity.getBlockPos(), group);
             }
-
-            for (POIGroup group : builtInGroups.values()) {
-                for (Entity e : entities) {
-                    if (group.checkAndAddEntity(e)) {
-                        this.playSoundAt(e.getBlockPos(), group.sound, group.soundPitch);
-                        entities.remove(e);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            log.error("An error occurred while executing POIEntities", e);
         }
     }
 
-    private void playSoundAt(BlockPos pos, SoundEvent soundEvent, float pitch) {
+    private void playSoundAt(BlockPos pos, POIGroup<Entity> group) {
         if (!playSound || volume == 0f) return;
-        log.debug("Play sound at [x:%d y:%d z%d]".formatted(pos.getX(), pos.getY(), pos.getZ()));
-        WorldUtils.playSoundAtPosition(soundEvent, volume, pitch, pos.toCenterPos());
+        log.debug("Play sound at [x:{} y:{} z{}]", pos.getX(), pos.getY(), pos.getZ());
+        group.playSound(pos.toCenterPos(), volume);
     }
 
     /**
@@ -146,13 +148,7 @@ public class POIEntities {
         this.interval.setDelay(map.getDelay(), Interval.Unit.Millisecond);
     }
 
-    private void setMarkedEntity(Entity entity) {
-        if (entity == null) {
-            this.markedEntity = e -> false;
-        } else {
-            // Mark an entity = mark the type of entity (class type)
-            Class<? extends Entity> clazz = entity.getClass();
-            this.markedEntity = clazz::isInstance;
-        }
+    private void setMarked(@Nullable Entity entity) {
+        marked = Optional.ofNullable(entity).map(Entity::getClass).orElse(null);
     }
 }

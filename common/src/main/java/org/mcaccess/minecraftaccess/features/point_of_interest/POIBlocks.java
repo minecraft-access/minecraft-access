@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
@@ -11,11 +12,8 @@ import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -26,7 +24,7 @@ import java.util.function.Predicate;
 @Slf4j
 public class POIBlocks {
     @Getter
-    private static final POIBlocks instance;
+    private static final POIBlocks INSTANCE = new POIBlocks();
     private ClientPlayerEntity player;
     private ClientWorld world;
 
@@ -88,63 +86,91 @@ public class POIBlocks {
     private float volume;
     private boolean playSoundForOtherBlocks;
     private final Interval interval = Interval.defaultDelay();
-    private Predicate<BlockState> markedBlock = state -> false;
-    private boolean onPOIMarkingNow = false;
+    private @Nullable Block markedBlock = null;
+    private boolean isMarking = false;
 
-    public Map<String, POIGroup> builtInGroups = Map.of(
-        "marked", new POIGroup("Marked blocks", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) -> onPOIMarkingNow && markedBlock.test(block)),
-    "ore", new POIGroup("Ores", SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) -> oreBlockPredicates.stream().anyMatch(p -> p.test(block))),
-        "fluid", new POIGroup("Fluids", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> this.detectFluidBlocks && block.getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && block.getFluidState().getLevel() == 8),
-        "functional", new POIGroup("Functional blocks", SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) -> block.getBlock() instanceof ButtonBlock || block.getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(block))),
-        "gui", new POIGroup("Blocks with interface", SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), 0f, null, (block, pos) -> block.createScreenHandlerFactory(world, pos) != null)
+    private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
+            SoundEvents.ENTITY_ITEM_PICKUP,
+            -5f,
+            pos -> isMarking && world.getBlockState(pos).isOf(markedBlock)
+    );
+    private final POIGroup<BlockPos> oreGroup = new POIGroup<>(
+            SoundEvents.ENTITY_ITEM_PICKUP,
+            -5f,
+            pos -> oreBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
     );
 
-    static {
-        try {
-            instance = new POIBlocks();
-        } catch (Exception e) {
-            throw new RuntimeException("Exception occurred in creating POIBlocks instance", e);
-        }
-    }
+    @SuppressWarnings("unchecked")
+    private final POIGroup<BlockPos>[] groups = new POIGroup[] {
+            markedGroup,
+            oreGroup,
+            new POIGroup<BlockPos>(// Fluids
+                    SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
+                    2f,
+                    pos -> this.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && world.getFluidState(pos).getLevel() == 8
+            ),
+            new POIGroup<BlockPos>(// Functional blocks
+                    SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
+                    2f,
+                    pos -> world.getBlockState(pos).getBlock() instanceof ButtonBlock || world.getBlockState(pos).getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
+            ),
+            new POIGroup<BlockPos>(// Blocks with interface
+                    SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(),
+                    0f,
+                    pos -> world.getBlockState(pos).createScreenHandlerFactory(world, pos) != null
+            ),
+    };
 
     private POIBlocks() {
         loadConfigurations();
     }
 
-    public void update(boolean onMarking, Block markedBlock) {
-        try {
-            this.onPOIMarkingNow = onMarking;
-            if (onPOIMarkingNow) setMarkedBlock(markedBlock);
-            loadConfigurations();
+    public void update(boolean isMarking, Block markedBlock) {
+        this.isMarking = isMarking;
+        if (isMarking) setMarkedBlock(markedBlock);
+        loadConfigurations();
 
-            if (!this.enabled) return;
-            if (!interval.isReady()) return;
+        if (!enabled) return;
+        if (!interval.isReady()) return;
 
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (client == null) return;
-            if (client.player == null) return;
-            if (client.currentScreen != null) return; //Prevent running if any screen is opened
-            this.player = client.player;
-            this.world = client.world;
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client == null) return;
+        if (client.player == null) return;
+        if (client.currentScreen != null) return; //Prevent running if any screen is opened
+        player = client.player;
+        world = client.world;
 
-            for (POIGroup group : builtInGroups.values()) {
-                group.clearBlocks();
-            }
-
-            // Player position is where player's leg be
-            checkedBlocks = new HashSet<>();
-            BlockPos pos = this.player.getBlockPos();
-            log.debug("POIBlock started.");
-            // Scan blocks exposed in the space around player
-            checkBlock(pos.down(), 0);
-            checkBlock(pos.up(2), 0);
-            checkBlock(pos, this.range);
-            checkBlock(pos.up(), this.range);
-            log.debug("POIBlock ended.");
-
-        } catch (Exception e) {
-            log.error("Error encountered in poi blocks feature.", e);
+        for (POIGroup<BlockPos> group : groups) {
+            group.clear();
         }
+
+        // Player position is where player's leg be
+        checkedBlocks = new HashSet<>();
+        BlockPos pos = player.getBlockPos();
+        log.debug("POIBlock started.");
+        // Scan blocks exposed in the space around player
+        checkBlock(pos.down(), 0);
+        checkBlock(pos.up(2), 0);
+        checkBlock(pos, this.range);
+        checkBlock(pos.up(), this.range);
+
+        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
+            for (BlockPos blockPos : markedGroup.getItems()) {
+                markedGroup.playSound(blockPos.toCenterPos(), volume);
+            }
+        } else if (playSound && !playSoundForOtherBlocks) {
+            for (BlockPos blockPos : oreGroup.getItems()) {
+                oreGroup.playSound(blockPos.toCenterPos(), volume);
+            }
+        } else if (playSound) {
+            for (POIGroup<BlockPos> group : groups) {
+                for (BlockPos blockPos : group.getItems()) {
+                    group.playSound(blockPos.toCenterPos(), volume);
+                }
+            }
+        }
+
+        log.debug("POIBlock ended.");
     }
 
     private void loadConfigurations() {
@@ -179,49 +205,22 @@ public class POIBlocks {
             return;
         }
 
-        boolean shouldPlayMarkedOnly = onPOIMarkingNow && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled();
-
-        for (POIGroup group : builtInGroups.values()) {
-            if (group.checkAndAddBlock(blockState, blockPos)) {
-                if (playSound && playSoundForOtherBlocks && !shouldPlayMarkedOnly) {
-                    world.playSound(player, blockPos, group.sound, SoundCategory.BLOCKS, volume, group.soundPitch);
-                }
-            }
-        }
-
-        if (playSound && !playSoundForOtherBlocks && !shouldPlayMarkedOnly) {
-            POIGroup oreGroup = builtInGroups.get("ore");
-
-            for (BlockPos pos : oreGroup.getBlocks().keySet()) {
-                world.playSound(player, pos, oreGroup.sound, SoundCategory.BLOCKS, volume, oreGroup.soundPitch);
-            }
-        }
-
-        if (shouldPlayMarkedOnly) {
-            POIGroup markedGroup = builtInGroups.get("marked");
-
-            for (BlockPos pos : markedGroup.getBlocks().keySet()) {
-                world.playSound(player, pos, markedGroup.sound, SoundCategory.BLOCKS, volume, markedGroup.soundPitch);
+        for (POIGroup<BlockPos> group : groups) {
+            if (group.add(blockPos)) {
+                break;
             }
         }
     }
 
-    private void setMarkedBlock(Block block) {
-        this.markedBlock = block == null ? s -> false : s -> s.isOf(block);
+    private void setMarkedBlock(@Nullable Block block) {
+        markedBlock = block;
     }
 
-    public List<TreeMap<Double, Vec3d>> getLockingCandidates() {
-        List<TreeMap<Double, Vec3d>> results = new ArrayList<>();
-
-        if (onPOIMarkingNow && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
-            results.add(builtInGroups.get("marked").getBlocks(true));
-            return results;
+    public @UnmodifiableView List<BlockPos> getLockingCandidates() {
+        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
+            return markedGroup.getItems();
         }
 
-        for (POIGroup group : builtInGroups.values()) {
-            results.add(group.getBlocks(true));
-        }
-
-        return results;
+        return Arrays.stream(groups).flatMap(group -> group.getItems().stream()).toList();
    }
 }
