@@ -19,7 +19,7 @@ public class PlayerWarnings {
     private boolean isHealthBelowSecondThreshold;
     private boolean isFoodBelowThreshold;
     private boolean isAirBelowThreshold;
-    private  boolean isFrostAboveThreshold;
+    private boolean isFrostAboveThreshold;
 
     private boolean playSound;
     private double firstHealthThreshold;
@@ -39,25 +39,23 @@ public class PlayerWarnings {
     }
 
     public void update() {
-        try {
-            minecraftClient = MinecraftClient.getInstance();
-            if (minecraftClient == null) return;
-            if (minecraftClient.player == null) return;
-            if (minecraftClient.currentScreen != null) return;
+        minecraftClient = MinecraftClient.getInstance();
+        if (minecraftClient == null) return;
+        if (minecraftClient.player == null) return;
+        if (minecraftClient.currentScreen != null) return;
 
-            loadConfigurations();
+        loadConfigurations();
 
-            double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
-            double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
-            double maxAir = Math.round((minecraftClient.player.getMaxAir() / 20.0) * 10.0) / 10.0;
-            double frostExposurePercent = Math.round((minecraftClient.player.getFreezingScale() * 100.0) * 10.0) / 10.0;
+        double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
+        double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
+        double maxAir = Math.round((minecraftClient.player.getMaxAir() / 20.0) * 10.0) / 10.0;
+        double frostExposurePercent = Math.round((minecraftClient.player.getFreezingScale() * 100.0) * 10.0) / 10.0;
 
-            healthWarning(PlayerUtils.getHearts(), maxHealth);
+        healthWarning(PlayerUtils.getHearts(), maxHealth);
+        if (!minecraftClient.player.isCreative()) {
             hungerWarning(PlayerUtils.getHunger(), maxHunger);
             airWarning(Math.round((minecraftClient.player.getAir() / 20.0) * 10.0) / 10.0, maxAir);
             frostWarning(frostExposurePercent);
-        } catch (Exception e) {
-            log.error("An error occurred in PlayerWarnings.", e);
         }
     }
 
@@ -116,7 +114,7 @@ public class PlayerWarnings {
     }
 
     private void frostWarning(double frostExposurePercent) {
-        if (minecraftClient.player == null || minecraftClient.player.isCreative()) return;
+        if (minecraftClient.player == null) return;
 
         if (frostExposurePercent >= frostThreshold && frostExposurePercent < 100 && !isFrostAboveThreshold) {
             isFrostAboveThreshold = true;
