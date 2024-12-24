@@ -70,6 +70,7 @@ public class KeyBindingsHandler {
     public KeyBinding objectTrackerNextItem;
 public KeyBinding objectTrackerPreviousItem;
 public KeyBinding objectTrackerNarrateCurrentObject;
+public KeyBinding targetNearestObject;
 
     private static final String OTHER_GROUP_TRANSLATION_KEY = "minecraft_access.keys.other.group_name";
     private static final String CAMERA_CONTROLS_TRANSLATION_KEY = "minecraft_access.keys.camera_controls.group_name";
@@ -552,6 +553,13 @@ public KeyBinding objectTrackerNarrateCurrentObject;
                 GLFW.GLFW_KEY_HOME,
                 OTHER_GROUP_TRANSLATION_KEY
         );
+
+        targetNearestObject = new KeyBinding(
+                "Target nearest object",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_END,
+                OTHER_GROUP_TRANSLATION_KEY
+        );
     }
 
     public Set<KeyBinding> getKeys() {
@@ -608,7 +616,8 @@ public KeyBinding objectTrackerNarrateCurrentObject;
                 directionNarrationKey,
                 objectTrackerNextItem,
                 objectTrackerPreviousItem,
-                objectTrackerNarrateCurrentObject
+                objectTrackerNarrateCurrentObject,
+                targetNearestObject
         );
     }
 }

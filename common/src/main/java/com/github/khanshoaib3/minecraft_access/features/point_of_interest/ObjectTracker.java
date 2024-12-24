@@ -2,7 +2,6 @@ package com.github.khanshoaib3.minecraft_access.features.point_of_interest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.github.khanshoaib3.minecraft_access.MainClass;
@@ -13,12 +12,14 @@ import com.github.khanshoaib3.minecraft_access.utils.condition.Keystroke;
 import com.github.khanshoaib3.minecraft_access.utils.system.KeyUtils;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
+@Slf4j
 public class ObjectTracker {
     @Getter
     private static ObjectTracker instance = new ObjectTracker();
@@ -26,6 +27,10 @@ public class ObjectTracker {
     private Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNextItem), Keystroke.TriggeredAt.PRESSED);
     private Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerPreviousItem), Keystroke.TriggeredAt.PRESSED);
     private Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNarrateCurrentObject), Keystroke.TriggeredAt.PRESSED);
+    private Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().targetNearestObject), Keystroke.TriggeredAt.PRESSED);
+    private Keystroke cancelNearestTargeting = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNextItem, KeyBindingsHandler.getInstance().objectTrackerPreviousItem, KeyBindingsHandler.getInstance().targetNearestObject), Keystroke.TriggeredAt.PRESSED);
+
+    private Boolean isTargetingNearestObject = false;
 
     private List<POIGroup> groups = new ArrayList<>();
 
@@ -46,6 +51,7 @@ public class ObjectTracker {
 
     private int currentGroupIndex = 0;
     private int currentObjectIndex = 0;
+    private Object nearestObject;
 
     public void update() {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
@@ -57,6 +63,10 @@ public class ObjectTracker {
 
         updateGroups();
 
+        if (isTargetingNearestObject && cancelNearestTargeting.canBeTriggered()) {
+            isTargetingNearestObject = false;
+        }
+
         if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
         if (nextItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(1);
@@ -65,9 +75,13 @@ public class ObjectTracker {
         if (nextItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(1);
         if (previousItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(-1);
 
+        if (targetNearestObjectKeyPressed.canBeTriggered()) targetNearestObject();
+
         nextItemKeyPressed.updateStateForNextTick();
         previousItemKeyPressed.updateStateForNextTick();
         narrateCurrentObjectKeyPressed.updateStateForNextTick();
+        targetNearestObjectKeyPressed.updateStateForNextTick();
+        cancelNearestTargeting.updateStateForNextTick();
     }
 
     private void updateGroups() {
@@ -78,6 +92,20 @@ public class ObjectTracker {
 
     private void narrateCurrentObject(boolean interupt) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
+
+        if (isTargetingNearestObject) {
+            if (nearestObject instanceof Entity) {
+                MainClass.speakWithNarrator(NarrationUtils.narrateEntity((Entity)nearestObject), interupt);
+                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, ((Entity)nearestObject).getPos());
+            }
+
+            if (nearestObject instanceof BlockPos) {
+                MainClass.speakWithNarrator(NarrationUtils.narrateBlock((BlockPos)nearestObject, null), interupt);
+                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, ((BlockPos)nearestObject).toCenterPos());
+            }
+
+            return;
+        }
 
         POIGroup currentGroup = groups.get(currentGroupIndex);
 
@@ -178,7 +206,31 @@ public class ObjectTracker {
         } else return false;
     }
 
+    private void targetNearestObject() {
+        List<Entity> entities = POIEntities.getInstance().getLastScanResults();
+        List<BlockPos> blocks = POIBlocks.getInstance().getLastScanResults();
+
+        if (!entities.isEmpty() && blocks.isEmpty()) nearestObject = entities.getFirst();
+        if (!blocks.isEmpty() && entities.isEmpty()) nearestObject = blocks.getFirst();
+        if (!entities.isEmpty() && !blocks.isEmpty()) {
+            double distanceToEntity = MinecraftClient.getInstance().player.distanceTo(entities.getFirst());
+            double distanceToBlock = MinecraftClient.getInstance().player.getEyePos().distanceTo(blocks.getFirst().toCenterPos());
+
+            if (distanceToEntity <= distanceToBlock) nearestObject = entities.getFirst();
+            if (distanceToBlock < distanceToEntity) nearestObject = blocks.getFirst();
+        }
+
+        if (!entities.isEmpty() || !blocks.isEmpty()) {
+            isTargetingNearestObject = true;
+            MainClass.speakWithNarrator("Targeting nearest object", true);
+            narrateCurrentObject(false);
+        }
+        else MainClass.speakWithNarrator("No points of interest detected", true);
+    }
+
     public Object getCurrentObject() {
+        if (isTargetingNearestObject) return nearestObject;
+
         POIGroup group = groups.get(currentGroupIndex);
 
         switch (group.getType()) {

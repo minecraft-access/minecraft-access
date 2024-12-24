@@ -4,6 +4,8 @@ import com.github.khanshoaib3.minecraft_access.config.config_maps.POIEntitiesCon
 import com.github.khanshoaib3.minecraft_access.config.config_maps.POIMarkingConfigMap;
 import com.github.khanshoaib3.minecraft_access.utils.WorldUtils;
 import com.github.khanshoaib3.minecraft_access.utils.condition.Interval;
+
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -23,6 +25,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +90,9 @@ public class POIEntities {
         return instance;
     }
 
+    @Getter
+    private List<Entity> lastScanResults = new ArrayList<>();
+
     private POIEntities() {
         loadConfigurations();
     }
@@ -110,6 +116,8 @@ public class POIEntities {
             for (POIGroup group : builtInGroups.values()) {
                 group.clearEntities();
             }
+
+            List<Entity> currentScanResults = new ArrayList<>();
 
             log.debug("POIEntities started.");
 
@@ -137,10 +145,14 @@ public class POIEntities {
                 for (Entity e : entities) {
                     if (group.checkAndAddEntity(e)) {
                         this.playSoundAt(e.getBlockPos(), group.sound, group.soundPitch);
+                        currentScanResults.add(e);
+
                         // Todo: Figure out why is this line causing only the nearest entity to get added into the group
                         // entities.remove(e);
                     }
                 }
+
+                lastScanResults = currentScanResults;
             }
         } catch (Exception e) {
             log.error("An error occurred while executing POIEntities", e);

@@ -127,6 +127,9 @@ public class POIBlocks {
         loadConfigurations();
     }
 
+    @Getter
+    private List<BlockPos> lastScanResults = new ArrayList<>();
+
     public void update(boolean onMarking, Block markedBlock) {
         try {
             this.onPOIMarkingNow = onMarking;
@@ -145,7 +148,9 @@ public class POIBlocks {
 
             for (POIGroup group : builtInGroups.values()) {
                 group.clearBlocks();
-            }    
+            }
+
+            lastScanResults = new ArrayList<>();
 
             // Player position is where player's leg be
             checkedBlocks = new HashSet<>();
@@ -199,6 +204,7 @@ public class POIBlocks {
 
         for (POIGroup group : builtInGroups.values()) {
             if (group.checkAndAddBlock(blockState, blockPos)) {
+                lastScanResults.add(blockPos);
                 if (playSound && playSoundForOtherBlocks && !shouldPlayMarkedOnly) {
                     world.playSound(player, blockPos, group.sound, SoundCategory.BLOCKS, volume, group.soundPitch);
                 }
