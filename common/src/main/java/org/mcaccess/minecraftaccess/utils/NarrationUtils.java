@@ -2,8 +2,6 @@ package org.mcaccess.minecraftaccess.utils;
 
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.Item;
 import org.mcaccess.minecraftaccess.mixin.MobSpawnerLogicAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import lombok.extern.slf4j.Slf4j;
