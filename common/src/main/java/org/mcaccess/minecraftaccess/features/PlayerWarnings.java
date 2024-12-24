@@ -116,7 +116,7 @@ public class PlayerWarnings {
     }
 
     private void frostWarning(double frostExposurePercent) {
-        if (minecraftClient.player == null) return;
+        if (minecraftClient.player == null || minecraftClient.player.isCreative()) return;
 
         if (frostExposurePercent >= frostThreshold && frostExposurePercent < 100 && !isFrostAboveThreshold) {
             isFrostAboveThreshold = true;
