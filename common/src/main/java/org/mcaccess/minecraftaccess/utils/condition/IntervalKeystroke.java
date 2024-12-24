@@ -46,4 +46,13 @@ public class IntervalKeystroke extends TimedKeystroke {
     protected boolean otherTriggerConditions() {
         return true;
     }
+
+    @Override
+    public void updateStateForNextTick() {
+        if (isPressed()) {
+            interval.beReady();
+        }
+
+        super.updateStateForNextTick();
+    }
 }
