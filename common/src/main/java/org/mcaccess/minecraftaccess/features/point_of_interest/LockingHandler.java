@@ -155,7 +155,7 @@ public class LockingHandler {
             List<Entity> hostileEntities = POIEntities.getInstance().hostileGroup.getItems();
             if (!hostileEntities.isEmpty()) {
                 Entity entity = hostileEntities.stream()
-                        .min(Comparator.comparingDouble(e-> WorldUtils.getClientPlayer().distanceTo(e)))
+                        .min(Comparator.comparingDouble(e -> WorldUtils.getClientPlayer().distanceTo(e)))
                         .get();
                 if (lockOnEntity(entity)) {
                     aimAssistActive = true;
@@ -272,12 +272,8 @@ public class LockingHandler {
         unlock(false);
         lockedOnEntity = entity;
 
-        String toSpeak = "";
-        if(entity instanceof ItemEntity) {
-         toSpeak+=I18n.translate("minecraft_access.point_of_interest.locking.dropped_item", NarrationUtils.narrateEntity(entity));
-        } else {
-            toSpeak += NarrationUtils.narrateEntity(entity);
-        }
+        String toSpeak = NarrationUtils.narrateEntity(entity);
+
         if (this.speakDistance) {
             toSpeak += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.getBlockPos());
         }

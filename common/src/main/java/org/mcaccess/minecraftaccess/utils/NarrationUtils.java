@@ -1,5 +1,9 @@
 package org.mcaccess.minecraftaccess.utils;
 
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.item.Item;
 import org.mcaccess.minecraftaccess.mixin.MobSpawnerLogicAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import lombok.extern.slf4j.Slf4j;
@@ -110,6 +114,9 @@ public class NarrationUtils {
             var values = Map.of("entity", text, "equipments", String.join(wordConnection, equipments));
             text = I18n.translate("minecraft_access.other.entity_with_equipments", values);
         }
+
+        if (entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED))
+            text = I18n.translate("minecraft_access.point_of_interest.locking.dropped_item", text);
 
         return text;
     }

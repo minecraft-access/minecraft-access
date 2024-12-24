@@ -45,7 +45,9 @@ public class POIBlocks {
             Blocks.CALIBRATED_SCULK_SENSOR,
             Blocks.SCULK_SENSOR,
             Blocks.VAULT,
-            Blocks.TRIAL_SPAWNER
+            Blocks.TRIAL_SPAWNER,
+            Blocks.SPAWNER,
+            Blocks.CREAKING_HEART,
     };
 
     private static final List<Predicate<BlockState>> poiBlockPredicates = Arrays.stream(POI_BLOCKS)
