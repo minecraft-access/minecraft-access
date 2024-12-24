@@ -53,6 +53,7 @@ public class NarrationUtils {
         // otherwise it is its type.
         String nameOrType = entity.getName().getString();
         String type = entity.hasCustomName() ? I18n.translate(entity.getType().getTranslationKey()) : nameOrType;
+        boolean isDroppedItem = entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED);
 
         String variant = getVariantInfo(entity);
         if (!Strings.isBlank(variant)) {
@@ -113,7 +114,7 @@ public class NarrationUtils {
             text = I18n.translate("minecraft_access.other.entity_with_equipments", values);
         }
 
-        if (entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED))
+        if (isDroppedItem)
             text = I18n.translate("minecraft_access.point_of_interest.locking.dropped_item", text);
 
         return text;
