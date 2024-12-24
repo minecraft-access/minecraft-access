@@ -54,7 +54,7 @@ public class PlayerWarnings {
 
             healthWarning(PlayerUtils.getHearts(), maxHealth);
             hungerWarning(PlayerUtils.getHunger(), maxHunger);
-            airWarning(PlayerUtils.getAir(), maxAir);
+            airWarning(Math.round((minecraftClient.player.getAir() / 20.0) * 10.0) / 10.0, maxAir);
             frostWarning(frostExposurePercent);
         } catch (Exception e) {
             log.error("An error occurred in PlayerWarnings.", e);
