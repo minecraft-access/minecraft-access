@@ -245,6 +245,7 @@
     "minecraft_access.player_warnings.health_low": "Warning, %1$.1f out of %2$.1f Health",
     "minecraft_access.player_warnings.hunger_low": "Warning, %1$.1f out of %2$.1f Hunger",
     "minecraft_access.point_of_interest.locking.locked": "Lock On: %s",
+    "minecraft_access.point_of_interest.locking.dropped_item": "Dropped %s Item",
     "minecraft_access.point_of_interest.locking.tracking_eye_of_ender": "Tracking Eye of Ender",
     "minecraft_access.point_of_interest.marking.marked": "Mark On: %s",
     "minecraft_access.point_of_interest.marking.unmarked": "Unmarked",

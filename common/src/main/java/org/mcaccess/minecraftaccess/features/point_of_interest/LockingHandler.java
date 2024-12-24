@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import net.minecraft.entity.ItemEntity;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -271,11 +272,16 @@ public class LockingHandler {
         unlock(false);
         lockedOnEntity = entity;
 
-        String narration = NarrationUtils.narrateEntity(entity);
-        if (this.speakDistance) {
-            narration += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.getBlockPos());
+        String toSpeak = "";
+        if(entity instanceof ItemEntity) {
+         toSpeak+=I18n.translate("minecraft_access.point_of_interest.locking.dropped_item", NarrationUtils.narrateEntity(entity));
+        } else {
+            toSpeak += NarrationUtils.narrateEntity(entity);
         }
-        MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.locking.locked", narration), true);
+        if (this.speakDistance) {
+            toSpeak += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.getBlockPos());
+        }
+        MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.locking.locked", toSpeak), true);
         return true;
     }
 
