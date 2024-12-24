@@ -53,7 +53,7 @@ public class POIEntities {
         );
 
         builtInGroups.put("hostile", new POIGroup("Hostile Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 2f,
-            entity -> entity instanceof HostileEntity || entity instanceof Angerable monster && (monster.hasAngerTime() || MinecraftClient.getInstance().player.getUuid().equals(monster.getAngryAt()) || MinecraftClient.getInstance().player.getUuid().equals(monster.getAttacker()) || monster.isUniversallyAngry(MinecraftClient.getInstance().player.getWorld())), null)
+            entity -> entity instanceof HostileEntity || entity instanceof Angerable monster && (monster.hasAngerTime() || MinecraftClient.getInstance().player.getUuid().equals(monster.getAngryAt()) || MinecraftClient.getInstance().player.getUuid().equals(monster.getAttacker())), null)
         );
 
             builtInGroups.put("passive", new POIGroup("Passive Mobs", SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f,
