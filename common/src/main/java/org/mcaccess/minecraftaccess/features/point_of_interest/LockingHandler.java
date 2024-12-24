@@ -306,7 +306,7 @@ public class LockingHandler {
             default -> position.toCenterPos();
         };
 
-        lockedOnBlock = new BlockPos3d(absolutePosition);
+        lockedOnBlock = new BlockPos3d(position, absolutePosition);
 
         String blockDescription = NarrationUtils.narrateBlock(lockedOnBlock, "");
         if (this.speakDistance) {
