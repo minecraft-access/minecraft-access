@@ -21,6 +21,11 @@ public class BlockPos3d extends BlockPos {
         accuratePosition = position.toCenterPos();
     }
 
+    public BlockPos3d(BlockPos position, Vec3d accuratePosition) {
+        super(position);
+        this.accuratePosition = accuratePosition;
+    }
+
     public static BlockPos3d of(BlockPos position) {
         return new BlockPos3d(position);
     }
