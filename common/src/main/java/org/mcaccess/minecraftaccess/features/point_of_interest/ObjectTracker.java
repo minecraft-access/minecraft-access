@@ -97,12 +97,12 @@ public class ObjectTracker {
         if (isTargetingNearestObject) {
             if (nearestObject instanceof Entity) {
                 MainClass.speakWithNarrator(NarrationUtils.narrateEntity((Entity)nearestObject), interupt);
-                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, ((Entity)nearestObject).getPos());
+                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, ((Entity)nearestObject).getPos());
             }
 
             if (nearestObject instanceof BlockPos) {
                 MainClass.speakWithNarrator(NarrationUtils.narrateBlock((BlockPos)nearestObject, null), interupt);
-                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, ((BlockPos)nearestObject).toCenterPos());
+                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, ((BlockPos)nearestObject).toCenterPos());
             }
 
             return;
@@ -120,13 +120,13 @@ public class ObjectTracker {
                 Entity entity = currentGroup.getEntities().values().stream().toList().get(currentObjectIndex);
                 MainClass.speakWithNarrator(NarrationUtils.narrateEntity(entity), interupt);
 
-                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, entity.getPos());
+                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, entity.getPos());
                 break;
             case BLOCK:
                 BlockPos block = currentGroup.getBlocks().keySet().stream().toList().get(currentObjectIndex);
                 MainClass.speakWithNarrator(NarrationUtils.narrateBlock(block, null), interupt);
 
-                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 1, 1f, block.toCenterPos());
+                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, block.toCenterPos());
                 break;
         }
     }
