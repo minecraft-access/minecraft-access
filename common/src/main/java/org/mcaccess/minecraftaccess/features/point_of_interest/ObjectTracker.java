@@ -136,19 +136,19 @@ public class ObjectTracker {
 
         if ((currentGroupIndex + step) > (groups.size() - 1)) {
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
-            MainClass.speakWithNarrator(groups.get(currentGroupIndex).name, false);
+            MainClass.speakWithNarrator(groups.get(currentGroupIndex).getName(), false);
             return;
         }
 
         if ((currentGroupIndex + step) < 0) {
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.start_of_list"), true);
-            MainClass.speakWithNarrator(groups.get(currentGroupIndex).name, false);
+            MainClass.speakWithNarrator(groups.get(currentGroupIndex).getName(), false);
             return;
         }
 
         currentGroupIndex += step;
         currentObjectIndex = 0;
-        MainClass.speakWithNarrator(groups.get(currentGroupIndex).name, true);
+        MainClass.speakWithNarrator(groups.get(currentGroupIndex).getName(), true);
         narrateCurrentObject(false);
     }
 

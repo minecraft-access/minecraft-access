@@ -49,35 +49,35 @@ public class POIEntities {
     public Map<String, POIGroup> builtInGroups = new LinkedHashMap<>();
 
     {
-        builtInGroups.put("boss", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.boss"), SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 2f,
+        builtInGroups.put("boss", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.boss"), SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 2f,
             entity -> entity instanceof MobEntity mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolemEntity), null)
         );
 
-        builtInGroups.put("hostile", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.hostile"), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 2f,
+        builtInGroups.put("hostile", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.hostile"), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 2f,
             entity -> entity instanceof HostileEntity || entity instanceof Angerable monster && (monster.hasAngerTime() || MinecraftClient.getInstance().player.getUuid().equals(monster.getAngryAt()) || MinecraftClient.getInstance().player.getUuid().equals(monster.getAttacker())), null)
         );
 
-            builtInGroups.put("passive", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.passive"), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f,
+            builtInGroups.put("passive", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.passive"), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), 0f,
             entity -> entity instanceof PassiveEntity || entity instanceof WaterCreatureEntity, null)
             );
 
-            builtInGroups.put("player", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.player"), SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), 1f,
+            builtInGroups.put("player", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.player"), SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), 1f,
             entity -> entity instanceof PlayerEntity, null)
             );
 
-            builtInGroups.put("item", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.item"), SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, 2f,
+            builtInGroups.put("item", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.item"), SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, 2f,
             entity -> entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED), null)
             );
 
-            builtInGroups.put("yourPet", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.your_pets"), SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f,
+            builtInGroups.put("yourPet", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.your_pets"), SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f,
             entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid()), null)
         );
 
-        builtInGroups.put("otherPet", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.other_pet"), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(), 1f,
+        builtInGroups.put("otherPet", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.other_pet"), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(), 1f,
             entity -> entity instanceof TameableEntity pet && pet.isTamed(), null)
         );
 
-        builtInGroups.put("vehicle", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.vehicle"), SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f,
+        builtInGroups.put("vehicle", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.vehicle"), SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f,
         entity -> entity instanceof VehicleEntity, null)
     );
     }

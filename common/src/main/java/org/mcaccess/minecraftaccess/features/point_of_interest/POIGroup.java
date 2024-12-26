@@ -9,6 +9,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class POIGroup {
-    public final String name;
+    private Supplier<String> nameSupplier;
     public final SoundEvent sound;
     public final float soundPitch;
 
@@ -26,16 +27,20 @@ public class POIGroup {
     private Function<Entity, Boolean> entityFilter;
     private BiFunction<BlockState, BlockPos, Boolean> blockFilter;
 
-    public POIGroup(String name, SoundEvent sound, float soundPitch, Function<Entity, Boolean> entityFilter, BiFunction<BlockState, BlockPos, Boolean> blockFilter) {
+    public POIGroup(Supplier<String> nameSupplier, SoundEvent sound, float soundPitch, Function<Entity, Boolean> entityFilter, BiFunction<BlockState, BlockPos, Boolean> blockFilter) {
         if (entityFilter != null && blockFilter != null) {
             throw new IllegalArgumentException("POI groups can only have one filter type");
         }
 
-        this.name = name;
+        this.nameSupplier = nameSupplier;
         this.sound = sound;
         this.soundPitch = soundPitch;
         this.entityFilter = entityFilter;
         this.blockFilter = blockFilter;
+    }
+
+    public String getName() {
+        return nameSupplier.get();
     }
 
     public void filterEntities(List<Entity> scannedEntities) {

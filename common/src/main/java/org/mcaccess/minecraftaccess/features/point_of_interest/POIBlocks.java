@@ -95,23 +95,23 @@ public class POIBlocks {
     public Map<String, POIGroup> builtInGroups = new LinkedHashMap<>();
 
     {
-        builtInGroups.put("marked", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.markedBlocks"), SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) ->
+        builtInGroups.put("marked", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.markedBlocks"), SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) ->
         onPOIMarkingNow && markedBlock.test(block))
         );
 
-        builtInGroups.put("ore", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.ore"), SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) ->
+        builtInGroups.put("ore", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.ore"), SoundEvents.ENTITY_ITEM_PICKUP, -5f, null, (block, pos) ->
             oreBlockPredicates.stream().anyMatch(p -> p.test(block)))
         );
 
-        builtInGroups.put("functional", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.functional"), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) ->
+        builtInGroups.put("functional", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.functional"), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) ->
             block.getBlock() instanceof ButtonBlock || block.getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(block)))
         );
 
-        builtInGroups.put("gui", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.gui"), SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), 0f, null, (block, pos) ->
+        builtInGroups.put("gui", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.gui"), SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(), 0f, null, (block, pos) ->
             block.createScreenHandlerFactory(world, pos) != null)
         );
 
-        builtInGroups.put("fluid", new POIGroup(I18n.translate("minecraft_access.point_of_interest.group.fluid"), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) ->
+        builtInGroups.put("fluid", new POIGroup(() -> I18n.translate("minecraft_access.point_of_interest.group.fluid"), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), 2f, null, (block, pos) ->
         this.detectFluidBlocks && block.getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && block.getFluidState().getLevel() == 8)
     );
     }
