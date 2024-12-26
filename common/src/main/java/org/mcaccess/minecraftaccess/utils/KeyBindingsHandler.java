@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.utils;
 
 import lombok.Getter;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
@@ -534,31 +535,31 @@ public KeyBinding targetNearestObject;
         );
 
         objectTrackerNextItem = new KeyBinding(
-                "Object tracker next item",
+                I18n.translate("minecraft_access.keys.object_tracker.nextItem"),
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_PAGE_DOWN,
-                OTHER_GROUP_TRANSLATION_KEY
+                I18n.translate("minecraft_access.point_of_interest.object_tracker.group_name")
         );
 
         objectTrackerPreviousItem = new KeyBinding(
-                "Object tracker previous item",
+                I18n.translate("minecraft_access.keys.object_tracker.previous_item"),
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_PAGE_UP,
-                OTHER_GROUP_TRANSLATION_KEY
+                I18n.translate("minecraft_access.point_of_interest.object_tracker.group_name")
         );
 
         objectTrackerNarrateCurrentObject = new KeyBinding(
-                "Object tracker narrate current object",
+                I18n.translate("minecraft_access.keys.object_tracker.narrate_current_object"),
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_HOME,
-                OTHER_GROUP_TRANSLATION_KEY
+                I18n.translate("minecraft_access.point_of_interest.object_tracker.group_name")
         );
 
         targetNearestObject = new KeyBinding(
-                "Target nearest object",
+                I18n.translate("minecraft_access.keys.object_tracker.target_nearest"),
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_END,
-                OTHER_GROUP_TRANSLATION_KEY
+                I18n.translate("minecraft_access.point_of_interest.object_tracker.group_name")
         );
     }
 

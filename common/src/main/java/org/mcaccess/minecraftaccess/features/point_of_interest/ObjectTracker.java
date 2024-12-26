@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -134,13 +135,13 @@ public class ObjectTracker {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
         if ((currentGroupIndex + step) > (groups.size() - 1)) {
-            MainClass.speakWithNarrator("End of list", true);
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
             MainClass.speakWithNarrator(groups.get(currentGroupIndex).name, false);
             return;
         }
 
         if ((currentGroupIndex + step) < 0) {
-            MainClass.speakWithNarrator("Start of list", true);
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.start_of_list"), true);
             MainClass.speakWithNarrator(groups.get(currentGroupIndex).name, false);
             return;
         }
@@ -161,14 +162,14 @@ public class ObjectTracker {
                 List<Entity> entities = currentGroup.getEntities().values().stream().toList();
 
                 if ((currentObjectIndex + step) > (entities.size() - 1)) {
-                    MainClass.speakWithNarrator("End of list", true);
+                    MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
                     currentObjectIndex = entities.size() - 1;
                     narrateCurrentObject(false);
                     return;
                 }
 
                 if ((currentObjectIndex + step) < 0) {
-                    MainClass.speakWithNarrator("Start of list", true);
+                    MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.start_of_list"), true);
                     narrateCurrentObject(false);
                     return;
                 }
@@ -179,14 +180,14 @@ public class ObjectTracker {
             List<BlockPos> blocks = currentGroup.getBlocks().keySet().stream().toList();
 
             if ((currentObjectIndex + step) > (blocks.size() - 1)) {
-                MainClass.speakWithNarrator("End of list", true);
+                MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
                 currentObjectIndex = blocks.size() - 1;
                 narrateCurrentObject(false);
                 return;
             }
 
             if ((currentObjectIndex + step) < 0) {
-                MainClass.speakWithNarrator("Start of list", true);
+                MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.start_of_list"), true);
                 narrateCurrentObject(false);
                 return;
             }
@@ -200,7 +201,7 @@ public class ObjectTracker {
 
     private boolean checkAndSpeakIfAllGroupsEmpty() {
         if (groups.isEmpty()) {
-            MainClass.speakWithNarrator("No points of interest detected", true);
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.not_found"), true);
 
             return true;
         } else return false;
@@ -225,7 +226,7 @@ public class ObjectTracker {
             MainClass.speakWithNarrator("Targeting nearest object", true);
             narrateCurrentObject(false);
         }
-        else MainClass.speakWithNarrator("No points of interest detected", true);
+        else MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.not_found"), true);
     }
 
     public Object getCurrentObject() {
