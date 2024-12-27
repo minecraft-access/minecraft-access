@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.util.math.BlockPos;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -24,10 +26,8 @@ import net.minecraft.state.property.Property;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.item.BowItem;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 /**
  * Locks on to the nearest entity or block.<br><br>
@@ -153,9 +153,11 @@ public class LockingHandler {
     private void bowAimingAssist() {
         ClientPlayerEntity player = WorldUtils.getClientPlayer();
         if (aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getActiveItem().getItem() instanceof BowItem) {
-            TreeMap<Double, Entity> hostileEntities = POIEntities.getInstance().builtInGroups.get("hostile").getEntities();
+            List<Entity> hostileEntities = POIEntities.getInstance().hostileGroup.getItems();
             if (!hostileEntities.isEmpty()) {
-                Entity entity = hostileEntities.firstEntry().getValue();
+                Entity entity = hostileEntities.stream()
+                        .min(Comparator.comparingDouble(e -> WorldUtils.getClientPlayer().distanceTo(e)))
+                        .get();
                 if (lockOnEntity(entity)) {
                     aimAssistActive = true;
                 }
@@ -216,23 +218,8 @@ public class LockingHandler {
         if (target instanceof BlockPos) {
             BlockPos targetPos = (BlockPos)target;
 
-            lockOnBlock(targetPos.toCenterPos());
+            lockOnBlock(targetPos);
         }
-
-        /* Commented out for now, will be used again in the future
-        Map<String, POIGroup> entityGroups = POIEntities.getInstance().builtInGroups;
-        for (POIGroup group : entityGroups.values()) {
-            TreeMap<Double, Entity> map = group.getEntities();
-            if (!map.isEmpty()) {
-                Entity entity = map.firstEntry().getValue();
-                if (lockOnEntity(entity)) return;
-            }
-        }
-
-        if (this.lockOnBlocks || onPOIMarkingNow) {
-            findAndLockOnNearestBlock();
-        }
-            */
     }
 
     /**
@@ -269,7 +256,7 @@ public class LockingHandler {
         // Change the lock target to the last (block) position (somewhere floating in the air) where the eye of ender disappeared,
         // so the player can continue walking until being under that position.
         if (lockedOnEntity instanceof EyeOfEnderEntity) {
-            lockOnBlock(lockedOnEntity.getBlockPos().toCenterPos());
+            lockOnBlock(lockedOnEntity.getBlockPos());
             isLockedOnWhereEyeOfEnderDisappears = true;
         }
 
@@ -286,58 +273,31 @@ public class LockingHandler {
         unlock(false);
         lockedOnEntity = entity;
 
-        String narration = NarrationUtils.narrateEntity(entity);
+        String toSpeak = NarrationUtils.narrateEntity(entity);
+
         if (this.speakDistance) {
-            narration += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.getBlockPos());
+            toSpeak += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.getBlockPos());
         }
-        MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.locking.locked", narration), true);
+        MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.locking.locked", toSpeak), true);
         return true;
     }
 
-    private void findAndLockOnNearestBlock() {
-        Double minPlayerDistance = Double.MAX_VALUE;
-        Vec3d nearestBlockPosition = null;
-
-        List<TreeMap<Double, Vec3d>> scannedBlockMaps = POIBlocks.getInstance().getLockingCandidates();
-        for (TreeMap<Double, Vec3d> map : scannedBlockMaps) {
-            if (!map.isEmpty()) {
-                Entry<Double, Vec3d> closestOneInThisType = map.firstEntry();
-                Double distanceWithPlayer = closestOneInThisType.getKey();
-                if (distanceWithPlayer < minPlayerDistance) {
-                    minPlayerDistance = distanceWithPlayer;
-                    nearestBlockPosition = closestOneInThisType.getValue();
-                }
-            }
-        }
-
-        if (nearestBlockPosition != null) {
-            lockOnBlock(nearestBlockPosition);
-        }
-    }
-
-    private void lockOnBlock(Vec3d position) {
+    private void lockOnBlock(BlockPos position) {
         unlock(false);
 
-        BlockState blockState = WorldUtils.getClientWorld().getBlockState(WorldUtils.blockPosOf(position));
+        BlockState blockState = WorldUtils.getClientWorld().getBlockState(position);
         entriesOfLockedOnBlock = blockState.getEntries();
 
-        Vec3d absolutePosition = position;
-        Block blockType = blockState.getBlock();
+        Vec3d absolutePosition = switch (blockState.getBlock()) {
+            case DoorBlock ignored -> NonCubeBlockAbsolutePositions.getDoorPos(position.toCenterPos());
+            case TrapdoorBlock ignored -> NonCubeBlockAbsolutePositions.getTrapDoorPos(position.toCenterPos());
+            case ButtonBlock ignored -> NonCubeBlockAbsolutePositions.getButtonPos(position.toCenterPos());
+            case LadderBlock ignored -> NonCubeBlockAbsolutePositions.getLadderPos(position.toCenterPos());
+            case LeverBlock ignored -> NonCubeBlockAbsolutePositions.getLeverPos(position.toCenterPos());
+            default -> position.toCenterPos();
+        };
 
-        // Special cases for non-cube blocks
-        if (blockType instanceof DoorBlock) {
-            absolutePosition = NonCubeBlockAbsolutePositions.getDoorPos(position);
-        } else if (blockType instanceof TrapdoorBlock) {
-            absolutePosition = NonCubeBlockAbsolutePositions.getTrapDoorPos(position);
-        } else if (blockType instanceof ButtonBlock) {
-            absolutePosition = NonCubeBlockAbsolutePositions.getButtonPos(position);
-        } else if (blockType instanceof LadderBlock) {
-            absolutePosition = NonCubeBlockAbsolutePositions.getLadderPos(position);
-        } else if (blockType instanceof LeverBlock) {
-            absolutePosition = NonCubeBlockAbsolutePositions.getLeverPos(position);
-        }
-
-        lockedOnBlock = new BlockPos3d(absolutePosition);
+        lockedOnBlock = new BlockPos3d(position, absolutePosition);
 
         String blockDescription = NarrationUtils.narrateBlock(lockedOnBlock, "");
         if (this.speakDistance) {

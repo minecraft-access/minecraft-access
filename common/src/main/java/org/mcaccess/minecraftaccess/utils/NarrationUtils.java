@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.utils;
 
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import org.mcaccess.minecraftaccess.mixin.MobSpawnerLogicAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +53,7 @@ public class NarrationUtils {
         // otherwise it is its type.
         String nameOrType = entity.getName().getString();
         String type = entity.hasCustomName() ? I18n.translate(entity.getType().getTranslationKey()) : nameOrType;
+        boolean isDroppedItem = entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED);
 
         String variant = getVariantInfo(entity);
         if (!Strings.isBlank(variant)) {
@@ -110,6 +113,9 @@ public class NarrationUtils {
             var values = Map.of("entity", text, "equipments", String.join(wordConnection, equipments));
             text = I18n.translate("minecraft_access.other.entity_with_equipments", values);
         }
+
+        if (isDroppedItem)
+            text = I18n.translate("minecraft_access.point_of_interest.locking.dropped_item", text);
 
         return text;
     }

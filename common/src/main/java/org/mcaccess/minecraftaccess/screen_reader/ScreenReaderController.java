@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.screen_reader;
 
+import net.minecraft.client.resource.language.I18n;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.system.OsUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class ScreenReaderController {
     }
 
     public static void refreshScreenReader(boolean closeOpenedScreen) {
-       log.info("Refreshing screen reader");
+        log.info("Refreshing screen reader");
         try {
             MainClass.setScreenReader(getAvailable());
 
@@ -42,7 +43,7 @@ public class ScreenReaderController {
             if (MinecraftClient.getInstance() == null) return;
             if (MinecraftClient.getInstance().player == null) return;
             MinecraftClient.getInstance().player.closeScreen();
-            MainClass.speakWithNarrator("Screen reader refreshed", true);
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.access_menu.screen_reader_refreshed"), true);
         } catch (Exception e) {
             log.error("An error while refreshing screen reader", e);
         }

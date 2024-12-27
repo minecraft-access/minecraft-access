@@ -147,7 +147,7 @@ jobs:
                 changelog += `\n\n## ${section}\n`;
                 changelog += sections[section].join("\n");
             }
-            core.summary.addRow("# Changelog\n");
+            core.summary.addRaw("# Changelog\n");
             core.summary.addRaw(changelog.trim());
             core.summary.write();
             return changelog.trim();

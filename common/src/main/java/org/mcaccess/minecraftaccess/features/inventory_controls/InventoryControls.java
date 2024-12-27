@@ -73,10 +73,10 @@ public class InventoryControls {
     private boolean speakFocusedSlotChanges = true;
 
     private enum FocusDirection {
-        UP(I18n.translate("gui.up")),
-        DOWN(I18n.translate("gui.down")),
-        LEFT(I18n.translate("minecraft_access.inventory_controls.direction_left")),
-        RIGHT(I18n.translate("minecraft_access.inventory_controls.direction_right"));
+        UP("gui.up"),
+        DOWN("gui.down"),
+        LEFT("minecraft_access.inventory_controls.direction_left"),
+        RIGHT("minecraft_access.inventory_controls.direction_right");
 
         private final String value;
 
@@ -312,7 +312,9 @@ public class InventoryControls {
             MouseUtils.moveAndLeftClick(p.x(), p.y());
             moveToSlotItem(currentSlotItem, 100);
 
-            String text = "Showing %s".formatted(toggleCraftableButton.isToggled() ? "all" : "craftable only");
+            String text = toggleCraftableButton.isToggled()
+                    ? I18n.translate("gui.recipebook.toggleRecipes.all")
+                    : ((RecipeBookWidgetAccessor) currentRecipeBookWidget).callGetToggleCraftableButtonText().getString();
             log.debug("Recipe toggle key pressed, {}", text);
             MainClass.speakWithNarrator(text, true);
 
@@ -361,7 +363,7 @@ public class InventoryControls {
 
         SlotItem slotItem = getGroupItemInDirection(focusDirection);
         if (slotItem == null) {
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.inventory_controls.no_slot_in_direction", focusDirection.getString()), true);
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.inventory_controls.no_slot_in_direction", I18n.translate(focusDirection.getString())), true);
             return;
         }
 
