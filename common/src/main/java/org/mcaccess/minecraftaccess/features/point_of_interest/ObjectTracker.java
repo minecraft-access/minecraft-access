@@ -53,6 +53,7 @@ public class ObjectTracker {
 
     private int currentGroupIndex = 0;
     private int currentObjectIndex = 0;
+    private Object currentObject;
     private Object nearestObject;
 
     public void update() {
@@ -116,7 +117,9 @@ public class ObjectTracker {
             return;
         }
 
-        Object currentObject = currentGroup.getItems(true).get(currentObjectIndex);
+        if (currentObject == null) {
+            currentObject = currentGroup.getItems(true).get(currentObjectIndex);
+        }
 
         if (currentObject instanceof Entity) {
             Entity entity = (Entity)currentObject;
@@ -150,6 +153,7 @@ public class ObjectTracker {
 
         currentGroupIndex += step;
         currentObjectIndex = 0;
+        currentObject = groups.get(currentGroupIndex).getItems().get(currentObjectIndex);
         MainClass.speakWithNarrator(groups.get(currentGroupIndex).getName(), true);
         narrateCurrentObject(false);
     }
@@ -164,6 +168,7 @@ public class ObjectTracker {
         if ((currentObjectIndex + step) > (objects.size() - 1)) {
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
             currentObjectIndex = objects.size() - 1;
+            currentObject = currentGroup.getItems().get(currentObjectIndex);
             narrateCurrentObject(false);
             return;
         }
@@ -175,6 +180,7 @@ public class ObjectTracker {
         }
 
         currentObjectIndex += step;
+        currentObject = currentGroup.getItems().get(currentObjectIndex);
 
         narrateCurrentObject(true);
     }
@@ -212,7 +218,6 @@ public class ObjectTracker {
     public Object getCurrentObject() {
         if (isTargetingNearestObject) return nearestObject;
 
-        POIGroup<?> currentGroup = groups.get(currentGroupIndex);
-        return currentGroup.getItems().get(currentObjectIndex);
+        return currentObject;
     }
 }
