@@ -116,7 +116,7 @@ public class ObjectTracker {
             return;
         }
 
-        Object currentObject = currentGroup.getItems().get(currentObjectIndex);
+        Object currentObject = currentGroup.getItems(true).get(currentObjectIndex);
 
         if (currentObject instanceof Entity) {
             Entity entity = (Entity)currentObject;
@@ -159,7 +159,7 @@ public class ObjectTracker {
 
         POIGroup<?> currentGroup = groups.get(currentGroupIndex);
 
-        List<?> objects = currentGroup.getItems();
+        List<?> objects = currentGroup.getItems(true);
 
         if ((currentObjectIndex + step) > (objects.size() - 1)) {
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
