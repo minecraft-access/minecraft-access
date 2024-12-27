@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -33,17 +34,17 @@ public class ObjectTracker {
 
     private Boolean isTargetingNearestObject = false;
 
-    private List<POIGroup> groups = new ArrayList<>();
+    private List<POIGroup<?>> groups = new ArrayList<>();
 
-    private List<POIGroup> getPOIGroups() {
-        List<POIGroup> groupList = Stream.concat(
-            POIEntities.getInstance().builtInGroups.values().stream(),
-            POIBlocks.getInstance().builtInGroups.values().stream()
+    private List<POIGroup<?>> getPOIGroups() {
+        List<POIGroup<?>> groupList = Stream.concat(
+            Arrays.stream(POIEntities.getInstance().groups),
+            Arrays.stream(POIBlocks.getInstance().groups)
         ).toList();
 
-        List<POIGroup> result = new ArrayList<>();
+        List<POIGroup<?>> result = new ArrayList<>();
 
-        for (POIGroup group : groupList) {
+        for (POIGroup<?> group : groupList) {
             if (!group.isEmpty()) result.add(group);
         }
 
@@ -108,26 +109,27 @@ public class ObjectTracker {
             return;
         }
 
-        POIGroup currentGroup = groups.get(currentGroupIndex);
+        POIGroup<?> currentGroup = groups.get(currentGroupIndex);
 
         if (currentGroup.isEmpty()) {
             MainClass.speakWithNarrator("No objects in current group", interupt);
             return;
         }
 
-        switch (currentGroup.getType()) {
-            case ENTITY:
-                Entity entity = currentGroup.getEntities().values().stream().toList().get(currentObjectIndex);
-                MainClass.speakWithNarrator(NarrationUtils.narrateEntity(entity), interupt);
+        Object currentObject = currentGroup.getItems().get(currentObjectIndex);
 
-                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, entity.getPos());
-                break;
-            case BLOCK:
-                BlockPos block = currentGroup.getBlocks().keySet().stream().toList().get(currentObjectIndex);
-                MainClass.speakWithNarrator(NarrationUtils.narrateBlock(block, null), interupt);
+        if (currentObject instanceof Entity) {
+            Entity entity = (Entity)currentObject;
 
-                WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, block.toCenterPos());
-                break;
+            MainClass.speakWithNarrator(NarrationUtils.narrateEntity(entity), interupt);
+            WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, entity.getPos());
+        }
+
+        if (currentObject instanceof BlockPos) {
+            BlockPos block = (BlockPos)currentObject;
+
+            MainClass.speakWithNarrator(NarrationUtils.narrateBlock(block, null), interupt);
+            WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, block.toCenterPos());
         }
     }
 
@@ -155,46 +157,24 @@ public class ObjectTracker {
     private void moveObject(int step) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
-        POIGroup currentGroup = groups.get(currentGroupIndex);
+        POIGroup<?> currentGroup = groups.get(currentGroupIndex);
 
-        switch (currentGroup.getType()) {
-            case ENTITY:
-                List<Entity> entities = currentGroup.getEntities().values().stream().toList();
+        List<?> objects = currentGroup.getItems();
 
-                if ((currentObjectIndex + step) > (entities.size() - 1)) {
-                    MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
-                    currentObjectIndex = entities.size() - 1;
-                    narrateCurrentObject(false);
-                    return;
-                }
-
-                if ((currentObjectIndex + step) < 0) {
-                    MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.start_of_list"), true);
-                    narrateCurrentObject(false);
-                    return;
-                }
-
-                currentObjectIndex += step;
-                break;
-                case BLOCK:
-            List<BlockPos> blocks = currentGroup.getBlocks().keySet().stream().toList();
-
-            if ((currentObjectIndex + step) > (blocks.size() - 1)) {
-                MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
-                currentObjectIndex = blocks.size() - 1;
-                narrateCurrentObject(false);
-                return;
-            }
-
-            if ((currentObjectIndex + step) < 0) {
-                MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.start_of_list"), true);
-                narrateCurrentObject(false);
-                return;
-            }
-
-            currentObjectIndex += step;
-            break;
+        if ((currentObjectIndex + step) > (objects.size() - 1)) {
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
+            currentObjectIndex = objects.size() - 1;
+            narrateCurrentObject(false);
+            return;
         }
+
+        if ((currentObjectIndex + step) < 0) {
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.start_of_list"), true);
+            narrateCurrentObject(false);
+            return;
+        }
+
+        currentObjectIndex += step;
 
         narrateCurrentObject(true);
     }
@@ -232,15 +212,7 @@ public class ObjectTracker {
     public Object getCurrentObject() {
         if (isTargetingNearestObject) return nearestObject;
 
-        POIGroup group = groups.get(currentGroupIndex);
-
-        switch (group.getType()) {
-            case ENTITY:
-                return group.getEntities().values().stream().toList().get(currentObjectIndex);
-            case BLOCK:
-                return group.getBlocks().keySet().stream().toList().get(currentObjectIndex);
-        }
-
-        return null;
+        POIGroup<?> currentGroup = groups.get(currentGroupIndex);
+        return currentGroup.getItems().get(currentObjectIndex);
     }
 }

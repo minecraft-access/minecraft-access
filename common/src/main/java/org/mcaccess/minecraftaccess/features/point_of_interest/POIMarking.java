@@ -30,7 +30,7 @@ public class POIMarking {
 
     static {
         instance = new POIMarking();
-        poiBlocks = POIBlocks.getINSTANCE();
+        poiBlocks = POIBlocks.getInstance();
         poiEntities = POIEntities.getInstance();
         lockingHandler = LockingHandler.getInstance();
         objectTracker = ObjectTracker.getInstance();

@@ -30,7 +30,7 @@ import java.util.Set;
 @Slf4j
 public class POIBlocks {
     @Getter
-    private static final POIBlocks INSTANCE = new POIBlocks();
+    private static final POIBlocks instance = new POIBlocks();
     private ClientPlayerEntity player;
     private ClientWorld world;
 
@@ -112,7 +112,7 @@ public class POIBlocks {
     );
 
     @SuppressWarnings("unchecked")
-    private final POIGroup<BlockPos>[] groups = new POIGroup[] {
+    public final POIGroup<BlockPos>[] groups = new POIGroup[] {
             markedGroup,
             oreGroup,
             new POIGroup<BlockPos>(// Fluids

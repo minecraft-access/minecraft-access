@@ -319,6 +319,7 @@
     "minecraft_access.xp_indicator.decreased": "Player XP level decreased to %s",
     "minecraft_access.xp_indicator.increased": "Player XP level increased to %s",
     "minecraft_access.point_of_interest.group.boss": "Bosses",
+    "minecraft_access.point_of_interest.group.hostile": "Hostile mobs",
     "minecraft_access.point_of_interest.group.passive": "Passive mobs",
     "minecraft_access.point_of_interest.group.player": "Players",
     "minecraft_access.point_of_interest.group.item": "Items",
