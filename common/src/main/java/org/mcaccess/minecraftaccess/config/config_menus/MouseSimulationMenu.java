@@ -1,22 +1,19 @@
 package org.mcaccess.minecraftaccess.config.config_menus;
 
-import org.mcaccess.minecraftaccess.config.Config;
-import org.mcaccess.minecraftaccess.config.config_maps.MouseSimulationConfigMap;
-import org.mcaccess.minecraftaccess.utils.BaseScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
+import org.mcaccess.minecraftaccess.config.Config;
+import org.mcaccess.minecraftaccess.config.config_maps.MouseSimulationConfigMap;
+import org.mcaccess.minecraftaccess.utils.BaseScreen;
+
+import java.util.function.Function;
 
 @SuppressWarnings("DataFlowIssue")
 public class MouseSimulationMenu extends BaseScreen {
     public MouseSimulationMenu(String title, BaseScreen previousScreen) {
         super(title, previousScreen);
     }
-
-	static	String getMacMouseFixKey (Boolean enabled){
-		return "minecraft_access.gui.mouse_simulation.button.toggle_mac_mouse_fix_button." + (enabled ? "enabled" : "disabled");
-	}
-
 
     @Override
     protected void init() {
@@ -42,11 +39,12 @@ public class MouseSimulationMenu extends BaseScreen {
                 (button) -> this.client.setScreen(new ValueEntryMenu(c1, this)));
 		this.addDrawableChild(delayButton);
 
-        ButtonWidget macMouseFixToggleButton = this.buildButtonWidget(getMacMouseFixKey(initMap.getMacMouseFix()),
+        Function<Boolean, String> useMacMouseFix = featureToggleButtonMessageWith("minecraft_access.gui.mouse_simulation.button.toggle_mac_mouse_fix_button");
+        ButtonWidget macMouseFixToggleButton = this.buildButtonWidget(useMacMouseFix.apply(initMap.getMacMouseFix()),
                 (button) -> {
                     MouseSimulationConfigMap map = MouseSimulationConfigMap.getInstance();
                     map.setMacMouseFix(!map.getMacMouseFix());
-                    button.setMessage(Text.of(I18n.translate(getMacMouseFixKey(map.getMacMouseFix()))));
+                    button.setMessage(Text.of(I18n.translate(useMacMouseFix.apply(map.getMacMouseFix()))));
                     Config.getInstance().writeJSON();
                 });
         this.addDrawableChild(macMouseFixToggleButton);
