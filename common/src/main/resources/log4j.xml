@@ -70,7 +70,7 @@ the path of this file will be shown as "log4j.configurationFile=..." property in
         <!-- Log of this mod -->
         <!-- for stop logging mod's INFO log twice
         ref: https://logging.apache.org/log4j/2.x/manual/configuration.html#additivity -->
-        <Logger level="all" name="com.github.khanshoaib3.minecraft_access" additivity="false">
+        <Logger level="all" name="org.mcaccess.minecraftaccess" additivity="false">
             <!-- Control log level of this mod with "-DmineAccess.log.level" JVM argument.
            ref: https://stackoverflow.com/a/44745321/11397457-->
             <AppenderRef ref="DebugFile" level="${sys:mineAccess.log.level:-debug}"/>
