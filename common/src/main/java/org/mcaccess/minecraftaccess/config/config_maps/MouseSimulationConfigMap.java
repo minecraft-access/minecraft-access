@@ -15,6 +15,8 @@ public class MouseSimulationConfigMap {
     private boolean enabled;
     @SerializedName("Scroll Delay (in milliseconds)")
     private int scrollDelayInMilliseconds;
+    @SerializedName("mac mouse fix")
+	private Boolean macMouseFix;
 
     private MouseSimulationConfigMap() {
     }
@@ -23,6 +25,7 @@ public class MouseSimulationConfigMap {
         MouseSimulationConfigMap m = new MouseSimulationConfigMap();
         m.enabled = true;
         m.scrollDelayInMilliseconds = 150;
+		m.macMouseFix = false;
 
         setInstance(m);
         return m;
