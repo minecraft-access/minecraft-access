@@ -1,21 +1,17 @@
-[//]: # (The changelog will be added into CHANGELOG.md file automatically by fast-forward workflow.)
 
-[//]: # (Please delete unrelevant changelog sections.)
 
-## Changelog
+[//]: # (This changelog will be part of the release notes)
+[//]: # (Please keep anything that isn't part of the changelog above this line and delete unused headings)
+[//]: # (Changelog entries should be formatted as unordered lists to ensure consistency when they are collated)
 
-### New Features
+# Changelog
 
-### Feature Updates
+## New Features
 
-### Bug Fixes
+## Feature Updates
 
-### Translation Changes
+## Bug Fixes
 
-### Others
+## Translation Changes
 
-[//]: # (The `Development Chores` section won't be included as release notes, it's recorded for developers only.)
-
-### Development Chores
-
-[//]: # (## Keep Writting If You Have Anything Else To Say)
+## Others

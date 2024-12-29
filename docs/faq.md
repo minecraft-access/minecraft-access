@@ -30,7 +30,7 @@ the Mod has implemented such functions as `Read Crosshair` (read out blocks and 
 `100% accessibility for all screens`, `Camera Controls`, and `Mouse Simulation` with keyboard,
 `Points of Interest`
 (scan nearby special blocks and creatures and lock on them),
-and a new F4 `Narrator Menu` which contains assistant functions like `Read Light Level`,
+and a new F4 `Access Menu` which contains assistant functions like `Read Light Level`,
 `Find Closest Water Source`, etc.
 
 You can play the game within the keyboard's main typing part (which means a number pad isn't necessary),
