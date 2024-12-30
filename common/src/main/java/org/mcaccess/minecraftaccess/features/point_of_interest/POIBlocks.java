@@ -14,6 +14,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
@@ -111,6 +112,24 @@ public class POIBlocks {
             pos -> oreBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
     );
 
+    private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
+        () -> I18n.translate("minecraft_access.point_of_interest.group.otherBlocks"),
+        new SoundEvent(null, null),
+        0f,
+        pos -> otherBlocksFilter(pos)
+    );
+
+    private boolean otherBlocksFilter(BlockPos pos) {
+        boolean blockAlreadyInGroup = false;
+
+        for (BlockPos posInGroup : otherBlocksGroup.getItems()) {
+            blockAlreadyInGroup = world.getBlockState(pos).getBlock() == world.getBlockState(posInGroup).getBlock();
+            if (blockAlreadyInGroup) break;
+        }
+
+        return !world.getBlockState(pos).isAir() && !blockAlreadyInGroup;
+    }
+
     @SuppressWarnings("unchecked")
     public final POIGroup<BlockPos>[] groups = new POIGroup[] {
             markedGroup,
@@ -133,6 +152,7 @@ public class POIBlocks {
                     0f,
                     pos -> world.getBlockState(pos).createScreenHandlerFactory(world, pos) != null
             ),
+            otherBlocksGroup, // This group should always be at the end of this list
     };
 
     private POIBlocks() {
@@ -229,7 +249,7 @@ public class POIBlocks {
         }
 
         for (POIGroup<BlockPos> group : groups) {
-            if (group.add(blockPos)) {
+            if (group.add(blockPos) && group != otherBlocksGroup) {
                 currentScanResults.add(blockPos);
                 break;
             }

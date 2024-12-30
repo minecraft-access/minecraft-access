@@ -332,6 +332,7 @@
   "minecraft_access.point_of_interest.group.functional": "Functional blocks",
   "minecraft_access.point_of_interest.group.gui": "Blocks with interface",
   "minecraft_access.point_of_interest.group.fluid": "Fluids",
+  "minecraft_access.point_of_interest.group.otherBlocks": "Other blocks",
   "minecraft_access.keys.object_tracker.group_name": "Minecraft Access: Object Tracker",
   "minecraft_access.keys.object_tracker.next_item": "Next item",
   "minecraft_access.keys.object_tracker.previous_item": "Previous item",
