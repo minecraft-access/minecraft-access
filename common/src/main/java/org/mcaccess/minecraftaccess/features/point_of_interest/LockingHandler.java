@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.util.math.BlockPos;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.POIConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -83,9 +84,10 @@ public class LockingHandler {
      */
     private void loadConfigurations() {
         POILockingConfigMap map = POILockingConfigMap.getInstance();
+        POIConfigMap poiConfigMap = POIConfigMap.getInstance();
         this.enabled = map.isEnabled();
         this.lockOnBlocks = map.isLockOnBlocks();
-        this.speakDistance = map.isSpeakDistance();
+        this.speakDistance = poiConfigMap.isSpeakTargetPosition();
         this.unlockingSound = map.isUnlockingSound();
         this.interval.setDelay(map.getDelay(), Interval.Unit.Millisecond);
         this.aimAssistEnabled = map.isAimAssistEnabled();

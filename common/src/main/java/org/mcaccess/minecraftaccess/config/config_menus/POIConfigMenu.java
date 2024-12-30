@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.config.config_menus;
 
 import org.mcaccess.minecraftaccess.config.Config;
 import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.POIConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
@@ -17,6 +18,8 @@ public class POIConfigMenu extends BaseScreen {
     public POIConfigMenu(String title, BaseScreen previousScreen) {
         super(title, previousScreen);
     }
+
+    private POIConfigMap initMap = POIConfigMap.getInstance();
 
     @Override
     protected void init() {
@@ -37,6 +40,21 @@ public class POIConfigMenu extends BaseScreen {
         ButtonWidget poiMarkingButton = this.buildButtonWidget("minecraft_access.gui.poi_config_menu.button.poi_marking_button",
                 (button) -> this.client.setScreen(new POIMarkingConfigMenu("poi_marking_config_menu", this)));
         this.addDrawableChild(poiMarkingButton);
+
+        ButtonWidget speakDistanceButton = this.buildButtonWidget(
+                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isSpeakTargetPosition() ? "enabled" : "disabled"),
+                        I18n.translate("minecraft_access.gui.poi_locking_config_menu.button.speak_distance_button")
+                ),
+                (button) -> {
+                    POIConfigMap map = POIConfigMap.getInstance();
+                    map.setSpeakTargetPosition(!map.isSpeakTargetPosition());
+                    Config.getInstance().writeJSON();
+                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isSpeakTargetPosition() ? "enabled" : "disabled"),
+                            I18n.translate("minecraft_access.gui.poi_locking_config_menu.button.speak_distance_button")
+                    )));
+                },
+                true);
+        this.addDrawableChild(speakDistanceButton);
     }
 }
 
@@ -215,21 +233,6 @@ class POILockingConfigMenu extends BaseScreen {
                     )));
                 });
         this.addDrawableChild(lockOnBlocksButton);
-
-        ButtonWidget speakDistanceButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isSpeakDistance() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.poi_locking_config_menu.button.speak_distance_button")
-                ),
-                (button) -> {
-                    POILockingConfigMap map = POILockingConfigMap.getInstance();
-                    map.setSpeakDistance(!map.isSpeakDistance());
-                    Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isSpeakDistance() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.poi_locking_config_menu.button.speak_distance_button")
-                    )));
-                },
-                true);
-        this.addDrawableChild(speakDistanceButton);
 
         ButtonWidget autoLockEyeOfEnderButton = this.buildButtonWidget(
                 I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isAutoLockEyeOfEnderEntity() ? "enabled" : "disabled"),

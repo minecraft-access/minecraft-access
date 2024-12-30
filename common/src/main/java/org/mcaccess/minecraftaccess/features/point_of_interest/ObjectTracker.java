@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.POIConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
@@ -53,6 +54,8 @@ public class ObjectTracker {
     @Getter
     private Object currentObject;
 
+    private boolean speakDistance;
+
     public void update() {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
 
@@ -62,6 +65,7 @@ public class ObjectTracker {
         if (minecraftClient.currentScreen != null) return;
 
         updateGroups();
+        loadConfigurations();
 
         if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
@@ -85,6 +89,11 @@ public class ObjectTracker {
         if (!groups.isEmpty() && currentGroupIndex > groups.size() - 1) currentGroupIndex = 0;
     }
 
+    private void loadConfigurations() {
+        POIConfigMap map = POIConfigMap.getInstance();
+        speakDistance = map.isSpeakTargetPosition();
+    }
+
     private void narrateCurrentObject(boolean interupt) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
@@ -102,14 +111,18 @@ public class ObjectTracker {
         if (currentObject instanceof Entity) {
             Entity entity = (Entity)currentObject;
 
-            MainClass.speakWithNarrator(NarrationUtils.narrateEntity(entity), interupt);
+            String message = NarrationUtils.narrateEntity(entity);
+            if (speakDistance) message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.getBlockPos());
+            MainClass.speakWithNarrator(message, interupt);
             WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, entity.getPos());
         }
 
         if (currentObject instanceof BlockPos) {
             BlockPos block = (BlockPos)currentObject;
 
-            MainClass.speakWithNarrator(NarrationUtils.narrateBlock(block, null), interupt);
+            String message = NarrationUtils.narrateBlock(block, null);
+            if (speakDistance) message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(block);
+            MainClass.speakWithNarrator(message, interupt);
             WorldUtils.playSoundAtPosition(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 1, 1f, block.toCenterPos());
         }
     }
