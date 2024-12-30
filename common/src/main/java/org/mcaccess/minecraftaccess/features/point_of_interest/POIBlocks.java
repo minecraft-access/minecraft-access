@@ -195,6 +195,8 @@ public class POIBlocks {
         checkBlock(pos, this.range);
         checkBlock(pos.up(), this.range);
 
+        lastScanResults = currentScanResults;
+
         if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
             for (BlockPos blockPos : markedGroup.getItems()) {
                 markedGroup.playSound(blockPos.toCenterPos(), volume);
@@ -210,8 +212,6 @@ public class POIBlocks {
                 }
             }
         }
-
-        lastScanResults = currentScanResults;
 
         log.debug("POIBlock ended.");
     }
