@@ -2,6 +2,15 @@
 
 Thank you for considering making this mod better.
 
+## Translations
+
+To manage translations we use [Weblate], an open source web-based translation platform.
+If you're interested in contributing to translations, please visit our [Weblate] project
+where you will find all the languages we are currently translating to and any untranslated strings.
+If you would like to help translate into a language which isn't there,
+please reach out to us via [Discord].
+Thank you for helping make this mod accessible to more people around the world!
+
 ## Required knowledge
 
 First, general Java project development knowledge is required:
@@ -96,7 +105,6 @@ is for providing user information to client side game when developing.
 * `.github`: GitHub related stuff like workflow (CI) files.
 * `gradle`: Mainly contains Gradle wrapper configuration, Gradle wrapper's version is passively upgraded as Loom's version is upgraded.
 * `doc`: Project documentations.
-* `.gitmodules`: The I18N part ([`assets/<mod name>/lang`](https://fabricmc.net/wiki/tutorial:lang)) of this mod is separated as an independent repository - [minecraft-access-i18n](https://github.com/khanshoaib3/minecraft-access-i18n), and being used by this main repository in form of git submodule.
 * `build.gradle`: Root Gradle build script of this Gradle managing project. ([Gradle doc about `build.gradle` file](https://docs.gradle.org/current/userguide/build_file_basics.html))
 * `gradle.properties`: Configuration about mod and dependencies versioning.
 * `settings.gradle`: Defines that this project has three subprojects: `common`, `fabric`, `neoforge`. ([Gradle doc about `settings.gradle` file](https://docs.gradle.org/current/userguide/settings_file_basics.html))
@@ -109,7 +117,7 @@ is for providing user information to client side game when developing.
         * `minecraft_access.accesswidener`: Yet another configuration.
         * `minecraft_access-common.mixins.json`: Mixin configuration that tells the Mixin framework where to find Mixin classes under `common` directory.
         * `assets/minecraft_access`: Contains custom resource files of this mod, structured in the [Minecraft Resource Pack](https://minecraft.wiki/w/Resource_pack) format.
-            * `lang`: The I18N text used by this mod for narration purpose, managed by another git repository.
+            * `lang`: The I18N text used by this mod for narration purpose, managed with [Weblate].
     * `src/test`: Unit test suite.
 * `fabric`: Gradle subproject, Fabric-dependent mod code.
     * `build.gradle`: Gradle build script of Fabric version mod.
@@ -126,7 +134,7 @@ is for providing user information to client side game when developing.
 
 ### Program Structure
 
-The root package class path of this project is `com.github.khanshoaib3.minecraft_access`,
+The root package class path of this project is `org.mcaccess.minecraftaccess`,
 below I'll use relative paths to describe code.
 
 There are two types of logic in this project, classified by the execution entry point.
@@ -206,3 +214,6 @@ This means that you do not need to get anyone's permission to make changes to yo
 you just need to make it work for **your personal needs**.
 If you feel that your changes will also benefit the upstream, you can submit a Pull Request to the upstream,
 and only then does the `contributing` begin.
+
+[Weblate]: https://hosted.weblate.org/engage/minecraft-access/
+[Discord]: https://discord.gg/yQjjsDqWQX

@@ -10,13 +10,24 @@ repositories {
             includeGroup "org.projectlombok"
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Modrinth'
+                url = 'https://api.modrinth.com/maven'
+            }
+        }
+        filter {
+            includeGroup 'maven.modrinth'
+        }
+    }
     maven {
         url 'https://maven.shedaniel.me/'
     }
 }
 
 architectury {
-    common(rootProject.enabled_platforms.split(","))
+    common("fabric", "neoforge")
 }
 
 loom {
@@ -28,7 +39,10 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
-    modApi 'me.shedaniel.cloth:cloth-config-fabric:15.0.140'
+    modImplementation 'maven.modrinth:jade:15.1.5+fabric'
+    modApi 'me.shedaniel.cloth:cloth-config-fabric:17.0.144'
+
+    modImplementation "dev.architectury:architectury:${project.architectury_api_version}"
 
     // lombok that makes the life easier
     // https://projectlombok.org/setup/gradle
@@ -55,4 +69,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // Since JDK 21
+    // ref: https://stackoverflow.com/questions/77951485/getting-a-java-agent-has-been-loaded-warning-in-intellij-after-upgrading-jdk-17
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
 }

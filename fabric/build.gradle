@@ -6,7 +6,7 @@ plugins {
     //
     // Latest Test Compatibility: gradle version 8.x shadow version 8.0.0+
     // ref: https://github.com/johnrengelman/shadow
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.gradleup.shadow" version "8.3.5"
 }
 
 architectury {
@@ -40,17 +40,13 @@ repositories {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    // Use this part of fabric api to generate asserts to resource packs,
-    // so the lang resources can be loaded.
-    // Use jij Jar-in-Jar style to dependent on this part,
-    // so we needn't to depend on whole fabric-api.
-    // ref: https://fabricmc.net/wiki/documentation:fabric_loom#dependency_configurations
-    modApi include("net.fabricmc.fabric-api:fabric-resource-loader-v0:${rootProject.fabric_resource_loader_version}")
-    modApi include("net.fabricmc.fabric-api:fabric-key-binding-api-v1:${rootProject.fabric_key_binding_api_version}")
-    modApi include('me.shedaniel.cloth:cloth-config-fabric:15.0.140') {
+    modImplementation include("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
+
+    modImplementation include("dev.architectury:architectury-fabric:${project.architectury_api_version}")
+    modApi include('me.shedaniel.cloth:cloth-config-fabric:17.0.144') {
         exclude group: 'net.fabricmc.fabric-api'
     }
-    modImplementation 'com.terraformersmc:modmenu:11.0.2'
+    modImplementation 'com.terraformersmc:modmenu:13.0.0-beta.1'
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

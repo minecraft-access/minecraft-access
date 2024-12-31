@@ -19,14 +19,14 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "com.github.khanshoaib3.minecraft_access.fabric.MainClassFabric"
-    ],
     "client": [
-      "com.github.khanshoaib3.minecraft_access.fabric.MinecraftAccessClient"
+      "org.mcaccess.minecraftaccess.fabric.MinecraftAccessClient"
+    ],
+    "server": [
+      "org.mcaccess.minecraftaccess.fabric.MinecraftAccessServer"
     ],
     "modmenu": [
-      "com.github.khanshoaib3.minecraft_access.fabric.ModMenu"
+      "org.mcaccess.minecraftaccess.fabric.ModMenu"
     ]
   },
   "mixins": [

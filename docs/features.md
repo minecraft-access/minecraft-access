@@ -19,7 +19,7 @@ There is also a page for [viewing all sound effects](https://html-preview.github
     * [POI Locking](#poi-locking)
     * [POI Marking](#poi-marking)
 6. [Fall Detector](#fall-detector)
-7. [Narrator Menu](#narrator-menu)
+7. [Access Menu](#access-menu)
 8. [Play Status](#player-status)
     * [Position Narrator](#position-narrator)
     * [Health n Hunger](#health-n-hunger)
@@ -174,10 +174,13 @@ It will play a sound effect for every location that meets the set threshold dist
 
 See also: [Configuration](/docs/config.md#fall-detector)
 
-## Narrator Menu
+## Access Menu
 
-We also call it the `F4 Menu` because it requires pressing the `F4` key to open.
-This menu integrates a number of helper functions, and you can execute them by opening the menu or by using the hotkey directly.
+This menu can be accessed by pressing the F4 key by default
+and integrates a number of helper functions which can be executed from within the menu 
+or by using the individual hotkey directly. 
+Note that the individual function keys aren't bound by default, aside from narrate target,
+so you will need to bind the ones you want to use yourself.
 
 | Function                              | Description                                                                                                                                                                                  |
 |---------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -192,7 +195,7 @@ This menu integrates a number of helper functions, and you can execute them by o
 | 9. Refresh screen Reader              | Refresh the screen Reader                                                                                                                                                                    |
 | 0. Open Config Menu                   | Opens the Config Menu which can be used to change the configs of this mod that take effect immediately                                                                                       |
 
-See also: [Configuration](/docs/config.md#narrator-menu), [Keybindings](/docs/keybindings.md#narrator-menu)
+See also: [Configuration](/docs/config.md#access-menu), [Keybindings](/docs/keybindings.md#access-menu)
 
 ## Player Status
 

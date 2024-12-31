@@ -3,7 +3,7 @@
 This page contains all the configuration that controls the features on-off and behavior.
 
 The configuration can be modified in two ways: via the config menu or directly editing the configuration file.
-The `Config Menu` can be opened via opening the `Narrator Menu` (press F4) then click `Open Config Menu` button.
+The `Config Menu` can be opened via opening the `Access Menu` (press F4) then click `Open Config Menu` button.
 The configuration file (named as `config.json`) can be found in the `{minecraft directory}/config/minecraft_access/` directory.
 You can use Notepad or any text editor to edit the file.
 You can also use online JSON editor like [Json Editor Online](https://jsoneditoronline.org/), [Json Formatter](https://jsonformatter.org/json-editor) or [Code Beautify JSON Online Editor](https://jsonformatter.org/json-editor).
@@ -24,7 +24,7 @@ or click `Reset Config` button in the `Config Menu`.
 7. [Health n Hunger](#health-n-hunger)
 8. [Player Warnings](#player-warnings)
 9. [Fall Detector](#fall-detector)
-10. [Narrator Menu](#narrator-menu)
+10. [Access Menu](#access-menu)
     * [Fluid Detector](#fluid-detector)
 11. [Other Configurations](#other-configurations)
 
@@ -153,9 +153,9 @@ See also: [Feature Description](/docs/features.md#points-of-interest),
 | Play Sound Instead Of Speak             | false         | Play a base drum sound cue on unlock instead of speak `unlock`                               |
 | Auto Lock on to Eye of Ender when Used  | true          | Automatically lock on to the [Eye of Ender](https://minecraft.wiki/w/Eye_of_Ender) when used |
 | Delay (in milliseconds)                 | 100           | Cooldown between two feature executions                                                      |
-| Bow aim assist | true | Enable automatic temporary locking onto the nearest monster when using a bow                                              |
-| Aim assist sound | true | Enables audio cues for bow aim assist                                                                                   |
-| Aim assist sound volume | 0.5 | Controls the volume of the aim assist audio cues                                                                  |
+| Bow aim assist                          | true          | Enable automatic temporary locking onto the nearest monster when using a bow                 |
+| Aim assist sound                        | true          | Enables audio cues for bow aim assist                                                        |
+| Aim assist sound volume                 | 0.5           | Controls the volume of the aim assist audio cues                                             |
 
 ### Entities/Blocks Marking
 
@@ -211,13 +211,13 @@ See also: [Feature Description](/docs/features.md#player-warnings)
 
 See also: [Feature Description](/docs/features.md#fall-detector)
 
-## Narrator Menu
+## Access Menu
 
 | Configuration | Default Value | Description                    |
 |---------------|---------------|--------------------------------|
 | Enabled       | true          | Whether to enable this feature |
 
-See also: [Feature Description](/docs/features.md#narrator-menu), [keybindings](/docs/keybindings.md#narrator-menu)
+See also: [Feature Description](/docs/features.md#access-menu), [keybindings](/docs/keybindings.md#access-menu)
 
 ### Fluid Detector
 

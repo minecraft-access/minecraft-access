@@ -17,80 +17,80 @@ You may want to take a look at [all the original controls](https://minecraft.wik
 4. [Point of Interest](#point-of-interest)
 5. [Position Narrator](#position-narrator)
 6. [Health n Hunger](#health-n-hunger)
-7. [Narrator Menu](#narrator-menu)
+7. [Access Menu](#access-menu)
 8. [Book Editing](#book-editing)
 9. [Speak Chat Messages](#speak-chat-messages)
 
 ## Camera Controls
 
-| Single Key                   | Default Keybinding | Description                                                                                                                          |
-|------------------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| `Look Up Key`                | I                  | Move the camera vertically up by the `Normal Rotating Angle` config value                                                            |
-| `Alternate Look Up Key`      | Number Pad 8       | Same as `Look Up Key`, move the camera vertically up                                                                                 |
-| `Look Right Key`             | L                  | Move the camera horizontally right by the `Normal Rotating Angle` config value                                                       |
-| `Alternate Look Right Key`   | Number Pad 6       | Same as `Look Right Key`, move the camera horizontally right                                                                         |
-| `Look Down Key`              | K                  | Move the camera vertically down by the `Normal Rotating Angle` config value                                                          |
-| `Alternate Look Down Key`    | Number Pad 2       | Same as `Look Down Key`, Move the camera vertically down                                                                             |
-| `Look Left Key`              | J                  | Move the camera horizontally left by the `Normal Rotating Angle` config value                                                        |
-| `Alternate Look Left Key`    | Number Pad 4       | Same as `Look Left Key`, move the camera horizontally left                                                                           |
-| `Look North Key`             | Number Pad 7       | Turn the camera to the north                                                                                                         |
-| `Look East Key`              | Number Pad 9       | Turn the camera to the east                                                                                                          |
-| `Look South Key`             | Number Pad 3       | Turn the camera to the south                                                                                                         |
-| `Look West Key`              | Number Pad 1       | Turn the camera to the west                                                                                                          |
-| `Center Camera Key`          | Number Pad 5       | Look straight ahead: Turn the camera to the closest of the eight cardinal directions and reset vertical angle to horizontal position |
-| `Look Straight Up Key`       | Number Pad 0       | Turn the camera to the look above head direction                                                                                     |
-| `Look Straight Down Key`     | Number Pad .       | Turn the camera to the look down at feet direction                                                                                   |
-| `Speak Facing Direction Key` | H                  | Speak current horizontal facing direction                                                                                            |
+| Single Key               | Default Keybinding | Description                                                                                                                          |
+|--------------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `Look Up`                | I                  | Move the camera vertically up by the `Normal Rotating Angle` config value                                                            |
+| `Alternate Look Up`      | Number Pad 8       | Same as `Look Up Key`, move the camera vertically up                                                                                 |
+| `Look Right`             | L                  | Move the camera horizontally right by the `Normal Rotating Angle` config value                                                       |
+| `Alternate Look Right`   | Number Pad 6       | Same as `Look Right Key`, move the camera horizontally right                                                                         |
+| `Look Down`              | K                  | Move the camera vertically down by the `Normal Rotating Angle` config value                                                          |
+| `Alternate Look Down`    | Number Pad 2       | Same as `Look Down Key`, Move the camera vertically down                                                                             |
+| `Look Left`              | J                  | Move the camera horizontally left by the `Normal Rotating Angle` config value                                                        |
+| `Alternate Look Left`    | Number Pad 4       | Same as `Look Left Key`, move the camera horizontally left                                                                           |
+| `Look North`             | Number Pad 7       | Turn the camera to the north                                                                                                         |
+| `Look East`              | Number Pad 9       | Turn the camera to the east                                                                                                          |
+| `Look South`             | Number Pad 3       | Turn the camera to the south                                                                                                         |
+| `Look West`              | Number Pad 1       | Turn the camera to the west                                                                                                          |
+| `Center Camera`          | Number Pad 5       | Look straight ahead: Turn the camera to the closest of the eight cardinal directions and reset vertical angle to horizontal position |
+| `Look Straight Up`       | Number Pad 0       | Turn the camera to the look above head direction                                                                                     |
+| `Look Straight Down`     | Number Pad .       | Turn the camera to the look down at feet direction                                                                                   |
+| `Speak Facing Direction` | H                  | Speak current horizontal facing direction                                                                                            |
 
-| Key Combination                                                           | Description                                                                                                                                         |
-|---------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| hold `Left Alt` then press `Look Up Key` or `Alternate Look Up Key`       | Move the camera vertically up by the `Modified Rotating Angle` config value                                                                         |
-| hold `Left Alt` then press `Look Right Key` or `Alternate Look Right Key` | Move the camera vertically right by the `Modified Rotating Angle` config value                                                                      |
-| hold `Left Alt` then press `Look Down Key` or `Alternate Look Down Key`   | Move the camera vertically down by the `Modified Rotating Angle` config value                                                                       |
-| hold `Left Alt` then press `Look Left Key` or `Alternate Look Left Key`   | Move the camera vertically left by the `Modified Rotating Angle` config value                                                                       |
-| `Left Alt` + `Center Camera Key`                                          | Look straight back: Turn the camera to the opposite of the closest of the eight cardinal directions and reset vertical angle to horizontal position |
-| hold `Right Alt` then press `Look Up Key`                                 | Same as single `Look North Key` and single `Look Straight Up Key`, alternately move the camera to the north or up                                   |
-| `Right Alt` + `Look Right Key`                                            | Same as single `Look East Key`, turn the camera to the east                                                                                         |
-| hold `Right Alt` then press `Look Down Key`                               | Same as single `Look South Key` and single `Look Straight Down Key`, alternately move the camera to the south or down                               |
-| `Right Alt` + `Look Left Key`                                             | Same as single `Look West Key`, turn the camera to the west                                                                                         |
-| `Left Alt` + `Speak Facing Direction Key`                                 | Speak current vertical facing direction                                                                                                             |
+| Key Combination                                     | Description                                                                                                                                         |
+|-----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Left Alt` + `Look Up` or `Alternate Look Up`       | Move the camera vertically up by the `Modified Rotating Angle` config value                                                                         |
+| `Left Alt` + `Look Right` or `Alternate Look Right` | Move the camera vertically right by the `Modified Rotating Angle` config value                                                                      |
+| `Left Alt` + `Look Down` or `Alternate Look Down`   | Move the camera vertically down by the `Modified Rotating Angle` config value                                                                       |
+| `Left Alt` + `Look Left` or `Alternate Look Left`   | Move the camera vertically left by the `Modified Rotating Angle` config value                                                                       |
+| `Left Alt` + `Center Camera`                        | Look straight back: Turn the camera to the opposite of the closest of the eight cardinal directions and reset vertical angle to horizontal position |
+| `Right Alt` + `Look Up`                             | Same as single `Look North Key` and single `Look Straight Up Key`, alternately move the camera to the north or up                                   |
+| `Right Alt` + `Look Right`                          | Same as single `Look East Key`, turn the camera to the east                                                                                         |
+| `Right Alt` + `Look Down`                           | Same as single `Look South Key` and single `Look Straight Down Key`, alternately move the camera to the south or down                               |
+| `Right Alt` + `Look Left Key`                       | Same as single `Look West Key`, turn the camera to the west                                                                                         |
+| `Left Alt` + `Speak Facing Direction Key`           | Speak current vertical facing direction                                                                                                             |
 
 See also: [Feature Description](/docs/features.md#camera-controls), [Configuration](/docs/config.md#camera-controls)
 
 ## Mouse Simulation
 
-| Single Key                    | Default Keybinding | Description                                                                        |
-|-------------------------------|--------------------|------------------------------------------------------------------------------------|
-| `Left Mouse Sim Key`          | [                  | Simulate left mouse key, default value of the original `Attack/Destroy` key        |
-| `Middle Mouse Sim Key`        | \                  | Simulate middle mouse key, default value of the original `Pick Block` key          |
-| `Right Mouse Sim Key`         | ]                  | Simulate right mouse key, default value of the original `Use Item/Place Block` key |
-| `Mouse Wheel Scroll Up Key`   | ;                  | Simulate mouse wheel scroll up, switching items in hotbar forward                  |
-| `Mouse Wheel Scroll Down Key` | '                  | Simulate mouse wheel scroll down, switching items in hotbar backward               |
+| Single Key                | Default Keybinding | Description                                                                        |
+|---------------------------|--------------------|------------------------------------------------------------------------------------|
+| `Left Mouse Sim`          | [                  | Simulate left mouse key, default value of the original `Attack/Destroy` key        |
+| `Middle Mouse Sim`        | \                  | Simulate middle mouse key, default value of the original `Pick Block` key          |
+| `Right Mouse Sim`         | ]                  | Simulate right mouse key, default value of the original `Use Item/Place Block` key |
+| `Mouse Wheel Scroll Up`   | ;                  | Simulate mouse wheel scroll up, switching items in hotbar forward                  |
+| `Mouse Wheel Scroll Down` | '                  | Simulate mouse wheel scroll down, switching items in hotbar backward               |
 
 See also: [Feature Description](/docs/features.md#mouse-simulation), [Configuration](/docs/config.md#mouse-simulation)
 
 ## Inventory Controls
 
-| Single Key             | Default Keybinding | Description                                                                      |
-|------------------------|--------------------|----------------------------------------------------------------------------------|
-| `Up Key`               | I                  | Focus to the slot above                                                          |
-| `Right Key`            | L                  | Focus to the slot right                                                          |
-| `Down Key`             | K                  | Focus to the slot below                                                          |
-| `Left Key`             | J                  | Focus to the slot left                                                           |
-| `Group Key`            | C                  | Select next slot group                                                           |
-| `Switch Tab Key`       | V                  | Select next tab                                                                  |
-| `Toggle Craftable Key` | R                  | Switch between `show all` and `show only` craftable recipes in recipe book group |
-| T                      | not re-mappable    | Select the search box or text box                                                |
-| Enter                  | not re-mappable    | Deselect the search box or text box                                              |
+| Single Key         | Default Keybinding | Description                                                                      |
+|--------------------|--------------------|----------------------------------------------------------------------------------|
+| `Menu Move Up`     | I                  | Focus to the slot above                                                          |
+| `Menu Move Right`  | L                  | Focus to the slot right                                                          |
+| `Menu Move Down`   | K                  | Focus to the slot below                                                          |
+| `Menu Move Left`   | J                  | Focus to the slot left                                                           |
+| `Change Group`     | C                  | Select next slot group                                                           |
+| `Switch Tab`       | V                  | Select next tab                                                                  |
+| `Toggle Craftable` | R                  | Switch between `show all` and `show only` craftable recipes in recipe book group |
+| T                  | not re-mappable    | Select the search box or text box                                                |
+| Enter              | not re-mappable    | Deselect the search box or text box                                              |
 
 | Key Combination                 | Description                             |
 |---------------------------------|-----------------------------------------|
-| `Left Shift` + `Group Key`      | Select previous slot group              |
-| `Left Shift` + `Switch Tab Key` | Select previous tab                     |
-| `Left Shift` + `Up Key`         | Select previous page of the Recipe Book |
-| `Left Shift` + `Down Key`       | Select next page of the Recipe Book     |
+| `Left Shift` + `Change Group`   | Select previous slot group              |
+| `Left Shift` + `Switch Tab`     | Select previous tab                     |
+| `Left Shift` + `Menu Move Up`   | Select previous page of the Recipe Book |
+| `Left Shift` + `Menu Move Down` | Select next page of the Recipe Book     |
 
-`Switch Tab Key`, `Toggle Craftable Key`, `T` key and `Enter` key only works when there is a corresponding component in the opened screen.
+`Switch Tab`, `Toggle Craftable`, `T` key and `Enter` key only works when there is a corresponding component in the opened screen.
 Recipe Book page turning only works when `Recipe Book Group` is selected.
 Search on the [wiki](https://minecraft.wiki/?search) for the description of screens if you're not familiar with them.
 
@@ -113,9 +113,9 @@ See also: [Feature Description](/docs/features.md#points-of-interest),
 
 ## Position Narrator
 
-| Single Key                  | Default Keybinding | Description                       |
-|-----------------------------|--------------------|-----------------------------------|
-| `Speak Player Position Key` | G                  | Speak the player's x y z position |
+| Single Key              | Default Keybinding | Description                       |
+|-------------------------|--------------------|-----------------------------------|
+| `Speak Player Position` | G                  | Speak the player's x y z position |
 
 | Key Combination  | Description               |
 |------------------|---------------------------|
@@ -127,25 +127,28 @@ See also: [Feature Description](/docs/features.md#position-narrator), [Configura
 
 ## Health n Hunger
 
-| Single Key                           | Default Keybinding | Description                                  |
-|--------------------------------------|--------------------|----------------------------------------------|
-| `Speak Player Health and Hunger Key` | R                  | Speak the player's current health and hunger |
+| Single Key                       | Default Keybinding | Description                                  |
+|----------------------------------|--------------------|----------------------------------------------|
+| `Speak Player Health and Hunger` | R                  | Speak the player's current health and hunger |
 
 See also: [Feature Description](/docs/features.md#health-n-hunger), [Configuration](/docs/config.md#health-n-hunger)
 
-## Narrator Menu
+## Access Menu
 
-| Single Key                       | Default Keybinding | Description                                                                                                                                |
-|----------------------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| F4                               | not re-mappable    | Open or close the Narrator Menu                                                                                                            |
-| `Narrator Menu Function Hot Key` | B                  | Execute the selected function                                                                                                              |
-| Number Keys                      | not re-mappable    | When Narrator Menu is opened, press number keys to execute corresponding desired functions, without pressing `Tab` several times to select |
+| Single Key        | Default Keybinding | Description                                                             |
+|-------------------|--------------------|-------------------------------------------------------------------------|
+| Open Access Menu  | F4                 | Open or close the Access Menu                                           |
+| `Narrate Target`  | B                  | Narrates the thing you are looking at                                   |
+| Upper number keys | not re-mappable    | When Access Menu is opened, execute corresponding Access Menu functions |
 
-| Key Combination                                       | Description                               |
-|-------------------------------------------------------|-------------------------------------------|
-| hold `F4` then press `Narrator Menu Function Hot Key` | Loop selecting functions in Narrator Menu |
+| Key Combination           | Description                                                                                                                                                       |
+|---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Alt` + Upper number keys | Execute corresponding Access Menu functions. PS: the `Find Closest Water/Lava Source` functions are not supported by this key combination since they lag the game |
 
-See also: [Feature Description](/docs/features.md#narrator-menu), [Configuration](/docs/config.md#narrator-menu)
+All functions in the Access Menu have unique keybindings that can be set in the game's controls settings menu.
+The only function that is bound by default is the narrate target function, and all other function keys are left up to you to bind if you want to use them.
+
+See also: [Feature Description](/docs/features.md#access-menu), [Configuration](/docs/config.md#access-menu)
 
 ## Book Editing
 
@@ -164,9 +167,9 @@ See also: [Feature Description](/docs/features.md#book-editing)
 
 ### Speak Chat Messages
 
-| Key Combination       | Description                                                                                                                        |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| Press `Alt` + `1`~`9` | Speak previous chat message (again) corresponding to the number, 1 for the closest message, 2 for second closest message and so on |
+| Key Combination                                          | Description                                                                                                                                    |
+|----------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Alt` + Number Keys (Upper number keys and key pad keys) | Speak previous chat message (again) corresponding to the number, 1 for the most recent message, 2 for the second most recent message and so on |
 
 This feature only works while the Chat Screen is open.
 These keys aren’t re-mappable.
