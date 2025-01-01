@@ -16,10 +16,13 @@ import org.mockito.Mockito;
 public class MockConfigExtension implements BeforeAllCallback, AfterAllCallback {
     private MockedStatic<Config> ms;
 
+    static {
+        AutoConfig.register(Config.class, (ConfigSerializer.Factory<Config>) DummyConfigSerializer::new);
+    }
+
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         this.ms = Mockito.mockStatic(Config.class);
-        AutoConfig.register(Config.class, (ConfigSerializer.Factory<Config>) DummyConfigSerializer::new);
         //noinspection ResultOfMethodCallIgnored
         this.ms.when(Config::getInstance).thenReturn(AutoConfig.getConfigHolder(Config.class).get());
     }
