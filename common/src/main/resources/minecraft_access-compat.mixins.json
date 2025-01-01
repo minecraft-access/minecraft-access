@@ -1,7 +1,7 @@
 {
   "required": false,
   "minVersion": "0.8",
-  "package": "com.github.khanshoaib3.minecraft_access.compat.mixin",
+  "package": "org.mcaccess.minecraftaccess.compat.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
     "clothconfig.AbstractConfigEntryMixin",

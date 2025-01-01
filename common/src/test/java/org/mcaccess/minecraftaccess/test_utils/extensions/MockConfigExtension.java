@@ -1,11 +1,12 @@
 package org.mcaccess.minecraftaccess.test_utils.extensions;
 
-import org.mcaccess.minecraftaccess.Config;
+import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.ConfigSerializer;
 import me.shedaniel.autoconfig.serializer.DummyConfigSerializer;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.mcaccess.minecraftaccess.Config;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -18,7 +19,9 @@ public class MockConfigExtension implements BeforeAllCallback, AfterAllCallback 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         this.ms = Mockito.mockStatic(Config.class);
-        this.ms.when(Config::getSerialiser).thenReturn((ConfigSerializer.Factory<Config>) DummyConfigSerializer::new);
+        AutoConfig.register(Config.class, (ConfigSerializer.Factory<Config>) DummyConfigSerializer::new);
+        //noinspection ResultOfMethodCallIgnored
+        this.ms.when(Config::getInstance).thenReturn(AutoConfig.getConfigHolder(Config.class).get());
     }
 
     @Override public void afterAll(ExtensionContext extensionContext) {

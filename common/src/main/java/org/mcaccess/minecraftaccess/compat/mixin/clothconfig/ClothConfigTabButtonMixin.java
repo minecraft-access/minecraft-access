@@ -1,4 +1,4 @@
-package com.github.khanshoaib3.minecraft_access.compat.mixin.clothconfig;
+package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
 import me.shedaniel.clothconfig2.gui.ClothConfigTabButton;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
