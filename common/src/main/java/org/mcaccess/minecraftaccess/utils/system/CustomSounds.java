@@ -20,10 +20,6 @@ import java.util.Map;
 
 @Slf4j
 public class CustomSounds {
-    private CustomSounds() {
-        // Helper class
-    }
-
     public static final Map<String, SoundEvent> REGISTERED_SOUNDS = new HashMap<>();
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(MainClass.MOD_ID,
             RegistryKeys.SOUND_EVENT);
@@ -32,17 +28,13 @@ public class CustomSounds {
             "y_down"
     };
 
-    public static void init() {
+    public CustomSounds() {
         try {
-            _init();
+            registerSounds();
+            SOUNDS.register();
         } catch (Exception E) {
-            log.error("The custom sounds class was unable to be initialized", E);
+            log.error("The custom sounds class couldn't be set up.", E);
         }
-    }
-
-    private static void _init() {
-        registerSounds();
-        SOUNDS.register();
     }
 
     public static void registerSounds() {
