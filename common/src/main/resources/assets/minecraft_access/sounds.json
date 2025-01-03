@@ -1,0 +1,12 @@
+{
+    "y_up": {
+        "sounds": [
+            "minecraft_access:y_up"
+        ]
+    },
+    "y_down": {
+        "sounds": [
+            "minecraft_access:y_down"
+        ]
+    }
+}
