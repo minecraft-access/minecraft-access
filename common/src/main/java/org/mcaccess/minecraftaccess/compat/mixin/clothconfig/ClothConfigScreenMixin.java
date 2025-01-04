@@ -16,7 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(ClothConfigScreen.class)
+/**
+ * remap=false: suppress warnings since cloth isn't part of original game
+ */
+@Mixin(value = ClothConfigScreen.class, remap = false)
 abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
     ClothConfigScreenMixin(Screen parent, Text title, Identifier backgroundLocation) {
         super(parent, title, backgroundLocation);
