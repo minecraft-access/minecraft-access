@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "clothconfig.AbstractConfigEntryMixin",
+    "clothconfig.ClothConfigScreenAccessor",
     "clothconfig.ClothConfigScreenMixin",
     "clothconfig.ClothConfigTabButtonMixin"
   ],
