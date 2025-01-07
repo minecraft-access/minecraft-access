@@ -31,6 +31,10 @@ public class POIGroup<T> {
         this.predicate = predicate;
     }
 
+    public POIGroup(Supplier<String> nameSupplier, Predicate<T> predicate) {
+        this(nameSupplier, null, 0, predicate);
+    }
+
     public String getName() {
         return nameSupplier.get();
     }
@@ -74,6 +78,7 @@ public class POIGroup<T> {
     }
 
     public void playSound(Vec3d pos, float volume) {
+        if (sound == null) return;
         WorldUtils.playSoundAtPosition(sound, volume, soundPitch, pos);
     }
 

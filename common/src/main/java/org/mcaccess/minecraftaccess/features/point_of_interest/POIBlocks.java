@@ -114,8 +114,6 @@ public class POIBlocks {
 
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
         () -> I18n.translate("minecraft_access.point_of_interest.group.otherBlocks"),
-        new SoundEvent(null, null),
-        0f,
         pos -> otherBlocksFilter(pos)
     );
 
