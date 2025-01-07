@@ -17,7 +17,6 @@ public class PosChangeChecker {
     int lastX;
     int lastY;
     int lastZ;
-    PosChangeCheckerConfigMap configMap;
 
     public void init() {
         try {
@@ -31,11 +30,10 @@ public class PosChangeChecker {
         lastX = 0;
         lastY = 0;
         lastZ = 0;
-        configMap = PosChangeCheckerConfigMap.getInstance();
     }
 
     public void compareStats() {
-        if (configMap.isPlaySoundForXChanges()) {
+        if (PosChangeCheckerConfigMap.getInstance().isPlaySoundForXChanges()) {
             int newX = (int) PlayerPositionUtils.getX();
             if (newX > lastX) {
                 CustomSounds.playSoundOnPlayer("x_up", 1f, 1f);
@@ -46,7 +44,7 @@ public class PosChangeChecker {
             lastX = newX;
         }
 
-        if (configMap.isPlaySoundForYChanges()) {
+        if (PosChangeCheckerConfigMap.getInstance().isPlaySoundForYChanges()) {
             int newY = (int) PlayerPositionUtils.getY();
             if (newY > lastY) {
                 CustomSounds.playSoundOnPlayer("y_up", 1f, 1f);
@@ -57,7 +55,7 @@ public class PosChangeChecker {
             lastY = newY;
         }
 
-        if (configMap.isPlaySoundForZChanges()) {
+        if (PosChangeCheckerConfigMap.getInstance().isPlaySoundForZChanges()) {
             int newZ = (int) PlayerPositionUtils.getZ();
             if (newZ > lastZ) {
                 CustomSounds.playSoundOnPlayer("z_up", 1f, 1f);
