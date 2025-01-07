@@ -37,7 +37,7 @@ public class MouseSimulationMenu extends BaseScreen {
                 I18n.translate("minecraft_access.gui.common.button.delay",
                         initMap.getScrollDelayInMilliseconds()),
                 (button) -> this.client.setScreen(new ValueEntryMenu(c1, this)));
-		this.addDrawableChild(delayButton);
+        this.addDrawableChild(delayButton);
 
         Function<Boolean, String> useMacMouseFix = featureToggleButtonMessageWith("minecraft_access.gui.mouse_simulation.button.toggle_mac_mouse_fix_button");
         ButtonWidget macMouseFixToggleButton = this.buildButtonWidget(useMacMouseFix.apply(initMap.getMacMouseFix()),
@@ -48,5 +48,5 @@ public class MouseSimulationMenu extends BaseScreen {
                     Config.getInstance().writeJSON();
                 });
         this.addDrawableChild(macMouseFixToggleButton);
-	}
+    }
 }
