@@ -16,7 +16,8 @@ import java.util.Map;
  * "common\src\main\resources\assets\minecraft_access\sounds.json"
  * and the sounds themselves should be saved in
  * "common\src\main\resources\assets\minecraft_access\sounds"
- * Currently the module only supports playing sounds on the player, but this will change. */
+ * Currently the module only supports playing sounds on the player, but this will change.
+ * At some point, it's possible that we can read through the sounds json file to automatically register sounds instead of using a giant array in this class. */
 
 @Slf4j
 public class CustomSounds {
@@ -24,8 +25,12 @@ public class CustomSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(MainClass.MOD_ID,
             RegistryKeys.SOUND_EVENT);
     private static final String[] SOUND_NAMES = {
+            "x_up",
+            "x_down",
             "y_up",
-            "y_down"
+            "y_down",
+            "z_up",
+            "z_down"
     };
 
     public CustomSounds() {
