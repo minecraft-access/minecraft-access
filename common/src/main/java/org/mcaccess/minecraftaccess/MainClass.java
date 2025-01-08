@@ -170,7 +170,7 @@ public class MainClass {
 
     public static ScreenReaderInterface getScreenReader() {
         return MainClass.screenReader;
-    } //TODO remove this
+    } // TODO remove this
 
     public static void setScreenReader(ScreenReaderInterface screenReader) {
         MainClass.screenReader = screenReader;
