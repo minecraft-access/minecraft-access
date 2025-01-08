@@ -51,11 +51,4 @@ public class CustomSounds {
         }
     }
 
-    public static void playSoundOnPlayer(String soundName, float volume, float pitch) {
-        SoundEvent soundEvent = REGISTERED_SOUNDS.get(soundName);
-        if (soundEvent == null) {
-            throw new IllegalArgumentException("Not able to find sound: " + soundName);
-        }
-        MinecraftClient.getInstance().player.playSound(soundEvent, volume, pitch);
-    }
 }
