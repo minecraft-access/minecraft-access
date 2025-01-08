@@ -1,18 +1,18 @@
 package org.mcaccess.minecraftaccess.utils.system;
 
-import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.MouseSimulationConfigMap;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import lombok.extern.slf4j.Slf4j;
-import java.util.Arrays;
-import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.Window;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.MouseSimulationConfigMap;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -107,7 +107,7 @@ public class MouseUtils {
      */
     public static void moveAfterDelay(int x, int y, int delay) {
         try {
-           log.debug("Moving mouse to x:%d y:%d after %d milliseconds".formatted(x, y, delay));
+            log.debug("Moving mouse to x:%d y:%d after %d milliseconds".formatted(x, y, delay));
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
@@ -344,7 +344,7 @@ public class MouseUtils {
                 "xdotool click 5",
                 (i) -> {
                     // Create an event that scrolls the wheel down by 1 line
-                                Pointer event = i.cgInstance.CGEventCreateScrollWheelEvent(new Pointer(0), CoreGraphicsScrollEventUnits.line.getValue(), 1, -1);
+                    Pointer event = i.cgInstance.CGEventCreateScrollWheelEvent(new Pointer(0), CoreGraphicsScrollEventUnits.line.getValue(), 1, -1);
 
                     // Send the event
                     i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
@@ -367,7 +367,7 @@ public class MouseUtils {
                 int x = (int) minecraftClient.mouse.getX(), y = (int) minecraftClient.mouse.getY();
                 coordinates = " at minecraft x:%d y:%d".formatted(x, y);
             }
-           log.debug("Performing " + name + coordinates);
+            log.debug("Performing {}{}", name, coordinates);
 
 
             if (OsUtils.isLinux()) {
@@ -375,20 +375,20 @@ public class MouseUtils {
             } else if (OsUtils.isMacOS()) {
                 if (cgWrapper == null) initializeCoreGraphics();
 
-        // Check if the accessibility permission has been granted
-        // If not, mouse simulation will not work, so inform the user
-        // 0 is false, 1 is true
-        if (applicationServicesInstance.AXIsProcessTrusted() == 0) {
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.messages.accessibility_permission_not_granted"), false);
-            return;
-        }
+                // Check if the accessibility permission has been granted
+                // If not, mouse simulation will not work, so inform the user
+                // 0 is false, 1 is true
+                if (applicationServicesInstance.AXIsProcessTrusted() == 0) {
+                    MainClass.speakWithNarrator(I18n.translate("minecraft_access.messages.accessibility_permission_not_granted"), false);
+                    return;
+                }
 
-		if (logCoordinates) {
-			var p = cgWrapper.getNativeMousePosition();
-			String nativeCoordinates = " at native x:%f y:%f".formatted(p.x, p.y);
-			log.debug("\nPerforming " + name + nativeCoordinates);
-		}
-		macOSAction.accept(cgWrapper);
+                if (logCoordinates) {
+                    var p = cgWrapper.getNativeMousePosition();
+                    String nativeCoordinates = " at native x:%f y:%f".formatted(p.x, p.y);
+                    log.debug("\nPerforming " + name + nativeCoordinates);
+                }
+                macOSAction.accept(cgWrapper);
             } else if (OsUtils.isWindows()) {
                 if (user32dllInstance == null) initializeUser32dll();
                 windowsAction.accept(user32dllInstance);
@@ -406,16 +406,16 @@ public class MouseUtils {
         if (client == null) return new Coordinates(x, y);
         Window window = client.getWindow();
         if (window == null) return new Coordinates(x, y);
-		MouseSimulationConfigMap config = MouseSimulationConfigMap.getInstance();
+        MouseSimulationConfigMap config = MouseSimulationConfigMap.getInstance();
 
         int realX, realY;
-		if (config.getMacMouseFix()) {
-			realX = (int) ((x * window.getScaleFactor()));
-			realY = (int) ((y * window.getScaleFactor()));
-		} else {
-			realX = (int) (window.getX() + (x * window.getScaleFactor()));
-			realY = (int) (window.getY() + (y * window.getScaleFactor()));
-		}
+        if (config.getMacMouseFix()) {
+            realX = (int) ((x * window.getScaleFactor()));
+            realY = (int) ((y * window.getScaleFactor()));
+        } else {
+            realX = (int) (window.getX() + (x * window.getScaleFactor()));
+            realY = (int) (window.getY() + (y * window.getScaleFactor()));
+        }
         return new Coordinates(realX, realY);
     }
 
@@ -456,7 +456,7 @@ public class MouseUtils {
             return;
 
         try {
-            cgWrapper =new CGWrapper(Native.load("CoreGraphics", CoreGraphicsInterface.class));
+            cgWrapper = new CGWrapper(Native.load("CoreGraphics", CoreGraphicsInterface.class));
             coreFoundationInstance = Native.load("CoreFoundation", CoreFoundationInterface.class);
             applicationServicesInstance = Native.load("ApplicationServices", ApplicationServicesInterface.class);
         } catch (Exception e) {
@@ -480,7 +480,6 @@ public class MouseUtils {
     /**
      * Flags used in the mouse_event function of User32.dll
      */
-    @SuppressWarnings("unused")
     private enum WindowsMouseEventFlags {
         LEFTDOWN(0x00000002),
         LEFTUP(0x00000004),
@@ -512,7 +511,7 @@ public class MouseUtils {
                 public ByValue() {
                     super();
                 }
-    
+
                 public ByValue(double x, double y) {
                     super(x, y);
                 }
@@ -642,7 +641,8 @@ public class MouseUtils {
     }
 
     private static class CGWrapper {
-        private         CoreGraphicsInterface cgInstance;
+        private CoreGraphicsInterface cgInstance;
+
         public CGWrapper(CoreGraphicsInterface instance) {
             cgInstance = instance;
         }
@@ -650,7 +650,7 @@ public class MouseUtils {
         /**
          * Creates a pointer event, extracts the x,y coordinates of its location, frees the event and then returns the coordinates
          */
-        public CoreGraphicsInterface.CGPoint.ByValue getNativeMousePosition(){
+        public CoreGraphicsInterface.CGPoint.ByValue getNativeMousePosition() {
             Pointer dummyEvent = cgInstance.CGEventCreate(new Pointer(0));
             var position = cgInstance.CGEventGetLocation(dummyEvent);
             coreFoundationInstance.CFRelease(dummyEvent);
