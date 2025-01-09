@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * "common/src/main/resources/assets/minecraft_access/sounds/"
  */
 
- @Slf4j
+@Slf4j
 public class CustomSounds {
     public static final Map<String, SoundEvent> REGISTERED_SOUNDS = new HashMap<>();
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(MainClass.MOD_ID,
