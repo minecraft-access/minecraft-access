@@ -1,0 +1,32 @@
+{
+    "x_up": {
+        "sounds": [
+            "minecraft_access:x_up"
+        ]
+    },
+    "x_down": {
+        "sounds": [
+            "minecraft_access:x_down"
+        ]
+    },
+    "z_up": {
+        "sounds": [
+            "minecraft_access:z_up"
+        ]
+    },
+    "z_down": {
+        "sounds": [
+            "minecraft_access:z_down"
+        ]
+    },
+    "y_up": {
+        "sounds": [
+            "minecraft_access:y_up"
+        ]
+    },
+    "y_down": {
+        "sounds": [
+            "minecraft_access:y_down"
+        ]
+    }
+}

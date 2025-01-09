@@ -14,6 +14,8 @@ import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
+import org.mcaccess.minecraftaccess.utils.system.CustomSounds;
+import org.mcaccess.minecraftaccess.features.navigator.PosChangeChecker;
 import com.mojang.text2speech.Narrator;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
@@ -35,7 +37,7 @@ public class MainClass {
     public static PlayerWarnings playerWarnings = null;
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
-
+    public static PosChangeChecker posChangeChecker;
     public static boolean isNeoForge = false;
     public static boolean interrupt = true;
     private static boolean alreadyDisabledAdvancementKey = false;
@@ -71,7 +73,8 @@ public class MainClass {
         MainClass.playerWarnings = new PlayerWarnings();
         MainClass.accessMenu = new AccessMenu();
         MainClass.fluidDetector = new FluidDetector();
-
+        MainClass.posChangeChecker = new PosChangeChecker();
+        new CustomSounds();
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
@@ -124,6 +127,7 @@ public class MainClass {
         PositionNarrator.getInstance().update();
 
         if (MinecraftClient.getInstance() != null && WorldUtils.getClientPlayer() != null) {
+            posChangeChecker.compareStats();
             if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
                 playerStatus.update();
             }
@@ -169,7 +173,7 @@ public class MainClass {
 
     public static ScreenReaderInterface getScreenReader() {
         return MainClass.screenReader;
-    } //TODO remove this
+    } // TODO remove this
 
     public static void setScreenReader(ScreenReaderInterface screenReader) {
         MainClass.screenReader = screenReader;

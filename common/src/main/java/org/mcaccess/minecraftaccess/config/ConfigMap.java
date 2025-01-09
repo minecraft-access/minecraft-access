@@ -24,6 +24,8 @@ public class ConfigMap {
     private POIConfigMap poiConfigMap;
     @SerializedName("Player Warnings")
     private PlayerWarningConfigMap playerWarningConfigMap;
+    @SerializedName("Play Sounds for Coordinate Changes")
+    private PosChangeCheckerConfigMap posChangeCheckerConfigMap;
     @SerializedName("Fall Detector")
     private FallDetectorConfigMap fallDetectorConfigMap;
     @SerializedName("Read Crosshair")
@@ -43,6 +45,7 @@ public class ConfigMap {
         m.mouseSimulationConfigMap = MouseSimulationConfigMap.buildDefault();
         m.poiConfigMap = POIConfigMap.buildDefault();
         m.playerWarningConfigMap = PlayerWarningConfigMap.buildDefault();
+        m.posChangeCheckerConfigMap = PosChangeCheckerConfigMap.buildDefault();
         m.fallDetectorConfigMap = FallDetectorConfigMap.buildDefault();
         m.readCrosshairConfigMap = ReadCrosshairConfigMap.buildDefault();
         m.otherConfigsMap = OtherConfigsMap.buildDefault();
@@ -61,19 +64,23 @@ public class ConfigMap {
         OtherConfigsMap.setInstance(map.otherConfigsMap);
         PlayerWarningConfigMap.setInstance(map.playerWarningConfigMap);
         POIConfigMap.setInstance(map.poiConfigMap);
+        PosChangeCheckerConfigMap.setInstance(map.posChangeCheckerConfigMap);
         ReadCrosshairConfigMap.setInstance(map.readCrosshairConfigMap);
         AreaMapConfigMap.setInstance(map.areaMapConfigMap);
         instance = map;
     }
 
     public static ConfigMap getInstance() {
-        if (instance == null) Config.getInstance().loadConfig();
+        if (instance == null)
+            Config.getInstance().loadConfig();
         return instance;
     }
 
     /**
-     * Some XxxConfigMap class variable may be missing duo to new features released with new config section or so.
-     * Only reset these missing sections to reduce the burden on users whenever new config section is introduced.
+     * Some XxxConfigMap class variable may be missing duo to new features released
+     * with new config section or so.
+     * Only reset these missing sections to reduce the burden on users whenever new
+     * config section is introduced.
      */
     public void resetMissingSectionsToDefault() {
         if (Objects.isNull(this.speechSettingsConfigMap)) {
@@ -90,6 +97,9 @@ public class ConfigMap {
         }
         if (Objects.isNull(this.playerWarningConfigMap)) {
             this.playerWarningConfigMap = PlayerWarningConfigMap.buildDefault();
+        }
+        if (Objects.isNull(this.posChangeCheckerConfigMap)) {
+            this.posChangeCheckerConfigMap = PosChangeCheckerConfigMap.buildDefault();
         }
         if (Objects.isNull(this.otherConfigsMap)) {
             this.otherConfigsMap = OtherConfigsMap.buildDefault();
@@ -112,8 +122,8 @@ public class ConfigMap {
         } else {
             this.accessMenuConfigMap.resetMissingSectionsToDefault();
         }
-//        if (Objects.isNull(this.areaMapConfigMap)) {
-//            this.areaMapConfigMap = AreaMapConfigMap.buildDefault();
-//        }
+        // if (Objects.isNull(this.areaMapConfigMap)) {
+        // this.areaMapConfigMap = AreaMapConfigMap.buildDefault();
+        // }
     }
 }
