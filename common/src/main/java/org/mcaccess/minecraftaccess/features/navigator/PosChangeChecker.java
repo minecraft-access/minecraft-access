@@ -2,7 +2,7 @@ package org.mcaccess.minecraftaccess.features.navigator;
 
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.mcaccess.minecraftaccess.utils.system.CustomSounds;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.config.config_maps.PosChangeCheckerConfigMap;
 
 /**
@@ -36,10 +36,10 @@ public class PosChangeChecker {
         if (PosChangeCheckerConfigMap.getInstance().isPlaySoundForXChanges()) {
             int newX = (int) PlayerPositionUtils.getX();
             if (newX > lastX) {
-                CustomSounds.playSoundOnPlayer("x_up", 1f, 1f);
+                PlayerUtils.playSoundOnPlayer("x_up", 1f, 1f);
             }
             if (newX < lastX) {
-                CustomSounds.playSoundOnPlayer("x_down", 1f, 1f);
+                PlayerUtils.playSoundOnPlayer("x_down", 1f, 1f);
             }
             lastX = newX;
         }
@@ -47,10 +47,10 @@ public class PosChangeChecker {
         if (PosChangeCheckerConfigMap.getInstance().isPlaySoundForYChanges()) {
             int newY = (int) PlayerPositionUtils.getY();
             if (newY > lastY) {
-                CustomSounds.playSoundOnPlayer("y_up", 1f, 1f);
+                PlayerUtils.playSoundOnPlayer("y_up", 1f, 1f);
             }
             if (newY < lastY) {
-                CustomSounds.playSoundOnPlayer("y_down", 1f, 1f);
+                PlayerUtils.playSoundOnPlayer("y_down", 1f, 1f);
             }
             lastY = newY;
         }
@@ -58,10 +58,10 @@ public class PosChangeChecker {
         if (PosChangeCheckerConfigMap.getInstance().isPlaySoundForZChanges()) {
             int newZ = (int) PlayerPositionUtils.getZ();
             if (newZ > lastZ) {
-                CustomSounds.playSoundOnPlayer("z_up", 1f, 1f);
+                PlayerUtils.playSoundOnPlayer("z_up", 1f, 1f);
             }
             if (newZ < lastZ) {
-                CustomSounds.playSoundOnPlayer("z_down", 1f, 1f);
+                PlayerUtils.playSoundOnPlayer("z_down", 1f, 1f);
             }
             lastZ = newZ;
         }

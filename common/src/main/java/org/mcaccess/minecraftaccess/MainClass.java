@@ -37,8 +37,11 @@ public class MainClass {
     public static PlayerWarnings playerWarnings = null;
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
+<<<<<<< HEAD
     public static CustomSounds customSounds;
     public static PosChangeChecker posChangeChecker;
+=======
+>>>>>>> custom-sounds
     public static boolean isNeoForge = false;
     public static boolean interrupt = true;
     private static boolean alreadyDisabledAdvancementKey = false;
@@ -74,8 +77,12 @@ public class MainClass {
         MainClass.playerWarnings = new PlayerWarnings();
         MainClass.accessMenu = new AccessMenu();
         MainClass.fluidDetector = new FluidDetector();
+<<<<<<< HEAD
         MainClass.customSounds = new CustomSounds();
         MainClass.posChangeChecker = new PosChangeChecker();
+=======
+        new CustomSounds();
+>>>>>>> custom-sounds
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())

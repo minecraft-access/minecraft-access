@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.utils;
 
 import org.mcaccess.minecraftaccess.features.point_of_interest.BlockPos3d;
+import org.mcaccess.minecraftaccess.utils.system.CustomSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -23,19 +24,36 @@ import java.util.Objects;
 
 /**
  * This class provides delegate calls to {@link ClientPlayerEntity}.
- * The main reason for this class is that {@link ClientPlayerEntity} cannot be mocked by Mockito. <p>
- * ({@link ClientPlayerEntity} constructor requires -> {@link ClientWorld} constructor -> {@link World} static init block -> {@link RegistryKeys},
- * somehow the {@link RegistryKeys} cannot finish its static assignments in class loading.
- * We can replace Mockito with more powerful PowerMock to resolve this problem, but PowerMock is sticking on Junit 4,
- * we can't go back to Junit 4 from 5 since some of the mechanisms currently used for unit testing have no alternatives in 4.
+ * The main reason for this class is that {@link ClientPlayerEntity} cannot be
+ * mocked by Mockito.
+ * <p>
+ * ({@link ClientPlayerEntity} constructor requires -> {@link ClientWorld}
+ * constructor -> {@link World} static init block -> {@link RegistryKeys},
+ * somehow the {@link RegistryKeys} cannot finish its static assignments in
+ * class loading.
+ * We can replace Mockito with more powerful PowerMock to resolve this problem,
+ * but PowerMock is sticking on Junit 4,
+ * we can't go back to Junit 4 from 5 since some of the mechanisms currently
+ * used for unit testing have no alternatives in 4.
  * Forgive me for doing this, but it's the most economical way.)
  */
 public class PlayerUtils {
-    // A way to get exactly at what part of the entity the player is looking when locked on it
+    // A way to get exactly at what part of the entity the player is looking when
+    // locked on it
     public static Vec3d currentEntityLookingAtPosition = null;
 
     public static void playSoundOnPlayer(RegistryEntry.Reference<SoundEvent> sound, float volume, float pitch) {
         WorldUtils.getClientPlayer().playSound(sound.value(), volume, pitch);
+    }
+
+    public static void playSoundOnPlayer(String soundName, float volume, float pitch) {
+        // This is an overloaded method that uses a sound event instead of a registry
+        // entry. It's used for playing non-vanilla, custom sounds.
+        SoundEvent soundEvent = CustomSounds.REGISTERED_SOUNDS.get(soundName);
+        if (soundEvent == null) {
+            throw new IllegalArgumentException("Not able to find sound: " + soundName);
+        }
+        MinecraftClient.getInstance().player.playSound(soundEvent, volume, pitch);
     }
 
     public static void lookAt(Vec3d position) {
@@ -43,7 +61,8 @@ public class PlayerUtils {
     }
 
     /**
-     * Let player looks at entity even the entity exposes a very small part of its body
+     * Let player looks at entity even the entity exposes a very small part of its
+     * body
      */
     public static void lookAt(Entity entity) {
         Vec3d playerEyePos = WorldUtils.getClientPlayer().getEyePos();
@@ -134,11 +153,12 @@ public class PlayerUtils {
     }
 
     /**
-     * The value of MinecraftClient.crosshairTarget field is ray cast result that not including the fluid blocks.
+     * The value of MinecraftClient.crosshairTarget field is ray cast result that
+     * not including the fluid blocks.
      * So use this method to get what fluid the player might be looking at.
      *
      * @return fluid block if player isn't in fluid and is looking at a fluid block,
-     * or MinecraftClient.crosshairTarget otherwise
+     *         or MinecraftClient.crosshairTarget otherwise
      */
     public static HitResult crosshairTarget(double rayCastDistance) {
         BlockHitResult fluidHitResult = crosshairFluidTarget(rayCastDistance);
@@ -155,17 +175,20 @@ public class PlayerUtils {
         // Whatever the inner values are, they are not used.
         BlockHitResult missed = BlockHitResult.createMissed(Vec3d.ZERO, Direction.UP, BlockPos.ORIGIN);
 
-        if (!HitResult.Type.BLOCK.equals(hit.getType())) return missed;
+        if (!HitResult.Type.BLOCK.equals(hit.getType()))
+            return missed;
 
         BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
         ClientWorld world = WorldUtils.getClientWorld();
 
         BlockState blockState = world.getBlockState(blockPos);
         boolean thisBlockIsFluidBlock = blockState.isOf(Blocks.WATER) || blockState.isOf(Blocks.LAVA);
-        if (!thisBlockIsFluidBlock) return missed;
+        if (!thisBlockIsFluidBlock)
+            return missed;
 
         FluidState fluidState = world.getFluidState(blockPos);
-        if (fluidState.isEmpty()) return missed;
+        if (fluidState.isEmpty())
+            return missed;
 
         return (BlockHitResult) hit;
     }
