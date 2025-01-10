@@ -1,11 +1,37 @@
 package org.mcaccess.minecraftaccess.utils;
 
+import net.minecraft.block.BeehiveBlock;
+import net.minecraft.block.BeetrootsBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ButtonBlock;
+import net.minecraft.block.CocoaBlock;
+import net.minecraft.block.ComparatorBlock;
+import net.minecraft.block.CropBlock;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.DoorBlock;
+import net.minecraft.block.FarmlandBlock;
+import net.minecraft.block.GlowLichenBlock;
+import net.minecraft.block.HopperBlock;
+import net.minecraft.block.LeverBlock;
+import net.minecraft.block.NetherWartBlock;
+import net.minecraft.block.ObserverBlock;
+import net.minecraft.block.PistonBlock;
+import net.minecraft.block.PitcherCropBlock;
+import net.minecraft.block.PlantBlock;
+import net.minecraft.block.RedstoneLampBlock;
+import net.minecraft.block.RedstoneTorchBlock;
+import net.minecraft.block.RedstoneWireBlock;
+import net.minecraft.block.RepeaterBlock;
+import net.minecraft.block.TorchflowerBlock;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.Leashable;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import org.mcaccess.minecraftaccess.mixin.MobSpawnerLogicAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.block.*;
 import net.minecraft.block.entity.BeehiveBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
@@ -17,7 +43,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.fluid.Fluid;
@@ -72,24 +97,26 @@ public class NarrationUtils {
         if (entity instanceof AnimalEntity animalEntity) {
             switch (animalEntity) {
                 case SheepEntity sheepEntity -> text = getSheepInfo(sheepEntity, text);
-                case TameableEntity tameableEntity -> {
-                    // wolf, cat, parrot
-                    String isTamedText = I18n.translate("minecraft_access.read_crosshair.is_tamed", text);
-                    text = tameableEntity.isTamed() ? isTamedText : text;
-                    text = tameableEntity.isInSittingPose() ? addSittingInfo(text) : text;
-                }
                 case FoxEntity foxEntity -> text = foxEntity.isSitting() ? addSittingInfo(text) : text;
                 case PandaEntity pandaEntity -> text = pandaEntity.isSitting() ? addSittingInfo(text) : text;
                 case CamelEntity camelEntity -> text = camelEntity.isSitting() ? addSittingInfo(text) : text;
                 default -> {
                 }
             }
-
-            if (animalEntity.isBaby())
-                text = I18n.translate("minecraft_access.read_crosshair.animal_entity_baby", text);
-            if (animalEntity.isLeashed())
-                text = I18n.translate("minecraft_access.read_crosshair.animal_entity_leashed", text);
         }
+
+        // wolf, cat, parrot
+        if (entity instanceof TameableEntity tameableEntity) {
+            String isTamedText = I18n.translate("minecraft_access.read_crosshair.is_tamed", text);
+            text = tameableEntity.isTamed() ? isTamedText : text;
+            text = tameableEntity.isInSittingPose() ? addSittingInfo(text) : text;
+        }
+
+        if (entity instanceof MobEntity mobEntity && mobEntity.isBaby())
+            text = I18n.translate("minecraft_access.read_crosshair.animal_entity_baby", text);
+
+        if (entity instanceof Leashable leashable && leashable.isLeashed())
+            text = I18n.translate("minecraft_access.read_crosshair.animal_entity_leashed", text);
 
         if (entity instanceof LivingEntity livingEntity) {
             for (ItemStack equipment : livingEntity.getEquippedItems()) {
@@ -100,12 +127,10 @@ public class NarrationUtils {
             }
         }
 
-        if (entity instanceof HostileEntity) {
-            if (entity instanceof ZombieVillagerEntity zombieVillagerEntity) {
-                text = zombieVillagerEntity.isConverting() ?
-                        I18n.translate("minecraft_access.read_crosshair.zombie_villager_is_curing", text) :
-                        text;
-            }
+        if (entity instanceof ZombieVillagerEntity zombieVillagerEntity) {
+            text = zombieVillagerEntity.isConverting() ?
+                    I18n.translate("minecraft_access.read_crosshair.zombie_villager_is_curing", text) :
+                    text;
         }
 
         if (!equipments.isEmpty()) {
@@ -343,7 +368,8 @@ public class NarrationUtils {
         return I18n.translate("minecraft_access.read_crosshair.sign_" + (signEntity.isPlayerFacingFront(player) ? "front" : "back") + "_content", toSpeak, content);
     }
 
-    private static @NotNull Pair<String, String> getRedstoneRelatedInfo(ClientWorld world, BlockPos blockPos, Block block, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Pair<String, String> getRedstoneRelatedInfo(ClientWorld world, BlockPos blockPos, Block
+            block, BlockState blockState, String toSpeak, String currentQuery) {
         boolean isEmittingPower = world.isEmittingRedstonePower(blockPos, Direction.DOWN);
         boolean isReceivingPower = world.isReceivingRedstonePower(blockPos);
 
@@ -420,7 +446,8 @@ public class NarrationUtils {
         return new Pair<>(toSpeak, currentQuery);
     }
 
-    private static @NotNull Pair<String, String> getRedstoneWireInfo(BlockState blockState, BlockPos pos, String toSpeak, String currentQuery) {
+    private static @NotNull Pair<String, String> getRedstoneWireInfo(BlockState blockState, BlockPos pos, String
+            toSpeak, String currentQuery) {
         int powerLevel = blockState.get(RedstoneWireBlock.POWER);
         if (powerLevel > 0) {
             toSpeak = I18n.translate("minecraft_access.read_crosshair.redstone_wire_power", toSpeak, powerLevel);
@@ -467,7 +494,8 @@ public class NarrationUtils {
         return new Pair<>(toSpeak, currentQuery);
     }
 
-    private static @NotNull Pair<String, String> getBeehiveInfo(BeehiveBlockEntity blockEntity, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Pair<String, String> getBeehiveInfo(BeehiveBlockEntity blockEntity, BlockState
+            blockState, String toSpeak, String currentQuery) {
         boolean isSmoked = blockEntity.isSmoked();
         int honeyLevel = blockState.get(BeehiveBlock.HONEY_LEVEL);
         Direction facingDirection = blockState.get(BeehiveBlock.FACING);
@@ -494,7 +522,8 @@ public class NarrationUtils {
      * torch flower, pitcher crop.<br>
      * Watermelon vein and pumpkin vein are not harvestable so not be included here.
      */
-    private static @NotNull Pair<String, String> getCropsInfo(Block block, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Pair<String, String> getCropsInfo(Block block, BlockState blockState, String
+            toSpeak, String currentQuery) {
         int currentAge, maxAge;
 
         switch (block) {
