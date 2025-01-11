@@ -535,7 +535,7 @@ public KeyBinding targetNearestObject;
         );
 
         objectTrackerNextItem = new KeyBinding(
-                I18n.translate("minecraft_access.keys.object_tracker.nextItem"),
+                I18n.translate("minecraft_access.keys.object_tracker.next_item"),
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_PAGE_DOWN,
                 I18n.translate("minecraft_access.point_of_interest.object_tracker.group_name")
