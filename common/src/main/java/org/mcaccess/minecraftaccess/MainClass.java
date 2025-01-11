@@ -147,6 +147,9 @@ public class MainClass {
 
         FallDetector.getInstance().update();
 
+        // TODO remove feature flag after complete
+        // AreaMapMenu.getInstance().update();
+
         Keystroke.updateInstances();
     }
 
