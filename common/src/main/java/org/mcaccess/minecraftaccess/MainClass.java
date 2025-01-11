@@ -148,6 +148,8 @@ public class MainClass {
         FallDetector.getInstance().update();
 
         Keystroke.updateInstances();
+
+        HudStatus.getInstance().update();
     }
 
     /**
