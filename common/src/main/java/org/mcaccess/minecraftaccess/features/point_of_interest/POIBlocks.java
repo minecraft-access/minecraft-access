@@ -9,6 +9,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
@@ -133,9 +134,15 @@ public class POIBlocks {
             markedGroup,
             oreGroup,
             new POIGroup<BlockPos>(
+                () -> I18n.translate("minecraft_access.point_of_interest.group.door"),
                 SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
                 2f,
-                pos -> world.getBlockState(pos).getBlock() instanceof DoorBlock || world.getBlockState(pos).getBlock() instanceof TrapdoorBlock
+                pos -> {
+                    if (world.getBlockState(pos).getBlock() instanceof DoorBlock) return world.getBlockState(pos).get(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER);
+                    else if (world.getBlockState(pos).getBlock() instanceof TrapdoorBlock) return true;
+
+                    return false;
+                }
             ),
             new POIGroup<BlockPos>(// Fluids
             () -> I18n.translate("minecraft_access.point_of_interest.group.fluid"),

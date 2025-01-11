@@ -309,6 +309,7 @@
   "minecraft_access.point_of_interest.group.vehicle": "Vehicles",
   "minecraft_access.point_of_interest.group.markedBlock": "Marked blocks",
   "minecraft_access.point_of_interest.group.ore": "Ores",
+  "minecraft_access.point_of_interest.group.door": "Doors",
   "minecraft_access.point_of_interest.group.functional": "Functional blocks",
   "minecraft_access.point_of_interest.group.gui": "Blocks with interface",
   "minecraft_access.point_of_interest.group.fluid": "Fluids",
