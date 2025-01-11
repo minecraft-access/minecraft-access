@@ -30,8 +30,6 @@ public class ConfigMap {
     private ReadCrosshairConfigMap readCrosshairConfigMap;
     @SerializedName("Access Menu")
     private AccessMenuConfigMap accessMenuConfigMap;
-    @SerializedName("Area Map")
-    private AreaMapConfigMap areaMapConfigMap;
     @SerializedName("Other Configurations")
     private OtherConfigsMap otherConfigsMap;
 
@@ -47,7 +45,6 @@ public class ConfigMap {
         m.readCrosshairConfigMap = ReadCrosshairConfigMap.buildDefault();
         m.otherConfigsMap = OtherConfigsMap.buildDefault();
         m.accessMenuConfigMap = AccessMenuConfigMap.buildDefault();
-        m.areaMapConfigMap = AreaMapConfigMap.buildDefault();
         return m;
     }
 
@@ -62,7 +59,6 @@ public class ConfigMap {
         PlayerWarningConfigMap.setInstance(map.playerWarningConfigMap);
         POIConfigMap.setInstance(map.poiConfigMap);
         ReadCrosshairConfigMap.setInstance(map.readCrosshairConfigMap);
-        AreaMapConfigMap.setInstance(map.areaMapConfigMap);
         instance = map;
     }
 
@@ -112,8 +108,5 @@ public class ConfigMap {
         } else {
             this.accessMenuConfigMap.resetMissingSectionsToDefault();
         }
-//        if (Objects.isNull(this.areaMapConfigMap)) {
-//            this.areaMapConfigMap = AreaMapConfigMap.buildDefault();
-//        }
     }
 }
