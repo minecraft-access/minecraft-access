@@ -9,6 +9,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.ChestType;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -160,7 +161,10 @@ public class POIBlocks {
             () -> I18n.translate("minecraft_access.point_of_interest.group.gui"),
             SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(),
                     0f,
-                    pos -> world.getBlockState(pos).createScreenHandlerFactory(world, pos) != null
+                    pos -> {
+                        if (world.getBlockState(pos).getBlock() instanceof ChestBlock) return world.getBlockState(pos).get(ChestBlock.CHEST_TYPE).equals(ChestType.SINGLE) || world.getBlockState(pos).get(ChestBlock.CHEST_TYPE).equals(ChestType.RIGHT);
+                        else return world.getBlockState(pos).createScreenHandlerFactory(world, pos) != null;
+                    }
             ),
             otherBlocksGroup, // This group should always be at the end of this list
     };
