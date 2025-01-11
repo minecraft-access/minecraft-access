@@ -132,6 +132,11 @@ public class POIBlocks {
     public final POIGroup<BlockPos>[] groups = new POIGroup[] {
             markedGroup,
             oreGroup,
+            new POIGroup<BlockPos>(
+                SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
+                2f,
+                pos -> world.getBlockState(pos).getBlock() instanceof DoorBlock || world.getBlockState(pos).getBlock() instanceof TrapdoorBlock
+            ),
             new POIGroup<BlockPos>(// Fluids
             () -> I18n.translate("minecraft_access.point_of_interest.group.fluid"),
             SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),

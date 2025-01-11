@@ -58,16 +58,6 @@ public class KeyBindingsHandler {
     public KeyBinding mouseSimulationScrollUpKey;
     public KeyBinding mouseSimulationScrollDownKey;
 
-    public KeyBinding areaMapMenuKey;
-    public KeyBinding areaMapNorthKey;
-    public KeyBinding areaMapSouthKey;
-    public KeyBinding areaMapWestKey;
-    public KeyBinding areaMapEastKey;
-    public KeyBinding areaMapUpKey;
-    public KeyBinding areaMapDownKey;
-    public KeyBinding areaMapCursorResetKey;
-    public KeyBinding areaMapMapLockKey;
-
     public KeyBinding objectTrackerNextItem;
 public KeyBinding objectTrackerPreviousItem;
 public KeyBinding objectTrackerNarrateCurrentObject;
@@ -77,7 +67,6 @@ public KeyBinding targetNearestObject;
     private static final String CAMERA_CONTROLS_TRANSLATION_KEY = "minecraft_access.keys.camera_controls.group_name";
     private static final String INVENTORY_CONTROLS_TRANSLATION_KEY = "minecraft_access.keys.inventory_controls.group_name";
     private static final String MOUSE_SIMULATION_KEY = "minecraft_access.keys.mouse_simulation.group_name";
-    private static final String AREA_MAP_GROUP_KEY = "minecraft_access.keys.area_map.group_name";
 
     @Getter
     private static final KeyBindingsHandler instance;
@@ -89,7 +78,6 @@ public KeyBinding targetNearestObject;
         initializeCameraControlsKeybindings();
         initializeInventoryControlsKeybindings();
         initializeMouseSimulationKeybindings();
-//        initializeAreaMapKeybindings();
         initializeOtherKeybindings();
     }
 
@@ -341,81 +329,6 @@ public KeyBinding targetNearestObject;
     }
 
     /**
-     * 1. Open Area Map Menu Key (default: F6) = Opens the area map menu.
-     * 2. Cursor North Key (default: I) = Move the map cursor one block north.
-     * 3. Cursor South Key (default: K) = Move the map cursor one block south.
-     * 4. Cursor West Key (default: J) = Moves the map cursor one block west.
-     * 5. Cursor East Key (default: L) = Moves the map cursor one block east.
-     * 6. Cursor Up Key (default: U) = Moves the map cursor one block up.
-     * 7. Cursor Down Key (default: O) = Moves the map cursor one block down.
-     */
-    @SuppressWarnings("unused")
-    private void initializeAreaMapKeybindings() {
-        areaMapMenuKey = new KeyBinding(
-                "minecraft_access.keys.area_map.menu_key_name",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F6,
-                AREA_MAP_GROUP_KEY
-        );
-
-        areaMapNorthKey = new KeyBinding(
-                "minecraft_access.keys.area_map.north_key_name",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_I,
-                AREA_MAP_GROUP_KEY
-        );
-
-        areaMapSouthKey = new KeyBinding(
-                "minecraft_access.keys.area_map.south_key_name",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_K,
-                AREA_MAP_GROUP_KEY
-        );
-
-        areaMapWestKey = new KeyBinding(
-                "minecraft_access.keys.area_map.west_key_name",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_J,
-                AREA_MAP_GROUP_KEY
-        );
-
-        areaMapEastKey = new KeyBinding(
-                "minecraft_access.keys.area_map.east_key_name",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_L,
-                AREA_MAP_GROUP_KEY
-        );
-
-        areaMapUpKey = new KeyBinding(
-                "minecraft_access.keys.area_map.up_key_name",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_U,
-                AREA_MAP_GROUP_KEY
-        );
-
-        areaMapDownKey = new KeyBinding(
-                "minecraft_access.keys.area_map.down_key_name",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_O,
-                AREA_MAP_GROUP_KEY
-        );
-
-        areaMapCursorResetKey = new KeyBinding(
-                "minecraft_access.keys.area_map.cursor_reset_key_name",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_R,
-                AREA_MAP_GROUP_KEY
-        );
-
-        areaMapMapLockKey = new KeyBinding(
-                "minecraft_access.keys.area_map.map_lock_key_name",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_Y,
-                AREA_MAP_GROUP_KEY
-        );
-    }
-
-    /**
      * Initializes all the other keybindings.<br><br>
      * Related key binds and combinations:-<br>
      * 1) Locking Key (default: Y) = Locks onto the nearest entity or block<br>
@@ -591,15 +504,6 @@ public KeyBinding targetNearestObject;
                 mouseSimulationMiddleMouseKey,
                 mouseSimulationScrollUpKey,
                 mouseSimulationScrollDownKey,
-//                        areaMapMenuKey,
-//                        areaMapNorthKey,
-//                        areaMapSouthKey,
-//                        areaMapWestKey,
-//                        areaMapEastKey,
-//                        areaMapUpKey,
-//                        areaMapDownKey,
-//                        areaMapResetCursorKey,
-//                        areaMapMapLockKey,
                 speakPlayerStatusKey,
                 lockingHandlerKey,
                 positionNarrationKey,
