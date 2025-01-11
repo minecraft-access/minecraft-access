@@ -25,10 +25,10 @@ import net.minecraft.block.RedstoneTorchBlock;
 import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.block.RepeaterBlock;
 import net.minecraft.block.TorchflowerBlock;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.Leashable;
+import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.MobSpawnerLogicAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +41,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.fluid.Fluid;
@@ -79,6 +77,7 @@ public class NarrationUtils {
         String nameOrType = entity.getName().getString();
         String type = entity.hasCustomName() ? I18n.translate(entity.getType().getTranslationKey()) : nameOrType;
         boolean isDroppedItem = entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED);
+        boolean entityIsSitting = false;
 
         String variant = getVariantInfo(entity);
         if (!Strings.isBlank(variant)) {
@@ -94,29 +93,60 @@ public class NarrationUtils {
 
         List<String> equipments = new ArrayList<>();
 
-        if (entity instanceof AnimalEntity animalEntity) {
-            switch (animalEntity) {
-                case SheepEntity sheepEntity -> text = getSheepInfo(sheepEntity, text);
-                case FoxEntity foxEntity -> text = foxEntity.isSitting() ? addSittingInfo(text) : text;
-                case PandaEntity pandaEntity -> text = pandaEntity.isSitting() ? addSittingInfo(text) : text;
-                case CamelEntity camelEntity -> text = camelEntity.isSitting() ? addSittingInfo(text) : text;
+        if (1 + 1 == 2) {
+            switch (entity.getPose()) {
+                case SLEEPING -> text = "sleeping";
+                case DYING -> text = "dying";
+                case DIGGING -> text = "digging";
+                case GLIDING -> text = "gliding";
+                case ROARING -> text = "roaring";
+                case SLIDING -> text = "sliding";
+                case SWIMMING -> text = "swimming";
+                case SITTING -> entityIsSitting = true;
+                case CROAKING -> text = "crowking";
+                case EMERGING -> text = "emerging";
+                case SHOOTING -> text = "shooting";
+                case INHALING -> text = "enhaling";
+                case SNIFFING -> text = "sniffing";
+                case CROUCHING -> text = "crouching";
+                case LONG_JUMPING -> text = "long jumping";
+                case USING_TONGUE -> text = "using tongue";
                 default -> {
                 }
             }
         }
 
-        // wolf, cat, parrot
-        if (entity instanceof TameableEntity tameableEntity) {
-            String isTamedText = I18n.translate("minecraft_access.read_crosshair.is_tamed", text);
-            text = tameableEntity.isTamed() ? isTamedText : text;
-            text = tameableEntity.isInSittingPose() ? addSittingInfo(text) : text;
+        if (!entityIsSitting) {
+            switch (entity) {
+                case FoxEntity foxEntity -> entityIsSitting = foxEntity.isSitting();
+                case PandaEntity pandaEntity -> entityIsSitting = pandaEntity.isSitting();
+                case CamelEntity camelEntity -> entityIsSitting = camelEntity.isSitting();
+                case TameableEntity tameableEntity -> entityIsSitting = tameableEntity.isSitting();
+                default -> {
+                }
+            }
         }
+
+        if (entity instanceof TameableEntity tameableEntity && tameableEntity.isTamed())
+            text = I18n.translate("minecraft_access.read_crosshair.is_tamed", text);
+
+        if (entityIsSitting)
+            text = I18n.translate("minecraft_access.read_crosshair.is_sitting", text);
 
         if (entity instanceof MobEntity mobEntity && mobEntity.isBaby())
             text = I18n.translate("minecraft_access.read_crosshair.animal_entity_baby", text);
 
         if (entity instanceof Leashable leashable && leashable.isLeashed())
             text = I18n.translate("minecraft_access.read_crosshair.animal_entity_leashed", text);
+
+        if (entity instanceof SheepEntity sheepEntity) {
+            text = getSheepInfo(sheepEntity, text);
+        } else if (entity instanceof ZombieVillagerEntity zombieVillagerEntity && zombieVillagerEntity.isConverting()) {
+            text = I18n.translate("minecraft_access.read_crosshair.zombie_villager_is_curing", text);
+        } else if (isDroppedItem) {
+            text = I18n.translate("minecraft_access.point_of_interest.locking.dropped_item", text);
+        }
+
 
         if (entity instanceof LivingEntity livingEntity) {
             for (ItemStack equipment : livingEntity.getEquippedItems()) {
@@ -127,20 +157,12 @@ public class NarrationUtils {
             }
         }
 
-        if (entity instanceof ZombieVillagerEntity zombieVillagerEntity) {
-            text = zombieVillagerEntity.isConverting() ?
-                    I18n.translate("minecraft_access.read_crosshair.zombie_villager_is_curing", text) :
-                    text;
-        }
-
         if (!equipments.isEmpty()) {
             String wordConnection = I18n.translate("minecraft_access.other.words_connection");
             var values = Map.of("entity", text, "equipments", String.join(wordConnection, equipments));
             text = I18n.translate("minecraft_access.other.entity_with_equipments", values);
         }
 
-        if (isDroppedItem)
-            text = I18n.translate("minecraft_access.point_of_interest.locking.dropped_item", text);
 
         return text;
     }
@@ -173,10 +195,6 @@ public class NarrationUtils {
         String color = variant.toShortTranslationKey();
         String transKey = "minecraft_access." + variantTypeName + "." + color;
         return I18n.translate(transKey);
-    }
-
-    private static String addSittingInfo(String currentQuery) {
-        return I18n.translate("minecraft_access.read_crosshair.is_sitting", currentQuery);
     }
 
     private static String getSheepInfo(SheepEntity sheepEntity, String currentQuery) {
