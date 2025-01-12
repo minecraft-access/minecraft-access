@@ -86,9 +86,7 @@ public class EffectNarration {
             }
         }
 
-        if (toSpeak.length() > 0) {
-            MainClass.speakWithNarrator(toSpeak.toString(), true);
-        }
+        MainClass.speakWithNarratorIfNotEmpty(toSpeak.toString(), true);
 
         previousEffects = currentEffects;
     }

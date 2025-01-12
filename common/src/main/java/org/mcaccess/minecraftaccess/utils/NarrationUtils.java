@@ -571,21 +571,25 @@ public class NarrationUtils {
     }
 
         public static String narrateEffect(StatusEffectInstance effect) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
-        result += I18n.translate(effect.getTranslationKey());
-        result += " ";
-        if (effect.isInfinite()) {
-            result += I18n.translate("effect.duration.infinite");
-            return result;
+        result.append(I18n.translate(effect.getTranslationKey())).append(" ");
+
+        int amplifier = effect.getAmplifier();
+        if (amplifier > 1) {
+            result.append(String.valueOf(amplifier)).append(" ");
         }
 
-        int duration = effect.getDuration() / 20;
-        int minutes = duration / 60;
-        int seconds = duration % 60;
+        if (effect.isInfinite()) {
+            result.append(I18n.translate("effect.duration.infinite"));
+        } else {
+            int duration = effect.getDuration() / 20;
+            int minutes = duration / 60;
+            int seconds = duration % 60;
 
-        result += "%02d:%02d".formatted(minutes, seconds);
+            result.append("%02d:%02d".formatted(minutes, seconds));
+        }
 
-        return result;
+        return result.toString();
     }
 }
