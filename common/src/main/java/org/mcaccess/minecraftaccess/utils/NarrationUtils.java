@@ -1,41 +1,16 @@
 package org.mcaccess.minecraftaccess.utils;
 
 import net.minecraft.block.BeehiveBlock;
-import net.minecraft.block.BeetrootsBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ButtonBlock;
-import net.minecraft.block.CocoaBlock;
-import net.minecraft.block.ComparatorBlock;
-import net.minecraft.block.CropBlock;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.FarmlandBlock;
-import net.minecraft.block.GlowLichenBlock;
-import net.minecraft.block.HopperBlock;
-import net.minecraft.block.LeverBlock;
-import net.minecraft.block.NetherWartBlock;
-import net.minecraft.block.ObserverBlock;
-import net.minecraft.block.PistonBlock;
-import net.minecraft.block.PitcherCropBlock;
-import net.minecraft.block.PlantBlock;
-import net.minecraft.block.RedstoneLampBlock;
-import net.minecraft.block.RedstoneTorchBlock;
-import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.block.RepeaterBlock;
-import net.minecraft.block.TorchflowerBlock;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.ReadCrosshairConfigMap;
 import org.mcaccess.minecraftaccess.mixin.MobSpawnerLogicAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.block.entity.BeehiveBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.MobSpawnerBlockEntity;
-import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.enums.ComparatorMode;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -93,24 +68,24 @@ public class NarrationUtils {
 
         List<String> equipments = new ArrayList<>();
 
-        if (1 + 1 == 2) {
+        if (ReadCrosshairConfigMap.getInstance().isSpeakAdditionalEntityPoses()) {
             switch (entity.getPose()) {
-                case SLEEPING -> text = "sleeping";
-                case DYING -> text = "dying";
-                case DIGGING -> text = "digging";
-                case GLIDING -> text = "gliding";
-                case ROARING -> text = "roaring";
-                case SLIDING -> text = "sliding";
-                case SWIMMING -> text = "swimming";
+                case SLEEPING -> text = I18n.translate("minecraft_access.read_crosshair.sleeping", text);
+                case DYING -> text = I18n.translate("minecraft_access.read_crosshair.dying", text);
+                case DIGGING -> text = I18n.translate("minecraft_access.read_crosshair.digging", text);
+                case GLIDING -> text = I18n.translate("minecraft_access.read_crosshair.gliding", text);
+                case ROARING -> text = I18n.translate("minecraft_access.read_crosshair.roaring", text);
+                case SLIDING -> text = I18n.translate("minecraft_access.read_crosshair.sliding", text);
+                case SWIMMING -> text = I18n.translate("minecraft_access.read_crosshair.swimming", text);
                 case SITTING -> entityIsSitting = true;
-                case CROAKING -> text = "crowking";
-                case EMERGING -> text = "emerging";
-                case SHOOTING -> text = "shooting";
-                case INHALING -> text = "enhaling";
-                case SNIFFING -> text = "sniffing";
-                case CROUCHING -> text = "crouching";
-                case LONG_JUMPING -> text = "long jumping";
-                case USING_TONGUE -> text = "using tongue";
+                case CROAKING -> text = I18n.translate("minecraft_access.read_crosshair.croaking", text);
+                case EMERGING -> text = I18n.translate("minecraft_access.read_crosshair.emerging", text);
+                case SHOOTING -> text = I18n.translate("minecraft_access.read_crosshair.shooting", text);
+                case INHALING -> text = I18n.translate("minecraft_access.read_crosshair.inhaling", text);
+                case SNIFFING -> text = I18n.translate("minecraft_access.read_crosshair.sniffing", text);
+                case CROUCHING -> text = I18n.translate("minecraft_access.read_crosshair.crouching", text);
+                case LONG_JUMPING -> text = I18n.translate("minecraft_access.read_crosshair.long_jumping", text);
+                case USING_TONGUE -> text = I18n.translate("minecraft_access.read_crosshair.using_tongue", text);
                 default -> {
                 }
             }
@@ -128,16 +103,16 @@ public class NarrationUtils {
         }
 
         if (entity instanceof TameableEntity tameableEntity && tameableEntity.isTamed())
-            text = I18n.translate("minecraft_access.read_crosshair.is_tamed", text);
+            text = I18n.translate("minecraft_access.read_crosshair.tamed", text);
 
         if (entityIsSitting)
-            text = I18n.translate("minecraft_access.read_crosshair.is_sitting", text);
+            text = I18n.translate("minecraft_access.read_crosshair.sitting", text);
 
         if (entity instanceof MobEntity mobEntity && mobEntity.isBaby())
-            text = I18n.translate("minecraft_access.read_crosshair.animal_entity_baby", text);
+            text = I18n.translate("minecraft_access.read_crosshair.baby", text);
 
         if (entity instanceof Leashable leashable && leashable.isLeashed())
-            text = I18n.translate("minecraft_access.read_crosshair.animal_entity_leashed", text);
+            text = I18n.translate("minecraft_access.read_crosshair.leashed", text);
 
         if (entity instanceof SheepEntity sheepEntity) {
             text = getSheepInfo(sheepEntity, text);
@@ -146,7 +121,6 @@ public class NarrationUtils {
         } else if (isDroppedItem) {
             text = I18n.translate("minecraft_access.point_of_interest.locking.dropped_item", text);
         }
-
 
         if (entity instanceof LivingEntity livingEntity) {
             for (ItemStack equipment : livingEntity.getEquippedItems()) {
@@ -308,60 +282,59 @@ public class NarrationUtils {
         String currentQuery = name + side;
 
         // Different special narration (toSpeak) about different type of blocks
-        try {
-            if (blockState.isOf(Blocks.WATER) || blockState.isOf(Blocks.LAVA)) {
-                toSpeak = NarrationUtils.narrateFluidBlock(blockPos);
-                return new Pair<>(toSpeak, toSpeak);
-            }
+        if (blockState.isOf(Blocks.WATER) || blockState.isOf(Blocks.LAVA)) {
+            toSpeak = NarrationUtils.narrateFluidBlock(blockPos);
+            return new Pair<>(toSpeak, toSpeak);
+        }
 
-            if (blockEntity != null) {
-                // The all signs tag include all types of signs, so it should also work with the hanging signs in 1.20.x
-                if (blockState.isIn(BlockTags.ALL_SIGNS)) {
-                    toSpeak = getSignInfo((SignBlockEntity) blockEntity, client.player, toSpeak);
-                } else if (blockEntity instanceof BeehiveBlockEntity beehiveBlockEntity) {
-                    Pair<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, toSpeak, currentQuery);
-                    toSpeak = beehiveInfo.getLeft();
-                    currentQuery = beehiveInfo.getRight();
+        if (blockEntity != null) {
+            if (blockState.isIn(BlockTags.ALL_SIGNS)) {
+                toSpeak = getSignInfo((SignBlockEntity) blockEntity, client.player, toSpeak);
+            } else if (blockEntity instanceof BeehiveBlockEntity beehiveBlockEntity) {
+                Pair<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, toSpeak, currentQuery);
+                toSpeak = beehiveInfo.getLeft();
+                currentQuery = beehiveInfo.getRight();
+            } else
+// Speak monster spawner mob type
+                if (blockEntity instanceof MobSpawnerBlockEntity spawner) {
+                    // Will not support non-vanilla custom configured multiple-mob spawner (like generated with command)
+                    Entity entity = ((MobSpawnerLogicAccessor) spawner.getLogic()).getRenderedEntity();
+                    // Monster spawners that gotten from creative creating screen is empty.
+                    String entityName = "Empty";
+                    if (entity != null) {
+                        entityName = Objects.requireNonNull(entity.getDisplayName()).getString();
+                    }
+                    toSpeak = entityName + " " + toSpeak;
+                    currentQuery = entityName + currentQuery;
                 }
-            }
+        }
 
-            if (block instanceof PlantBlock || block instanceof CocoaBlock) {
-                Pair<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
-                toSpeak = cropsInfo.getLeft();
-                currentQuery = cropsInfo.getRight();
-            }
+        if (block instanceof PlantBlock || block instanceof CocoaBlock) {
+            Pair<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
+            toSpeak = cropsInfo.getLeft();
+            currentQuery = cropsInfo.getRight();
+        } else
 
             // Check if farmland is wet
             if (block instanceof FarmlandBlock && blockState.get(FarmlandBlock.MOISTURE) == FarmlandBlock.MAX_MOISTURE) {
                 toSpeak = I18n.translate("minecraft_access.crop.wet_farmland", toSpeak);
                 currentQuery = "wet" + currentQuery;
-            }
-
-            // Speak monster spawner mob type
-            if (blockEntity instanceof MobSpawnerBlockEntity spawner) {
-                // Will not support non-vanilla custom configured multiple-mob spawner (like generated with command)
-                Entity entity = ((MobSpawnerLogicAccessor) spawner.getLogic()).getRenderedEntity();
-                // Monster spawners that gotten from creative creating screen is empty.
-                String entityName = "Empty";
-                if (entity != null) {
-                    entityName = Objects.requireNonNull(entity.getDisplayName()).getString();
+            } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
+                if (blockState.get(EndPortalFrameBlock.EYE)) {
+                    toSpeak = I18n.translate("minecraft_access.read_crosshair.end_portal_frame_with_eye", toSpeak);
+                } else {
+                    toSpeak = I18n.translate("minecraft_access.read_crosshair.end_portal_frame_empty", toSpeak);
                 }
-                toSpeak = entityName + " " + toSpeak;
-                currentQuery = entityName + currentQuery;
             }
 
-            // Redstone related
-            Pair<String, String> redstoneRelatedInfo = getRedstoneRelatedInfo(clientWorld, blockPos, block, blockState, toSpeak, currentQuery);
-            toSpeak = redstoneRelatedInfo.getLeft();
-            currentQuery = redstoneRelatedInfo.getRight();
+        // Redstone related
+        Pair<String, String> redstoneRelatedInfo = getRedstoneRelatedInfo(clientWorld, blockPos, block, blockState, toSpeak, currentQuery);
+        toSpeak = redstoneRelatedInfo.getLeft();
+        currentQuery = redstoneRelatedInfo.getRight();
 
-            if (clientWorld.getFluidState(blockPos).isOf(Fluids.WATER)) {
-                toSpeak = I18n.translate("minecraft_access.crop.water_logged", toSpeak);
-                currentQuery = "waterlogged" + currentQuery;
-            }
-
-        } catch (Exception e) {
-            log.error("An error occurred while adding narration text for special blocks", e);
+        if (clientWorld.getFluidState(blockPos).isOf(Fluids.WATER)) {
+            toSpeak = I18n.translate("minecraft_access.crop.water_logged", toSpeak);
+            currentQuery = "waterlogged" + currentQuery;
         }
 
         return new Pair<>(toSpeak, currentQuery);
