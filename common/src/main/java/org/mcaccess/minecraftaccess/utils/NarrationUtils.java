@@ -17,6 +17,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.*;
@@ -567,5 +568,24 @@ public class NarrationUtils {
                 (fluidValue) -> "[unregistered " + fluidValue + "]"
         );
         return I18n.translate(translationKey);
+    }
+
+        public static String narrateEffect(StatusEffectInstance effect) {
+        String result = "";
+
+        result += I18n.translate(effect.getTranslationKey());
+        result += " ";
+        if (effect.isInfinite()) {
+            result += I18n.translate("effect.duration.infinite");
+            return result;
+        }
+
+        int duration = effect.getDuration() / 20;
+        int minutes = duration / 60;
+        int seconds = duration % 60;
+
+        result += "%02d:%02d".formatted(minutes, seconds);
+
+        return result;
     }
 }

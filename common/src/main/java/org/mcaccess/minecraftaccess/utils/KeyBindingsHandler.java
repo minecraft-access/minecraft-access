@@ -57,6 +57,8 @@ public class KeyBindingsHandler {
     public KeyBinding mouseSimulationScrollUpKey;
     public KeyBinding mouseSimulationScrollDownKey;
 
+    public KeyBinding speakEffectsKey;
+
     private static final String OTHER_GROUP_TRANSLATION_KEY = "minecraft_access.keys.other.group_name";
     private static final String CAMERA_CONTROLS_TRANSLATION_KEY = "minecraft_access.keys.camera_controls.group_name";
     private static final String INVENTORY_CONTROLS_TRANSLATION_KEY = "minecraft_access.keys.inventory_controls.group_name";
@@ -440,6 +442,13 @@ public class KeyBindingsHandler {
                 GLFW.GLFW_KEY_H,
                 OTHER_GROUP_TRANSLATION_KEY
         );
+
+        speakEffectsKey = new KeyBinding(
+                "minecraft_access.keys.effect_narration_key",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_X,
+                OTHER_GROUP_TRANSLATION_KEY
+        );
     }
 
     public Set<KeyBinding> getKeys() {
@@ -484,6 +493,7 @@ public class KeyBindingsHandler {
                 xpLevel,
                 refreshScreenReader,
                 openConfigMenu,
-                directionNarrationKey);
+                directionNarrationKey,
+                speakEffectsKey);
     }
 }

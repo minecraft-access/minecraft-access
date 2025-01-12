@@ -298,5 +298,7 @@
   "minecraft_access.wolf_variant.striped": "Striped",
   "minecraft_access.wolf_variant.woods": "Woods",
   "minecraft_access.xp_indicator.decreased": "Player XP level decreased to %s",
-  "minecraft_access.xp_indicator.increased": "Player XP level increased to %s"
+  "minecraft_access.xp_indicator.increased": "Player XP level increased to %s",
+  "minecraft_access.keys.effect_narration_key": "Speak current status effects",
+  "minecraft_access.effect_narration.no_effects": "No status effects"
 }
