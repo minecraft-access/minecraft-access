@@ -313,10 +313,7 @@ public class NarrationUtils {
             Pair<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
             toSpeak = cropsInfo.getLeft();
             currentQuery = cropsInfo.getRight();
-        } else
-
-            // Check if farmland is wet
-            if (block instanceof FarmlandBlock && blockState.get(FarmlandBlock.MOISTURE) == FarmlandBlock.MAX_MOISTURE) {
+        } else if (block instanceof FarmlandBlock && blockState.get(FarmlandBlock.MOISTURE) == FarmlandBlock.MAX_MOISTURE) {
                 toSpeak = I18n.translate("minecraft_access.crop.wet_farmland", toSpeak);
                 currentQuery = "wet" + currentQuery;
             } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
