@@ -149,7 +149,7 @@ public class MainClass {
 
         Keystroke.updateInstances();
 
-        HudStatus.getInstance().update();
+        HUDStatus.getInstance().update();
     }
 
     /**
