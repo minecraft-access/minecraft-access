@@ -70,3 +70,21 @@ for (const el: HTMLButtonElement of document.querySelectorAll("button[data-plays
         await media.play();
     });
 }
+
+// External link icon
+for (const el: HTMLAnchorElement of document.querySelectorAll("a[rel~=nofollow]")) {
+    el.textContent = `${el.textContent} `
+    const icon = document.createElement("span");
+    icon.classList.add("icon");
+    const iconInner = document.createElement("span");
+    iconInner.classList.add("icon-inner");
+    iconInner.classList.add("material-symbols-outlined");
+    iconInner.ariaHidden = "true";
+    iconInner.textContent = "arrow_outward";
+    icon.appendChild(iconInner);
+    const label = document.createElement("span");
+    label.classList.add("sr-only");
+    label.textContent = "(External)";
+    icon.appendChild(label);
+    el.appendChild(icon);
+}
