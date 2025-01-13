@@ -298,7 +298,7 @@ public class NarrationUtils {
                 toSpeak = beehiveInfo.getLeft();
                 currentQuery = beehiveInfo.getRight();
             } else
-// Speak monster spawner mob type
+            // Speak monster spawner mob type
                 if (blockEntity instanceof MobSpawnerBlockEntity spawner) {
                     // Will not support non-vanilla custom configured multiple-mob spawner (like generated with command)
                     Entity entity = ((MobSpawnerLogicAccessor) spawner.getLogic()).getRenderedEntity();
@@ -316,10 +316,7 @@ public class NarrationUtils {
             Pair<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
             toSpeak = cropsInfo.getLeft();
             currentQuery = cropsInfo.getRight();
-        } else
-
-            // Check if farmland is wet
-            if (block instanceof FarmlandBlock && blockState.get(FarmlandBlock.MOISTURE) == FarmlandBlock.MAX_MOISTURE) {
+        } else if (block instanceof FarmlandBlock && blockState.get(FarmlandBlock.MOISTURE) == FarmlandBlock.MAX_MOISTURE) {
                 toSpeak = I18n.translate("minecraft_access.crop.wet_farmland", toSpeak);
                 currentQuery = "wet" + currentQuery;
             } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
