@@ -86,7 +86,10 @@ public class NarrationUtils {
                 case CROUCHING -> text = I18n.translate("minecraft_access.read_crosshair.crouching", text);
                 case LONG_JUMPING -> text = I18n.translate("minecraft_access.read_crosshair.long_jumping", text);
                 case USING_TONGUE -> text = I18n.translate("minecraft_access.read_crosshair.using_tongue", text);
+                case STANDING -> {
+                }
                 default -> {
+                    log.warn("Unhandled pose found: " + entity.getPose().name() + " for additional pose narration in Narration Utils");
                 }
             }
         }
@@ -299,8 +302,8 @@ public class NarrationUtils {
                 if (blockEntity instanceof MobSpawnerBlockEntity spawner) {
                     // Will not support non-vanilla custom configured multiple-mob spawner (like generated with command)
                     Entity entity = ((MobSpawnerLogicAccessor) spawner.getLogic()).getRenderedEntity();
-                    // Monster spawners that gotten from creative creating screen is empty.
-                    String entityName = "Empty";
+                    // Monster spawners that are gotten from the creative inventory are empty.
+                    String entityName = I18n.translate("minecraft_access.read_crosshair.mob_spawner_empty");
                     if (entity != null) {
                         entityName = Objects.requireNonNull(entity.getDisplayName()).getString();
                     }
