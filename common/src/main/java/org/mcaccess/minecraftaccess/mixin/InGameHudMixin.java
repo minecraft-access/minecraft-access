@@ -72,16 +72,19 @@ public class InGameHudMixin {
         MainClass.speakWithNarratorIfNotEmpty(toSpeak, true);
     }
 
+    @Shadow
+    private Text title;
+    @Shadow
+    private Text subtitle;
+
     @Inject(method = "setTitle", at = @At("TAIL"))
     public void setTitleMixin(Text title, CallbackInfo ci) {
         MainClass.speakWithNarrator(title.getString(), true);
+        if (subtitle != null) MainClass.speakWithNarrator(subtitle.getString(), false);
     }
 
-    @Shadow
-    private Text title;
-
-    @Inject(method = "setSubtitle", at = @At("TAIL"))
+    @Inject(method = "setSubtitle", at = @At("HEAD"))
     public void setSubtitleMixin(Text subtitle, CallbackInfo ci) {
-        if (title != null) MainClass.speakWithNarrator(subtitle.getString(), false);
+        if (title != null && this.subtitle == null) MainClass.speakWithNarrator(subtitle.getString(), false);
     }
 }
