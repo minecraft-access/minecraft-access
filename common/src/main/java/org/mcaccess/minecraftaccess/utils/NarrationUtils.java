@@ -88,7 +88,7 @@ public class NarrationUtils {
                 case STANDING -> {
                 }
                 default -> {
-                    log.warn("Unhandled pose found: " + entity.getPose().name() + " for additional pose narration in Narration Utils");
+                    log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", entity.getPose().name());
                 }
             }
         }
