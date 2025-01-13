@@ -38,6 +38,7 @@
   "minecraft_access.cat_variant.tabby": "Tabby",
   "minecraft_access.cat_variant.tuxedo": "Tuxedo",
   "minecraft_access.cat_variant.white": "White",
+  "minecraft_access.credits_screen.started_tip": "Credits Screen: Hold space to speed up credits. Additional control keys will increase the speed further. Press escape to exit.",
   "minecraft_access.crop.half_ripe": "Half Ripe %s",
   "minecraft_access.crop.ripe": "Ripe %s",
   "minecraft_access.crop.seedling": "Seedling of %s",

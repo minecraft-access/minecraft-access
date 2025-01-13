@@ -16,6 +16,7 @@
     "ClickableWidgetAccessor",
     "ClientPlayNetworkHandlerMixin",
     "CreativeInventoryScreenAccessor",
+    "CreditsScreenMixin",
     "DrawContextMixin",
     "DurabilityMixin",
     "EntityAccessor",
@@ -29,6 +30,7 @@
     "KeyBindingMixin",
     "LoomScreenAccessor",
     "MerchantScreenAccessor",
+    "MinecraftClientMixin",
     "MobSpawnerLogicAccessor",
     "PageTurnWidgetMixin",
     "RecipeBookResultsAccessor",
@@ -41,7 +43,6 @@
     "SelectionManagerMixin",
     "SlotAccessor",
     "StonecutterScreenAccessor",
-    "MinecraftClientMixin",
     "TameableEntityMixin",
     "TextFieldWidgetAccessor",
     "TextFieldWidgetMixin"
