@@ -31,6 +31,12 @@ public class InGameHudMixin {
     @Shadow
     private ItemStack currentStack;
 
+    @Shadow
+    private Text title;
+
+    @Shadow
+    private Text subtitle;
+
     @Unique
     private final SpeakHeldItem minecraft_access$feature = new SpeakHeldItem();
 
@@ -71,11 +77,6 @@ public class InGameHudMixin {
         String toSpeak = String.join(", ", parts);
         MainClass.speakWithNarratorIfNotEmpty(toSpeak, true);
     }
-
-    @Shadow
-    private Text title;
-    @Shadow
-    private Text subtitle;
 
     @Inject(method = "setTitle", at = @At("TAIL"))
     public void setTitleMixin(Text title, CallbackInfo ci) {
