@@ -110,6 +110,11 @@ public class POIBlocks {
     private final POIGroup<BlockPos>[] groups = new POIGroup[] {
             markedGroup,
             oreGroup,
+            new POIGroup<BlockPos>(// Doors
+                SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
+                2f,
+                pos -> world.getBlockState(pos).getBlock() instanceof DoorBlock || world.getBlockState(pos).getBlock() instanceof TrapdoorBlock
+            ),
             new POIGroup<BlockPos>(// Fluids
                     SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
                     2f,
