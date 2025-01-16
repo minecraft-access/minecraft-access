@@ -4,6 +4,7 @@
   "package": "org.mcaccess.minecraftaccess.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "AdvancementToastAccessor",
     "AnimatedResultButtonMixin",
     "AnvilScreenAccessor",
     "AnvilScreenMixin",
@@ -29,6 +30,7 @@
     "KeyBindingMixin",
     "LoomScreenAccessor",
     "MerchantScreenAccessor",
+    "MinecraftClientMixin",
     "MobSpawnerLogicAccessor",
     "PageTurnWidgetMixin",
     "RecipeBookResultsAccessor",
@@ -41,10 +43,12 @@
     "SelectionManagerMixin",
     "SlotAccessor",
     "StonecutterScreenAccessor",
-    "MinecraftClientMixin",
+    "SystemToastAccessor",
     "TameableEntityMixin",
     "TextFieldWidgetAccessor",
-    "TextFieldWidgetMixin"
+    "TextFieldWidgetMixin",
+    "ToastManagerMixin",
+    "TutorialToastAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

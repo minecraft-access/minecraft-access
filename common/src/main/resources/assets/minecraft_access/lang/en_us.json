@@ -282,6 +282,8 @@
   "minecraft_access.slot_group.tab_inventory": "Tab Inventory",
   "minecraft_access.slot_group.trades": "Trades",
   "minecraft_access.slot_group.unknown": "Unknown",
+  "minecraft_access.toast.shown": "Toast shown",
+  "minecraft_access.toast.unknown": "Unknown toast",
   "minecraft_access.util.position_difference_away": "%s blocks away",
   "minecraft_access.util.position_difference_behind": "%s blocks behind",
   "minecraft_access.util.position_difference_down": "%s blocks down",

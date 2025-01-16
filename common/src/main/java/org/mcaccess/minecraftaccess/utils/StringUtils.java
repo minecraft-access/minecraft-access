@@ -1,5 +1,12 @@
 package org.mcaccess.minecraftaccess.utils;
 
+import net.minecraft.client.font.FreeTypeUtil;
+import net.minecraft.client.toast.SystemToast;
+import net.minecraft.text.OrderedText;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.mcaccess.minecraftaccess.mixin.SystemToastAccessor;
+
 public class StringUtils {
 
     public static String getLineTextWhereTheCursorIsLocatedIn(String whole, int cursor) {
@@ -41,5 +48,15 @@ public class StringUtils {
         } else {
             return msg.split("\\s");
         }
+    }
+
+    @Contract(pure = true)
+    public static @NotNull String orderedTextToString(@NotNull OrderedText text) {
+        StringBuilder builder = new StringBuilder();
+        text.accept((index, style, codePoint) -> {
+            builder.appendCodePoint(codePoint);
+            return true;
+        });
+        return builder.toString();
     }
 }
