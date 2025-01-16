@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.stream.Collectors;
 
-@Slf4j
 @Mixin(ToastManager.class)
 public class ToastManagerMixin {
     @Inject(at = @At("TAIL"), method = "add")
