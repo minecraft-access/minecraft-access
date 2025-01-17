@@ -27,10 +27,10 @@ public class ObjectTracker {
     @Getter
     private static ObjectTracker instance = new ObjectTracker();
 
-    private Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNextItem), Keystroke.TriggeredAt.PRESSED);
-    private Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerPreviousItem), Keystroke.TriggeredAt.PRESSED);
-    private Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNarrateCurrentObject), Keystroke.TriggeredAt.PRESSED);
-    private Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().targetNearestObject), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNextItem), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerPreviousItem), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNarrateCurrentObject), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().targetNearestObject), Keystroke.TriggeredAt.PRESSED);
 
     private List<POIGroup<?>> groups = new ArrayList<>();
 
@@ -187,7 +187,7 @@ public class ObjectTracker {
         }
 
         if (!entities.isEmpty() || !blocks.isEmpty()) {
-            MainClass.speakWithNarrator("Targeting nearest object", true);
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.targeting_nearest"), true);
             narrateCurrentObject(false);
         }
         else MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.not_found"), true);

@@ -59,9 +59,9 @@ public class KeyBindingsHandler {
     public KeyBinding mouseSimulationScrollDownKey;
 
     public KeyBinding objectTrackerNextItem;
-public KeyBinding objectTrackerPreviousItem;
-public KeyBinding objectTrackerNarrateCurrentObject;
-public KeyBinding targetNearestObject;
+    public KeyBinding objectTrackerPreviousItem;
+    public KeyBinding objectTrackerNarrateCurrentObject;
+    public KeyBinding targetNearestObject;
 
     private static final String OTHER_GROUP_TRANSLATION_KEY = "minecraft_access.keys.other.group_name";
     private static final String CAMERA_CONTROLS_TRANSLATION_KEY = "minecraft_access.keys.camera_controls.group_name";
@@ -451,28 +451,28 @@ public KeyBinding targetNearestObject;
                 I18n.translate("minecraft_access.keys.object_tracker.next_item"),
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_PAGE_DOWN,
-                I18n.translate("minecraft_access.point_of_interest.object_tracker.group_name")
+                I18n.translate("minecraft_access.keys.object_tracker.group_name")
         );
 
         objectTrackerPreviousItem = new KeyBinding(
                 I18n.translate("minecraft_access.keys.object_tracker.previous_item"),
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_PAGE_UP,
-                I18n.translate("minecraft_access.point_of_interest.object_tracker.group_name")
+                I18n.translate("minecraft_access.keys.object_tracker.group_name")
         );
 
         objectTrackerNarrateCurrentObject = new KeyBinding(
                 I18n.translate("minecraft_access.keys.object_tracker.narrate_current_object"),
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_HOME,
-                I18n.translate("minecraft_access.point_of_interest.object_tracker.group_name")
+                I18n.translate("minecraft_access.keys.object_tracker.group_name")
         );
 
         targetNearestObject = new KeyBinding(
                 I18n.translate("minecraft_access.keys.object_tracker.target_nearest"),
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_END,
-                I18n.translate("minecraft_access.point_of_interest.object_tracker.group_name")
+                I18n.translate("minecraft_access.keys.object_tracker.group_name")
         );
     }
 

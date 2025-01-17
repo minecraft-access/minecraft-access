@@ -24,7 +24,7 @@ public class POIConfigMap {
     private POIMarkingConfigMap poiMarkingConfigMap;
 
     @SerializedName("Speak relative position of targets")
-    private boolean speakTargetPosition;
+    private boolean speakTargetPosition = false;
 
     private POIConfigMap() {
     }
@@ -34,9 +34,8 @@ public class POIConfigMap {
         m.poiBlocksConfigMap = POIBlocksConfigMap.buildDefault();
         m.poiEntitiesConfigMap = POIEntitiesConfigMap.buildDefault();
         m.poiLockingConfigMap = POILockingConfigMap.buildDefault();
-        m.poiMarkingConfigMap = POIMarkingConfigMap.buildDefault();
-        
-        m.setSpeakTargetPosition(false);
+        m.poiMarkingConfigMap = POIMarkingConfigMap.buildDefault();        
+        m.speakTargetPosition = false;
 
         setInstance(m);
         return m;
