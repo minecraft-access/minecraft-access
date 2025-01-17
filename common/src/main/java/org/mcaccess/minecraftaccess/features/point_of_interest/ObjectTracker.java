@@ -49,10 +49,10 @@ public class ObjectTracker {
         return result;
     }
 
-    private int currentGroupIndex = 0;
-    private int currentObjectIndex = 0;
     @Getter
-    private Object currentObject;
+    private Object currentObject = null;
+    @Getter
+    private POIGroup<?> currentGroup = null;
 
     private boolean speakDistance;
 
@@ -86,7 +86,10 @@ public class ObjectTracker {
     private void updateGroups() {
         groups = getPOIGroups();
 
-        if (!groups.isEmpty() && currentGroupIndex > groups.size() - 1) currentGroupIndex = 0;
+        int currentGroupIndex = groups.indexOf(currentGroup);
+
+        if (!groups.isEmpty() && currentGroupIndex == -1) currentGroup = groups.get(0);
+        if (groups.isEmpty() && currentGroupIndex != -1) currentGroup = null;
     }
 
     private void loadConfigurations() {
@@ -96,17 +99,6 @@ public class ObjectTracker {
 
     private void narrateCurrentObject(boolean interupt) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
-
-        POIGroup<?> currentGroup = groups.get(currentGroupIndex);
-
-        if (currentGroup.isEmpty()) {
-            MainClass.speakWithNarrator("No objects in current group", interupt);
-            return;
-        }
-
-        if (currentObject == null) {
-            currentObject = currentGroup.getItems(true).get(currentObjectIndex);
-        }
 
         if (currentObject instanceof Entity) {
             Entity entity = (Entity)currentObject;
@@ -130,36 +122,34 @@ public class ObjectTracker {
     private void moveGroup(int step) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
+        int currentGroupIndex = groups.indexOf(currentGroup);
+
         if ((currentGroupIndex + step) > (groups.size() - 1)) {
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
-            MainClass.speakWithNarrator(groups.get(currentGroupIndex).getName(), false);
+            MainClass.speakWithNarrator(currentGroup.getName(), false);
             return;
         }
 
         if ((currentGroupIndex + step) < 0) {
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.start_of_list"), true);
-            MainClass.speakWithNarrator(groups.get(currentGroupIndex).getName(), false);
+            MainClass.speakWithNarrator(currentGroup.getName(), false);
             return;
         }
 
-        currentGroupIndex += step;
-        currentObjectIndex = 0;
-        currentObject = groups.get(currentGroupIndex).getItems().get(currentObjectIndex);
-        MainClass.speakWithNarrator(groups.get(currentGroupIndex).getName(), true);
+        currentGroup = groups.get(currentGroupIndex + step);
+        currentObject = currentGroup.getItems(true).get(0);
+        MainClass.speakWithNarrator(currentGroup.getName(), true);
         narrateCurrentObject(false);
     }
 
     private void moveObject(int step) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
-        POIGroup<?> currentGroup = groups.get(currentGroupIndex);
-
         List<?> objects = currentGroup.getItems(true);
+        int currentObjectIndex = objects.indexOf(currentObject);
 
         if ((currentObjectIndex + step) > (objects.size() - 1)) {
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.end_of_list"), true);
-            currentObjectIndex = objects.size() - 1;
-            currentObject = currentGroup.getItems().get(currentObjectIndex);
             narrateCurrentObject(false);
             return;
         }
@@ -170,9 +160,7 @@ public class ObjectTracker {
             return;
         }
 
-        currentObjectIndex += step;
-        currentObject = currentGroup.getItems().get(currentObjectIndex);
-
+        currentObject = currentGroup.getItems().get(currentObjectIndex + step);
         narrateCurrentObject(true);
     }
 
