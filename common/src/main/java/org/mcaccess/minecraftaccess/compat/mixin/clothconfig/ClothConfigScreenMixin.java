@@ -44,14 +44,4 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
         tabButtons.forEach(this::addSelectableChild);
         listWidget.children().forEach(this::addSelectableChild);
     }
-
-    /**
-     * Make the first category tab button focused at the beginning,
-     * so the next tab key pressing will switch to the second category tab,
-     * instead of stepping into the first category.
-     */
-    @Override
-    public void setInitialFocus() {
-        this.setInitialFocus(tabButtons.getFirst());
-    }
 }
