@@ -263,7 +263,7 @@
   "text.autoconfig.minecraft-access.category.playerWarnings": "Player warnings",
   "text.autoconfig.minecraft-access.category.poi": "POI",
   "text.autoconfig.minecraft-access.category.readCrosshair": "Read Crosshair",
-  "text.autoconfig.minecraft-access.category.speechSettings": "Speech",
+  "text.autoconfig.minecraft-access.category.narration": "Narration",
   "text.autoconfig.minecraft-access.option.accessMenu.enabled": "Enabled",
   "text.autoconfig.minecraft-access.option.accessMenu.fluidDetector": "Fluid Detector",
   "text.autoconfig.minecraft-access.option.accessMenu.fluidDetector.range": "Range",
@@ -351,7 +351,7 @@
   "text.autoconfig.minecraft-access.option.readCrosshair.speakSide": "Speak side",
   "text.autoconfig.minecraft-access.option.readCrosshair.useJade": "Use Jade",
   "text.autoconfig.minecraft-access.option.reportHeldItemsCountWhenChanged": "Report help items count when changed",
-  "text.autoconfig.minecraft-access.option.speechSettings.speechRate": "Speech rate",
+  "text.autoconfig.minecraft-access.option.narration.speechRate": "Speech Rate Percentage (for MacOS)",
   "text.autoconfig.minecraft-access.option.use12HourTimeFormat": "Use 12-hour time format",
   "text.autoconfig.minecraft-access.option.xpIndicatorEnabled": "Enable XP indicator",
   "text.autoconfig.minecraft-access.title": "Minecraft Access Settings"

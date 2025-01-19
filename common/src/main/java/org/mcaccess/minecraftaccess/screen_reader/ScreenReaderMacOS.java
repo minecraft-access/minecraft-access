@@ -48,7 +48,7 @@ public class ScreenReaderMacOS implements ScreenReaderInterface {
         }
 
         // Get speech rate here in case the user changes it
-        float speechRate = Config.getInstance().speechSettings.speechRate / 100;
+        float speechRate = Config.getInstance().narration.speechRate / 100;
 
         // Convert the text to be spoken into an NSString object
         Pointer stringObject = objcRuntimeInstance.objc_msgSend(
