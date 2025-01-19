@@ -5,6 +5,7 @@ import me.shedaniel.clothconfig2.gui.ClothConfigTabButton;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.navigation.GuiNavigation;
+import net.minecraft.client.gui.navigation.GuiNavigationPath;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.PressableWidget;
@@ -50,8 +51,14 @@ abstract class ClothConfigTabButtonMixin extends PressableWidget implements Pare
 
     /**
      * When {@link ParentElement#getNavigationPath(GuiNavigation)} requires the children of tab button,
-     * this tab button must be focused now, so we can directly use
+     * provide the children of the list widget if this tab button is focused.
      */
+    @Override
+    public GuiNavigationPath getNavigationPath(GuiNavigation navigation) {
+        // The super(ParentElement).getNavigationPath(navigation) will invoke methods like children(), getFocused()
+        return this.isFocused() ? super.getNavigationPath(navigation) : null;
+    }
+
     @Override
     public List<? extends Element> children() {
         return this.isFocused() ? this.screen.listWidget.children() : Collections.emptyList();
