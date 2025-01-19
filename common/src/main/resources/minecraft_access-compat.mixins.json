@@ -8,6 +8,8 @@
     "clothconfig.ClothConfigScreenAccessor",
     "clothconfig.ClothConfigScreenMixin",
     "clothconfig.ClothConfigTabButtonMixin",
+    "clothconfig.DynamicElementListWidgetMixin",
+    "clothconfig.DynamicElementListWidgetMixin$ElementEntryMixin",
     "clothconfig.ParentElementMixin"
   ],
   "injectors": {
