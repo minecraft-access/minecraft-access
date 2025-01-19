@@ -7,7 +7,8 @@
     "clothconfig.AbstractConfigEntryMixin",
     "clothconfig.ClothConfigScreenAccessor",
     "clothconfig.ClothConfigScreenMixin",
-    "clothconfig.ClothConfigTabButtonMixin"
+    "clothconfig.ClothConfigTabButtonMixin",
+    "clothconfig.ParentElementMixin"
   ],
   "injectors": {
     "defaultRequire": 1
