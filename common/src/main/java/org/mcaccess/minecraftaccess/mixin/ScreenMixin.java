@@ -41,14 +41,14 @@ public abstract class ScreenMixin {
     protected abstract void addElementNarrations(NarrationMessageBuilder builder);
 
     @Inject(at = @At("HEAD"), method = "addScreenNarrations", cancellable = true)
-    private void removeScreenUsageNarrations(NarrationMessageBuilder builder, CallbackInfo ci) {
+    private void addScreenNarrationsHead(NarrationMessageBuilder builder, CallbackInfo ci) {
         builder.put(NarrationPart.TITLE, this.getNarratedTitle());
         this.addElementNarrations(builder);
         ci.cancel();
     }
 
     @Inject(at = @At("HEAD"), method = "addElementNarrations*", cancellable = true)
-    private void removeElementPositionAndUsageNarrations(NarrationMessageBuilder builder, CallbackInfo callbackInfo) {
+    private void addElementNarrationsHead(NarrationMessageBuilder builder, CallbackInfo callbackInfo) {
         if (MinecraftClient.getInstance().currentScreen instanceof MerchantScreen) {
             callbackInfo.cancel();
         }
