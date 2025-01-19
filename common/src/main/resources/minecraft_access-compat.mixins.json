@@ -10,7 +10,9 @@
     "clothconfig.ClothConfigTabButtonMixin",
     "clothconfig.DynamicElementListWidgetMixin",
     "clothconfig.DynamicElementListWidgetMixin$ElementEntryMixin",
-    "clothconfig.ParentElementMixin"
+    "clothconfig.ParentElementMixin",
+    "clothconfig.SubCategoryListEntryMixin",
+    "clothconfig.SubCategoryListEntryMixin$CategoryLabelWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1
