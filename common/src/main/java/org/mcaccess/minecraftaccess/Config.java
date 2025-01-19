@@ -101,9 +101,6 @@ public class Config implements ConfigData {
     @ConfigEntry.Category("accessMenu")
     @ConfigEntry.Gui.TransitiveObject
     public AccessMenu accessMenu = new AccessMenu();
-    @ConfigEntry.Category("areaMap")
-    @ConfigEntry.Gui.TransitiveObject
-    public AreaMap areaMap = new AreaMap();
 
     public static final class Narration {
         private Narration() {}
@@ -212,7 +209,6 @@ public class Config implements ConfigData {
         public boolean enabled = true;
         public int range = 6;
         public int depth = 4;
-        public boolean playAlternateSound = true;
         public float volume = 0.25f;
         public int delay = 2500;
     }
@@ -271,14 +267,5 @@ public class Config implements ConfigData {
             public float volume = 0.25f;
             public int range = 10;
         }
-    }
-
-    public static final class AreaMap {
-        private AreaMap() {}
-
-        public boolean enabled = true;
-        public int delayMilliseconds = 150;
-        public int verticalBound = 2;
-        public int horizontalBound = 96;
     }
 }
