@@ -48,17 +48,16 @@ abstract class ClothConfigTabButtonMixin extends PressableWidget implements Pare
         builder.put(NarrationPart.POSITION, mca$position.toText());
     }
 
-
-    /**
-     * When {@link ParentElement#getNavigationPath(GuiNavigation)} requires the children of tab button,
-     * provide the children of the list widget if this tab button is focused.
-     */
     @Override
     public GuiNavigationPath getNavigationPath(GuiNavigation navigation) {
         // The super(ParentElement).getNavigationPath(navigation) will invoke methods like children(), getFocused()
         return this.isFocused() ? super.getNavigationPath(navigation) : null;
     }
 
+    /**
+     * When {@link ParentElement#getNavigationPath(GuiNavigation)} requires the {@link ParentElement#children()} of tab button,
+     * provide the children of the list widget if this tab button is focused.
+     */
     @Override
     public List<? extends Element> children() {
         return this.isFocused() ? this.screen.listWidget.children() : Collections.emptyList();
