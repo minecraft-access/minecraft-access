@@ -1,15 +1,15 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import org.mcaccess.minecraftaccess.MainClass;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.GuiMessage;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,22 +24,22 @@ import java.util.List;
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
     @Unique
-    private static final Text USAGE_TEXT = Text.translatable("chat_screen.usage");
+    private static final Component USAGE_TEXT = Component.translatable("chat_screen.usage");
 
     @Shadow
-    protected TextFieldWidget chatField;
+    protected EditBox input;
 
     /**
      * Removes `message to send` from the spoken text when entering a chat message.
      */
-    @Inject(at = @At("HEAD"), method = "addScreenNarrations", cancellable = true)
-    private void addScreenNarrations(NarrationMessageBuilder builder, CallbackInfo callbackInfo) {
-        if (MinecraftClient.getInstance().currentScreen == null) return;
-        builder.put(NarrationPart.TITLE, MinecraftClient.getInstance().currentScreen.getTitle());
-        builder.put(NarrationPart.USAGE, USAGE_TEXT);
-        String string = this.chatField.getText();
+    @Inject(at = @At("HEAD"), method = "updateNarrationState", cancellable = true)
+    private void addScreenNarrations(NarrationElementOutput builder, CallbackInfo callbackInfo) {
+        if (Minecraft.getInstance().screen == null) return;
+        builder.add(NarratedElementType.TITLE, Minecraft.getInstance().screen.getTitle());
+        builder.add(NarratedElementType.USAGE, USAGE_TEXT);
+        String string = this.input.getValue();
         if (!string.isEmpty()) {
-            builder.nextMessage().put(NarrationPart.TITLE, string);
+            builder.nest().add(NarratedElementType.TITLE, string);
         }
         callbackInfo.cancel();
     }
@@ -87,7 +87,7 @@ public class ChatScreenMixin {
      */
     @Unique
     private static void minecraft_access$speakPreviousChatAtIndex(int indexOffset) {
-        List<ChatHudLine> messages = ((ChatHudAccessor) MinecraftClient.getInstance().inGameHud.getChatHud()).getMessages();
+        List<GuiMessage> messages = ((ChatComponentAccessor) Minecraft.getInstance().gui.getChat()).getAllMessages();
         if ((messages.size() - indexOffset) <= 0) return;
 
         MainClass.speakWithNarrator(messages.get(indexOffset).content().getString(), true);
@@ -96,8 +96,8 @@ public class ChatScreenMixin {
     /**
      * Since there is no text modifying narration, we want to manually speak when the chat history is switched.
      */
-    @Inject(at = @At("TAIL"), method = "setChatFromHistory")
+    @Inject(at = @At("TAIL"), method = "moveInHistory")
     private void speakSwitchedChatHistory(int index, CallbackInfo ci) {
-        MainClass.speakWithNarratorIfNotEmpty(this.chatField.getText(), true);
+        MainClass.speakWithNarratorIfNotEmpty(this.input.getValue(), true);
     }
 }

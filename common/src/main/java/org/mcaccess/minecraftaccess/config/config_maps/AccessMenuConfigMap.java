@@ -1,9 +1,9 @@
 package org.mcaccess.minecraftaccess.config.config_maps;
 
-import org.mcaccess.minecraftaccess.config.Config;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
+import org.mcaccess.minecraftaccess.config.Config;
 
 import java.util.Objects;
 

@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.test_utils;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import com.mojang.authlib.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import org.mockito.Mockito;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -19,7 +19,7 @@ public class MockMinecraftClientWrapper {
     private final MinecraftClient mockitoClient;
 
     public MockMinecraftClientWrapper() {
-        mockitoClient = mock(MinecraftClient.class);
+        mockitoClient = mock(Minecraft.class);
 
         lenient().doAnswer((i) -> {
             // assign screen param to desired field to simulate real behavior
@@ -28,7 +28,7 @@ public class MockMinecraftClientWrapper {
         }).when(mockitoClient).setScreen(any());
     }
 
-    public MinecraftClient mockito() {
+    public Minecraft mockito() {
         return mockitoClient;
     }
 

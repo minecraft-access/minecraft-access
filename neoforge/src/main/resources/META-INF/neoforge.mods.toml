@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
-#issueTrackerURL = ""
+#issueTrackerURL = "https://github.com/minecraft-access/minecraft-access/issues"
 license = "GNU GPLv3"
 
 [[mods]]

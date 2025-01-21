@@ -1,14 +1,14 @@
 package org.mcaccess.minecraftaccess.utils.position;
 
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
 
 import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * The {@link net.minecraft.util.math.Direction} is not enough for this mod.
+ * The {@link net.minecraft.core.Direction} is not enough for this mod.
  */
 public enum Orientation {
     CENTER(0, 0, LAYER.MIDDLE, new Vec3i(0, 0, 0)),
@@ -66,7 +66,7 @@ public enum Orientation {
     }
 
     public static Orientation of(Direction direction) {
-        return of(direction.asString().toUpperCase());
+        return of(direction.getSerializedName().toUpperCase());
     }
 
     public static String getOppositeDirectionKey(String originalDirectionKey) {
@@ -85,7 +85,7 @@ public enum Orientation {
             return Orientation.NORTH_WEST;
         } else {
             // edge case
-            return Orientation.of(WorldUtils.getClientPlayer().getHorizontalFacing());
+            return Orientation.of(WorldUtils.getClientPlayer().getDirection());
         }
     }
 

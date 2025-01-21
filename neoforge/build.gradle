@@ -15,8 +15,6 @@ architectury {
 }
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-
     // Loom sets the log4j config while in development (in prod the log4j config might be dictated by the launcher or just the game itself).
     // This loom gradle config specifies that loom uses our customized log4j config file.
     // ref: https://fabricmc.net/wiki/documentation:fabric_loom
@@ -31,12 +29,6 @@ configurations {
     runtimeClasspath.extendsFrom common
     developmentNeoForge.extendsFrom common
 }
-
-// since 1.20.6
-//configurations.configureEach {
-//    resolutionStrategy.force("net.sf.jopt-simple:jopt-simple:5.0.4")
-//
-//}
 
 repositories {
     maven {

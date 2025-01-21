@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.features;
 
+import net.minecraft.util.Tuple;
+import org.apache.commons.lang3.tuple.Triple;
 import org.mcaccess.minecraftaccess.config.config_maps.MouseSimulationConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -7,8 +9,6 @@ import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
-import net.minecraft.util.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Set;
 
@@ -25,7 +25,7 @@ public class MouseKeySimulation {
     private static final Keystroke[] mouseClicks = new Keystroke[3];
     public static final Set<Triple<Keystroke, Runnable, Runnable>> MOUSE_CLICK_ACTIONS;
     private static final IntervalKeystroke[] mouseScrolls = new IntervalKeystroke[2];
-    public static final Set<Pair<IntervalKeystroke, Runnable>> MOUSE_SCROLL_ACTIONS;
+    public static final Set<Tuple<IntervalKeystroke, Runnable>> MOUSE_SCROLL_ACTIONS;
 
     static {
         // config keystroke conditions
@@ -36,8 +36,8 @@ public class MouseKeySimulation {
         mouseScrolls[1] = new IntervalKeystroke(KeyBindingsHandler.getInstance().mouseSimulationScrollDownKey);
 
         MOUSE_SCROLL_ACTIONS = Set.of(
-                new Pair<IntervalKeystroke, Runnable>(mouseScrolls[0], MouseUtils::scrollUp),
-                new Pair<IntervalKeystroke, Runnable>(mouseScrolls[1], MouseUtils::scrollDown)
+                new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[0], MouseUtils::scrollUp),
+                new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[1], MouseUtils::scrollDown)
         );
 
         MOUSE_CLICK_ACTIONS = Set.of(
@@ -62,8 +62,8 @@ public class MouseKeySimulation {
 
     private static void execute() {
         MOUSE_SCROLL_ACTIONS.forEach(t -> {
-            if (t.getLeft().canBeTriggered()) {
-                t.getRight().run();
+            if (t.getA().canBeTriggered()) {
+                t.getB().run();
             }
         });
 

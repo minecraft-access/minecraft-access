@@ -1,8 +1,8 @@
 package org.mcaccess.minecraftaccess.fabric.mixin;
 
-import org.mcaccess.minecraftaccess.MainClass;
 import com.mojang.text2speech.NarratorMac;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +15,7 @@ public class NarratorMacMixin {
         if (MainClass.getScreenReader() == null || !MainClass.getScreenReader().isInitialized())
             return;
 
-        if (MinecraftClient.getInstance().options.getNarrator().getValue().shouldNarrateSystem())
+        if (Minecraft.getInstance().options.narrator().get().shouldNarrateSystem())
             MainClass.getScreenReader().say(msg, interrupt);
 
         info.cancel();

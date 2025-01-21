@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.fabric;
 
-import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.KeyMapping;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 
 public class MinecraftAccessClient implements ClientModInitializer {
     @Override
@@ -23,7 +23,7 @@ public class MinecraftAccessClient implements ClientModInitializer {
         // custom key bindings registration should be registered in ClientModInitializer endpoint.
         //
         // And this will resolve issue: https://github.com/khanshoaib3/minecraft-access/issues/171
-        for (KeyBinding kb : KeyBindingsHandler.getInstance().getKeys()) {
+        for (KeyMapping kb : KeyBindingsHandler.getInstance().getKeys()) {
             KeyBindingHelper.registerKeyBinding(kb);
         }
     }

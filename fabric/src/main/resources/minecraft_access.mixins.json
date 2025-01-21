@@ -6,7 +6,7 @@
   "mixins": [
   ],
   "client": [
-    "MinecraftClientMixin",
+    "MinecraftMixin",
     "NarratorLinuxMixin",
     "NarratorMacMixin",
     "NarratorWindowsMixin"

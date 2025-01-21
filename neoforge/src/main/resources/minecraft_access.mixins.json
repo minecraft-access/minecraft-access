@@ -6,8 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "InGameHudMixin",
-    "NarratorMixin"
+    "GameNarratorMixin",
+    "GuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

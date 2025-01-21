@@ -1,5 +1,12 @@
 package org.mcaccess.minecraftaccess;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.text2speech.Narrator;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.util.Strings;
 import org.mcaccess.minecraftaccess.config.Config;
 import org.mcaccess.minecraftaccess.config.config_maps.AccessMenuConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
@@ -14,13 +21,6 @@ import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import com.mojang.text2speech.Narrator;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.util.Strings;
 
 @Slf4j
 public class MainClass {
@@ -84,7 +84,7 @@ public class MainClass {
      *
      * @param minecraftClient The current minecraft client object
      */
-    public static void clientTickEventsMethod(MinecraftClient minecraftClient) {
+    public static void clientTickEventsMethod(Minecraft minecraftClient) {
         try {
             _clientTickEventsMethod(minecraftClient);
         } catch (Exception e) {
@@ -92,13 +92,13 @@ public class MainClass {
         }
     }
 
-    private static void _clientTickEventsMethod(MinecraftClient minecraftClient) {
+    private static void _clientTickEventsMethod(Minecraft minecraftClient) {
         OtherConfigsMap otherConfigsMap = OtherConfigsMap.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
 
         if (!MainClass.alreadyDisabledAdvancementKey && minecraftClient.options != null) {
-            minecraftClient.options.advancementsKey.setBoundKey(InputUtil.fromTranslationKey("key.keyboard.unknown"));
+            minecraftClient.options.keyAdvancements.setKey(InputConstants.getKey("key.keyboard.unknown"));
             MainClass.alreadyDisabledAdvancementKey = true;
             log.info("Unbound advancements key");
         }
@@ -123,14 +123,14 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (MinecraftClient.getInstance() != null && WorldUtils.getClientPlayer() != null) {
+        if (Minecraft.getInstance() != null && WorldUtils.getClientPlayer() != null) {
             if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
                 playerStatus.update();
             }
 
             MouseKeySimulation.runOnTick();
 
-            if (MinecraftClient.getInstance().currentScreen == null) {
+            if (Minecraft.getInstance().screen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.update();
             }
@@ -177,7 +177,7 @@ public class MainClass {
     public static void speakWithNarrator(String text, boolean interrupt) {
         MainClass.interrupt = interrupt;
         if (isNeoForge) {
-            MinecraftClient.getInstance().getNarratorManager().narrate(text);
+            Minecraft.getInstance().getNarrator().sayNow(text);
             return;
         }
 

@@ -1,12 +1,13 @@
 package org.mcaccess.minecraftaccess.test_utils.extensions;
 
-import org.mcaccess.minecraftaccess.test_utils.MockMinecraftClientWrapper;
-import org.mcaccess.minecraftaccess.test_utils.annotations.MockMinecraftClient;
-import net.minecraft.Bootstrap;
-import net.minecraft.client.MinecraftClient;
+import com.mojang.authlib.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.mcaccess.minecraftaccess.test_utils.MockMinecraftClientWrapper;
+import org.mcaccess.minecraftaccess.test_utils.annotations.MockMinecraftClient;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -25,7 +26,7 @@ public class MockMinecraftClientExtension implements BeforeTestExecutionCallback
         MockMinecraftClientWrapper wrapper = new MockMinecraftClientWrapper();
 
         // Mock "MinecraftClient.getInstance()" that commonly used to get current MinecraftClient singleton instance.
-        this.ms.when(MinecraftClient::getInstance).thenReturn(wrapper.mockito());
+        this.ms.when(Minecraft::getInstance).thenReturn(wrapper.mockito());
 
         enableMCBootstrapFlag();
 
