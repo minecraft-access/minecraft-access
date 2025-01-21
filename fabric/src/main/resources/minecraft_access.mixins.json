@@ -7,9 +7,6 @@
   ],
   "client": [
     "MinecraftMixin",
-    "NarratorLinuxMixin",
-    "NarratorMacMixin",
-    "NarratorWindowsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

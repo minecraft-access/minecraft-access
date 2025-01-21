@@ -176,12 +176,8 @@ public class MainClass {
 
     public static void speakWithNarrator(String text, boolean interrupt) {
         MainClass.interrupt = interrupt;
-        if (isNeoForge) {
-            Minecraft.getInstance().getNarrator().sayNow(text);
-            return;
-        }
-
-        Narrator.getNarrator().say(text, interrupt);
+        Minecraft.getInstance().getNarrator().sayNow(text);
+        return;
     }
 
     public static void speakWithNarratorIfNotEmpty(String text, boolean interrupt) {

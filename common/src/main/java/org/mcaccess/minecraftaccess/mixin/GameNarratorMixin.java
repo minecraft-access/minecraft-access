@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.neoforge.mixin;
+package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameNarrator.class)
 public class GameNarratorMixin {
-    @Inject(at = @At("HEAD"), method = "narrate(Ljava/lang/String;)V", cancellable = true)
-    private void narrate(String text, CallbackInfo callbackInfo) {
+    @Inject(at = @At("HEAD"), method = "sayNow(Ljava/lang/String;)V", cancellable = true)
+    private void sayNow(String text, CallbackInfo callbackInfo) {
         if (MainClass.getScreenReader() == null || !MainClass.getScreenReader().isInitialized()) {
             return;
         }
@@ -26,8 +26,8 @@ public class GameNarratorMixin {
         callbackInfo.cancel();
     }
 
-    @Inject(at = @At("HEAD"), method = "narrateChatMessage", cancellable = true)
-    private void narrateChatMessage(Component text, CallbackInfo callbackInfo) {
+    @Inject(at = @At("HEAD"), method = "sayChat", cancellable = true)
+    private void sayChat(Component text, CallbackInfo callbackInfo) {
         if (Minecraft.getInstance().options.narrator().get().shouldNarrateChat()) {
             String string = text.getString();
             MainClass.getScreenReader().say(string, false);
@@ -35,8 +35,8 @@ public class GameNarratorMixin {
         callbackInfo.cancel();
     }
 
-    @Inject(at = @At("HEAD"), method = "narrateSystemMessage", cancellable = true)
-    private void narrateSystemMessage(Component text, CallbackInfo callbackInfo) {
+    @Inject(at = @At("HEAD"), method = "say", cancellable = true)
+    private void say(Component text, CallbackInfo callbackInfo) {
         String string = text.getString();
         if (Minecraft.getInstance().options.narrator().get().shouldNarrateSystem() && !string.isEmpty()) {
             MainClass.getScreenReader().say(string, true);
@@ -44,8 +44,8 @@ public class GameNarratorMixin {
         callbackInfo.cancel();
     }
 
-    @Inject(at = @At("HEAD"), method = "onModeChange", cancellable = true)
-    private void onModeChange(NarratorStatus mode, CallbackInfo callbackInfo) {
+    @Inject(at = @At("HEAD"), method = "updateNarratorStatus", cancellable = true)
+    private void updateNarratorStatus(NarratorStatus mode, CallbackInfo callbackInfo) {
         ToastManager toastManager = Minecraft.getInstance().getToastManager();
         if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized()) {
             MainClass.getScreenReader().say(Component.translatable("options.narrator").append(" : ").append(mode.getName()).getString(), true);
