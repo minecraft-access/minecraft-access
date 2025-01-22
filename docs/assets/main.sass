@@ -63,12 +63,42 @@ button
 [aria-expanded=false] [data-for-expanded=true]
   display: none
 
+.block-list
+  margin-block: 1em
+  display: flex
+  flex-wrap: wrap
+  list-style-type: none
+  gap: 1em
+  > li
+    flex-basis: calc(50% - 1em)
+    min-width: 35ch
+    flex-grow: 1
+    > a
+      display: block
+      width: 100%
+      height: 100%
+      background: var(--sidebar)
+      border: var(--border)
+      padding: 1em
+      color: inherit
+      text-decoration: inherit
+      &:hover
+        background: var(--bg-hover)
+      .label
+        color: var(--link)
+        font-weight: bold
+      &:hover .label
+        color: var(--link-hover)
+
+.right-align
+  text-align: right
+
 body
   background: var(--bg)
   color: var(--fg)
   font-family: $font-regular
   display: grid
-  grid-template: "head head head head head" 3em "nav . . . ." 1em "nav . breadcrumbs . toc" 3em "nav . heading . toc" min-content "nav . content . toc" min-content "nav . . . toc" minmax(3em, auto) "footer footer footer footer footer" min-content / 30ch minmax(1em, auto) minmax(auto, 100ch) minmax(1em, auto) 35ch
+  grid-template: "head head head head head" 3em "nav . . . ." 1em "nav . breadcrumbs . toc" min-content "nav . heading . toc" min-content "nav . content . toc" 1fr "nav . content-footer . toc" min-content "footer footer footer footer footer" min-content / 30ch minmax(1em, auto) minmax(auto, 100ch) minmax(1em, auto) 35ch
   position: relative
   min-height: 100vh
 
@@ -90,6 +120,9 @@ header
     font-size: 1.25rem
   .logo
     height: 100%
+
+article
+  margin-bottom: 2em
 
 .main-nav-toggle
   display: none
@@ -147,6 +180,9 @@ nav
 
 .heading
   grid-area: heading
+  border-bottom: var(--border)
+  margin-bottom: 1.5em
+  padding-bottom: 1em
 
 .content
   grid-area: content
@@ -166,9 +202,8 @@ main
   &:hover
     color: var(--link-hover)
   .icon
-    font-size: 1.5em
-    margin-right: 0.25em
-    margin-block: 0.5em
+    font-size: 1.3em
+    margin-right: 0.1em
 
 .table-of-contents-container
   grid-area: toc
@@ -225,6 +260,11 @@ main
       color: var(--breadcrumb-chevrons)
       font-weight: bold
 
+.content-footer
+  grid-area: content-footer
+  border-top: var(--border)
+  padding-block: 1em
+
 footer
   grid-area: footer
   text-align: center
@@ -235,7 +275,7 @@ footer
 
 @media screen and (max-width: 140ch)
   body
-    grid-template: "head head head head" 3em "nav . . ." 1em "nav . breadcrumbs ." 3em "nav . heading ." minmax(0, auto) "nav . toc ." minmax(0, auto) "nav . content ." minmax(0, auto) "nav . . ." minmax(25vh, auto) "footer footer footer footer" min-content / 30ch minmax(1em, auto) minmax(auto, 100ch) minmax(1em, auto)
+    grid-template: "head head head head" 3em "nav . . ." 1em "nav . breadcrumbs ." 3em "nav . heading ." minmax(0, auto) "nav . toc ." minmax(0, auto) "nav . content ." minmax(0, auto) "nav . content-footer ." min-content "footer footer footer footer" min-content / 30ch minmax(1em, auto) minmax(auto, 100ch) minmax(1em, auto)
 
   .table-of-contents-container
     .table-of-contents-header
@@ -249,7 +289,7 @@ footer
 
 @media screen and (max-width: 90ch)
   body
-    grid-template: "head head head" 3em ". . ." 1em ". breadcrumbs ." 3em ". heading ." minmax(0, auto) ". toc ." minmax(0, auto) ". content ." minmax(0, auto) ". . ." minmax(25vh, auto) "footer footer footer" min-content / minmax(1em, auto) minmax(auto, 100ch) minmax(1em, auto)
+    grid-template: "head head head" 3em ". . ." 1em ". breadcrumbs ." 3em ". heading ." minmax(0, auto) ". toc ." minmax(0, auto) ". content ." minmax(0, auto) ". content-footer ." min-content "footer footer footer" min-content / minmax(1em, auto) minmax(auto, 100ch) minmax(1em, auto)
 
   .main-nav-toggle
     display: block
@@ -293,7 +333,7 @@ footer
 
 @media print
   body
-    grid-template: "head head head" 3em ". . ." 1em ". breadcrumbs ." 3em ". heading ." minmax(0, auto) ". toc ." minmax(0, auto) ". content ." minmax(0, auto) ". . ." minmax(25vh, auto) / 1em auto 1em
+    grid-template: "head head head" 3em ". . ." 1em ". breadcrumbs ." 3em ". heading ." minmax(0, auto) ". toc ." minmax(0, auto) ". content ." minmax(0, auto) ". content-footer ." fit-content / 1em auto 1em
 
   .main-nav-container
     display: none

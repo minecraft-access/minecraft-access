@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{- block "title" . -}}{{- .Site.Title -}}{{- end -}}</title>
+    <title>{{- block "title" . -}}{{- default .Page.Path .Page.Title }} | {{ .Site.Title -}}{{- end -}}</title>
     {{- with resources.Get "main.sass" | toCSS | minify | fingerprint -}}
         <link rel="stylesheet" href="{{- .RelPermalink -}}" integrity="{{- .Data.Integrity -}}">
     {{- end -}}
@@ -60,7 +60,7 @@
                     {{- if .IsHome -}}
                         {{- partial "icon" (dict "Icon" "home" "Label" "home") -}}
                     {{- else -}}
-                        {{- .LinkTitle -}}
+                        {{- default .Path .LinkTitle -}}
                     {{- end -}}
                 </a>
             </li>
@@ -69,29 +69,52 @@
 </nav>
 <div class="heading">
     <h1>{{- .Page.Title -}}</h1>
-    {{- if .Page.Content -}}
-        <p>
-            Last modified:
-            <time datetime="{{- .Page.Lastmod.UTC.Format "2006-01-02T15:04:05Z" -}}">{{- .Page.Lastmod.UTC -}}</time>
-        </p>
-        <p>
-            <a class="edit-link"
-               href="https://github.com/khanshoaib3/minecraft-access/blob/1.21/docs/content/{{- .Page.File.Path -}}">
-                {{- partial "icon" (dict "Icon" "edit" "Hidden" true) }} Edit this page
-            </a>
-        </p>
-    {{- end -}}
+    {{- with .Description -}}<p>{{- . -}}</p>{{- end -}}
 </div>
-<div class="table-of-contents-container">
-    <div class="table-of-contents-header">{{- partial "icon" (dict "Icon" "list") }} Contents</div>
-    <nav class="table-of-contents" aria-label="Table of Contents">
-        {{- strings.TrimSuffix "</nav>" (strings.TrimPrefix "<nav id=\"TableOfContents\">" .TableOfContents) | safeHTML -}}
-    </nav>
-</div>
+{{- with strings.TrimSuffix "</nav>" (strings.TrimPrefix "<nav id=\"TableOfContents\">" .TableOfContents) | safeHTML -}}
+    <div class="table-of-contents-container">
+        <div class="table-of-contents-header">{{- partial "icon" (dict "Icon" "list") }} Contents</div>
+        <nav class="table-of-contents" aria-label="Table of Contents">
+            {{- . -}}
+        </nav>
+    </div>
+{{- end -}}
 <div class="content" tabindex="-1">
     <main>
         {{- block "main" . -}}{{- end -}}
     </main>
+</div>
+<div class="content-footer">
+    {{- if or .NextInSection .PrevInSection -}}
+        <ul class="block-list">
+            {{- with .NextInSection -}}
+                <li>
+                    <a href="{{- .RelPermalink -}}" rel="prev">
+                        <p class="label">Previous</p>
+                        <p>{{- default .Path .Title -}}</p>
+                    </a>
+                </li>
+            {{- end -}}
+            {{- with .PrevInSection -}}
+                <li>
+                    <a href="{{- .RelPermalink -}}" rel="next" class="right-align">
+                        <p class="label">Next</p>
+                        <p>{{- default .Path .Title -}}</p>
+                    </a>
+                </li>
+            {{- end -}}
+        </ul>
+    {{- end -}}
+    <p>
+        Last modified:
+        <time datetime="{{- .Page.Lastmod.UTC.Format "2006-01-02T15:04:05Z" -}}">{{- .Page.Lastmod.UTC -}}</time>
+    </p>
+    <p>
+        <a class="edit-link"
+           href="https://github.com/khanshoaib3/minecraft-access/blob/1.21/docs/content/{{- .Page.File.Path -}}">
+            {{- partial "icon" (dict "Icon" "edit") }} Edit this page
+        </a>
+    </p>
 </div>
 <footer>
     <p>
