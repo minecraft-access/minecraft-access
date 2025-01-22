@@ -1,5 +1,0 @@
-{{- if .IsNamedParams -}}
-    {{- partial "sound" (dict "Sound" (.Get "sound") "Pitch" (.Get "pitch")) -}}
-{{- else -}}
-    {{- partial "sound" (dict "Sound" (.Get 0)) -}}
-{{- end -}}

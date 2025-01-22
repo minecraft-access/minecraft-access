@@ -1,5 +1,0 @@
-{{- if .IsNamedParams -}}
-    {{- partial "icon" (dict "Icon" (.Get "icon") "Label" (.Get "label") "Style" (.Get "style")) -}}
-{{- else -}}
-    {{- partial "icon" (dict "Icon" (.Get 0) "Label" (.Get 1) "Style" (.Get 2)) -}}
-{{- end -}}

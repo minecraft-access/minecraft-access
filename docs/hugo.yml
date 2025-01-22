@@ -6,6 +6,8 @@ disableKinds:
   - taxonomy
   - term
   - rss
+theme:
+  - docs
 
 markup:
   tableOfContents:

@@ -1,5 +1,0 @@
-{{- if page.Store.Get "unique-id" | not -}}
-    {{- page.Store.Set "unique-id" 0 -}}
-{{- end -}}
-{{- page.Store.Add "unique-id" 1 -}}
-{{- return (md5 (page.Store.Get "unique-id")) -}}

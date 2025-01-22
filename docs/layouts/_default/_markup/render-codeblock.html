@@ -1,7 +1,0 @@
-<div class="codeblock">
-    <p class="codeblock-heading">
-        {{- partial "icon" (dict "Icon" "code") -}}
-        <span class="language">{{- title .Type -}}</span>
-    </p>
-    <pre><code class="codeblock">{{- (transform.HighlightCodeBlock .).Inner -}}</code></pre>
-</div>
