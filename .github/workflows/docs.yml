@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - "1.21"
-      # TODO: Remove this before merging PR
-      - gh-pages
 
 permissions:
   contents: read
