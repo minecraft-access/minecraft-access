@@ -19,3 +19,7 @@ security:
   http:
     mediaTypes:
       - "^audio/.+$"
+  funcs:
+    getenv:
+      - ^GITHUB_REPOSITORY$
+      - ^GITHUB_REF_NAME$
