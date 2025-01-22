@@ -2,6 +2,58 @@
 title: "Changelog"
 ---
 
+<!-- INSERT CHANGELOG HERE -->
+
+## Release v1.9.0 (2024-12)
+### New Features
+- Speak current perspective when switched to [#314](https://github.com/khanshoaib3/minecraft-access/issues/314)
+- Blocks and entities can now be narrated with Jade, providing much more detailed information.
+- Add basic aim assist for bows (temporarily lock onto the nearest hostile mob when drawing a bow, play sounds indicating how much the bow has been drawn and if the target can be shot)
+- Implement support for running  the mod on MacOS
+- Each function in the access menu can now be bound as a key on your keyboard (all unbound by default aside from narrate target)
+- HealthNHunger is now player status
+- Made the readout of player status more concise which also delivers values faster
+- This includes new information like air, frost exposure, armor, and absorption hearts
+- Added a warning for when frost exposure gets above a configurable value (default 30%)
+- Hold Alt+R to hear only conditional information like air and frost exposure
+- Renamed enableHealthNHunger in the config to enablePlayerStatus (**THIS IS A BREAKING CHANGE**)
+
+### Feature Updates
+- [Vault](https://minecraft.wiki/w/Vault) and [Trial Spawner](https://minecraft.wiki/w/Trial_Spawner) are added as POI blocks [#306](https://github.com/khanshoaib3/minecraft-access/issues/306)
+- Remove `Position Narrator Format` config since it seems duplicate with single number narrating formats
+- The narration menu function key key is now deprecated, and has been replaced by the narrate target key as each thing can be bound independently
+- The narrator menu was renamed to the access menu to avoid confusion with the existing narrator feature in Microsoft products
+- **BREAKING CHANGES**: Rename **Narrator Menu** aka F4 Menu to Access Menu
+- **Access Menu**: Access Menu functions can be triggered with Alt + upper number keys
+- Your pets, other's pets, bosses, players, and vehicles now have their own sounds
+- Dropped item detection also now extends to projectiles on the ground which can be picked up like arrows and tridents
+- Air is now measured roughly in seconds remaining, as it is not clear how fast air ticks down for blind players usually
+- The default air threshold is now 5 seconds of air remaining, which is roughly the same overall percentage (30%) air remaining
+- The mod now announces the biome you entered when you join a world instead of the xp level.
+
+### Bug Fixes
+- Let `Enable Facing Direction` config controls auto direction speaking in `Camera Controls` [#327](https://github.com/khanshoaib3/minecraft-access/issues/327)
+- Make the `Look Straight Back` key combination (left alt + numpad 5) works again [#328](https://github.com/khanshoaib3/minecraft-access/issues/328)
+- You can now hold down keys without them speaking their output over and over
+- Fixed smithing table slots being mislabeled
+- Some neutral mobs are now recognized as hostile when angry like wolves, instead of always being passive
+- Fix equipment narration triggering even if entity doesn't have equipment
+- When the locked on block is destroyed, it will automatically be unlocked
+
+### Others
+- Added an error message when trying to run the mod server-side
+
+### Translation Changes
+- [Weblate](https://hosted.weblate.org/engage/minecraft-access/) is now used for translations.
+- Removed coppied strings that were already in use in vanilla, mainly the seperate color strings that Minecraft access had which vanilla translation already provides.
+
+### Support 1.21.4
+This mod doesn't yet support new features such as [crafter](https://minecraft.wiki/w/Crafter) and [pale garden](https://minecraft.wiki/w/Pale_Garden), but at least you can play the latest version now! Compatibility for 1.21.4:
+* Minecraft: 1.21.4 ([read setup guide](/docs/setup/basic.md)))
+* Fabric Loader: >=0.16.9 ([download Fabric Loader](https://fabricmc.net/use/installer/))
+* NeoForge: 21.4.33-beta ([download NeoForge installer](https://maven.neoforged.net/releases/net/neoforged/neoforge/21.3.4-beta/neoforge-21.3.4-beta-installer.jar))
+* Java: >=21 ([download x64 Windows installer](https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.msi), [download page for all Operating Systems](https://www.oracle.com/java/technologies/downloads/#java21))
+
 Release v1.8.0 (2024-08)
 ---------------------------
 

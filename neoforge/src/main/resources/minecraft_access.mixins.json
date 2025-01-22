@@ -1,11 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.github.khanshoaib3.minecraft_access.neoforge.mixin",
+  "package": "org.mcaccess.minecraftaccess.neoforge.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],
   "client": [
+    "InGameHudMixin",
     "NarratorMixin"
   ],
   "injectors": {
