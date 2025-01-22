@@ -1,8 +1,14 @@
 package org.mcaccess.minecraftaccess;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.text2speech.Narrator;
+import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.platform.Platform;
+import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
+import dev.architectury.utils.Env;
 import lombok.extern.slf4j.Slf4j;
+import net.fabricmc.loader.impl.util.log.Log;
+import net.fabricmc.loader.impl.util.log.LogCategory;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -19,6 +25,7 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.POIMarking;
 import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
@@ -36,7 +43,7 @@ public class MainClass {
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
 
-    public static boolean isNeoForge = false;
+    public static boolean isNeoForge = Platform.isNeoForge();
     public static boolean interrupt = true;
     private static boolean alreadyDisabledAdvancementKey = false;
 
@@ -52,6 +59,10 @@ public class MainClass {
     }
 
     private static void _init() {
+        if(Platform.getEnvironment().equals(Env.SERVER)) {
+            Log.error(LogCategory.GENERAL, "Minecraft Access can only be run client-side");
+        }
+
         Config.getInstance().loadConfig();
 
         String msg = "Initializing Minecraft Access";
@@ -72,6 +83,14 @@ public class MainClass {
         MainClass.accessMenu = new AccessMenu();
         MainClass.fluidDetector = new FluidDetector();
 
+        for (KeyMapping km : KeyBindingsHandler.getInstance().getKeys()) {
+            KeyMappingRegistry.register(km);
+        }
+
+        ClientTickEvent.CLIENT_POST.register((Minecraft minecraftClient) -> {
+            clientTickEventsMethod(minecraftClient);
+        });
+
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
@@ -79,20 +98,7 @@ public class MainClass {
         }, "Shutdown-thread"));
     }
 
-    /**
-     * This method gets called at the end of every tick
-     *
-     * @param minecraftClient The current minecraft client object
-     */
-    public static void clientTickEventsMethod(Minecraft minecraftClient) {
-        try {
-            _clientTickEventsMethod(minecraftClient);
-        } catch (Exception e) {
-            log.error("An error occurred while running Minecraft Access client tick events", e);
-        }
-    }
-
-    private static void _clientTickEventsMethod(Minecraft minecraftClient) {
+    private static void clientTickEventsMethod(Minecraft minecraftClient) {
         OtherConfigsMap otherConfigsMap = OtherConfigsMap.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
@@ -156,7 +162,7 @@ public class MainClass {
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = OtherConfigsMap.getInstance().isDebugMode();
+        boolean debugMode = OtherConfigsMap.getInstance().isDebugMode() || Platform.isDevelopmentEnvironment();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);

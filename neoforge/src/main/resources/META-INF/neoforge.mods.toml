@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
-#issueTrackerURL = "https://github.com/minecraft-access/minecraft-access/issues"
+issueTrackerURL = "https://github.com/minecraft-access/minecraft-access/issues"
 license = "GNU GPLv3"
 
 [[mods]]
@@ -11,7 +11,14 @@ authors = "Shoaib, Boholder, TheSuperGamer20578"
 description = '''
 A mod that helps visually impaired players to play Minecraft.
 '''
-#logoFile = ""
+logoFile = "logo-mc-access.png"
+
+[[dependencies.minecraft_access]]
+modId = "architectury"
+mandatory = true
+versionRange = "[${architectury_api_version},)"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies.minecraft_access]]
 modId = "neoforge"
@@ -29,6 +36,3 @@ side = "BOTH"
 
 [[mixins]]
 config = "minecraft_access.mixins.json"
-
-[[mixins]]
-config = "minecraft_access-common.mixins.json"
