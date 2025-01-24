@@ -14,10 +14,10 @@
     "sources": "https://github.com/minecraft-access/minecraft-access"
   },
   "license": "GNU GPLv3",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "main": [
-      "org.mcaccess.minecraftaccess.fabric.MinecraftAccess"
+      "org.mcaccess.minecraftaccess.fabric.MainClassFabric"
     ]
   },
   "icon": "logo-mc-access.png",

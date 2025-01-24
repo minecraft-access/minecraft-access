@@ -4,10 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
-import dev.architectury.utils.Env;
 import lombok.extern.slf4j.Slf4j;
-import net.fabricmc.loader.impl.util.log.Log;
-import net.fabricmc.loader.impl.util.log.LogCategory;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.Level;
@@ -51,18 +48,6 @@ public class MainClass {
      * Initializes the mod
      */
     public static void init() {
-        try {
-            _init();
-        } catch (Exception e) {
-            log.error("An error occurred while initializing Minecraft Access.", e);
-        }
-    }
-
-    private static void _init() {
-        if(Platform.getEnvironment().equals(Env.SERVER)) {
-            Log.error(LogCategory.GENERAL, "Minecraft Access can only be run client-side");
-        }
-
         Config.getInstance().loadConfig();
 
         String msg = "Initializing Minecraft Access";
@@ -98,7 +83,7 @@ public class MainClass {
         }, "Shutdown-thread"));
     }
 
-    private static void clientTickEventsMethod(Minecraft minecraftClient) {
+    public static void clientTickEventsMethod(Minecraft minecraftClient) {
         OtherConfigsMap otherConfigsMap = OtherConfigsMap.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
