@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 import lombok.Getter;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.effect.StatusEffectInstance;
 
@@ -18,10 +18,7 @@ public class EffectNarration {
     private List<StatusEffectInstance> previousEffects = new ArrayList<>();
 
     public void update() {
-        if (MinecraftClient.getInstance() == null) return;
-        if (MinecraftClient.getInstance().player == null) return;
-
-        List<StatusEffectInstance> currentEffects = new ArrayList<>(MinecraftClient.getInstance().player.getStatusEffects());
+        List<StatusEffectInstance> currentEffects = new ArrayList<>(WorldUtils.getClientPlayer().getStatusEffects());
 
         List<StatusEffectInstance> newEffects = new ArrayList<>();
         List<StatusEffectInstance> lostEffects = new ArrayList<>();
@@ -74,13 +71,13 @@ public class EffectNarration {
     }
 
     public void narrateCurrentPlayerEffects() {
-        if (MinecraftClient.getInstance().player.getStatusEffects().isEmpty()) {
+        if (WorldUtils.getClientPlayer().getStatusEffects().isEmpty()) {
             MainClass.speakWithNarrator(I18n.translate("minecraft_access.effect_narration.no_effects"), true);
             return;
         }
 
         StringBuilder toSpeak = new StringBuilder();
-        for (StatusEffectInstance effect : MinecraftClient.getInstance().player.getStatusEffects()) {
+        for (StatusEffectInstance effect : WorldUtils.getClientPlayer().getStatusEffects()) {
             toSpeak.append(NarrationUtils.narrateEffect(effect));
         }
 

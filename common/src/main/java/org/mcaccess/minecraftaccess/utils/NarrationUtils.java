@@ -570,7 +570,7 @@ public class NarrationUtils {
         return I18n.translate(translationKey);
     }
 
-        public static String narrateEffect(StatusEffectInstance effect) {
+    public static String narrateEffect(StatusEffectInstance effect) {
         StringBuilder result = new StringBuilder();
 
         result.append(I18n.translate(effect.getTranslationKey())).append(" ");
@@ -583,6 +583,8 @@ public class NarrationUtils {
         if (effect.isInfinite()) {
             result.append(I18n.translate("effect.duration.infinite"));
         } else {
+            // StatusEffectInstance#getDuration returns ticks, so we divide by 20 in order to convert to seconds
+            // 1 second = 20 ticks
             int duration = effect.getDuration() / 20;
             int minutes = duration / 60;
             int seconds = duration % 60;

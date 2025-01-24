@@ -130,6 +130,8 @@ public class MainClass {
 
             MouseKeySimulation.runOnTick();
 
+            EffectNarration.getInstance().update();
+
             if (MinecraftClient.getInstance().currentScreen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.update();
@@ -146,8 +148,6 @@ public class MainClass {
         POIMarking.getInstance().update();
 
         FallDetector.getInstance().update();
-
-        EffectNarration.getInstance().update();
 
         HUDStatus.getInstance().update();
 
