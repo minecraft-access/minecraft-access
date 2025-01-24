@@ -72,9 +72,7 @@ public class MainClass {
             KeyMappingRegistry.register(km);
         }
 
-        ClientTickEvent.CLIENT_POST.register((Minecraft minecraftClient) -> {
-            clientTickEventsMethod(minecraftClient);
-        });
+        ClientTickEvent.CLIENT_POST.register(MainClass::clientTickEventsMethod);
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
