@@ -9,14 +9,19 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.ChestType;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.function.Predicate;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +33,7 @@ import java.util.Set;
 @Slf4j
 public class POIBlocks {
     @Getter
-    private static final POIBlocks INSTANCE = new POIBlocks();
+    private static final POIBlocks instance = new POIBlocks();
     private ClientPlayerEntity player;
     private ClientWorld world;
 
@@ -96,45 +101,82 @@ public class POIBlocks {
     private boolean isMarking = false;
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
-            SoundEvents.ENTITY_ITEM_PICKUP,
+    () -> I18n.translate("minecraft_access.point_of_interest.group.markedBlock"),
+    SoundEvents.ENTITY_ITEM_PICKUP,
             -5f,
             pos -> isMarking && world.getBlockState(pos).isOf(markedBlock)
     );
+
     private final POIGroup<BlockPos> oreGroup = new POIGroup<>(
-            SoundEvents.ENTITY_ITEM_PICKUP,
+        () -> I18n.translate("minecraft_access.point_of_interest.group.ore"),
+    SoundEvents.ENTITY_ITEM_PICKUP,
             -5f,
             pos -> oreBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
     );
 
+    private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
+        () -> I18n.translate("minecraft_access.point_of_interest.group.otherBlocks"),
+        pos -> otherBlocksFilter(pos)
+    );
+
+    private boolean otherBlocksFilter(BlockPos pos) {
+        boolean blockAlreadyInGroup = false;
+
+        for (BlockPos posInGroup : otherBlocksGroup.getItems()) {
+            blockAlreadyInGroup = world.getBlockState(pos).getBlock() == world.getBlockState(posInGroup).getBlock();
+            if (blockAlreadyInGroup) break;
+        }
+
+        return !world.getBlockState(pos).isAir() && !blockAlreadyInGroup;
+    }
+
     @SuppressWarnings("unchecked")
-    private final POIGroup<BlockPos>[] groups = new POIGroup[] {
+    public final POIGroup<BlockPos>[] groups = new POIGroup[] {
             markedGroup,
             oreGroup,
-            new POIGroup<BlockPos>(// Doors
+            new POIGroup<BlockPos>( // Doors
+                () -> I18n.translate("minecraft_access.point_of_interest.group.door"),
                 SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
                 2f,
-                pos -> world.getBlockState(pos).getBlock() instanceof DoorBlock || world.getBlockState(pos).getBlock() instanceof TrapdoorBlock
+                pos -> {
+                    if (world.getBlockState(pos).getBlock() instanceof DoorBlock) return world.getBlockState(pos).get(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER);
+                    else if (world.getBlockState(pos).getBlock() instanceof TrapdoorBlock) return true;
+
+                    return false;
+                }
             ),
             new POIGroup<BlockPos>(// Fluids
-                    SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
+            () -> I18n.translate("minecraft_access.point_of_interest.group.fluid"),
+            SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
                     2f,
                     pos -> this.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && world.getFluidState(pos).getLevel() == 8
             ),
             new POIGroup<BlockPos>(// Functional blocks
-                    SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
+            () -> I18n.translate("minecraft_access.point_of_interest.group.functional"),
+            SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
                     2f,
                     pos -> world.getBlockState(pos).getBlock() instanceof ButtonBlock || world.getBlockState(pos).getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
             ),
             new POIGroup<BlockPos>(// Blocks with interface
-                    SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(),
+            () -> I18n.translate("minecraft_access.point_of_interest.group.gui"),
+            SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(),
                     0f,
-                    pos -> world.getBlockState(pos).createScreenHandlerFactory(world, pos) != null
+                    pos -> {
+                        if (world.getBlockState(pos).getBlock() instanceof ChestBlock) return world.getBlockState(pos).get(ChestBlock.CHEST_TYPE).equals(ChestType.SINGLE) || world.getBlockState(pos).get(ChestBlock.CHEST_TYPE).equals(ChestType.RIGHT);
+                        else return world.getBlockState(pos).createScreenHandlerFactory(world, pos) != null;
+                    }
             ),
+            otherBlocksGroup, // This group should always be at the end of this list
     };
 
     private POIBlocks() {
         loadConfigurations();
     }
+
+    @Getter
+    private List<BlockPos> lastScanResults = new ArrayList<>();
+
+    private List<BlockPos> currentScanResults = new ArrayList<>();
 
     public void update(boolean isMarking, Block markedBlock) {
         this.isMarking = isMarking;
@@ -155,6 +197,8 @@ public class POIBlocks {
             group.clear();
         }
 
+        currentScanResults = new ArrayList<>();
+
         // Player position is where player's leg be
         checkedBlocks = new HashSet<>();
         BlockPos pos = player.getBlockPos();
@@ -164,6 +208,8 @@ public class POIBlocks {
         checkBlock(pos.up(2), 0);
         checkBlock(pos, this.range);
         checkBlock(pos.up(), this.range);
+
+        lastScanResults = currentScanResults;
 
         if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
             for (BlockPos blockPos : markedGroup.getItems()) {
@@ -217,7 +263,8 @@ public class POIBlocks {
         }
 
         for (POIGroup<BlockPos> group : groups) {
-            if (group.add(blockPos)) {
+            if (group.add(blockPos) && group != otherBlocksGroup) {
+                currentScanResults.add(blockPos);
                 break;
             }
         }
