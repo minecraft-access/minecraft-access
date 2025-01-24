@@ -134,7 +134,7 @@ public class POIBlocks {
     public final POIGroup<BlockPos>[] groups = new POIGroup[] {
             markedGroup,
             oreGroup,
-            new POIGroup<BlockPos>(
+            new POIGroup<BlockPos>( // Doors
                 () -> I18n.translate("minecraft_access.point_of_interest.group.door"),
                 SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
                 2f,

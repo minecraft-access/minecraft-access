@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * Narrates/Speaks the currently selected hotbar item's name and the action bar.
+ * Narrates titles
  */
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
@@ -29,6 +30,12 @@ public class InGameHudMixin {
 
     @Shadow
     private ItemStack currentStack;
+
+    @Shadow
+    private Text title;
+
+    @Shadow
+    private Text subtitle;
 
     @Unique
     private final SpeakHeldItem minecraft_access$feature = new SpeakHeldItem();
@@ -69,5 +76,16 @@ public class InGameHudMixin {
         parts.removeAll(previousParts);
         String toSpeak = String.join(", ", parts);
         MainClass.speakWithNarratorIfNotEmpty(toSpeak, true);
+    }
+
+    @Inject(method = "setTitle", at = @At("TAIL"))
+    public void setTitleMixin(Text title, CallbackInfo ci) {
+        MainClass.speakWithNarrator(title.getString(), true);
+        if (subtitle != null) MainClass.speakWithNarrator(subtitle.getString(), false);
+    }
+
+    @Inject(method = "setSubtitle", at = @At("HEAD"))
+    public void setSubtitleMixin(Text subtitle, CallbackInfo ci) {
+        if (title != null && this.subtitle == null) MainClass.speakWithNarrator(subtitle.getString(), false);
     }
 }

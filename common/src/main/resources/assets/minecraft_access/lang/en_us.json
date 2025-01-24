@@ -322,5 +322,7 @@
   "minecraft_access.other.start_of_list": "Start of list",
   "minecraft_access.other.end_of_list": "End of list",
   "minecraft_access.point_of_interest.not_found": "No points of interest detected",
-  "minecraft_access.point_of_interest.targeting_nearest": "Targeting nearest object"
+  "minecraft_access.point_of_interest.targeting_nearest": "Targeting nearest object",
+  "minecraft_access.hud_status.announce_shown": "HUD shown",
+  "minecraft_access.hud_status.announce_hidden": "HUD hidden"
 }
