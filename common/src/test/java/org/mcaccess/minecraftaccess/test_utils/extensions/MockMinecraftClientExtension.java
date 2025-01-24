@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.test_utils.extensions;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -19,10 +18,10 @@ import java.util.Objects;
  * Close the mocked static instance at {@link AfterTestExecutionCallback} phase.
  */
 public class MockMinecraftClientExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
-    private MockedStatic<MinecraftClient> ms;
+    private MockedStatic<Minecraft> ms;
 
     @Override public void beforeTestExecution(ExtensionContext extensionContext) {
-        this.ms = Mockito.mockStatic(MinecraftClient.class);
+        this.ms = Mockito.mockStatic(Minecraft.class);
         MockMinecraftClientWrapper wrapper = new MockMinecraftClientWrapper();
 
         // Mock "MinecraftClient.getInstance()" that commonly used to get current MinecraftClient singleton instance.
@@ -48,7 +47,7 @@ public class MockMinecraftClientExtension implements BeforeTestExecutionCallback
      */
     private static void enableMCBootstrapFlag() {
         try {
-            var b = Bootstrap.class.getDeclaredField("initialized");
+            var b = Bootstrap.class.getDeclaredField("isBootstrapped");
             b.trySetAccessible();
             b.set(null, true);
         } catch (NoSuchFieldException | IllegalAccessException e) {
