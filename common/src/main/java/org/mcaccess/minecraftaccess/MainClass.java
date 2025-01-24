@@ -150,6 +150,8 @@ public class MainClass {
         Keystroke.updateInstances();
 
         EffectNarration.getInstance().update();
+
+        HUDStatus.getInstance().update();
     }
 
     /**
