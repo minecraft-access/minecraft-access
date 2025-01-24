@@ -53,6 +53,11 @@ public class PlayerStatus {
                     }
                 }
 
+                if (Screen.hasControlDown()) {
+                    EffectNarration.getInstance().narrateCurrentPlayerEffects();
+                    return;
+                }
+
                 if ((minecraftClient.player.isSubmergedInWater() || minecraftClient.player.getAir() < minecraftClient.player.getMaxAir()) && !minecraftClient.player.canBreatheInWater()) {
                     air = Math.max(air, 0.0);
                     toSpeak += I18n.translate("minecraft_access.player_status.air", air, maxAir);

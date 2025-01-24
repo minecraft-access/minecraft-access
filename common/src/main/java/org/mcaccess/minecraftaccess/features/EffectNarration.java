@@ -1,13 +1,10 @@
 package org.mcaccess.minecraftaccess.features;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
@@ -22,22 +19,7 @@ public class EffectNarration {
 
     public void update() {
         if (MinecraftClient.getInstance() == null) return;
-        if (MinecraftClient.getInstance().currentScreen != null) return;
         if (MinecraftClient.getInstance().player == null) return;
-
-        if (KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().speakEffectsKey)) {
-            if (MinecraftClient.getInstance().player.getStatusEffects().isEmpty()) {
-                MainClass.speakWithNarrator(I18n.translate("minecraft_access.effect_narration.no_effects"), true);
-                return;
-            }
-
-            StringBuilder toSpeak = new StringBuilder();
-            for (StatusEffectInstance effect : MinecraftClient.getInstance().player.getStatusEffects()) {
-                toSpeak.append(NarrationUtils.narrateEffect(effect));
-            }
-
-            MainClass.speakWithNarrator(toSpeak.toString(), true);
-        }
 
         List<StatusEffectInstance> currentEffects = new ArrayList<>(MinecraftClient.getInstance().player.getStatusEffects());
 
@@ -89,5 +71,19 @@ public class EffectNarration {
         MainClass.speakWithNarratorIfNotEmpty(toSpeak.toString(), true);
 
         previousEffects = currentEffects;
+    }
+
+    public void narrateCurrentPlayerEffects() {
+        if (MinecraftClient.getInstance().player.getStatusEffects().isEmpty()) {
+            MainClass.speakWithNarrator(I18n.translate("minecraft_access.effect_narration.no_effects"), true);
+            return;
+        }
+
+        StringBuilder toSpeak = new StringBuilder();
+        for (StatusEffectInstance effect : MinecraftClient.getInstance().player.getStatusEffects()) {
+            toSpeak.append(NarrationUtils.narrateEffect(effect));
+        }
+
+        MainClass.speakWithNarrator(toSpeak.toString(), true);
     }
 }
