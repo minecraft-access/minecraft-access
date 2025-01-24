@@ -147,11 +147,12 @@ public class MainClass {
 
         FallDetector.getInstance().update();
 
-        Keystroke.updateInstances();
-
         EffectNarration.getInstance().update();
 
         HUDStatus.getInstance().update();
+
+        // This should always be at the bottom
+        Keystroke.updateInstances();
     }
 
     /**
