@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import org.mcaccess.minecraftaccess.Config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CommandBlockScreen;
@@ -15,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ScreenNarrator.class)
 public class ScreenNarratorMixin {
     @Unique
-    private Screen previousScreen = null;
+    private Screen mca$previousScreen = null;
 
     /**
      * The original game narration function will repeat whole text input in {@link TextFieldWidget} on every text modifying operation.
@@ -27,16 +26,14 @@ public class ScreenNarratorMixin {
     @Inject(at = @At("RETURN"), method = "buildNarratorText", cancellable = true)
     public void suppressTextEditingNarration(boolean includeUnchanged, CallbackInfoReturnable<String> cir) {
         var c = MinecraftClient.getInstance();
-        var s = Config.getSerialiser();
-        s.getClass();
         if (c == null || c.currentScreen == null || !(c.currentScreen.getFocused() instanceof TextFieldWidget)) {
-            this.previousScreen = null;
+            this.mca$previousScreen = null;
             return;
         }
 
         // Skip every first time the new screen is opened, to speak screen title.
-        if (c.currentScreen != previousScreen) {
-            this.previousScreen = c.currentScreen;
+        if (c.currentScreen != mca$previousScreen) {
+            this.mca$previousScreen = c.currentScreen;
             return;
         }
 
