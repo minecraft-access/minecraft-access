@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.read_crosshair;
 
+import dev.architectury.platform.Platform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -150,12 +151,8 @@ public class ReadCrosshair {
     }
 
     private CrosshairNarrator getNarrator() {
-        if (useJade) {
-            try {
-                Class.forName("snownee.jade.overlay.WailaTickHandler");
+        if (useJade && Platform.isModLoaded("jade")) {
                 return Jade.getInstance();
-            } catch (ClassNotFoundException ignored) {
-            }
         }
         return MCAccess.getInstance();
     }
