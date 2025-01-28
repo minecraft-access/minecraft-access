@@ -59,6 +59,7 @@ processResources {
         expand Map.of("version", project.version,
                 "neoforge_version", rootProject.neoforge_version,
                 "architectury_api_version", rootProject.architectury_api_version,
+                "jade_neoforge_version", rootProject.jade_neoforge_version,
                 "minecraft_version", rootProject.minecraft_version)
     }
 }
