@@ -1,12 +1,12 @@
 package org.mcaccess.minecraftaccess.features;
 
-import org.mcaccess.minecraftaccess.MainClass;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
+import org.mcaccess.minecraftaccess.MainClass;
 
 /**
  * Narrates the name of the biome when entering a different biome.
@@ -17,18 +17,18 @@ public class BiomeIndicator {
     private String previousBiome = null;
 
     public void update() {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient == null) return;
-        if (minecraftClient.world == null) return;
+        if (minecraftClient.level == null) return;
         if (minecraftClient.player == null) return;
-        if (minecraftClient.currentScreen != null) return;
+        if (minecraftClient.screen != null) return;
 
-        RegistryEntry<Biome> var27 = minecraftClient.world.getBiome(minecraftClient.player.getBlockPos());
-        String name = I18n.translate(getBiomeName(var27));
+        Holder<Biome> var27 = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
+        String name = I18n.get(getBiomeName(var27));
 
         if (!name.equalsIgnoreCase(previousBiome)) {
             previousBiome = name;
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.biome", name), true);
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.biome", name), true);
         }
     }
 
@@ -38,8 +38,8 @@ public class BiomeIndicator {
      * @param biome the biome's registry entry
      * @return the biome's name
      */
-    public static String getBiomeName(RegistryEntry<Biome> biome) {
-        return I18n.translate(getBiomeTranslationKey(biome));
+    public static String getBiomeName(Holder<Biome> biome) {
+        return I18n.get(getBiomeTranslationKey(biome));
     }
 
     /**
@@ -48,9 +48,9 @@ public class BiomeIndicator {
      * @param biome the biome's registry entry
      * @return the biome's translation key
      */
-    private static String getBiomeTranslationKey(RegistryEntry<Biome> biome) {
-        return biome.getKeyOrValue().map(
-                (biomeKey) -> "biome." + biomeKey.getValue().getNamespace() + "." + biomeKey.getValue().getPath(),
+    private static String getBiomeTranslationKey(Holder<Biome> biome) {
+        return biome.unwrap().map(
+                (biomeKey) -> "biome." + biomeKey.location().getNamespace() + "." + biomeKey.location().getPath(),
                 (biomeValue) -> "[unregistered " + biomeValue + "]" // For unregistered biome
         );
     }

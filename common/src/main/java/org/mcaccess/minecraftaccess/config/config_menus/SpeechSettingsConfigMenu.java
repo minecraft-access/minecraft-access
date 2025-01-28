@@ -1,11 +1,9 @@
 package org.mcaccess.minecraftaccess.config.config_menus;
 
-import org.mcaccess.minecraftaccess.config.Config;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
 import org.mcaccess.minecraftaccess.config.config_maps.SpeechSettingsConfigMap;
 import org.mcaccess.minecraftaccess.utils.BaseScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.Text;
 
 @SuppressWarnings("DataFlowIssue")
 public class SpeechSettingsConfigMenu extends BaseScreen {
@@ -22,11 +20,11 @@ public class SpeechSettingsConfigMenu extends BaseScreen {
         ValueEntryMenu.ValueConfig c1 = new ValueEntryMenu.ValueConfig(() -> SpeechSettingsConfigMap.getInstance().getSpeechRate(),
                 (v) -> SpeechSettingsConfigMap.getInstance().setSpeechRate(Float.parseFloat(v)),
                 ValueEntryMenu.ValueType.FLOAT);
-        ButtonWidget speechRateButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.button_with_float_value",
-                        I18n.translate("minecraft_access.gui.speech_settings_config_menu.button.speech_rate"),
+        Button speechRateButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.button_with_float_value",
+                        I18n.get("minecraft_access.gui.speech_settings_config_menu.button.speech_rate"),
                         initMap.getSpeechRate()),
-                (button) -> this.client.setScreen(new ValueEntryMenu(c1, this)));
-        this.addDrawableChild(speechRateButton);
+                (button) -> minecraft.setScreen(new ValueEntryMenu(c1, this)));
+        this.addRenderableWidget(speechRateButton);
     }
 }

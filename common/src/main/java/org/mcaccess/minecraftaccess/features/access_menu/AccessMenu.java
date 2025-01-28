@@ -1,5 +1,16 @@
 package org.mcaccess.minecraftaccess.features.access_menu;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.ConfigMenu;
 import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
@@ -12,17 +23,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -36,7 +36,7 @@ public class AccessMenu {
      * Much farther than the Read Crosshair feature (6 blocks).
      */
     public static final double RAY_CAST_DISTANCE = 20.0;
-    private static MinecraftClient minecraftClient;
+    private static Minecraft minecraftClient;
     private static final MenuKeystroke menuKey = new MenuKeystroke(KeyBindingsHandler.getInstance().accessMenuKey);
     /**
      * Access Menu function direct keys (configured in keybinding settings)
@@ -50,7 +50,7 @@ public class AccessMenu {
      */
     private static final MenuFunction[] FUNCTIONS = new MenuFunction[]{
             new MenuFunction(0, new IntervalKeystroke(KeyBindingsHandler.getInstance().openConfigMenu),
-                    () -> MinecraftClient.getInstance().setScreen(new ConfigMenu("config_menu"))),
+                    () -> Minecraft.getInstance().setScreen(new ConfigMenu("config_menu"))),
             new MenuFunction(1, new IntervalKeystroke(KeyBindingsHandler.getInstance().narrateTarget),
                     AccessMenu::getBlockAndFluidTargetInformation),
             new MenuFunction(2, new IntervalKeystroke(KeyBindingsHandler.getInstance().targetPosition),
@@ -89,11 +89,11 @@ public class AccessMenu {
 
     public void update() {
         try {
-            minecraftClient = MinecraftClient.getInstance();
+            minecraftClient = Minecraft.getInstance();
             if (minecraftClient == null) return;
             if (minecraftClient.player == null) return;
 
-            Screen currentScreen = minecraftClient.currentScreen;
+            Screen currentScreen = minecraftClient.screen;
             if (currentScreen == null) {
                 if (Screen.hasAltDown()) {
                     handleInMenuActions();
@@ -129,9 +129,9 @@ public class AccessMenu {
         // With Access Menu opened or alt key pressed,
         // listen to number keys pressing for executing corresponding functions
         // for the little performance improvement, will not use KeyUtils here.
-        long handle = minecraftClient.getWindow().getHandle();
+        long handle = minecraftClient.getWindow().getWindow();
         Stream.of(FUNCTIONS)
-                .filter(f -> InputUtil.isKeyPressed(handle, f.number + GLFW.GLFW_KEY_0))
+                .filter(f -> InputConstants.isKeyDown(handle, f.number + GLFW.GLFW_KEY_0))
                 .findFirst()
                 .ifPresent(f -> {
                     if (functionIntervals[f.number].isReady()) {
@@ -145,7 +145,7 @@ public class AccessMenu {
             HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
             if (hit == null) return;
             switch (hit.getType()) {
-                case MISS, ENTITY -> MainClass.speakWithNarrator(I18n.translate("minecraft_access.access_menu.target_missed"), true);
+                case MISS, ENTITY -> MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
                 case BLOCK -> {
                     try {
                         BlockHitResult blockHit = (BlockHitResult) hit;
@@ -167,7 +167,7 @@ public class AccessMenu {
             HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
             if (hit == null) return;
             switch (hit.getType()) {
-                case MISS, ENTITY -> MainClass.speakWithNarrator(I18n.translate("minecraft_access.access_menu.target_missed"), true);
+                case MISS, ENTITY -> MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
                 case BLOCK -> {
                     try {
                         BlockHitResult blockHitResult = (BlockHitResult) hit;
@@ -186,12 +186,12 @@ public class AccessMenu {
     public static void getLightLevel() {
         try {
             if (minecraftClient.player == null) return;
-            if (minecraftClient.world == null) return;
+            if (minecraftClient.level == null) return;
 
-            minecraftClient.player.closeScreen();
+            minecraftClient.player.clientSideCloseContainer();
 
-            int light = minecraftClient.world.getLightLevel(minecraftClient.player.getBlockPos());
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.access_menu.light_level", light), true);
+            int light = minecraftClient.level.getMaxLocalRawBrightness(minecraftClient.player.blockPosition());
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.light_level", light), true);
         } catch (Exception e) {
             log.error("An error occurred when getting light level.", e);
         }
@@ -200,13 +200,13 @@ public class AccessMenu {
     public static void getBiome() {
         try {
             if (minecraftClient.player == null) return;
-            if (minecraftClient.world == null) return;
+            if (minecraftClient.level == null) return;
 
-            minecraftClient.player.closeScreen();
+            minecraftClient.player.clientSideCloseContainer();
 
-            RegistryEntry<Biome> var27 = minecraftClient.world.getBiome(minecraftClient.player.getBlockPos());
-            String name = I18n.translate(BiomeIndicator.getBiomeName(var27));
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.access_menu.biome", name), true);
+            Holder<Biome> var27 = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
+            String name = I18n.get(BiomeIndicator.getBiomeName(var27));
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.biome", name), true);
         } catch (Exception e) {
             log.error("An error occurred when getting biome.", e);
         }
@@ -216,9 +216,9 @@ public class AccessMenu {
         try {
             if (minecraftClient.player == null) return;
 
-            minecraftClient.player.closeScreen();
+            minecraftClient.player.clientSideCloseContainer();
 
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.access_menu.xp",
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.xp",
                             PlayerUtils.getExperienceLevel(),
                             PlayerUtils.getExperienceProgress()),
                     true);
@@ -230,10 +230,10 @@ public class AccessMenu {
     public static void getTimeOfDay() {
         try {
             if (minecraftClient.player == null) return;
-            if (minecraftClient.world == null) return;
+            if (minecraftClient.level == null) return;
 
-            minecraftClient.player.closeScreen();
-            long daytime = minecraftClient.player.clientWorld.getTimeOfDay() + 6000;
+            minecraftClient.player.clientSideCloseContainer();
+            long daytime = minecraftClient.player.clientLevel.getDayTime() + 6000;
             int hours = (int) (daytime / 1000) % 24;
             int minutes = (int) ((daytime % 1000) * 60 / 1000);
 
@@ -250,7 +250,7 @@ public class AccessMenu {
             }
 
             String toSpeak = "%02d:%02d".formatted(hours, minutes);
-            toSpeak = I18n.translate(translationKey, toSpeak);
+            toSpeak = I18n.get(translationKey, toSpeak);
             MainClass.speakWithNarrator(toSpeak, true);
         } catch (Exception e) {
             log.error("An error occurred while speaking time of day.", e);

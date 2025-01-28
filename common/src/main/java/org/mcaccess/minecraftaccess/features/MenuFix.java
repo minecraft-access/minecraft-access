@@ -1,19 +1,21 @@
 package org.mcaccess.minecraftaccess.features;
 
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.DirectJoinServerScreen;
+import net.minecraft.client.gui.screens.EditServerScreen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
+import net.minecraft.client.gui.screens.options.*;
+import net.minecraft.client.gui.screens.options.controls.ControlsScreen;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.client.gui.screens.packs.PackSelectionScreen;
+import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
+import net.minecraft.client.gui.screens.worldselection.EditWorldScreen;
+import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
+import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.gui.screen.multiplayer.AddServerScreen;
-import net.minecraft.client.gui.screen.multiplayer.DirectConnectScreen;
-import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
-import net.minecraft.client.gui.screen.option.*;
-import net.minecraft.client.gui.screen.pack.PackScreen;
-import net.minecraft.client.gui.screen.world.CreateWorldScreen;
-import net.minecraft.client.gui.screen.world.EditWorldScreen;
-import net.minecraft.client.gui.screen.world.SelectWorldScreen;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,23 +39,23 @@ public class MenuFix {
     private static final List<Class> menuList = new ArrayList<>() {{
         add(TitleScreen.class);
         add(OptionsScreen.class);
-        add(ControlsOptionsScreen.class);
+        add(ControlsScreen.class);
         add(OnlineOptionsScreen.class);
-        add(SkinOptionsScreen.class);
+        add(SkinCustomizationScreen.class);
         add(SoundOptionsScreen.class);
-        add(VideoOptionsScreen.class);
-        add(LanguageOptionsScreen.class);
+        add(VideoSettingsScreen.class);
+        add(LanguageSelectScreen.class);
         add(ChatOptionsScreen.class);
-        add(PackScreen.class);
+        add(PackSelectionScreen.class);
         add(AccessibilityOptionsScreen.class);
-        add(MouseOptionsScreen.class);
-        add(KeybindsScreen.class);
+        add(MouseSettingsScreen.class);
+        add(KeyBindsScreen.class);
         add(SelectWorldScreen.class);
         add(CreateWorldScreen.class);
         add(EditWorldScreen.class);
-        add(MultiplayerScreen.class);
-        add(DirectConnectScreen.class);
-        add(AddServerScreen.class);
+        add(JoinMultiplayerScreen.class);
+        add(DirectJoinServerScreen.class);
+        add(EditServerScreen.class);
     }};
 
     /**
@@ -61,16 +63,16 @@ public class MenuFix {
      *
      * @param minecraftClient Current MinecraftClient instance
      */
-    public static void update(MinecraftClient minecraftClient) {
-        if (minecraftClient.currentScreen == null)
+    public static void update(Minecraft minecraftClient) {
+        if (minecraftClient.screen == null)
             return;
 
         try {
-            if (menuList.contains(minecraftClient.currentScreen.getClass())) {
-                if (!(prevScreenClass == minecraftClient.currentScreen.getClass())) {
-                   log.debug("%s opened, now moving the mouse cursor.".formatted(minecraftClient.currentScreen.getTitle().getString()));
+            if (menuList.contains(minecraftClient.screen.getClass())) {
+                if (!(prevScreenClass == minecraftClient.screen.getClass())) {
+                   log.debug("%s opened, now moving the mouse cursor.".formatted(minecraftClient.screen.getTitle().getString()));
                     moveMouseCursor(minecraftClient);
-                    prevScreenClass = minecraftClient.currentScreen.getClass();
+                    prevScreenClass = minecraftClient.screen.getClass();
                 }
 
                 boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
@@ -88,7 +90,7 @@ public class MenuFix {
      *
      * @param minecraftClient Current MinecraftClient instance
      */
-    private static void moveMouseCursor(MinecraftClient minecraftClient) {
+    private static void moveMouseCursor(Minecraft minecraftClient) {
         try {
             int movePosX = minecraftClient.getWindow().getX() + 10;
             int movePosY = minecraftClient.getWindow().getY() + 10;

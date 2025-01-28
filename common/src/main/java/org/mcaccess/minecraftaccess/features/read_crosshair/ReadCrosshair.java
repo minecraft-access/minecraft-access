@@ -1,5 +1,16 @@
 package org.mcaccess.minecraftaccess.features.read_crosshair;
 
+import dev.architectury.platform.Platform;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.RCPartialSpeakingConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.RCRelativePositionSoundCueConfigMap;
@@ -7,16 +18,6 @@ import org.mcaccess.minecraftaccess.config.config_maps.ReadCrosshairConfigMap;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +32,7 @@ public class ReadCrosshair {
     private boolean enabled;
     private boolean useJade;
     private @Nullable Object previous = null;
-    private Vec3d previousSoundPos = Vec3d.ZERO;
+    private Vec3 previousSoundPos = Vec3.ZERO;
     private boolean speakSide;
     private boolean speakingConsecutiveBlocks;
     private final Interval repeatSpeakingInterval = Interval.defaultDelay();
@@ -57,11 +58,11 @@ public class ReadCrosshair {
     }
 
     public void tick() {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient == null) return;
-        if (minecraftClient.world == null) return;
+        if (minecraftClient.level == null) return;
         if (minecraftClient.player == null) return;
-        if (minecraftClient.currentScreen != null) return;
+        if (minecraftClient.screen != null) return;
 
         loadConfig();
         if (!enabled) return;
@@ -80,28 +81,29 @@ public class ReadCrosshair {
 
         if (enableRelativePositionSoundCue) {
             double rayCastDistance = PlayerUtils.getInteractionRange();
-            Vec3d targetPosition = switch (hit) {
-                case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().toCenterPos();
-                case EntityHitResult entityHitResult -> entityHitResult.getEntity().getPos();
+            Vec3 targetPosition = switch (hit) {
+                case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().getCenter();
+                case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();
                 default -> null;
             };
             if (targetPosition != null && !Objects.equals(targetPosition, previousSoundPos)) {
                 WorldUtils.playRelativePositionSoundCue(targetPosition, rayCastDistance,
-                        SoundEvents.BLOCK_NOTE_BLOCK_HARP, this.minSoundVolume, this.maxSoundVolume);
+                        SoundEvents.NOTE_BLOCK_HARP, this.minSoundVolume, this.maxSoundVolume);
             }
             previousSoundPos = targetPosition;
         }
 
         if (enablePartialSpeaking) {
-            Identifier identifier = switch (hit) {
-                case BlockHitResult blockHitResult -> Registries.BLOCK.getId(minecraftClient.world.getBlockState(blockHitResult.getBlockPos()).getBlock());
-                case EntityHitResult entityHitResult -> EntityType.getId(entityHitResult.getEntity().getType());
+            ResourceLocation resourceLocation = switch (hit) {
+                case BlockHitResult blockHitResult ->
+                        BuiltInRegistries.BLOCK.getKey(minecraftClient.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
+                case EntityHitResult entityHitResult -> EntityType.getKey(entityHitResult.getEntity().getType());
                 default -> null;
             };
-            if (partialSpeakingBlock && hit.getType() == HitResult.Type.BLOCK && isIgnored(identifier)) {
+            if (partialSpeakingBlock && hit.getType() == HitResult.Type.BLOCK && isIgnored(resourceLocation)) {
                 return;
             }
-            if (partialSpeakingEntity && hit.getType() == HitResult.Type.ENTITY && isIgnored(identifier)) {
+            if (partialSpeakingEntity && hit.getType() == HitResult.Type.ENTITY && isIgnored(resourceLocation)) {
                 return;
             }
         }
@@ -149,17 +151,13 @@ public class ReadCrosshair {
     }
 
     private CrosshairNarrator getNarrator() {
-        if (useJade) {
-            try {
-                Class.forName("snownee.jade.overlay.WailaTickHandler");
+        if (useJade && Platform.isModLoaded("jade")) {
                 return Jade.getInstance();
-            } catch (ClassNotFoundException ignored) {
-            }
         }
         return MCAccess.getInstance();
     }
 
-    private boolean isIgnored(Identifier identifier) {
+    private boolean isIgnored(ResourceLocation identifier) {
         if (identifier == null) return false;
         String name = identifier.getPath();
         Predicate<String> p = partialSpeakingFuzzyMode ? name::contains : name::equals;
