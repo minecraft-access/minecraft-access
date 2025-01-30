@@ -3,7 +3,7 @@ name: Deploy Hugo site to GitHub Pages
 on:
   push:
     branches:
-      - "1.21"
+      - dev
 
 permissions:
   contents: read
