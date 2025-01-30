@@ -1,11 +1,8 @@
 package org.mcaccess.minecraftaccess.utils;
 
-import net.minecraft.client.font.FreeTypeUtil;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.text.OrderedText;
+import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.mcaccess.minecraftaccess.mixin.SystemToastAccessor;
 
 public class StringUtils {
 
@@ -51,9 +48,9 @@ public class StringUtils {
     }
 
     @Contract(pure = true)
-    public static @NotNull String orderedTextToString(@NotNull OrderedText text) {
+    public static @NotNull String formattedCharSequenceToString(@NotNull FormattedCharSequence charSequence) {
         StringBuilder builder = new StringBuilder();
-        text.accept((index, style, codePoint) -> {
+        charSequence.accept((index, style, codePoint) -> {
             builder.appendCodePoint(codePoint);
             return true;
         });

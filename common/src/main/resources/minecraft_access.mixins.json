@@ -42,19 +42,17 @@
     "RecipeButtonMixin",
     "ScreenMixin",
     "ScreenNarrationCollectorMixin",
+    "SingleItemRecipeAccessor",
     "SlotAccessor",
     "StonecutterScreenAccessor",
     "SystemToastAccessor",
     "TamableAnimalMixin",
     "TextFieldHelperAccessor",
-    "TextFieldHelperMixin"
+    "TextFieldHelperMixin",
     "ToastManagerMixin",
     "TutorialToastAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "SingleItemRecipeAccessor"
-  ]
+  }
 }

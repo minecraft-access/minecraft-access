@@ -1,8 +1,8 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -11,8 +11,8 @@ import java.util.List;
 @Mixin(SystemToast.class)
 public interface SystemToastAccessor {
     @Accessor
-    Text getTitle();
+    Component getTitle();
 
     @Accessor
-    List<OrderedText> getLines();
+    List<FormattedCharSequence> getMessageLines();
 }

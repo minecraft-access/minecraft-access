@@ -1,12 +1,12 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import net.minecraft.advancement.AdvancementEntry;
-import net.minecraft.client.toast.AdvancementToast;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(AdvancementToast.class)
 public interface AdvancementToastAccessor {
     @Accessor
-    AdvancementEntry getAdvancement();
+    AdvancementHolder getAdvancement();
 }
