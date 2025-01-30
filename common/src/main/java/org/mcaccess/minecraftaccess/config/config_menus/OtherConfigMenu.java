@@ -1,11 +1,11 @@
 package org.mcaccess.minecraftaccess.config.config_menus;
 
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import org.mcaccess.minecraftaccess.config.Config;
 import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.mcaccess.minecraftaccess.utils.BaseScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.Text;
 
 @SuppressWarnings("DataFlowIssue")
 public class OtherConfigMenu extends BaseScreen {
@@ -19,189 +19,189 @@ public class OtherConfigMenu extends BaseScreen {
 
         OtherConfigsMap initMap = OtherConfigsMap.getInstance();
 
-        ButtonWidget biomeIndicatorButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isBiomeIndicatorEnabled() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.biome_indicator_button")
+        Button biomeIndicatorButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isBiomeIndicatorEnabled() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.biome_indicator_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setBiomeIndicatorEnabled(!map.isBiomeIndicatorEnabled());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isBiomeIndicatorEnabled() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.biome_indicator_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isBiomeIndicatorEnabled() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.biome_indicator_button")
                     )));
                 });
-        this.addDrawableChild(biomeIndicatorButton);
+        this.addRenderableWidget(biomeIndicatorButton);
 
-        ButtonWidget xpIndicatorButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isXpIndicatorEnabled() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.xp_indicator_button")
+        Button xpIndicatorButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isXpIndicatorEnabled() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.xp_indicator_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setXpIndicatorEnabled(!map.isXpIndicatorEnabled());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isXpIndicatorEnabled() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.xp_indicator_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isXpIndicatorEnabled() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.xp_indicator_button")
                     )));
                 });
-        this.addDrawableChild(xpIndicatorButton);
+        this.addRenderableWidget(xpIndicatorButton);
 
-        ButtonWidget speakFacingDirectionButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isFacingDirectionEnabled() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.speak_facing_direction_button")
+        Button speakFacingDirectionButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isFacingDirectionEnabled() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.speak_facing_direction_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setFacingDirectionEnabled(!map.isFacingDirectionEnabled());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isFacingDirectionEnabled() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.speak_facing_direction_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isFacingDirectionEnabled() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.speak_facing_direction_button")
                     )));
                 },
                 true);
-        this.addDrawableChild(speakFacingDirectionButton);
+        this.addRenderableWidget(speakFacingDirectionButton);
 
-        ButtonWidget playerStatusButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isPlayerStatusEnabled() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.player_status_button")
+        Button playerStatusButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isPlayerStatusEnabled() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.player_status_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setPlayerStatusEnabled(!map.isPlayerStatusEnabled());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isPlayerStatusEnabled() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.player_status_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isPlayerStatusEnabled() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.player_status_button")
                     )));
                 },
                 true);
-        this.addDrawableChild(playerStatusButton);
+        this.addRenderableWidget(playerStatusButton);
 
-        ButtonWidget positionNarratorButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isPositionNarratorEnabled() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.position_narrator_button")
+        Button positionNarratorButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isPositionNarratorEnabled() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.position_narrator_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setPositionNarratorEnabled(!map.isPositionNarratorEnabled());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isPositionNarratorEnabled() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.position_narrator_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isPositionNarratorEnabled() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.position_narrator_button")
                     )));
                 });
-        this.addDrawableChild(positionNarratorButton);
+        this.addRenderableWidget(positionNarratorButton);
 
         ValueEntryMenu.ValueConfig c2 = new ValueEntryMenu.ValueConfig(() -> OtherConfigsMap.getInstance().getCommandSuggestionNarratorFormat(),
                 (v) -> OtherConfigsMap.getInstance().setCommandSuggestionNarratorFormat(v),
                 ValueEntryMenu.ValueType.STRING);
-        ButtonWidget suggestionFormatButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.button_with_string_value",
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.command_suggestion_narrator_format_button"),
+        Button suggestionFormatButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.button_with_string_value",
+                        I18n.get("minecraft_access.gui.other_config_menu.button.command_suggestion_narrator_format_button"),
                         initMap.getCommandSuggestionNarratorFormat()
                 ),
-                (button) -> this.client.setScreen(new ValueEntryMenu(c2, this)));
-        this.addDrawableChild(suggestionFormatButton);
+                (button) -> this.minecraft.setScreen(new ValueEntryMenu(c2, this)));
+        this.addRenderableWidget(suggestionFormatButton);
 
-        ButtonWidget use12HourFormatButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isUse12HourTimeFormat() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.use_12_hour_format_button")
+        Button use12HourFormatButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isUse12HourTimeFormat() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.use_12_hour_format_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setUse12HourTimeFormat(!map.isUse12HourTimeFormat());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isUse12HourTimeFormat() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.use_12_hour_format_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isUse12HourTimeFormat() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.use_12_hour_format_button")
                     )));
                 });
-        this.addDrawableChild(use12HourFormatButton);
+        this.addRenderableWidget(use12HourFormatButton);
 
-        ButtonWidget speakActionBarButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isActionBarEnabled() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.speak_action_bar_button")
+        Button speakActionBarButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isActionBarEnabled() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.speak_action_bar_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setActionBarEnabled(!map.isActionBarEnabled());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isActionBarEnabled() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.speak_action_bar_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isActionBarEnabled() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.speak_action_bar_button")
                     )));
                 },
                 true);
-        this.addDrawableChild(speakActionBarButton);
+        this.addRenderableWidget(speakActionBarButton);
 
-        ButtonWidget onlySpeakChangedContentOfActionBarButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isOnlySpeakActionBarUpdates() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.only_speak_action_bar_updates_button")
+        Button onlySpeakChangedContentOfActionBarButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isOnlySpeakActionBarUpdates() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.only_speak_action_bar_updates_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setOnlySpeakActionBarUpdates(!map.isOnlySpeakActionBarUpdates());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isOnlySpeakActionBarUpdates() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.only_speak_action_bar_updates_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isOnlySpeakActionBarUpdates() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.only_speak_action_bar_updates_button")
                     )));
                 },
                 true);
-        this.addDrawableChild(onlySpeakChangedContentOfActionBarButton);
+        this.addRenderableWidget(onlySpeakChangedContentOfActionBarButton);
 
-        ButtonWidget speakFishingHarvestButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isFishingHarvestEnabled() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.speak_fishing_harvest_button")
+        Button speakFishingHarvestButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isFishingHarvestEnabled() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.speak_fishing_harvest_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setFishingHarvestEnabled(!map.isFishingHarvestEnabled());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isFishingHarvestEnabled() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.speak_fishing_harvest_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isFishingHarvestEnabled() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.speak_fishing_harvest_button")
                     )));
                 },
                 true);
-        this.addDrawableChild(speakFishingHarvestButton);
+        this.addRenderableWidget(speakFishingHarvestButton);
 
-        ButtonWidget reportHeldItemsCountWhenChangedButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isReportHeldItemsCountWhenChanged() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.report_held_items_count_when_changed_button")
+        Button reportHeldItemsCountWhenChangedButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isReportHeldItemsCountWhenChanged() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.report_held_items_count_when_changed_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setReportHeldItemsCountWhenChanged(!map.isReportHeldItemsCountWhenChanged());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isReportHeldItemsCountWhenChanged() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.report_held_items_count_when_changed_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isReportHeldItemsCountWhenChanged() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.report_held_items_count_when_changed_button")
                     )));
                 },
                 true);
-        this.addDrawableChild(reportHeldItemsCountWhenChangedButton);
+        this.addRenderableWidget(reportHeldItemsCountWhenChangedButton);
 
-        ButtonWidget menuFixButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isMenuFixEnabled() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.menu_fix_button")
+        Button menuFixButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isMenuFixEnabled() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.menu_fix_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setMenuFixEnabled(!map.isMenuFixEnabled());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isMenuFixEnabled() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.menu_fix_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isMenuFixEnabled() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.menu_fix_button")
                     )));
                 });
-        this.addDrawableChild(menuFixButton);
+        this.addRenderableWidget(menuFixButton);
 
-        ButtonWidget debugModeButton = this.buildButtonWidget(
-                I18n.translate("minecraft_access.gui.common.button.toggle_button." + (initMap.isDebugMode() ? "enabled" : "disabled"),
-                        I18n.translate("minecraft_access.gui.other_config_menu.button.debug_mode_button")
+        Button debugModeButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isDebugMode() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.debug_mode_button")
                 ),
                 (button) -> {
                     OtherConfigsMap map = OtherConfigsMap.getInstance();
                     map.setDebugMode(!map.isDebugMode());
                     Config.getInstance().writeJSON();
-                    button.setMessage(Text.of(I18n.translate("minecraft_access.gui.common.button.toggle_button." + (map.isDebugMode() ? "enabled" : "disabled"),
-                            I18n.translate("minecraft_access.gui.other_config_menu.button.debug_mode_button")
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isDebugMode() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.debug_mode_button")
                     )));
                 });
-        this.addDrawableChild(debugModeButton);
+        this.addRenderableWidget(debugModeButton);
     }
 }

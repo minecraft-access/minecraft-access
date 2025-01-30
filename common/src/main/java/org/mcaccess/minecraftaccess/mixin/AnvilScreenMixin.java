@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import org.mcaccess.minecraftaccess.MainClass;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.AnvilScreen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AnvilScreen;
+import net.minecraft.network.chat.Component;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,9 +22,9 @@ public class AnvilScreenMixin {
      * so there is a repeat check before speaking.
      * Let the original logic build the text, we don't want to repeat that.
      */
-    @Inject(method = "drawForeground", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V"))
-    protected void speakCost(DrawContext context, int mouseX, int mouseY, CallbackInfo ci, @Local Text text) {
-        if (text instanceof Text text_) {
+    @Inject(method = "renderLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
+    protected void speakCost(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
+        if (text instanceof Component text_) {
             String textString = text_.getString();
             if (!textString.equals(minecraft_access$previousText)) {
                 MainClass.speakWithNarrator(textString, true);
@@ -33,8 +33,8 @@ public class AnvilScreenMixin {
         }
     }
 
-    @Inject(method = "drawForeground", at = @At("RETURN"))
-    protected void resetWhenCostDisappears(DrawContext context, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 2) int cost) {
+    @Inject(method = "renderLabels", at = @At("RETURN"))
+    protected void resetWhenCostDisappears(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 2) int cost) {
         if (cost <= 0) {
             minecraft_access$previousText = null;
         }
