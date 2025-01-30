@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
@@ -47,9 +48,16 @@ public class GuiMixin {
     /**
      * This method is continually invoked by the Gui.render(),
      * so we use previousContent to check if the content has changed and need to be narrated.
+     * <p>
+     * The suppression on unresolved "renderSelectedItemName(GuiGraphics;I)" method is for neoforge,
+     * since they patched the original {@link Gui#renderSelectedItemName(GuiGraphics)} method to make it as two methods,
+     * and invoke the new method instead.
+     * <a href="https://github.com/neoforged/NeoForge/blob/821e47fe8e30663d4511530787a16f9d48f38b3f/patches/net/minecraft/client/gui/Gui.java.patch#L225">patch link</a>
      */
+    @SuppressWarnings("UnresolvedMixinReference")
     @WrapOperation(
-            method = {"Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;I)V", "Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V"},
+            method = {"renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;I)V",
+                    "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V"},
             at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V")
     )
     private void speakItemName(ProfilerFiller profiler, Operation<Void> original) {
