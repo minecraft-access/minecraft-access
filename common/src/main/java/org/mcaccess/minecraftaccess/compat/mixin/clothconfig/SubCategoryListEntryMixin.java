@@ -4,11 +4,11 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import me.shedaniel.math.Rectangle;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.ParentElement;
-import net.minecraft.client.gui.navigation.GuiNavigation;
-import net.minecraft.client.gui.navigation.GuiNavigationPath;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.ComponentPath;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
@@ -23,17 +23,17 @@ import java.util.function.Supplier;
 @Mixin(SubCategoryListEntry.class)
 abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractConfigListEntry>> {
     @SuppressWarnings({"deprecation", "UnstableApiUsage"})
-    public SubCategoryListEntryMixin(Text fieldName, @Nullable Supplier<Optional<Text[]>> tooltipSupplier) {
+    public SubCategoryListEntryMixin(Component fieldName, @Nullable Supplier<Optional<Component[]>> tooltipSupplier) {
         super(fieldName, tooltipSupplier);
     }
 
     /**
-     * Make {@link SubCategoryListEntry.CategoryLabelWidget} a navigable {@link Element}
+     * Make {@link SubCategoryListEntry.CategoryLabelWidget} a navigable {@link net.minecraft.client.gui.components.events.GuiEventListener}
      * and can be clicked by space or enter.
-     * Note that {@link SubCategoryListEntry} has already been {@link ParentElement} in its original implementation.
+     * Note that {@link SubCategoryListEntry} has already been {@link ContainerEventHandler} in its original implementation.
      */
     @Mixin(value = SubCategoryListEntry.CategoryLabelWidget.class, remap = false)
-    abstract static class CategoryLabelWidgetMixin implements Element {
+    abstract static class CategoryLabelWidgetMixin implements GuiEventListener {
         @Shadow
         public abstract boolean mouseClicked(double mouseX, double mouseY, int int_1);
 
@@ -42,8 +42,8 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         private Rectangle rectangle;
 
         @Override
-        public GuiNavigationPath getNavigationPath(GuiNavigation navigation) {
-            return this.isFocused() ? null : GuiNavigationPath.of(this);
+        public ComponentPath nextFocusPath(FocusNavigationEvent navigation) {
+            return this.isFocused() ? null : ComponentPath.path(this);
         }
 
         @Override

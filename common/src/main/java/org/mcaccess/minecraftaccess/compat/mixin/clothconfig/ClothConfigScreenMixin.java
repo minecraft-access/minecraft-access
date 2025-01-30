@@ -4,11 +4,12 @@ import me.shedaniel.clothconfig2.gui.AbstractTabbedConfigScreen;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
 import me.shedaniel.clothconfig2.gui.ClothConfigTabButton;
 import me.shedaniel.clothconfig2.gui.entries.EmptyEntry;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.mixin.McaScreenAccessor;
 import org.spongepowered.asm.mixin.Final;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @Mixin(value = ClothConfigScreen.class, remap = false)
 abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
-    ClothConfigScreenMixin(Screen parent, Text title, Identifier backgroundLocation) {
+    ClothConfigScreenMixin(Screen parent, Component title, ResourceLocation backgroundLocation) {
         super(parent, title, backgroundLocation);
     }
 
@@ -35,14 +36,14 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
     private List<ClothConfigTabButton> tabButtons;
 
     @Shadow
-    public abstract Text getSelectedCategory();
+    public abstract Component getSelectedCategory();
 
     @Shadow
-    public ClothConfigScreen.ListWidget<? extends Element> listWidget;
+    public ClothConfigScreen.ListWidget<? extends GuiEventListener> listWidget;
 
     @Override
-    public Text getNarratedTitle() {
-        return super.getNarratedTitle().copy().append(". ").append(getSelectedCategory());
+    public @NotNull Component getNarrationMessage() {
+        return super.getNarrationMessage().copy().append(". ").append(getSelectedCategory());
     }
 
     @Inject(at = @At("TAIL"), method = "init")
@@ -52,8 +53,8 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
         this.listWidget.children().removeIf(e -> e instanceof EmptyEntry);
         // Add current category's options as selectable of screen,
         // so that they can be narrated in Screen.addElementNarrations()
-        List<Selectable> selectables = ((McaScreenAccessor) this).getSelectables();
-        selectables.addAll(this.listWidget.children());
+        List<NarratableEntry> narratables = ((McaScreenAccessor) this).getNarratables();
+        narratables.addAll(this.listWidget.children());
     }
 
     /**
@@ -65,7 +66,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
     }
 
     /**
-     * Inspired by {@link net.minecraft.client.gui.widget.TabNavigationWidget#trySwitchTabsWithKey(int)}.
+     * Inspired by {@link net.minecraft.client.gui.components.tabs.TabNavigationBar#keyPressed(int, int, int)}.
      * Use Control + Tab (and Control + Shift + Tab) to switch between tab buttons.
      */
     @Override

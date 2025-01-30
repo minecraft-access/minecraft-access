@@ -1,8 +1,8 @@
 package org.mcaccess.minecraftaccess.test_utils;
 
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.function.BooleanSupplier;

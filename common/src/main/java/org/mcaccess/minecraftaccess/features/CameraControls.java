@@ -1,5 +1,8 @@
 package org.mcaccess.minecraftaccess.features;
 
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.phys.Vec3;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -9,9 +12,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,7 +191,7 @@ public class CameraControls {
         float verticalAngleDelta = angle * direction.verticalWight;
         log.debug("Rotating camera by x:{} y:{}", horizontalAngleDelta, verticalAngleDelta);
 
-        WorldUtils.getClientPlayer().changeLookDirection(horizontalAngleDelta, verticalAngleDelta);
+        WorldUtils.getClientPlayer().turn(horizontalAngleDelta, verticalAngleDelta);
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
@@ -209,10 +209,10 @@ public class CameraControls {
      * @param direction to given direction
      */
     private static void rotateCameraTo(Orientation direction) {
-        ClientPlayerEntity player = WorldUtils.getClientPlayer();
-        Vec3d playerBlockPosition = player.getPos();
-        Vec3d targetBlockPosition = playerBlockPosition.add(Vec3d.of(direction.vector));
-        player.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, targetBlockPosition);
+        LocalPlayer player = WorldUtils.getClientPlayer();
+        Vec3 playerBlockPosition = player.position();
+        Vec3 targetBlockPosition = playerBlockPosition.add(Vec3.atLowerCornerOf(direction.vector));
+        player.lookAt(EntityAnchorArgument.Anchor.FEET, targetBlockPosition);
 
         log.debug("Rotating camera to: {}", direction.name());
 

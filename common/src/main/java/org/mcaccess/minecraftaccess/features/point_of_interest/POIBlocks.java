@@ -1,25 +1,25 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.block.*;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-
-import java.util.function.Predicate;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Scans the area to find exposed ore blocks, doors, buttons, ladders, etc., groups them and plays a sound only at ore blocks.
@@ -28,8 +28,7 @@ import java.util.Set;
 public class POIBlocks {
     @Getter
     private static final POIBlocks INSTANCE = new POIBlocks();
-    private ClientPlayerEntity player;
-    private ClientWorld world;
+    private ClientLevel world;
 
     private static final Block[] POI_BLOCKS = new Block[]{
             Blocks.PISTON,
@@ -54,7 +53,7 @@ public class POIBlocks {
     };
 
     private static final List<Predicate<BlockState>> poiBlockPredicates = Arrays.stream(POI_BLOCKS)
-            .map(b -> (Predicate<BlockState>) state -> state.isOf(b))
+            .map(b -> (Predicate<BlockState>) state -> state.is(b))
             .toList();
 
     private static final Block[] ORE_BLOCKS = new Block[]{
@@ -80,7 +79,7 @@ public class POIBlocks {
     };
 
     private static final List<Predicate<BlockState>> oreBlockPredicates = Arrays.stream(ORE_BLOCKS)
-            .map(b -> (Predicate<BlockState>) state -> state.isOf(b))
+            .map(b -> (Predicate<BlockState>) state -> state.is(b))
             .toList();
 
     private Config.POI.Blocks config;
@@ -90,34 +89,39 @@ public class POIBlocks {
     private boolean isMarking = false;
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
-            SoundEvents.ENTITY_ITEM_PICKUP,
+            SoundEvents.ITEM_PICKUP,
             -5f,
-            pos -> isMarking && world.getBlockState(pos).isOf(markedBlock)
+            pos -> isMarking && world.getBlockState(pos).is(markedBlock)
     );
     private final POIGroup<BlockPos> oreGroup = new POIGroup<>(
-            SoundEvents.ENTITY_ITEM_PICKUP,
+            SoundEvents.ITEM_PICKUP,
             -5f,
             pos -> oreBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
     );
 
     @SuppressWarnings("unchecked")
-    private final POIGroup<BlockPos>[] groups = new POIGroup[] {
+    private final POIGroup<BlockPos>[] groups = new POIGroup[]{
             markedGroup,
             oreGroup,
-            new POIGroup<BlockPos>(// Fluids
-                    SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
+            new POIGroup<BlockPos>(// Doors
+                    SoundEvents.NOTE_BLOCK_BIT.value(),
                     2f,
-                    pos -> config.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof FluidBlock && PlayerUtils.isNotInFluid() && world.getFluidState(pos).getLevel() == 8
+                    pos -> world.getBlockState(pos).getBlock() instanceof DoorBlock || world.getBlockState(pos).getBlock() instanceof TrapDoorBlock
+            ),
+            new POIGroup<BlockPos>(// Fluids
+                    SoundEvents.NOTE_BLOCK_BIT.value(),
+                    2f,
+                    pos -> config.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof LiquidBlock && PlayerUtils.isNotInFluid() && world.getFluidState(pos).getAmount() == 8
             ),
             new POIGroup<BlockPos>(// Functional blocks
-                    SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(),
+                    SoundEvents.NOTE_BLOCK_BIT.value(),
                     2f,
                     pos -> world.getBlockState(pos).getBlock() instanceof ButtonBlock || world.getBlockState(pos).getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
             ),
             new POIGroup<BlockPos>(// Blocks with interface
-                    SoundEvents.BLOCK_NOTE_BLOCK_BANJO.value(),
+                    SoundEvents.NOTE_BLOCK_BANJO.value(),
                     0f,
-                    pos -> world.getBlockState(pos).createScreenHandlerFactory(world, pos) != null
+                    pos -> world.getBlockState(pos).getMenuProvider(world, pos) != null
             ),
     };
 
@@ -133,12 +137,11 @@ public class POIBlocks {
         if (!config.enabled) return;
         if (!interval.isReady()) return;
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client == null) return;
+        Minecraft client = Minecraft.getInstance();
         if (client.player == null) return;
-        if (client.currentScreen != null) return; //Prevent running if any screen is opened
-        player = client.player;
-        world = client.world;
+        if (client.screen != null) return; //Prevent running if any screen is opened
+        LocalPlayer player = client.player;
+        world = client.level;
 
         for (POIGroup<BlockPos> group : groups) {
             group.clear();
@@ -146,26 +149,26 @@ public class POIBlocks {
 
         // Player position is where player's leg be
         checkedBlocks = new HashSet<>();
-        BlockPos pos = player.getBlockPos();
+        BlockPos pos = player.blockPosition();
         log.debug("POIBlock started.");
         // Scan blocks exposed in the space around player
-        checkBlock(pos.down(), 0);
-        checkBlock(pos.up(2), 0);
+        checkBlock(pos.below(), 0);
+        checkBlock(pos.above(2), 0);
         checkBlock(pos, config.range);
-        checkBlock(pos.up(), config.range);
+        checkBlock(pos.above(), config.range);
 
         if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
             for (BlockPos blockPos : markedGroup.getItems()) {
-                markedGroup.playSound(blockPos.toCenterPos(), config.volume);
+                markedGroup.playSound(blockPos.getCenter(), config.volume);
             }
         } else if (config.playSound && !config.playSoundForOtherBlocks) {
             for (BlockPos blockPos : oreGroup.getItems()) {
-                oreGroup.playSound(blockPos.toCenterPos(), config.volume);
+                oreGroup.playSound(blockPos.getCenter(), config.volume);
             }
         } else if (config.playSound) {
             for (POIGroup<BlockPos> group : groups) {
                 for (BlockPos blockPos : group.getItems()) {
-                    group.playSound(blockPos.toCenterPos(), config.volume);
+                    group.playSound(blockPos.getCenter(), config.volume);
                 }
             }
         }
@@ -193,8 +196,8 @@ public class POIBlocks {
             checkBlock(blockPos.south(), vSubOne);
             checkBlock(blockPos.west(), vSubOne);
             checkBlock(blockPos.east(), vSubOne);
-            checkBlock(blockPos.up(), vSubOne);
-            checkBlock(blockPos.down(), vSubOne);
+            checkBlock(blockPos.above(), vSubOne);
+            checkBlock(blockPos.below(), vSubOne);
             // Air block is not a valid POI block, so return early
             return;
         }
@@ -216,5 +219,5 @@ public class POIBlocks {
         }
 
         return Arrays.stream(groups).flatMap(group -> group.getItems().stream()).toList();
-   }
+    }
 }

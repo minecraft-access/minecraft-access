@@ -2,25 +2,25 @@ package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(AbstractConfigEntry.class)
 abstract class AbstractConfigEntryMixin<T> extends DynamicElementListWidget.ElementEntry<AbstractConfigEntry<T>> {
     @Shadow
-    public abstract Text getFieldName();
+    public abstract Component getFieldName();
 
     @Override
-    public boolean isNarratable() {
+    public boolean isActive() {
         return true;
     }
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
-        builder.put(NarrationPart.TITLE, getFieldName());
-        super.appendNarrations(builder);
+    public void updateNarration(NarrationElementOutput builder) {
+        builder.add(NarratedElementType.TITLE, getFieldName());
+        super.updateNarration(builder);
     }
 }

@@ -1,11 +1,11 @@
 package org.mcaccess.minecraftaccess.features;
 
-import org.mcaccess.minecraftaccess.Config;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import org.mcaccess.minecraftaccess.Config;
 
 import java.time.Clock;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ public class FallDetector {
     private static final FallDetector instance;
     private final Clock clock;
     private long previousTimeInMillis;
-    MinecraftClient minecraftClient;
+    Minecraft minecraftClient;
     private int count;
     private Config.FallDetector config;
 
@@ -31,7 +31,7 @@ public class FallDetector {
 
     private FallDetector() {
         clock = Clock.systemDefaultZone();
-        minecraftClient = MinecraftClient.getInstance();
+        minecraftClient = Minecraft.getInstance();
         previousTimeInMillis = clock.millis();
 
         loadConfig();
@@ -49,20 +49,20 @@ public class FallDetector {
 
             if (minecraftClient == null) return;
             if (minecraftClient.player == null) return;
-            if (minecraftClient.world == null) return;
-            if (minecraftClient.currentScreen != null) return;
-            if (minecraftClient.player.isSubmergedInWater()) return;
+            if (minecraftClient.level == null) return;
+            if (minecraftClient.screen != null) return;
+            if (minecraftClient.player.isUnderWater()) return;
             if (minecraftClient.player.isSwimming()) return;
-            if (minecraftClient.player.isInSwimmingPose()) return;
-            if (!minecraftClient.player.isOnGround()) return;
+            if (minecraftClient.player.isVisuallySwimming()) return;
+            if (!minecraftClient.player.onGround()) return;
 
             long currentTimeInMillis = clock.millis();
             if (currentTimeInMillis - previousTimeInMillis < config.delay) return;
             previousTimeInMillis = currentTimeInMillis;
 
-           log.debug("Searching for fall in nearby area...");
+            log.debug("Searching for fall in nearby area...");
             SearchNearbyPositions();
-           log.debug("Searching ended.");
+            log.debug("Searching ended.");
         } catch (Exception e) {
             log.error("An error occurred in fall detector.", e);
         }
@@ -70,7 +70,7 @@ public class FallDetector {
 
     private void SearchNearbyPositions() {
         if (minecraftClient.player == null) return;
-        BlockPos center = minecraftClient.player.getBlockPos();
+        BlockPos center = minecraftClient.player.blockPosition();
 
         Queue<BlockPos> toSearch = new LinkedList<>();
         HashSet<BlockPos> searched = new HashSet<>();
@@ -112,23 +112,23 @@ public class FallDetector {
 
     private void checkForFall(BlockPos toCheck) {
 
-        if (minecraftClient.world == null) return;
-        if (!(minecraftClient.world.getBlockState(toCheck).isAir())) return;
+        if (minecraftClient.level == null) return;
+        if (!(minecraftClient.level.getBlockState(toCheck).isAir())) return;
 
         if (getDepth(toCheck, config.depth) < config.depth) return;
 
-       log.debug("%d) Found qualified fall position: x:%d y:%d z:%d".formatted(++count, toCheck.getX(), toCheck.getY(), toCheck.getZ()));
-        minecraftClient.world.playSoundAtBlockCenter(toCheck, SoundEvents.BLOCK_ANVIL_HIT, SoundCategory.BLOCKS, config.volume, 1f, true);
+        log.debug("{}) Found qualified fall position: x:{} y:{} z:{}", ++count, toCheck.getX(), toCheck.getY(), toCheck.getZ());
+        minecraftClient.level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, config.volume, 1f, true);
     }
 
     private int getDepth(BlockPos blockPos, int maxDepth) {
         if (maxDepth <= 0)
             return 0;
 
-        if (minecraftClient.world == null) return 0;
-        if (!(minecraftClient.world.getBlockState(blockPos).isAir())) return 0;
+        if (minecraftClient.level == null) return 0;
+        if (!(minecraftClient.level.getBlockState(blockPos).isAir())) return 0;
 
-        return 1 + getDepth(blockPos.down(), --maxDepth);
+        return 1 + getDepth(blockPos.below(), --maxDepth);
     }
 
     private void loadConfig() {

@@ -10,7 +10,7 @@
     "clothconfig.ClothConfigTabButtonMixin",
     "clothconfig.DynamicElementListWidgetMixin",
     "clothconfig.DynamicElementListWidgetMixin$ElementEntryMixin",
-    "clothconfig.ParentElementMixin",
+    "clothconfig.ContainerEventHandlerMixin",
     "clothconfig.SubCategoryListEntryMixin",
     "clothconfig.SubCategoryListEntryMixin$CategoryLabelWidgetMixin"
   ],

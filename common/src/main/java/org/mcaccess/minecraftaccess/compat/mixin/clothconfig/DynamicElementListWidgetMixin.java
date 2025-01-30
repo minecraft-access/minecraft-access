@@ -2,8 +2,8 @@ package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,13 +16,13 @@ abstract class DynamicElementListWidgetMixin {
         /**
          * Do what {@link org.mcaccess.minecraftaccess.mixin.ScreenMixin#removeElementPositionAndUsageNarrations} does
          */
-        @Inject(method = "appendNarrations",
+        @Inject(method = "updateNarration",
                 at = @At(value = "INVOKE",
-                        target = "Lnet/minecraft/client/gui/screen/narration/NarrationMessageBuilder;" +
-                                "put(Lnet/minecraft/client/gui/screen/narration/NarrationPart;Lnet/minecraft/text/Text;)V"),
+                        target = "Lnet/minecraft/client/gui/narration/NarrationElementOutput;" +
+                                "add(Lnet/minecraft/client/gui/narration/NarratedElementType;Lnet/minecraft/network/chat/Component;)V"),
                 cancellable = true)
-        void removeElementPositionAndUsageNarrations(NarrationMessageBuilder builder, CallbackInfo ci, @Local Screen.SelectedElementNarrationData data) {
-            data.selectable.appendNarrations(builder.nextMessage());
+        void removeElementPositionAndUsageNarrations(NarrationElementOutput builder, CallbackInfo ci, @Local Screen.NarratableSearchResult data) {
+            data.entry.updateNarration(builder.nest());
             ci.cancel();
         }
     }

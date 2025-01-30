@@ -1,7 +1,7 @@
 package org.mcaccess.minecraftaccess.test_utils;
 
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.junit.jupiter.api.Test;
+import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

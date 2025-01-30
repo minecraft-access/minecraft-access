@@ -1,21 +1,21 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import org.mcaccess.minecraftaccess.Config;
+import lombok.Getter;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-import lombok.Getter;
-import net.minecraft.block.Block;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 
 public class POIMarking {
     @Getter
@@ -65,9 +65,8 @@ public class POIMarking {
     private void mark() {
         if (onMarking) return;
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client == null) return;
-        HitResult hit = client.crosshairTarget;
+        Minecraft client = Minecraft.getInstance();
+        HitResult hit = client.hitResult;
         if (hit == null) return;
 
         switch (hit.getType()) {
@@ -75,20 +74,20 @@ public class POIMarking {
                 return;
             }
             case BLOCK -> {
-                ClientWorld world = client.world;
+                ClientLevel world = client.level;
                 if (world == null) return;
                 BlockPos pos = ((BlockHitResult) hit).getBlockPos();
                 markedBlock = world.getBlockState(pos).getBlock();
 
                 String name = NarrationUtils.narrateBlock(pos, "");
-                MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.marking.marked", name), true);
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.marking.marked", name), true);
             }
             case ENTITY -> {
                 Entity e = ((EntityHitResult) hit).getEntity();
                 markedEntity = e;
 
                 String name = NarrationUtils.narrateEntity(e);
-                MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.marking.marked", name), true);
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.marking.marked", name), true);
             }
         }
 
@@ -100,6 +99,6 @@ public class POIMarking {
         onMarking = false;
         markedEntity = null;
         markedBlock = null;
-        MainClass.speakWithNarrator(I18n.translate("minecraft_access.point_of_interest.marking.unmarked"), true);
+        MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.marking.unmarked"), true);
     }
 }

@@ -1,19 +1,19 @@
 package org.mcaccess.minecraftaccess.features;
 
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 
 /**
  * Searches for the closest water/lava source.
@@ -28,8 +28,8 @@ public class FluidDetector {
      * @param closeCurrentlyOpenedScreen Whether to close the currently opened screen or not
      */
     public void findClosestWaterSource(boolean closeCurrentlyOpenedScreen) {
-        if (closeCurrentlyOpenedScreen && MinecraftClient.getInstance().currentScreen != null && MinecraftClient.getInstance().player != null)
-            MinecraftClient.getInstance().player.closeScreen();
+        if (closeCurrentlyOpenedScreen && Minecraft.getInstance().screen != null && Minecraft.getInstance().player != null)
+            Minecraft.getInstance().player.clientSideCloseContainer();
 
         log.debug("Finding closest water source");
         findClosestFluidSource(true);
@@ -41,8 +41,8 @@ public class FluidDetector {
      * @param closeCurrentlyOpenedScreen Whether to close the currently opened screen or not
      */
     public void findClosestLavaSource(boolean closeCurrentlyOpenedScreen) {
-        if (closeCurrentlyOpenedScreen && MinecraftClient.getInstance().currentScreen != null && MinecraftClient.getInstance().player != null)
-            MinecraftClient.getInstance().player.closeScreen();
+        if (closeCurrentlyOpenedScreen && Minecraft.getInstance().screen != null && Minecraft.getInstance().player != null)
+            Minecraft.getInstance().player.clientSideCloseContainer();
 
         log.debug("Finding closest lava source");
         findClosestFluidSource(false);
@@ -55,11 +55,11 @@ public class FluidDetector {
      * @param water Whether to find water or lava source block or not.
      */
     private void findClosestFluidSource(boolean water) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        if (minecraftClient.world == null) return;
+        Minecraft minecraftClient = Minecraft.getInstance();
+        if (minecraftClient.level == null) return;
         if (minecraftClient.player == null) return;
 
-        BlockPos pos = minecraftClient.player.getBlockPos();
+        BlockPos pos = minecraftClient.player.blockPosition();
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
@@ -70,16 +70,16 @@ public class FluidDetector {
         BlockPos closestFluidPos = findFluid(minecraftClient, startingPointPos, config.range, water);
         if (closestFluidPos == null) {
             log.debug("Unable to find closest fluid source");
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.other.not_found"), true);
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.not_found"), true);
             return;
         }
 
         log.debug("{FluidDetector} playing sound at %dx %dy %dz".formatted(closestFluidPos.getX(), closestFluidPos.getY(), closestFluidPos.getZ()));
-        minecraftClient.world.playSound(minecraftClient.player, closestFluidPos, SoundEvents.ENTITY_ITEM_PICKUP,
-                SoundCategory.BLOCKS, config.volume, 1f);
+        minecraftClient.level.playSound(minecraftClient.player, closestFluidPos, SoundEvents.ITEM_PICKUP,
+                SoundSource.BLOCKS, config.volume, 1f);
 
         String posDifference = NarrationUtils.narrateRelativePositionOfPlayerAnd(closestFluidPos);
-        String name = minecraftClient.world.getBlockState(closestFluidPos).getBlock().getName().getString();
+        String name = minecraftClient.level.getBlockState(closestFluidPos).getBlock().getName().getString();
 
         MainClass.speakWithNarrator(name + ", " + posDifference, true);
     }
@@ -94,18 +94,18 @@ public class FluidDetector {
      * @param water           Whether to check for water source or lava source.
      * @return Returns the position of the fluid source or null if not found
      */
-    private static BlockPos findFluid(MinecraftClient minecraftClient, BlockPos blockPos, int range, boolean water) {
-        if (minecraftClient.world == null) return null;
+    private static BlockPos findFluid(Minecraft minecraftClient, BlockPos blockPos, int range, boolean water) {
+        if (minecraftClient.level == null) return null;
         if (minecraftClient.player == null) return null;
 
-        BlockState blockState = minecraftClient.world.getBlockState(blockPos);
-        if (blockState.isOf(Blocks.VOID_AIR)) // Skip if void air is found, the world is probably still loading.
+        BlockState blockState = minecraftClient.level.getBlockState(blockPos);
+        if (blockState.is(Blocks.VOID_AIR)) // Skip if void air is found, the world is probably still loading.
             return null;
 
-        FluidState fluidState = minecraftClient.world.getFluidState(blockPos);
-        boolean rightTarget = (fluidState.isIn(FluidTags.LAVA) && !water) || (fluidState.isIn(FluidTags.WATER) && water);
+        FluidState fluidState = minecraftClient.level.getFluidState(blockPos);
+        boolean rightTarget = (fluidState.is(FluidTags.LAVA) && !water) || (fluidState.is(FluidTags.WATER) && water);
 
-        if (rightTarget && fluidState.isStill()) {
+        if (rightTarget && fluidState.isSource()) {
             return blockPos;
         } else if (range - 1 >= 0 && blockState.isAir()) {
             int posX = blockPos.getX();

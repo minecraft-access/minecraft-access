@@ -1,5 +1,15 @@
 package org.mcaccess.minecraftaccess;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.platform.Platform;
+import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.util.Strings;
 import org.mcaccess.minecraftaccess.features.*;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
@@ -7,15 +17,9 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.POIMarking;
 import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import com.mojang.text2speech.Narrator;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.util.Strings;
 
 @Slf4j
 public class MainClass {
@@ -31,7 +35,7 @@ public class MainClass {
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
 
-    public static boolean isNeoForge = false;
+    public static boolean isNeoForge = Platform.isNeoForge();
     public static boolean interrupt = true;
     private static boolean alreadyDisabledAdvancementKey = false;
 
@@ -39,14 +43,6 @@ public class MainClass {
      * Initializes the mod
      */
     public static void init() {
-        try {
-            _init();
-        } catch (Exception e) {
-            log.error("An error occurred while initializing Minecraft Access.", e);
-        }
-    }
-
-    private static void _init() {
         Config.init();
 
         String msg = "Initializing Minecraft Access";
@@ -67,6 +63,12 @@ public class MainClass {
         MainClass.accessMenu = new AccessMenu();
         MainClass.fluidDetector = new FluidDetector();
 
+        for (KeyMapping km : KeyBindingsHandler.getInstance().getKeys()) {
+            KeyMappingRegistry.register(km);
+        }
+
+        ClientTickEvent.CLIENT_POST.register(MainClass::clientTickEventsMethod);
+
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
@@ -79,7 +81,7 @@ public class MainClass {
      *
      * @param minecraftClient The current minecraft client object
      */
-    public static void clientTickEventsMethod(MinecraftClient minecraftClient) {
+    public static void clientTickEventsMethod(Minecraft minecraftClient) {
         try {
             _clientTickEventsMethod(minecraftClient);
         } catch (Exception e) {
@@ -87,13 +89,13 @@ public class MainClass {
         }
     }
 
-    private static void _clientTickEventsMethod(MinecraftClient minecraftClient) {
+    private static void _clientTickEventsMethod(Minecraft minecraftClient) {
         Config config = Config.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
 
-        if (!MainClass.alreadyDisabledAdvancementKey && minecraftClient.options != null) {
-            minecraftClient.options.advancementsKey.setBoundKey(InputUtil.fromTranslationKey("key.keyboard.unknown"));
+        if (!MainClass.alreadyDisabledAdvancementKey) {
+            minecraftClient.options.keyAdvancements.setKey(InputConstants.getKey("key.keyboard.unknown"));
             MainClass.alreadyDisabledAdvancementKey = true;
             log.info("Unbound advancements key");
         }
@@ -118,14 +120,14 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (MinecraftClient.getInstance() != null && WorldUtils.getClientPlayer() != null) {
+        if (WorldUtils.getClientPlayer() != null) {
             if (playerStatus != null && config.playerStatusEnabled) {
                 playerStatus.update();
             }
 
             MouseKeySimulation.runOnTick();
 
-            if (MinecraftClient.getInstance().currentScreen == null) {
+            if (Minecraft.getInstance().screen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.update();
             }
@@ -142,17 +144,16 @@ public class MainClass {
 
         FallDetector.getInstance().update();
 
-        // TODO remove feature flag after complete
-        // AreaMapMenu.getInstance().update();
-
         Keystroke.updateInstances();
+
+        HUDStatus.getInstance().update();
     }
 
     /**
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = Config.getInstance().debugMode;
+        boolean debugMode = Config.getInstance().debugMode || Platform.isDevelopmentEnvironment();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);
@@ -172,12 +173,7 @@ public class MainClass {
 
     public static void speakWithNarrator(String text, boolean interrupt) {
         MainClass.interrupt = interrupt;
-        if (isNeoForge) {
-            MinecraftClient.getInstance().getNarratorManager().narrate(text);
-            return;
-        }
-
-        Narrator.getNarrator().say(text, interrupt);
+        Minecraft.getInstance().getNarrator().sayNow(text);
     }
 
     public static void speakWithNarratorIfNotEmpty(String text, boolean interrupt) {

@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.utils;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 
 public class BaseScreen extends Screen {
     int centerX;
@@ -18,12 +18,12 @@ public class BaseScreen extends Screen {
     BaseScreen previousScreen;
 
     public BaseScreen(String title) {
-        super(Text.of(I18n.translate("minecraft_access.gui.screen." + title)));
+        super(Component.nullToEmpty(I18n.get("minecraft_access.gui.screen." + title)));
         previousScreen = null;
     }
 
     public BaseScreen(String title, BaseScreen previousScreen) {
-        super(Text.of(I18n.translate("minecraft_access.gui.screen." + title)));
+        super(Component.nullToEmpty(I18n.get("minecraft_access.gui.screen." + title)));
         this.previousScreen = previousScreen;
     }
 
@@ -38,13 +38,13 @@ public class BaseScreen extends Screen {
         shouldRenderInLeftColumn = true;
     }
 
-    protected ButtonWidget buildButtonWidget(String translationKeyOrText, ButtonWidget.PressAction pressAction) {
+    protected Button buildButtonWidget(String translationKeyOrText, Button.OnPress pressAction) {
         return buildButtonWidget(translationKeyOrText, pressAction, false);
     }
 
-    protected ButtonWidget buildButtonWidget(String translationKeyOrText, ButtonWidget.PressAction pressAction, boolean shouldRenderInSeparateRow) {
-        String buttonText = I18n.hasTranslation(translationKeyOrText) ? I18n.translate((translationKeyOrText)) : translationKeyOrText;
-        int calculatedButtonWidth = this.textRenderer.getWidth(buttonText) + 35;
+    protected Button buildButtonWidget(String translationKeyOrText, Button.OnPress pressAction, boolean shouldRenderInSeparateRow) {
+        String buttonText = I18n.exists(translationKeyOrText) ? I18n.get((translationKeyOrText)) : translationKeyOrText;
+        int calculatedButtonWidth = this.font.width(buttonText) + 35;
         if (shouldRenderInSeparateRow) {
             calculatedXPosition = centerX - calculatedButtonWidth / 2;
             calculatedYPosition += marginY;
@@ -55,20 +55,20 @@ public class BaseScreen extends Screen {
             shouldRenderInLeftColumn = !shouldRenderInLeftColumn;
         }
 
-        return ButtonWidget.builder(Text.of(buttonText), pressAction)
-                .dimensions(calculatedXPosition, calculatedYPosition, calculatedButtonWidth, buttonHeight)
+        return Button.builder(Component.nullToEmpty(buttonText), pressAction)
+                .bounds(calculatedXPosition, calculatedYPosition, calculatedButtonWidth, buttonHeight)
                 .build();
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context, mouseX, mouseY, delta);
-        context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 15, 16777215);
+        context.drawCenteredString(this.font, this.title, this.width / 2, 15, 16777215);
         super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
-    public void close() {
-        if (this.client != null) this.client.setScreen(previousScreen);
+    public void onClose() {
+        if (this.minecraft != null) this.minecraft.setScreen(previousScreen);
     }
 }
