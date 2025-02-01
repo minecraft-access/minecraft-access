@@ -1,4 +1,6 @@
-# Minecraft Access Keybindings
+---
+title: "Keybindings"
+---
 
 This page contains all the keybindings added by the mod.
 
@@ -8,18 +10,6 @@ You may find that some features have duplicate keys, such as I, J, K, L as the a
 It's ok since the same key takes effect in different interfaces for different functions.
 
 You may want to take a look at [all the original controls](https://minecraft.wiki/w/Controls#Java_Edition) as well.
-
-## Table Of Contents
-
-1. [Camera Controls](#camera-controls)
-2. [Mouse Simulation](#mouse-simulation)
-3. [Inventory Controls](#inventory-controls)
-4. [Point of Interest](#point-of-interest)
-5. [Position Narrator](#position-narrator)
-6. [Health n Hunger](#health-n-hunger)
-7. [Access Menu](#access-menu)
-8. [Book Editing](#book-editing)
-9. [Speak Chat Messages](#speak-chat-messages)
 
 ## Camera Controls
 
@@ -55,7 +45,7 @@ You may want to take a look at [all the original controls](https://minecraft.wik
 | `Right Alt` + `Look Left Key`                       | Same as single `Look West Key`, turn the camera to the west                                                                                         |
 | `Left Alt` + `Speak Facing Direction Key`           | Speak current vertical facing direction                                                                                                             |
 
-See also: [Feature Description](/docs/features.md#camera-controls), [Configuration](/docs/config.md#camera-controls)
+See also: [Feature Description]({{% relref "/features#camera-controls" %}}), [Configuration]({{% relref "/config#camera-controls" %}})
 
 ## Mouse Simulation
 
@@ -67,7 +57,7 @@ See also: [Feature Description](/docs/features.md#camera-controls), [Configurati
 | `Mouse Wheel Scroll Up`   | ;                  | Simulate mouse wheel scroll up, switching items in hotbar forward                  |
 | `Mouse Wheel Scroll Down` | '                  | Simulate mouse wheel scroll down, switching items in hotbar backward               |
 
-See also: [Feature Description](/docs/features.md#mouse-simulation), [Configuration](/docs/config.md#mouse-simulation)
+See also: [Feature Description]({{% relref "/features#mouse-simulation" %}}), [Configuration]({{% relref "/config#mouse-simulation" %}})
 
 ## Inventory Controls
 
@@ -94,7 +84,7 @@ See also: [Feature Description](/docs/features.md#mouse-simulation), [Configurat
 Recipe Book page turning only works when `Recipe Book Group` is selected.
 Search on the [wiki](https://minecraft.wiki/?search) for the description of screens if you're not familiar with them.
 
-See also: [Feature Description](/docs/features.md#inventory-controls), [Configuration](/docs/config.md#inventory-controls)
+See also: [Feature Description]({{% relref "/features#inventory-controls" %}}), [Configuration]({{% relref "/config#inventory-controls" %}})
 
 ## Point of Interest
 
@@ -108,8 +98,8 @@ See also: [Feature Description](/docs/features.md#inventory-controls), [Configur
 | `Control` + `Locking Key`         | Mark the block or entity currently targeted with crosshair |
 | `Control` + `Alt` + `Locking Key` | Unmark from the target                                     |
 
-See also: [Feature Description](/docs/features.md#points-of-interest),
-[Configuration](/docs/config.md#point-of-interest)
+See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
+[Configuration]({{% relref "/config#point-of-interest" %}})
 
 ## Position Narrator
 
@@ -123,15 +113,19 @@ See also: [Feature Description](/docs/features.md#points-of-interest),
 | `Left Alt` + `X` | Speak the player's x-axis |
 | `Left Alt` + `C` | Speak the player's y-axis |
 
-See also: [Feature Description](/docs/features.md#position-narrator), [Configuration](/docs/config.md#position-narrator)
+See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [Configuration]({{% relref "/config#position-narrator" %}})
 
-## Health n Hunger
+## Speak Player Status
 
 | Single Key                       | Default Keybinding | Description                                  |
 |----------------------------------|--------------------|----------------------------------------------|
-| `Speak Player Health and Hunger` | R                  | Speak the player's current health and hunger |
+| `Speak Player Status` | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
 
-See also: [Feature Description](/docs/features.md#health-n-hunger), [Configuration](/docs/config.md#health-n-hunger)
+| Key Combination  | Description               |
+|------------------|---------------------------|
+| `Left Alt` + `R` | Speak only the conditional statuses of the player like air and frost exposure |
+
+See also: [Feature Description]({{% relref "/features#player-status" %}}), [Configuration]({{% relref "/config#player-status" %}})
 
 ## Access Menu
 
@@ -148,7 +142,7 @@ See also: [Feature Description](/docs/features.md#health-n-hunger), [Configurati
 All functions in the Access Menu have unique keybindings that can be set in the game's controls settings menu.
 The only function that is bound by default is the narrate target function, and all other function keys are left up to you to bind if you want to use them.
 
-See also: [Feature Description](/docs/features.md#access-menu), [Configuration](/docs/config.md#access-menu)
+See also: [Feature Description]({{% relref "/features#access-menu" %}}), [Configuration]({{% relref "/config#access-menu" %}})
 
 ## Book Editing
 
@@ -163,7 +157,7 @@ See also: [Feature Description](/docs/features.md#access-menu), [Configuration](
 | `Done` button                                    | not re-mappable    | Save your unfinished work and quit editing screen                                                           |
 | `Sign` button                                    | not re-mappable    | And enter a title for the book to make it permanently non-editable                                          |
 
-See also: [Feature Description](/docs/features.md#book-editing)
+See also: [Feature Description]({{% relref "/features#book-editing" %}})
 
 ### Speak Chat Messages
 
@@ -176,8 +170,4 @@ These keys aren’t re-mappable.
 The chat message will be spoken when that message shows up, whether the sender is you or not.
 These keys are used to repeat previous chat messages.
 
-See also: [Feature Description](/docs/features.md#speak-chat-messages)
-
-## Other Pages
-
-* [Home](/README.md)
+See also: [Feature Description]({{% relref "/features#speak-chat-messages" %}})

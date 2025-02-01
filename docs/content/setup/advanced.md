@@ -1,12 +1,8 @@
-# Set up NeoForge (ADVANCED)
+---
+title: "Set up NeoForge (ADVANCED)"
+---
 
 Setting up NeoForge is a more advanced process. This guide is only recommended for those who **KNOW** they need it.
-
-## Contents
-
-1. [Install Java](#install-java)
-2. [Install NeoForge](#install-neoforge)
-3. [Set up multiple installations in the Minecraft Launcher](#set-up-multiple-installations-in-the-minecraft-launcher)
 
 ## Install Java
 

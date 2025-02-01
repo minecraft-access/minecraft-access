@@ -1,4 +1,6 @@
-# Using the Visually Impaired Access Modpack
+---
+title: "Using the Visually Impaired Access Modpack"
+---
 
 This modpack is a community project created by [@BrailleBennett](https://github.com/BrailleBennett).
 It was made for the Fabric mod loader for usage on the client side only.

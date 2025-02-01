@@ -1,29 +1,18 @@
-# Good Resources
-
-1. [Helpful links](#helpful-links)
-2. [Quality of Life Mods](#quality-of-life-mods)
-3. [Tutorial Resources](#tutorial-resources)
-    1. [General Minecraft tutorials](#general-minecraft-tutorials)
-    2. [Gameplay with this mod](#gameplay-with-this-mod)
-        1. [Tutorial](#tutorial-with-this-mod)
-        2. [Gameplay without intentional teaching](#gameplay-with-this-mod-without-intentional-teaching)
-4. [Beginner's Guide](#beginners-guide)
-    1. [Create a Good World](#create-a-good-world)
-    2. [Game Control](#game-control)
-    3. [Finding Trees](#finding-trees)
-    4. [Commands](#commands)
+---
+title: "Good Resources"
+---
 
 ## Helpful Links
 
 * [Documentation for this mod](https://github.com/khanshoaib3/minecraft-access) - Check what features this mod provides.
 * [Primary developer's X account](https://x.com/shoaib_mk0) - You can follow the developer on X to get notified when a new update drops.
 * [Playability Discord server](https://discord.gg/yQjjsDqWQX) - You can join our Discord server if you need help setting up the mod or with any issue related to Minecraft Java Edition.
-* [Visually Impaired Access Modpack](/docs/setup/modpack.md) - A mod pack that contains this mod and some quality of life mods, made with heart by [@BrailleBennett](https://github.com/BrailleBennett) for the Fabric mod loader.
+* [Visually Impaired Access Modpack]({{% relref "/setup/modpack" %}}) - A mod pack that contains this mod and some quality of life mods, made with heart by [@BrailleBennett](https://github.com/BrailleBennett) for the Fabric mod loader.
 
 ## Quality of Life Mods
 
 Here are some mods that can improve your game experience.
-There are guides about [installing](/docs/setup/basic.md#install-your-mods) and [upgrading](/docs/setup/basic.md#update-the-game-and-mods) mods.
+There are guides about [installing]({{% relref "/setup/basic#install-your-mods" %}}) and [upgrading]({{% relref "/setup/basic#update-the-game-and-mods" %}}) mods.
 
 1. Client side, which you can use in both a single-player and multiplayer game:
     * Presence Footsteps ([Fabric](https://modrinth.com/mod/presence-footsteps), [NeoForge port](https://www.curseforge.com/minecraft/mc-mods/presence-footsteps-forge)): Footstep sound enhancement mod. If the Fabric version of the mod isn't working, select `Default sound pack` in the resource pack menu of your game. If the mod does not support your game version, you should use this resource pack
@@ -68,8 +57,8 @@ These resources are tutorials and showcases about how to play Minecraft with thi
 
 * Game play video series on YouTube in English, last updated 2024-06-22: [The TrueBlindCraft Guide Series](https://www.youtube.com/playlist?list=PLXcBFfRlLcpiDpULQB3L2aX-AQb4-Atbq) by TrueBlindGaming. A tutorial series to help visually impaired/blind players who use the MineCraft Access mod to play MineCraft. Playing in Minecraft 1.20. Includes world creation, tree finding, navigation, and more.
 * Building tutorial video on Bilibili in Chinese (no English subtitles), uploaded 2023-07-01: [一个全盲视障者玩家的基建经验，来教盲人小伙伴们如何修房子](https://www.bilibili.com/video/BV1eh411N7y1) by 红马尾战士紫月sama. A building tutorial about how to build a basic square shape house with this mod.
-* Installation tutorial video on Bilibili in Chinese (no English subtitles), uploaded 2023-05-06: [【我的世界·MC】视障辅助MOD安装与使用教程](https://www.bilibili.com/video/BV1W24y1T7f9) by 红马尾战士紫月sama. The tutorial includes mod installation, game launching, and brief instructions on mod usage and game playing. Partially outdated, tolk is now installed automatically, and this mod doesn't need the `fabric-api` mod as a dependency for now, see the [setup guide](/docs/setup/basic.md) for full current instructions in text form.
-* Installation tutorial video on YouTube in English, uploaded 2023-03-21: [How to Install Mine Craft Access, a mine craft java mod for the blind](https://www.youtube.com/watch?v=MTRG3S0xeeg) by Logic Pro X Gaming. A tutorial includes mod installation and game launching. Partially outdated, tolk is now installed automatically, and this mod doesn't need the `fabric-api` mod as a dependency for now, see the [setup guide](/docs/setup/basic.md) for full current instructions in text form.
+* Installation tutorial video on Bilibili in Chinese (no English subtitles), uploaded 2023-05-06: [【我的世界·MC】视障辅助MOD安装与使用教程](https://www.bilibili.com/video/BV1W24y1T7f9) by 红马尾战士紫月sama. The tutorial includes mod installation, game launching, and brief instructions on mod usage and game playing. Partially outdated, tolk is now installed automatically, and this mod doesn't need the `fabric-api` mod as a dependency for now, see the [setup guide]({{% relref "/setup/basic" %}}) for full current instructions in text form.
+* Installation tutorial video on YouTube in English, uploaded 2023-03-21: [How to Install Mine Craft Access, a mine craft java mod for the blind](https://www.youtube.com/watch?v=MTRG3S0xeeg) by Logic Pro X Gaming. A tutorial includes mod installation and game launching. Partially outdated, tolk is now installed automatically, and this mod doesn't need the `fabric-api` mod as a dependency for now, see the [setup guide]({{% relref "/setup/basic" %}}) for full current instructions in text form.
 
 #### Gameplay with this mod without intentional teaching
 
@@ -134,7 +123,7 @@ like pressing W to move forwards, or pressing the left mouse button to break blo
 You can learn vanilla game controls on [corresponding wiki page](https://minecraft.wiki/w/Controls#Java_Edition)
 (ignore the F3 key) or read keybinding settings in game.
 Controls provided by this mod are described in mod manual pages:
-[Camera Controls](/docs/keybindings.md#camera-controls), [Mouse Simulation](/docs/keybindings.md#mouse-simulation).
+[Camera Controls]({{% relref "/keybindings#camera-controls" %}}), [Mouse Simulation]({{% relref "/keybindings#mouse-simulation" %}}).
 
 ### Finding Trees
 
@@ -160,7 +149,7 @@ You can also keep pressing one of the camera horizontal control keys to turn you
 or press A or D while walking to move left or right.
 All of these actions are to change the part of the world you’re viewing.
 
-Once you find a log block, you can use the [POI Marking feature](/docs/features.md#poi-marking).
+Once you find a log block, you can use the [POI Marking feature]({{% relref "/features#poi-marking" %}}).
 When you’re targeting a log block, press `Ctrl + Y` to mark that log block type,
 the POI feature will only hint for the log blocks that are around you with sounds,
 instead of hinting preset POI blocks.
@@ -179,7 +168,3 @@ You can learn this part with the following resources:
 Some commands are very convenient when you're playing single-player worlds.
 You can use them to gain advantages or to improve your game experience.
 Remember to turn on `Allow Cheats` option when you create the world.
-
-## Other Pages
-
-* [Home](/README.md)

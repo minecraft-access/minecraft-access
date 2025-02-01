@@ -1,3 +1,7 @@
+---
+title: "Changelog"
+---
+
 <!-- INSERT CHANGELOG HERE -->
 
 ## Release v1.9.0 (2024-12)
@@ -101,7 +105,7 @@ Release v1.6.1 (2024-06)
 
 ### Others
 
-- New guide page: [Good Resources](/docs/good-resources.md)
+- New guide page: [Good Resources]({{% relref "/good-resources" %}})
 - Remove `fabric-api` dependence for Fabric
 - forge_version: `1.20.6-50.0.0` -> `1.20.6-50.1.0`
 - architectury_loom_version: `1.6-SNAPSHOT` -> `1.7-SNAPSHOT`
@@ -148,7 +152,7 @@ Release v1.5.4 (2024-03)
 
 ### Refactoring, Documentation and Chores
 
-* Add [Sound Cue Listening Page](/docs/sounds.html) for making users refer to the sound cue they heard in the game.
+* Add [Sound Cue Listening Page]({{% relref "/sounds" %}}) for making users refer to the sound cue they heard in the game.
 
 Release v1.5.3 (2024-02)
 ---------------------------
@@ -175,7 +179,7 @@ Release v1.5.2 (2024-01)
 
 ### Refactoring, Documentation and Chores
 
-Now there are [three workflows](../.github/workflows):
+Now there are [three workflows](https://github.com/khanshoaib3/minecraft-access/blob/1.21/.github/workflows):
 
 * `test`: Triggered by PR, runs tests suite
 * `build`: Manually triggered, builds mod files, you can download built files from action page
@@ -196,7 +200,7 @@ Release v1.5.0 (2024-01)
 
 ### Feature Changes
 
-* Breaking change: The mod will speak `unlock` on every unlock (used to be only on manually press unlock key). Config `Play Unlocking Sound` is replaced by [`Play Sound Instead Of Speak`](/docs/config.md#entitiesblocks-locking), default value is `false`, so if you find out speak is annoying, switch this config to `ture` for original base drum sound.
+* Breaking change: The mod will speak `unlock` on every unlock (used to be only on manually press unlock key). Config `Play Unlocking Sound` is replaced by [`Play Sound Instead Of Speak`]({{% relref "/config#entitiesblocks-locking" %}}), default value is `false`, so if you find out speak is annoying, switch this config to `ture` for original base drum sound.
 
 ### Refactoring, Documentation and Chores
 
@@ -257,7 +261,7 @@ Release v1.4.0 (2023-11)
 * Suppress annoying original `speak whole sentence` narration on every text editing operation.
 * Simplify the original command suggestion narration for a better typing experience with lesser annoying too-detailed narrations.
 
-See also: [description of this feature](/docs/features.md#speak-text-editing) [#187](https://github.com/khanshoaib3/minecraft-access/issues/187)
+See also: [description of this feature]({{% relref "/features#speak-text-editing" %}}) [#187](https://github.com/khanshoaib3/minecraft-access/issues/187)
 
 #### I18N Fallback Mechanism
 
@@ -268,8 +272,8 @@ If you want to contribute to translating work, we manage the translation of this
 
 ### Feature Changes
 
-* Now whenever you're looking at a block and entity, the mod will play a piano sound cue to indicate relative location between you and target. see also: [description of this feature](/docs/features.md#relative-position-sound-cue) [#191](https://github.com/khanshoaib3/minecraft-access/issues/191)
-* Now the mod will only speak item count when held item type isn't changed (when picking up or spending items), with a new config `Report Held Items Count When Changed`, see the [configuration](/docs/config.md#other-configurations).
+* Now whenever you're looking at a block and entity, the mod will play a piano sound cue to indicate relative location between you and target. see also: [description of this feature]({{% relref "/features#relative-position-sound-cue" %}}) [#191](https://github.com/khanshoaib3/minecraft-access/issues/191)
+* Now the mod will only speak item count when held item type isn't changed (when picking up or spending items), with a new config `Report Held Items Count When Changed`, see the [configuration]({{% relref "/config#other-configurations" %}}).
 * Now the mod will speak sitting state of cat, dog, parrot, [and so on](https://minecraft.wiki/w/Sitting#Mechanics) in `Read Crosshair`. [#192](https://github.com/khanshoaib3/minecraft-access/issues/192)
 * Not the mod will speak if an animal is tamed in `Read Crosshair`.
 * Now the mod can tell if a zombie villager is under curing in `Read Crosshair`. [#195](https://github.com/khanshoaib3/minecraft-access/issues/195)

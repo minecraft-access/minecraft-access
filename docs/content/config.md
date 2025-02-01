@@ -1,4 +1,6 @@
-# Minecraft Access Configuration
+---
+title: "Configuration"
+---
 
 This page contains all the configuration that controls the features on-off and behavior.
 
@@ -10,23 +12,6 @@ You can also use online JSON editor like [Json Editor Online](https://jsoneditor
 
 If you want to reset the config back to default values, delete the configuration file while the game is not running,
 or click `Reset Config` button in the `Config Menu`.
-
-## Table Of Contents
-
-1. [Camera Controls](#camera-controls)
-2. [Mouse Simulation](#mouse-simulation)
-3. [Read Crosshair](#read-crosshair)
-    * [Relative Position Sound Cue](#relative-position-sound-cue)
-    * [Partial Speaking](#partial-speaking)
-4. [Inventory Controls](#inventory-controls)
-5. [Point of Interest](#point-of-interest)
-6. [Position Narrator](#position-narrator)
-7. [Health n Hunger](#health-n-hunger)
-8. [Player Warnings](#player-warnings)
-9. [Fall Detector](#fall-detector)
-10. [Access Menu](#access-menu)
-    * [Fluid Detector](#fluid-detector)
-11. [Other Configurations](#other-configurations)
 
 ## Camera Controls
 
@@ -43,7 +28,7 @@ This config is under `Other Configurations` section in the config file and confi
 |-------------------------|---------------|--------------------------------------------------------------------------|
 | Enable Facing Direction | true          | Whether to automatically speak the current direction as the camera moves |
 
-See also: [Feature Description](/docs/features.md#camera-controls), [keybindings](/docs/keybindings.md#camera-controls)
+See also: [Feature Description]({{% relref "/features#camera-controls" %}}), [keybindings]({{% relref "/keybindings#camera-controls" %}})
 
 ## Mouse Simulation
 
@@ -52,7 +37,7 @@ See also: [Feature Description](/docs/features.md#camera-controls), [keybindings
 | Enabled                        | true          | Whether to enable this feature                      |
 | Scroll Delay (in milliseconds) | 150           | Cooldown between two mouse wheel scroll simulations |
 
-See also: [Feature Description](/docs/features.md#mouse-simulation), [keybindings](/docs/keybindings.md#mouse-simulation)
+See also: [Feature Description]({{% relref "/features#mouse-simulation" %}}), [keybindings]({{% relref "/keybindings#mouse-simulation" %}})
 
 ## Read Crosshair
 
@@ -66,7 +51,7 @@ See also: [Feature Description](/docs/features.md#mouse-simulation), [keybinding
 Config `Disable Speaking Consecutive Blocks With Same Name` option can be useful
 when you don't want to hear repetitive speaking of a large area with the same block type.
 
-See also: [Feature Description](/docs/features.md#read-crosshair)
+See also: [Feature Description]({{% relref "/features#read-crosshair" %}})
 
 ### Relative Position Sound Cue
 
@@ -76,17 +61,17 @@ See also: [Feature Description](/docs/features.md#read-crosshair)
 | Min Sound Volume | 0.25          | Min volume of the sound cue    |
 | Max Sound Volume | 0.4           | Max volume of the sound cue    |
 
-See also: [Feature Description](/docs/features.md#relative-position-sound-cue)
+See also: [Feature Description]({{% relref "/features#relative-position-sound-cue" %}})
 
 ### Partial Speaking
 
-| Configuration   | Default Value                            | Description                                                                                                            |
-|-----------------|------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
-| Enabled         | true                                     | Whether to enable this feature                                                                                         |
-| White List Mode | true                                     | If true, only speak what have been configured. Set to false for blacklist mode, only not speak what you've configured  |
-| Fuzzy Mode      | true                                     | Whether to do fuzzy matching, for example `bed` will match all colors of beds, `door` will match all textures of doors |
-| Target Mode     | `block`                                  | Which type would you like to apply this feature to, either `all`, `entity` or `block`                                  |
-| Targets         | [`slab`,`planks`,`block`,`stone`,`sign`] | Indicated what to be spoken                                                                                            |
+| Configuration   | Default Value                                                                                            | Description                                                                                                            |
+|-----------------|----------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Enabled         | true                                                                                                     | Whether to enable this feature                                                                                         |
+| White List Mode | true                                                                                                     | If true, only speak what have been configured. Set to false for blacklist mode, only not speak what you've configured  |
+| Fuzzy Mode      | true                                                                                                     | Whether to do fuzzy matching, for example `bed` will match all colors of beds, `door` will match all textures of doors |
+| Target Mode     | `block`                                                                                                  | Which type would you like to apply this feature to, either `all`, `entity` or `block`                                  |
+| Targets         | [`slab`,&ZeroWidthSpace;`planks`,&ZeroWidthSpace;`block`,&ZeroWidthSpace;`stone`,&ZeroWidthSpace;`sign`] | Indicated what to be spoken                                                                                            |
 
 The `Targets` config can only be configured in `config.json` file.
 Values are written in Minecraft resource location format, the so-called
@@ -97,7 +82,7 @@ the `Block of Diamond` is written in `diamond_block`,
 so please check the correct values in [this wiki link](https://minecraft.wiki/w/Java_Edition_data_values#Blocks)
 (expand to show the list by clicking `Blocks[show]` then `Item form's ID[show]`).
 
-See also: [Feature Description](/docs/features.md#partial-speaking)
+See also: [Feature Description]({{% relref "/features#partial-speaking" %}})
 
 ## Inventory Controls
 
@@ -113,12 +98,12 @@ See also: [Feature Description](/docs/features.md#partial-speaking)
 Most recipes [require](https://minecraft.wiki/w/Crafting) their ingredients to be arranged in a specific way on the crafting grid (a.k.a. our crafting input group).
 That's how `Row and Column Format in Crafting Input Slots` config can help you, you'll hear something like `1x2 Empty Slot` which represent you're locating at row one and column two slot inside the crafting input group, and it contains nothing.
 
-See also: [Feature Description](/docs/features.md#inventory-controls), [keybindings](/docs/keybindings.md#inventory-controls)
+See also: [Feature Description]({{% relref "/features#inventory-controls" %}}), [keybindings]({{% relref "/keybindings#inventory-controls" %}})
 
 ## Point of Interest
 
-See also: [Feature Description](/docs/features.md#points-of-interest),
-[keybindings](/docs/keybindings.md#point-of-interest)
+See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
+[keybindings]({{% relref "/keybindings#point-of-interest" %}})
 
 ### Blocks
 
@@ -173,17 +158,17 @@ These configs are under `Other Configurations` section in the config file and co
 | Enable Position Narrator | true               | Whether to enable this feature                                                                       |
 | Position Narrator Format | `{x}x, {y}y, {z}z` | The speaking format of the position, `{x}`, `{y}`, `{z}` represent the corresponding axis's position |
 
-See also: [Feature Description](/docs/features.md#position-narrator), [keybindings](/docs/keybindings.md#position-narrator)
+See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [keybindings]({{% relref "/keybindings#position-narrator" %}})
 
-## Health n Hunger
+## Player Status
 
 This config is under `Other Configurations` section in the config file and config menu.
 
 | Configuration          | Default Value | Description                    |
 |------------------------|---------------|--------------------------------|
-| Enable Health n Hunger | true          | Whether to enable this feature |
+| Enable PlayerStatus | true          | Whether to enable this feature |
 
-See also: [Feature Description](/docs/features.md#health-n-hunger), [keybindings](/docs/keybindings.md#health-n-hunger)
+See also: [Feature Description]({{% relref "/features#player-status" %}}), [keybindings]({{% relref "/keybindings#player-status" %}})
 
 ## Player Warnings
 
@@ -196,7 +181,7 @@ See also: [Feature Description](/docs/features.md#health-n-hunger), [keybindings
 | Hunger Threshold        | 3             | The threshold for hunger/food                               |
 | Air Threshold           | 3             | The threshold for air when you're submerged in water        |
 
-See also: [Feature Description](/docs/features.md#player-warnings)
+See also: [Feature Description]({{% relref "/features#player-warnings" %}})
 
 ## Fall Detector
 
@@ -209,7 +194,7 @@ See also: [Feature Description](/docs/features.md#player-warnings)
 | Sound Volume            | 0.25          | Volume of the sound cue             |
 | Delay (in milliseconds) | 2500          | Execute at set intervals            |
 
-See also: [Feature Description](/docs/features.md#fall-detector)
+See also: [Feature Description]({{% relref "/features#fall-detector" %}})
 
 ## Access Menu
 
@@ -217,7 +202,7 @@ See also: [Feature Description](/docs/features.md#fall-detector)
 |---------------|---------------|--------------------------------|
 | Enabled       | true          | Whether to enable this feature |
 
-See also: [Feature Description](/docs/features.md#access-menu), [keybindings](/docs/keybindings.md#access-menu)
+See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybindings]({{% relref "/keybindings#access-menu" %}})
 
 ### Fluid Detector
 
@@ -230,8 +215,8 @@ See also: [Feature Description](/docs/features.md#access-menu), [keybindings](/d
 
 | Configuration                          | Default Value | Description                                                                                                                                                               |
 |----------------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Enable Biome Indicator                 | true          | Whether to enable [`Biome Indicator`](/docs/features.md#biome-indicator) feature                                                                                          |
-| Enable XP Indicator                    | true          | Whether to enable [`XP Indicator`](/docs/features.md#xp-indicator) feature                                                                                                |
+| Enable Biome Indicator                 | true          | Whether to enable [`Biome Indicator`]({{% relref "/features#biome-indicator" %}}) feature                                                                                 |
+| Enable XP Indicator                    | true          | Whether to enable [`XP Indicator`]({{% relref "/features#xp-indicator" %}}) feature                                                                                       |
 | Command Suggestion Narrator Format     | `%dx%d %s`    | The speaking format of the command suggestion, two `%d` represent the order of focused suggestion and total number of suggestions, `%s` represents the suggestion content |
 | Use 12 Hour Time Format                | false         | Whether to use 12 hour time format when speaking the time                                                                                                                 | 
 | Speak Action Bar Messages              | true          | Whether to speak the messages updated in [action bar](https://minecraft.wiki/w/Commands/title), useful when you're in modded multiplayer servers                          |
@@ -242,8 +227,4 @@ See also: [Feature Description](/docs/features.md#access-menu), [keybindings](/d
 | Debug Mode                             | true          | Developer config, whether to print debug messages into log                                                                                                                |
 | Multiple Click Speed (in milliseconds) | 750           | The maximum time interval between two keystrokes in multiple click operations like `double-click`                                                                         |
 
-See also: [Feature Description](/docs/features.md#other-small-features)
-
-## Other Pages
-
-* [Home](/README.md)
+See also: [Feature Description]({{% relref "/features#other-small-features" %}})
