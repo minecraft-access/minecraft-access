@@ -18,31 +18,18 @@ public class PlayerPositionUtils {
     private static final String POSITION_FORMAT = "{x}, {y}, {z}";
 
     public static double getX() {
-        String tempPosX = String.valueOf(getPlayerPosition().orElseThrow().x);
-        tempPosX = tempPosX.substring(0, tempPosX.indexOf(".") + 2);
-
-        return Double.parseDouble(tempPosX);
+        return Math.round(getPlayerPosition().orElseThrow().x * 10.0) / 10.0;
     }
 
     public static double getY() {
-        String tempPosY;
-        tempPosY = String.valueOf(getPlayerPosition().orElseThrow().y);
-        tempPosY = tempPosY.substring(0, tempPosY.indexOf(".") + 2);
-
-        return Double.parseDouble(tempPosY);
+        return Math.round(getPlayerPosition().orElseThrow().y * 10.0) / 10.0;
     }
 
     public static double getZ() {
-        String tempPosZ;
-        tempPosZ = String.valueOf(getPlayerPosition().orElseThrow().z);
-        tempPosZ = tempPosZ.substring(0, tempPosZ.indexOf(".") + 2);
-
-        return Double.parseDouble(tempPosZ);
+        return Math.round(getPlayerPosition().orElseThrow().z * 10.0) / 10.0;
     }
 
-    /**
-     * Player position is at player's leg.
-     */
+     // Player position is at player's leg.
     public static Optional<Vec3> getPlayerPosition() {
         Minecraft client = Minecraft.getInstance();
         return client.player == null ? java.util.Optional.empty() : Optional.of(client.player.position());
