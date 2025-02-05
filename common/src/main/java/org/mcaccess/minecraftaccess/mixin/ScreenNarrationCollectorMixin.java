@@ -32,7 +32,7 @@ public class ScreenNarrationCollectorMixin {
         }
 
         // Skip every first time the new screen is opened, to speak screen title.
-        if (!c.screen.getClass().equals(this.mca$previousScreen.getClass())) {
+        if (this.mca$previousScreen != null && !c.screen.getClass().equals(this.mca$previousScreen.getClass())) {
             this.mca$previousScreen = c.screen;
             return;
         }
