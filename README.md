@@ -9,11 +9,11 @@ Currently, this mod [has enough features](https://docs.mcaccess.org/faq#is-the-m
 
 This mod has available versions for:
 
-* Game version `1.19.3`, `1.20.1`, `1.20.4`, `1.20.6`, `1.21.1`.
+* Game versions `1.19.3`, `1.20.1`, `1.20.4`, `1.20.6`, `1.21.1`, `1.21.4`.
 * On the [Fabric](https://fabricmc.net/use/installer/) and [NeoForge](https://neoforged.net) mod loaders
 * On Windows, macOS and Linux operating systems
 
-Each version of this mod will be pre-released in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first as a beta testing stage, after one week of feedback collection, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions), [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files), and [GitHub](https://github.com/minecraft-access/minecraft-access/releases).
+Whenever the mod's code is updated, or whenever we need an upcoming feature someone contributed to be tested, a build will be automatically published in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first to allow for testing, after enough feedback has been gathered, or no serious bugs have been reported in the build, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions), [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files), and [GitHub](https://github.com/minecraft-access/minecraft-access/releases).
 
 ## Other Pages
 
