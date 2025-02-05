@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
-import org.mcaccess.minecraftaccess.mixin.McaScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.ScreenAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -53,7 +53,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
         this.listWidget.children().removeIf(e -> e instanceof EmptyEntry);
         // Add current category's options as selectable of screen,
         // so that they can be narrated in Screen.addElementNarrations()
-        List<NarratableEntry> narratables = ((McaScreenAccessor) this).getNarratables();
+        List<NarratableEntry> narratables = ((ScreenAccessor) this).getNarratables();
         narratables.addAll(this.listWidget.children());
     }
 

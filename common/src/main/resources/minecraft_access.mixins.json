@@ -31,7 +31,7 @@
     "KeyMappingAccessor",
     "KeyMappingMixin",
     "LoomScreenAccessor",
-    "McaScreenAccessor",
+    "ScreenAccessor",
     "MerchantScreenAccessor",
     "MinecraftMixin",
     "NarrationThunkMixin",

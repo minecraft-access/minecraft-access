@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.List;
 
 @Mixin(Screen.class)
-public interface McaScreenAccessor {
+public interface ScreenAccessor {
     @Accessor
     List<NarratableEntry> getNarratables();
 }
