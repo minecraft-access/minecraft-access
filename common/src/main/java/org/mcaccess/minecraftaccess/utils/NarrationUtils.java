@@ -6,7 +6,6 @@ import net.minecraft.block.entity.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.ReadCrosshairConfigMap;
 import org.mcaccess.minecraftaccess.mixin.MobSpawnerLogicAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
@@ -89,7 +88,7 @@ public class NarrationUtils {
                 case STANDING -> {
                 }
                 default -> {
-                    log.warn("Unhandled pose found: " + entity.getPose().name() + " for additional pose narration in Narration Utils");
+                    log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", entity.getPose().name());
                 }
             }
         }
