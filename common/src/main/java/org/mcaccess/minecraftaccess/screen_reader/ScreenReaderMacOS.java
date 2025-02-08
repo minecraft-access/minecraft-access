@@ -1,11 +1,10 @@
 package org.mcaccess.minecraftaccess.screen_reader;
 
-import org.mcaccess.minecraftaccess.config.config_maps.SpeechSettingsConfigMap;
-import java.lang.ProcessHandle;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import lombok.extern.slf4j.Slf4j;
+import org.mcaccess.minecraftaccess.config.config_maps.SpeechSettingsConfigMap;
 
 @Slf4j
 public class ScreenReaderMacOS implements ScreenReaderInterface {

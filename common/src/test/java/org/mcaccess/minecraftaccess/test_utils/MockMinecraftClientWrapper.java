@@ -1,7 +1,7 @@
 package org.mcaccess.minecraftaccess.test_utils;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,37 +16,37 @@ import static org.mockito.Mockito.mock;
  */
 public class MockMinecraftClientWrapper {
 
-    private final MinecraftClient mockitoClient;
+    private final Minecraft mockitoClient;
 
     public MockMinecraftClientWrapper() {
-        mockitoClient = mock(MinecraftClient.class);
+        mockitoClient = mock(Minecraft.class);
 
         lenient().doAnswer((i) -> {
             // assign screen param to desired field to simulate real behavior
-            mockitoClient.currentScreen = i.getArgument(0);
+            mockitoClient.screen = i.getArgument(0);
             return null;
         }).when(mockitoClient).setScreen(any());
     }
 
-    public MinecraftClient mockito() {
+    public Minecraft mockito() {
         return mockitoClient;
     }
 
     public void setScreen(Class<? extends Screen> screenClass) {
         Screen screen = Mockito.mock(screenClass);
         lenient().doAnswer((ignored) -> {
-            mockitoClient.currentScreen = null;
+            mockitoClient.screen = null;
             return null;
-        }).when(screen).close();
+        }).when(screen).onClose();
 
-        mockitoClient.currentScreen = screen;
+        mockitoClient.screen = screen;
     }
 
     public void verifyOpeningMenuOf(Class<? extends Screen> screenClass) {
-        assertThat(mockitoClient.currentScreen).as("the menu should be opened").isOfAnyClassIn(screenClass);
+        assertThat(mockitoClient.screen).as("the menu should be opened").isOfAnyClassIn(screenClass);
     }
 
     public void verifyClosingMenu() {
-        assertThat(mockitoClient.currentScreen).as("the menu should be closed").isNull();
+        assertThat(mockitoClient.screen).as("the menu should be closed").isNull();
     }
 }

@@ -1,7 +1,7 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * We need to save the accurate (decimal) position of blocks
@@ -9,19 +9,19 @@ import net.minecraft.util.math.Vec3d;
  * See also: {@link NonCubeBlockAbsolutePositions}
  */
 public class BlockPos3d extends BlockPos {
-    private final Vec3d accuratePosition;
+    private final Vec3 accuratePosition;
 
-    public BlockPos3d(Vec3d position) {
+    public BlockPos3d(Vec3 position) {
         super((int) position.x, (int) position.y, (int) position.z);
         accuratePosition = position;
     }
 
     public BlockPos3d(BlockPos position) {
         super(position.getX(), position.getY(), position.getZ());
-        accuratePosition = position.toCenterPos();
+        accuratePosition = position.getCenter();
     }
 
-    public BlockPos3d(BlockPos position, Vec3d accuratePosition) {
+    public BlockPos3d(BlockPos position, Vec3 accuratePosition) {
         super(position);
         this.accuratePosition = accuratePosition;
     }
@@ -30,7 +30,7 @@ public class BlockPos3d extends BlockPos {
         return new BlockPos3d(position);
     }
 
-    public Vec3d getAccuratePosition() {
+    public Vec3 getAccuratePosition() {
         return accuratePosition;
     }
 }

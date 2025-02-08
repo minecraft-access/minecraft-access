@@ -1,43 +1,39 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
-import org.mcaccess.minecraftaccess.mixin.*;
 import com.google.common.base.CaseFormat;
-import net.minecraft.block.entity.BannerPattern;
-import net.minecraft.block.entity.BeaconBlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.*;
-import net.minecraft.client.gui.screen.recipebook.AnimatedResultButton;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
-import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.CraftingResultInventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.*;
-import net.minecraft.screen.slot.FurnaceOutputSlot;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.village.TradeOfferList;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.*;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeButton;
+import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mcaccess.minecraftaccess.mixin.*;
 
 import java.util.*;
 
 public class GroupGenerator {
 
     /**
-     * Saved by RecipeBookResultsMixin
+     * Saved by RecipeBookPageMixin
      */
-    public static List<RecipeResultCollection> recipesOnTheScreen;
+    public static List<RecipeCollection> recipesOnTheScreen;
 
-    public static List<SlotsGroup> generateGroupsFromSlots(HandledScreenAccessor screen) {
-        if (screen instanceof CreativeInventoryScreen creativeInventoryScreen) {
+    public static List<SlotsGroup> generateGroupsFromSlots(AbstractContainerScreenAccessor screen) {
+        if (screen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
             return creativeInventoryGroups(creativeInventoryScreen);
         }
 
@@ -48,10 +44,10 @@ public class GroupGenerator {
         return commonGroups(screen);
     }
 
-    private static @NotNull List<SlotsGroup> commonGroups(@NotNull HandledScreenAccessor screen) {
+    private static @NotNull List<SlotsGroup> commonGroups(@NotNull AbstractContainerScreenAccessor screen) {
         List<SlotsGroup> foundGroups = new ArrayList<>();
 
-        List<Slot> slots = new ArrayList<>(screen.getHandler().slots);
+        List<Slot> slots = new ArrayList<>(screen.getMenu().slots);
 
         SlotsGroup hotbarGroup = new SlotsGroup("hotbar", null);
         SlotsGroup playerInventoryGroup = new SlotsGroup("player_inventory", null);
@@ -80,115 +76,115 @@ public class GroupGenerator {
         List<SlotItem> unknownSlots = new ArrayList<>(slots.size());
 
         for (Slot s : slots) {
-            int index = ((SlotAccessor) s).getIndex();
+            int index = ((SlotAccessor) s).getSlot();
 
             //<editor-fold desc="Group player inventory slot items">
-            if (s.inventory instanceof PlayerInventory && index >= 0 && index <= 8) {
+            if (s.container instanceof Inventory && index >= 0 && index <= 8) {
                 hotbarGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
-            if (s.inventory instanceof PlayerInventory && index >= 9 && index <= 35) {
+            if (s.container instanceof Inventory && index >= 9 && index <= 35) {
                 playerInventoryGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
-            if (s.inventory instanceof PlayerInventory && index >= 36 && index <= 39) {
+            if (s.container instanceof Inventory && index >= 36 && index <= 39) {
                 armourGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
-            if (s.inventory instanceof PlayerInventory && index == 40) {
+            if (s.container instanceof Inventory && index == 40) {
                 offHandGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group furnace(blast furnace, regular furnace and smoker) screen slot items">
-            if (screen.getHandler() instanceof AbstractFurnaceScreenHandler && index == 2) {
+            if (screen.getMenu() instanceof AbstractFurnaceMenu && index == 2) {
                 itemOutputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof AbstractFurnaceScreenHandler && index == 1) {
+            if (screen.getMenu() instanceof AbstractFurnaceMenu && index == 1) {
                 fuelInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof AbstractFurnaceScreenHandler && index == 0) {
+            if (screen.getMenu() instanceof AbstractFurnaceMenu && index == 0) {
                 itemInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group villager trading screen slot items">
-            if (screen.getHandler() instanceof MerchantScreenHandler && (index == 0 || index == 1)) {
+            if (screen.getMenu() instanceof MerchantMenu && (index == 0 || index == 1)) {
                 itemInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof MerchantScreenHandler && index == 2) {
+            if (screen.getMenu() instanceof MerchantMenu && index == 2) {
                 itemOutputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group stone cutter screen slot items">
-            if (screen.getHandler() instanceof StonecutterScreenHandler && index == 0) {
+            if (screen.getMenu() instanceof StonecutterMenu && index == 0) {
                 itemInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof StonecutterScreenHandler && index == 1) {
+            if (screen.getMenu() instanceof StonecutterMenu && index == 1) {
                 itemOutputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group cartography screen slot items">
-            if (screen.getHandler() instanceof CartographyTableScreenHandler && (index == 0 || index == 1)) {
+            if (screen.getMenu() instanceof CartographyTableMenu && (index == 0 || index == 1)) {
                 itemInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof CartographyTableScreenHandler && index == 2) {
+            if (screen.getMenu() instanceof CartographyTableMenu && index == 2) {
                 itemOutputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group loom screen slot items">
-            if (screen.getHandler() instanceof LoomScreenHandler && index == 0) {
-                if (s.inventory.size() == 3) {
+            if (screen.getMenu() instanceof LoomMenu && index == 0) {
+                if (s.container.getContainerSize() == 3) {
                     bannerInputGroup.slotItems.add(new SlotItem(s));
-                } else if (s.inventory.size() == 1) {
+                } else if (s.container.getContainerSize() == 1) {
                     itemOutputGroup.slotItems.add(new SlotItem(s));
                 }
                 continue;
             }
 
-            if (screen.getHandler() instanceof LoomScreenHandler && index == 1) {
+            if (screen.getMenu() instanceof LoomMenu && index == 1) {
                 dyeInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof LoomScreenHandler && index == 2) {
+            if (screen.getMenu() instanceof LoomMenu && index == 2) {
                 patternInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group anvil screen slot items">
-            if (screen.getHandler() instanceof AnvilScreenHandler && (index == 0 || index == 1)) {
+            if (screen.getMenu() instanceof AnvilMenu && (index == 0 || index == 1)) {
                     itemInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof AnvilScreenHandler && index == 2) {
+            if (screen.getMenu() instanceof AnvilMenu && index == 2) {
                 itemOutputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
                         //<editor-fold desc="Group smithing table screen slot items">
-            if (screen.getHandler() instanceof SmithingScreenHandler) {
+            if (screen.getMenu() instanceof SmithingMenu) {
                 switch (index) {
                     case 0:
                         smithingTemplateInputGroup.slotItems.add(new SlotItem(s));
@@ -209,77 +205,77 @@ public class GroupGenerator {
                         //</editor-fold>
 
             //<editor-fold desc="Group brewing stand screen slot items">
-            if (screen.getHandler() instanceof BrewingStandScreenHandler && index >= 0 && index <= 2) {
+            if (screen.getMenu() instanceof BrewingStandMenu && index >= 0 && index <= 2) {
                 potionGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof BrewingStandScreenHandler && index == 3) {
+            if (screen.getMenu() instanceof BrewingStandMenu && index == 3) {
                 ingredientGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof BrewingStandScreenHandler && index == 4) {
+            if (screen.getMenu() instanceof BrewingStandMenu && index == 4) {
                 fuelInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group grind stone screen slot items">
-            if (screen.getHandler() instanceof GrindstoneScreenHandler && (index == 0 || index == 1)) {
+            if (screen.getMenu() instanceof GrindstoneMenu && (index == 0 || index == 1)) {
                 itemInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof GrindstoneScreenHandler && index == 2) {
+            if (screen.getMenu() instanceof GrindstoneMenu && index == 2) {
                 itemOutputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group beacon screen slot items">
-            if (screen.getHandler() instanceof BeaconScreenHandler && index == 0) {
+            if (screen.getMenu() instanceof BeaconMenu && index == 0) {
                 itemInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group enchantment screen slot items">
-            if (screen.getHandler() instanceof EnchantmentScreenHandler && index == 0) {
+            if (screen.getMenu() instanceof EnchantmentMenu && index == 0) {
                 itemInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof EnchantmentScreenHandler && index == 1) {
+            if (screen.getMenu() instanceof EnchantmentMenu && index == 1) {
                 lapisLazuliInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group storage container(chests, hopper, dispenser, etc.) inventory slot items">
-            if (screen.getHandler() instanceof GenericContainerScreenHandler && s.inventory instanceof SimpleInventory) {
+            if (screen.getMenu() instanceof ChestMenu && s.container instanceof SimpleContainer) {
                 blockInventoryGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof Generic3x3ContainerScreenHandler && s.inventory instanceof SimpleInventory) {
+            if (screen.getMenu() instanceof DispenserMenu && s.container instanceof SimpleContainer) {
                 blockInventoryGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (screen.getHandler() instanceof HopperScreenHandler && s.inventory instanceof SimpleInventory) {
+            if (screen.getMenu() instanceof HopperMenu && s.container instanceof SimpleContainer) {
                 blockInventoryGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
             //</editor-fold>
 
             //<editor-fold desc="Group crafting related slot items">
-            if (s.inventory instanceof CraftingResultInventory && !(s instanceof FurnaceOutputSlot)) {
+            if (s.container instanceof ResultContainer && !(s instanceof FurnaceResultSlot)) {
                 craftingOutputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
-            if (s.inventory instanceof CraftingInventory) {
+            if (s.container instanceof TransientCraftingContainer) {
                 craftingInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
@@ -291,41 +287,41 @@ public class GroupGenerator {
         //<editor-fold desc="Group recipe group slot items if any">
         if (screen instanceof StonecutterScreen stonecutterScreen) {
             // Refer to StoneCutterScreen.java -->> renderRecipeIcons()
-            int x = screen.getX() + 52;
-            int y = screen.getY() + 14;
-            int scrollOffset = ((StonecutterScreenAccessor) stonecutterScreen).getScrollOffset();
+            int x = screen.getLeftPos() + 52;
+            int y = screen.getTopPos() + 14;
+            int scrollOffset = ((StonecutterScreenAccessor) stonecutterScreen).getStartIndex();
 
-            for (int i = scrollOffset; i < scrollOffset + 12 && i < stonecutterScreen.getScreenHandler().getAvailableRecipeCount(); ++i) {
+            for (int i = scrollOffset; i < scrollOffset + 12 && i < stonecutterScreen.getMenu().getNumberOfVisibleRecipes(); ++i) {
                 int j = i - scrollOffset;
                 int k = x + j % 4 * 16;
                 int l = j / 4;
                 int m = y + l * 18 + 2;
 
-                int realX = k - screen.getX() + 8;
-                int realY = m - screen.getY() + 8;
+                int realX = k - screen.getLeftPos() + 8;
+                int realY = m - screen.getTopPos() + 8;
                 recipesGroup.slotItems.add(new SlotItem(realX, realY, j));
             }
         }
 
         if (screen instanceof LoomScreen loomScreen) {
             // Refer to LoomScreen.java -->> drawBackground()
-            int i = screen.getX();
-            int j = screen.getY();
-            if (((LoomScreenAccessor) loomScreen).isCanApplyDyePattern()) {
+            int i = screen.getLeftPos();
+            int j = screen.getTopPos();
+            if (((LoomScreenAccessor) loomScreen).isDisplayPatterns()) {
                 int l = i + 60;
                 int m = j + 13;
-                List<RegistryEntry<BannerPattern>> list = loomScreen.getScreenHandler().getBannerPatterns();
+                List<Holder<BannerPattern>> list = loomScreen.getMenu().getSelectablePatterns();
                 block0:
                 for (int n = 0; n < 4; ++n) {
                     for (int o = 0; o < 4; ++o) {
-                        int p = n + ((LoomScreenAccessor) loomScreen).getVisibleTopRow();
+                        int p = n + ((LoomScreenAccessor) loomScreen).getStartRow();
                         int q = p * 4 + o;
                         if (q >= list.size()) break block0;
                         int r = l + o * 14;
                         int s = m + n * 14;
 
-                        int realX = r - screen.getX() + 8;
-                        int realY = s - screen.getY() + 8;
+                        int realX = r - screen.getLeftPos() + 8;
+                        int realY = s - screen.getTopPos() + 8;
 
                         recipesGroup.slotItems.add(new SlotItem(realX, realY, n, o));
                     }
@@ -335,55 +331,55 @@ public class GroupGenerator {
         //</editor-fold>
 
         //<editor-fold desc="Group beacon screen buttons (refer to BeaconScreen.java -->> init())">
-        if (screen.getHandler() instanceof BeaconScreenHandler) {
+        if (screen.getMenu() instanceof BeaconMenu) {
             int l;
             int k;
             int j;
             int i;
-            beaconConfirmButtonsGroup.slotItems.add(new SlotItem(173, screen.getY() + 107, "Done Button"));
-            beaconConfirmButtonsGroup.slotItems.add(new SlotItem(199, screen.getY() + 107, "Cancel Button"));
+            beaconConfirmButtonsGroup.slotItems.add(new SlotItem(173, screen.getTopPos() + 107, "Done Button"));
+            beaconConfirmButtonsGroup.slotItems.add(new SlotItem(199, screen.getTopPos() + 107, "Cancel Button"));
             for (i = 0; i <= 2; ++i) {
-                j = BeaconBlockEntity.EFFECTS_BY_LEVEL.get(i).size();
+                j = BeaconBlockEntity.BEACON_EFFECTS.get(i).size();
                 k = j * 22 + (j - 1) * 2;
                 for (l = 0; l < j; ++l) {
-                    primaryBeaconPowersButtonsGroup.slotItems.add(new SlotItem(85 + l * 24 - k / 2, screen.getY() + 22 + i * 25));
+                    primaryBeaconPowersButtonsGroup.slotItems.add(new SlotItem(85 + l * 24 - k / 2, screen.getTopPos() + 22 + i * 25));
                 }
             }
-            j = BeaconBlockEntity.EFFECTS_BY_LEVEL.get(3).size() + 1;
+            j = BeaconBlockEntity.BEACON_EFFECTS.get(3).size() + 1;
             k = j * 22 + (j - 1) * 2;
             for (l = 0; l < j - 1; ++l) {
-                secondaryBeaconPowersButtonsGroup.slotItems.add(new SlotItem(176 + l * 24 - k / 2, screen.getY() + 47));
+                secondaryBeaconPowersButtonsGroup.slotItems.add(new SlotItem(176 + l * 24 - k / 2, screen.getTopPos() + 47));
             }
-            secondaryBeaconPowersButtonsGroup.slotItems.add(new SlotItem(176 + (j - 1) * 24 - k / 2, screen.getY() + 47));
+            secondaryBeaconPowersButtonsGroup.slotItems.add(new SlotItem(176 + (j - 1) * 24 - k / 2, screen.getTopPos() + 47));
         }
         //</editor-fold>
 
         //<editor-fold desc="Group enchantment screen enchant buttons (EnchantScreen.java -->> render())">
-        if (MinecraftClient.getInstance().player != null && MinecraftClient.getInstance().world != null
-                && screen.getHandler() instanceof EnchantmentScreenHandler enchantmentScreenHandler) {
-            boolean bl = MinecraftClient.getInstance().player.getAbilities().creativeMode;
-            int i = enchantmentScreenHandler.getLapisCount();
+        if (Minecraft.getInstance().player != null && Minecraft.getInstance().level != null
+                && screen.getMenu() instanceof EnchantmentMenu enchantmentScreenHandler) {
+            boolean bl = Minecraft.getInstance().player.getAbilities().instabuild;
+            int i = enchantmentScreenHandler.getGoldCount();
             for (int j = 0; j < 3; ++j) {
-                int k = enchantmentScreenHandler.enchantmentPower[j];
-                int l = enchantmentScreenHandler.enchantmentLevel[j];
+                int k = enchantmentScreenHandler.costs[j];
+                int l = enchantmentScreenHandler.levelClue[j];
                 // copied from 1.21.3 EnchantmentScreen.render() L172
-                Optional<RegistryEntry.Reference<Enchantment>> optional = MinecraftClient.getInstance()
-                        .world
-                        .getRegistryManager()
-                        .getOrThrow(RegistryKeys.ENCHANTMENT)
-                        .getEntry(l);
+                Optional<Holder.Reference<Enchantment>> optional = Minecraft.getInstance()
+                        .level
+                        .registryAccess()
+                        .lookupOrThrow(Registries.ENCHANTMENT)
+                        .get(l);
 
                 int m = j + 1;
                 if (optional.isEmpty()) break;
-                StringBuilder clueText = new StringBuilder(Text.translatable("container.enchant.clue", Enchantment.getName(optional.get(), l)).formatted(Formatting.WHITE).getString());
+                StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(optional.get(), l)).withStyle(ChatFormatting.WHITE).getString());
                 if (!bl) {
-                    if (MinecraftClient.getInstance().player.experienceLevel < k) {
-                        clueText.append(Text.translatable("container.enchant.level.requirement", enchantmentScreenHandler.enchantmentPower[j]).formatted(Formatting.RED).getString());
+                    if (Minecraft.getInstance().player.experienceLevel < k) {
+                        clueText.append(Component.translatable("container.enchant.level.requirement", enchantmentScreenHandler.costs[j]).withStyle(ChatFormatting.RED).getString());
                     } else {
-                        MutableText mutableText = m == 1 ? Text.translatable("container.enchant.lapis.one") : Text.translatable("container.enchant.lapis.many", m);
-                        clueText.append(mutableText.formatted(i >= m ? Formatting.GRAY : Formatting.RED).getString());
-                        MutableText mutableText2 = m == 1 ? Text.translatable("container.enchant.level.one") : Text.translatable("container.enchant.level.many", m);
-                        clueText.append(mutableText2.formatted(Formatting.GRAY).getString());
+                        MutableComponent mutableText = m == 1 ? Component.translatable("container.enchant.lapis.one") : Component.translatable("container.enchant.lapis.many", m);
+                        clueText.append(mutableText.withStyle(i >= m ? ChatFormatting.GRAY : ChatFormatting.RED).getString());
+                        MutableComponent mutableText2 = m == 1 ? Component.translatable("container.enchant.level.one") : Component.translatable("container.enchant.level.many", m);
+                        clueText.append(mutableText2.withStyle(ChatFormatting.GRAY).getString());
                     }
                 }
 
@@ -394,17 +390,17 @@ public class GroupGenerator {
 
         //<editor-fold desc="Group merchant trades">
         if (screen instanceof MerchantScreen merchantScreen) {
-            MerchantScreenHandler merchantScreenHandler = merchantScreen.getScreenHandler();
-            TradeOfferList tradeOfferList = merchantScreenHandler.getRecipes();
+            MerchantMenu merchantScreenHandler = merchantScreen.getMenu();
+            MerchantOffers tradeOfferList = merchantScreenHandler.getOffers();
             if (!tradeOfferList.isEmpty()) {
-                int i = (merchantScreen.width - screen.getBackgroundWidth()) / 2;
-                int j = (merchantScreen.height - screen.getBackgroundHeight()) / 2;
+                int i = (merchantScreen.width - screen.getImageWidth()) / 2;
+                int j = (merchantScreen.height - screen.getImageHeight()) / 2;
                 int k = j + 16 + 1;
                 int l = i + 5 + 5;
                 for (int z = 0; z < tradeOfferList.size() && z < 7; z++) {
                     int n = k + 11;
 
-                    tradesGroup.slotItems.add(new SlotItem(l - screen.getX(), n - screen.getY(), z));
+                    tradesGroup.slotItems.add(new SlotItem(l - screen.getLeftPos(), n - screen.getTopPos(), z));
                     k += 20;
                 }
             }
@@ -417,11 +413,11 @@ public class GroupGenerator {
         //<editor-fold desc="Add Normal Inventory Groups to foundGroups">
         // Container inventory first (you open a container for items inside it)
         if (!blockInventoryGroup.slotItems.isEmpty()) {
-            if (screen.getHandler() instanceof Generic3x3ContainerScreenHandler)
+            if (screen.getMenu() instanceof DispenserMenu)
                 blockInventoryGroup.mapTheGroupList(3);
-            else if (screen.getHandler() instanceof GenericContainerScreenHandler)
+            else if (screen.getMenu() instanceof ChestMenu)
                 blockInventoryGroup.mapTheGroupList(9);
-            else if (screen.getHandler() instanceof HopperScreenHandler)
+            else if (screen.getMenu() instanceof HopperMenu)
                 blockInventoryGroup.mapTheGroupList(5);
             foundGroups.add(blockInventoryGroup);
         }
@@ -635,25 +631,25 @@ public class GroupGenerator {
         return adjacentOnX || adjacentOnY;
     }
 
-    private static @NotNull List<SlotsGroup> inventoryAndCraftingScreensGroups(@NotNull HandledScreenAccessor screen) {
+    private static @NotNull List<SlotsGroup> inventoryAndCraftingScreensGroups(@NotNull AbstractContainerScreenAccessor screen) {
         List<SlotsGroup> foundGroups = commonGroups(screen);
 
-        RecipeBookWidget<?> recipeBookWidget = null;
-        if (screen instanceof RecipeBookScreen<?> recipeBookScreen) {
-            recipeBookWidget = ((RecipeBookScreenAccessor) recipeBookScreen).getRecipeBook();
+        RecipeBookComponent<?> recipeBookWidget = null;
+        if (screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen) {
+            recipeBookWidget = ((AbstractRecipeBookScreenAccessor) recipeBookScreen).getRecipeBookComponent();
         }
-        if (recipeBookWidget == null || !recipeBookWidget.isOpen()) {
+        if (recipeBookWidget == null || !recipeBookWidget.isVisible()) {
             return foundGroups;
         }
 
-        RecipeBookWidgetAccessor recipeBookWidgetAccessor = (RecipeBookWidgetAccessor) recipeBookWidget;
+        RecipeBookComponentAccessor recipeBookComponentAccessor = (RecipeBookComponentAccessor) recipeBookWidget;
         SlotsGroup recipesGroup = new SlotsGroup("recipes", null);
-        List<AnimatedResultButton> slots = ((RecipeBookResultsAccessor) recipeBookWidgetAccessor.getRecipesArea()).getResultButtons();
+        List<RecipeButton> slots = ((RecipeBookPageAccessor) recipeBookComponentAccessor.getRecipeBookPage()).getButtons();
 
         for (int i = 0; i < slots.size() && i < GroupGenerator.recipesOnTheScreen.size(); i++) {
-            AnimatedResultButton animatedResultButton = slots.get(i);
-            int realX = animatedResultButton.getX() - screen.getX() + 10;
-            int realY = animatedResultButton.getY() - screen.getY() + 10;
+            RecipeButton animatedResultButton = slots.get(i);
+            int realX = animatedResultButton.getX() - screen.getLeftPos() + 10;
+            int realY = animatedResultButton.getY() - screen.getTopPos() + 10;
             recipesGroup.slotItems.add(new SlotItem(realX, realY));
         }
 
@@ -676,10 +672,10 @@ public class GroupGenerator {
         return foundGroups;
     }
 
-    private static @NotNull List<SlotsGroup> creativeInventoryGroups(@NotNull CreativeInventoryScreen creativeInventoryScreen) {
+    private static @NotNull List<SlotsGroup> creativeInventoryGroups(@NotNull CreativeModeInventoryScreen creativeInventoryScreen) {
         List<SlotsGroup> foundGroups = new ArrayList<>();
-        List<Slot> slots = new ArrayList<>(creativeInventoryScreen.getScreenHandler().slots);
-        if (CreativeInventoryScreenAccessor.getSelectedTab().getType() == ItemGroup.Type.INVENTORY) {
+        List<Slot> slots = new ArrayList<>(creativeInventoryScreen.getMenu().slots);
+        if (CreativeModeInventoryScreenAccessor.getSelectedTab().getType() == CreativeModeTab.Type.INVENTORY) {
             SlotsGroup deleteItemGroup = new SlotsGroup("delete_items", null);
             SlotsGroup offHandGroup = new SlotsGroup("off_hand", null);
             SlotsGroup hotbarGroup = new SlotsGroup("hotbar", null);
@@ -689,7 +685,7 @@ public class GroupGenerator {
             for (Slot s : slots) {
                 if (s.x < 0 || s.y < 0) continue;
 
-                int index = ((SlotAccessor) s).getIndex();
+                int index = ((SlotAccessor) s).getSlot();
 
                 if (index == 0) {
                     deleteItemGroup.slotItems.add(new SlotItem(s));
@@ -733,9 +729,9 @@ public class GroupGenerator {
             for (Slot s : slots) {
                 if (s.x < 0 || s.y < 0) continue;
 
-                int index = ((SlotAccessor) s).getIndex();
+                int index = ((SlotAccessor) s).getSlot();
 
-                if (index >= 0 && index <= 8 && s.inventory instanceof PlayerInventory) {
+                if (index >= 0 && index <= 8 && s.container instanceof Inventory) {
                     hotbarGroup.slotItems.add(new SlotItem(s));
                     continue;
                 }

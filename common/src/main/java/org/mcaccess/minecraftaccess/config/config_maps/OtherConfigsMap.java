@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.config.config_maps;
 
-import org.mcaccess.minecraftaccess.config.Config;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.util.Strings;
+import org.mcaccess.minecraftaccess.config.Config;
 
 import java.util.regex.Pattern;
 

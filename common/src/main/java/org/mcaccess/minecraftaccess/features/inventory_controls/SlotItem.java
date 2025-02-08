@@ -1,27 +1,27 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
-import net.minecraft.block.entity.BannerPattern;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.LoomScreen;
-import net.minecraft.client.gui.screen.ingame.MerchantScreen;
-import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.StonecuttingRecipe;
-import net.minecraft.recipe.display.CuttingRecipeDisplay;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradeOfferList;
-import net.minecraft.village.TradedItem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.LoomScreen;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
+import net.minecraft.client.gui.screens.inventory.StonecutterScreen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SelectableRecipe;
+import net.minecraft.world.item.crafting.StonecutterRecipe;
+import net.minecraft.world.item.trading.ItemCost;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import org.mcaccess.minecraftaccess.mixin.LoomScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.MerchantScreenAccessor;
-import org.mcaccess.minecraftaccess.mixin.SingleStackRecipeAccessor;
+import org.mcaccess.minecraftaccess.mixin.SingleItemRecipeAccessor;
 import org.mcaccess.minecraftaccess.mixin.StonecutterScreenAccessor;
 
 import java.util.List;
@@ -76,66 +76,66 @@ public class SlotItem {
     }
 
     public String getNarratableText() {
-        if (MinecraftClient.getInstance().currentScreen instanceof LoomScreen loomScreen) {
-            List<RegistryEntry<BannerPattern>> list = loomScreen.getScreenHandler().getBannerPatterns();
+        if (Minecraft.getInstance().screen instanceof LoomScreen loomScreen) {
+            List<Holder<BannerPattern>> list = loomScreen.getMenu().getSelectablePatterns();
             if (list.isEmpty()) return "";
 
-            int p = row + ((LoomScreenAccessor) loomScreen).getVisibleTopRow();
+            int p = row + ((LoomScreenAccessor) loomScreen).getStartRow();
             int q = p * 4 + column;
 
             BannerPattern pattern = list.get(q).value();
 
-            ItemStack dyeItemStack = ((LoomScreenAccessor) loomScreen).getDye();
+            ItemStack dyeItemStack = ((LoomScreenAccessor) loomScreen).getDyeStack();
             DyeItem dyeItem = (DyeItem) dyeItemStack.getItem();
-            DyeColor color = dyeItem.getColor();
+            DyeColor color = dyeItem.getDyeColor();
 
             // banner pattern trans key = banner pattern name + color name
             String transKey = pattern.translationKey() + "." + color.name().toLowerCase();
-            return I18n.translate(transKey);
+            return I18n.get(transKey);
         }
 
-        if (MinecraftClient.getInstance().currentScreen instanceof StonecutterScreen stonecutterScreen) {
-            List<CuttingRecipeDisplay.GroupEntry<StonecuttingRecipe>> list = stonecutterScreen.getScreenHandler().getAvailableRecipes().entries();
+        if (Minecraft.getInstance().screen instanceof StonecutterScreen stonecutterScreen) {
+            List<SelectableRecipe.SingleInputEntry<StonecutterRecipe>> list = stonecutterScreen.getMenu().getVisibleRecipes().entries();
             if (list.isEmpty()) return "";
 
-            int scrollOffset = ((StonecutterScreenAccessor) stonecutterScreen).getScrollOffset();
-            Optional<RecipeEntry<StonecuttingRecipe>> recipe = list.get(recipeOrTradeIndex + scrollOffset).recipe().recipe();
+            int scrollOffset = ((StonecutterScreenAccessor) stonecutterScreen).getStartIndex();
+            Optional<RecipeHolder<StonecutterRecipe>> recipe = list.get(recipeOrTradeIndex + scrollOffset).recipe().recipe();
             if (recipe.isEmpty()) return "";
-            StonecuttingRecipe recipe1 = recipe.get().value();
-            ItemStack item = ((SingleStackRecipeAccessor) recipe1).getResult();
-            List<Text> toolTip = Screen.getTooltipFromItem(MinecraftClient.getInstance(), item);
+            StonecutterRecipe recipe1 = recipe.get().value();
+            ItemStack item = ((SingleItemRecipeAccessor) recipe1).getResult();
+            List<Component> toolTip = Screen.getTooltipFromItem(Minecraft.getInstance(), item);
             StringBuilder toolTipString = new StringBuilder();
-            for (Text text : toolTip) {
+            for (Component text : toolTip) {
                 toolTipString.append(text.getString()).append("\n");
             }
 
             return "%s %s".formatted(item.getCount(), toolTipString);
         }
 
-        if (MinecraftClient.getInstance().currentScreen instanceof MerchantScreen merchantScreen) {
-            TradeOfferList tradeOfferList = merchantScreen.getScreenHandler().getRecipes();
-            if (tradeOfferList.isEmpty()) return I18n.translate("minecraft_access.inventory_controls.Unknown");
-            TradeOffer tradeOffer = tradeOfferList.get(recipeOrTradeIndex + ((MerchantScreenAccessor) merchantScreen).getIndexStartOffset());
+        if (Minecraft.getInstance().screen instanceof MerchantScreen merchantScreen) {
+            MerchantOffers tradeOfferList = merchantScreen.getMenu().getOffers();
+            if (tradeOfferList.isEmpty()) return I18n.get("minecraft_access.inventory_controls.Unknown");
+            MerchantOffer tradeOffer = tradeOfferList.get(recipeOrTradeIndex + ((MerchantScreenAccessor) merchantScreen).getScrollOff());
 
-            ItemStack firstBuyItem = tradeOffer.getOriginalFirstBuyItem();
-            Optional<TradedItem> secondBuyItem = tradeOffer.getSecondBuyItem();
-            ItemStack sellItem = tradeOffer.getSellItem();
+            ItemStack firstBuyItem = tradeOffer.getBaseCostA();
+            Optional<ItemCost> secondBuyItem = tradeOffer.getItemCostB();
+            ItemStack sellItem = tradeOffer.getResult();
 
             // base price - discount
-            int price = firstBuyItem.getCount() + tradeOffer.getSpecialPrice();
-            String firstBuyItemString = price + " " + firstBuyItem.getName().getString();
+            int price = firstBuyItem.getCount() + tradeOffer.getSpecialPriceDiff();
+            String firstBuyItemString = price + " " + firstBuyItem.getHoverName().getString();
             String secondBuyItemString = "";
             if (secondBuyItem.isPresent()) {
                 ItemStack item = secondBuyItem.get().itemStack();
-                secondBuyItemString = item.getCount() + " " + item.getName().getString();
+                secondBuyItemString = item.getCount() + " " + item.getHoverName().getString();
             }
-            String sellItemString = sellItem.getCount() + " " + sellItem.getName().getString();
+            String sellItemString = sellItem.getCount() + " " + sellItem.getHoverName().getString();
 
             String tradeText;
             if (secondBuyItem.isEmpty())
-                tradeText = I18n.translate("minecraft_access.inventory_controls.trade_text_format", firstBuyItemString, sellItemString);
+                tradeText = I18n.get("minecraft_access.inventory_controls.trade_text_format", firstBuyItemString, sellItemString);
             else
-                tradeText = I18n.translate("minecraft_access.inventory_controls.trade_text_format_with_second_item", firstBuyItemString, secondBuyItemString, sellItemString);
+                tradeText = I18n.get("minecraft_access.inventory_controls.trade_text_format_with_second_item", firstBuyItemString, secondBuyItemString, sellItemString);
 
             return tradeText;
         }

@@ -1,6 +1,6 @@
 package org.mcaccess.minecraftaccess.features.read_crosshair;
 
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
