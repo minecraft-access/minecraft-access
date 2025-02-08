@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(value = Slot.class)
+@Mixin(Slot.class)
 public interface SlotAccessor {
     /**
      * Returns the slot index, not to be confused with list index, this index is specific to the type of slot.
@@ -13,5 +13,5 @@ public interface SlotAccessor {
      * @return the index of the slot
      */
     @Accessor
-    int getIndex();
+    int getSlot();
 }

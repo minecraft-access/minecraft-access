@@ -1,7 +1,7 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
@@ -41,7 +41,7 @@ public class POIGroup<T> {
         return Collections.unmodifiableList(items);
     }
 
-    public void playSound(Vec3d pos, float volume) {
+    public void playSound(Vec3 pos, float volume) {
         WorldUtils.playSoundAtPosition(sound, volume, soundPitch, pos);
     }
 }

@@ -1,7 +1,7 @@
 package org.mcaccess.minecraftaccess.config;
 
-import org.mcaccess.minecraftaccess.config.config_maps.*;
 import com.google.gson.annotations.SerializedName;
+import org.mcaccess.minecraftaccess.config.config_maps.*;
 
 import java.util.Objects;
 
