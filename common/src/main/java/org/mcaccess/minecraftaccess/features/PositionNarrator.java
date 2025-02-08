@@ -33,6 +33,9 @@ public class PositionNarrator {
         positionNarrationKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().positionNarrationKey));
     }
 
+    private PositionNarrator() {
+    }
+
     public void update() {
         if (!OtherConfigsMap.getInstance().isPositionNarratorEnabled()) return;
 
