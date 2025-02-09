@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.utils.position;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
@@ -29,10 +30,13 @@ public class PlayerPositionUtils {
         return Math.round(getPlayerPosition().orElseThrow().z * 10.0) / 10.0;
     }
 
-     // Player position is at player's leg.
+    /**
+     * Wrapper around {@link ClientPlayer#position()}
+     *
+     * @return Position of player's feet or {@link Optional#empty()} if {@link Minecraft#player} is null
+     */
     public static Optional<Vec3> getPlayerPosition() {
-        Minecraft client = Minecraft.getInstance();
-        return client.player == null ? java.util.Optional.empty() : Optional.of(client.player.position());
+        return Optional.ofNullable(Minecraft.getInstance().player).map(LocalPlayer::position);
     }
 
     public static Optional<BlockPos> getPlayerBlockPosition() {
