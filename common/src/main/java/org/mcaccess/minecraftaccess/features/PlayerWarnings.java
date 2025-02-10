@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.features;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import org.mcaccess.minecraftaccess.MainClass;
