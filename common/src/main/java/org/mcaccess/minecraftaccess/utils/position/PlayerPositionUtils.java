@@ -19,15 +19,15 @@ public class PlayerPositionUtils {
     private static final String POSITION_FORMAT = "{x}, {y}, {z}";
 
     public static double getX() {
-        return Math.round(getPlayerPosition().orElseThrow().x * 10.0) / 10.0;
+        return getPlayerPosition().orElseThrow().x;
     }
 
     public static double getY() {
-        return Math.round(getPlayerPosition().orElseThrow().y * 10.0) / 10.0;
+        return getPlayerPosition().orElseThrow().y;
     }
 
     public static double getZ() {
-        return Math.round(getPlayerPosition().orElseThrow().z * 10.0) / 10.0;
+        return getPlayerPosition().orElseThrow().z;
     }
 
     /**
@@ -79,11 +79,11 @@ public class PlayerPositionUtils {
         if (isBetween(angle, -90, -88)) {
             return I18n.get("minecraft_access.direction.up");
         } else if (isBetween(angle, -87, -3)) {
-            return I18n.get("minecraft_access.direction.degrees", -angle) + " " + I18n.get("minecraft_access.direction.up");
+            return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(-angle)) + " " + I18n.get("minecraft_access.direction.up");
         } else if (isBetween(angle, -2, 2)) {
             return I18n.get("minecraft_access.direction.straight");
         } else if (isBetween(angle, 3, 97)) {
-            return I18n.get("minecraft_access.direction.degrees", angle) + " " + I18n.get("minecraft_access.direction.down");
+            return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(angle)) + " " + I18n.get("minecraft_access.direction.down");
         } else if (isBetween(angle, 88, 90)) {
             return I18n.get("minecraft_access.direction.down");
         } else return null;
