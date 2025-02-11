@@ -39,6 +39,8 @@ public class OtherConfigsMap {
     private boolean onlySpeakActionBarUpdates = false;
     @SerializedName("Speak Harvest Of Fishing")
     private boolean fishingHarvestEnabled;
+    @SerializedName("alwaysSpeakPickedUpItems")
+    private boolean alwaysSpeakPickedUpItemsEnabled;
     @SerializedName("Report Held Items Count When Changed")
     private boolean reportHeldItemsCountWhenChanged = true;
     @SerializedName("Enable Menu Fix")
@@ -93,6 +95,7 @@ public class OtherConfigsMap {
         defaultOtherConfigsMap.setActionBarEnabled(true);
         defaultOtherConfigsMap.onlySpeakActionBarUpdates = false;
         defaultOtherConfigsMap.setFishingHarvestEnabled(true);
+        defaultOtherConfigsMap.setAlwaysSpeakPickedUpItemsEnabled(false);
         defaultOtherConfigsMap.reportHeldItemsCountWhenChanged = true;
         defaultOtherConfigsMap.setMenuFixEnabled(true);
         defaultOtherConfigsMap.setDebugMode(false);

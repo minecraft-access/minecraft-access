@@ -34,12 +34,12 @@ public abstract class ClientPacketListenerMixin implements TickablePacketListene
 
         PacketUtils.ensureRunningOnSameThread(packet, this, client);
 
-        if (!OtherConfigsMap.getInstance().isFishingHarvestEnabled()) return;
-
         LocalPlayer player = client.player;
+        OtherConfigsMap otherConfig = OtherConfigsMap.getInstance();
+
         if (player == null) return;
 
-        if (player.getMainHandItem().getItem() instanceof FishingRodItem) {
+        if (otherConfig.isAlwaysSpeakPickedUpItemsEnabled() || (otherConfig.isFishingHarvestEnabled() && player.getMainHandItem().getItem() instanceof FishingRodItem)) {
             int cId = packet.getPlayerId();
             int pId = player.getId();
             // Is this item picked by "me" or other players?
@@ -52,7 +52,7 @@ public abstract class ClientPacketListenerMixin implements TickablePacketListene
 
                     // Have observed this speak will interrupt adventure achievement, level up notification or so,
                     // it should be at low priority.
-                    MainClass.speakWithNarrator(name, false);
+                    MainClass.speakWithNarrator(I18n.get("minecraft_access.other.picked_up_item", name), false);
                 }
             }
         }

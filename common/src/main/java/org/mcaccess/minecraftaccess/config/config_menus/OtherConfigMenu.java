@@ -161,6 +161,21 @@ public class OtherConfigMenu extends BaseScreen {
                 true);
         this.addRenderableWidget(speakFishingHarvestButton);
 
+        Button alwaysSpeakPickedUpItemsButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isAlwaysSpeakPickedUpItemsEnabled() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.other_config_menu.button.always_speak_picked_up_items_button")
+                ),
+                (button) -> {
+                    OtherConfigsMap map = OtherConfigsMap.getInstance();
+                    map.setAlwaysSpeakPickedUpItemsEnabled(!map.isAlwaysSpeakPickedUpItemsEnabled());
+                    Config.getInstance().writeJSON();
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isAlwaysSpeakPickedUpItemsEnabled() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.other_config_menu.button.always_speak_picked_up_items_button")
+                    )));
+                },
+                true);
+        this.addRenderableWidget(alwaysSpeakPickedUpItemsButton);
+
         Button reportHeldItemsCountWhenChangedButton = this.buildButtonWidget(
                 I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isReportHeldItemsCountWhenChanged() ? "enabled" : "disabled"),
                         I18n.get("minecraft_access.gui.other_config_menu.button.report_held_items_count_when_changed_button")
