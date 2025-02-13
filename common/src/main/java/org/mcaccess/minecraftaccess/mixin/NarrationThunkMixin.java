@@ -22,10 +22,10 @@ public class NarrationThunkMixin<T> {
     /**
      * <a href="https://minecraft.wiki/w/Formatting_codes">wiki page of formatting codes</a>
      */
+    @SuppressWarnings("unchecked")
     @Inject(at = @At("TAIL"), method = "<init>")
     private void removeFormattingCodes(Object value, BiConsumer<Consumer<String>, T> transformer, CallbackInfo ci) {
         if (value instanceof String) {
-            //noinspection unchecked
             this.contents = (T) ((String) value).replaceAll("§.", "");
         }
     }
