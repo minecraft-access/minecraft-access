@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.utils;
+package org.mcaccess.minecraftaccess.utils.ui;
 
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
