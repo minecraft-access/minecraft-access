@@ -4,15 +4,6 @@
   "package": "org.mcaccess.minecraftaccess.compat.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "clothconfig.AbstractConfigEntryMixin",
-    "clothconfig.ClothConfigScreenAccessor",
-    "clothconfig.ClothConfigScreenMixin",
-    "clothconfig.ClothConfigTabButtonMixin",
-    "clothconfig.DynamicElementListWidgetMixin",
-    "clothconfig.DynamicElementListWidgetMixin$ElementEntryMixin",
-    "clothconfig.ContainerEventHandlerMixin",
-    "clothconfig.SubCategoryListEntryMixin",
-    "clothconfig.SubCategoryListEntryMixin$CategoryLabelWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1
