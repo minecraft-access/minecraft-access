@@ -74,9 +74,6 @@ public class Config implements ConfigData {
     public boolean debugMode = false;
     public int multipleClickSpeedMilliseconds = 750;
 
-    @ConfigEntry.Category("speechSettings")
-    @ConfigEntry.Gui.TransitiveObject
-    public SpeechSettings speechSettings = new SpeechSettings();
     @ConfigEntry.Category("cameraControls")
     @ConfigEntry.Gui.TransitiveObject
     public CameraControls cameraControls = new CameraControls();
@@ -101,6 +98,9 @@ public class Config implements ConfigData {
     @ConfigEntry.Category("accessMenu")
     @ConfigEntry.Gui.TransitiveObject
     public AccessMenu accessMenu = new AccessMenu();
+    @ConfigEntry.Category("speechSettings")
+    @ConfigEntry.Gui.TransitiveObject
+    public SpeechSettings speechSettings = new SpeechSettings();
 
     public static final class SpeechSettings {
         private SpeechSettings() {}
