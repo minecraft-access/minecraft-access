@@ -11,7 +11,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 /**
- * Replace {@link Config#getSerialiser()} with {@link DummyConfigSerializer} to prevent any real saving and loading
+ * Replace {@link Config#getSerializer()} with {@link DummyConfigSerializer} to prevent any real saving and loading
  */
 public class MockConfigExtension implements BeforeAllCallback, AfterAllCallback {
     private MockedStatic<Config> ms;
