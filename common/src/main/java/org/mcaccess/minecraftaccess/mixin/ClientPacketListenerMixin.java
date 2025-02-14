@@ -34,7 +34,7 @@ public abstract class ClientPacketListenerMixin implements TickablePacketListene
 
         PacketUtils.ensureRunningOnSameThread(packet, this, client);
 
-        if (!Config.getInstance().fishingHarvestEnabled) return;
+        if (!Config.getInstance().features.fishingHarvestEnabled) return;
 
         LocalPlayer player = client.player;
         if (player == null) return;

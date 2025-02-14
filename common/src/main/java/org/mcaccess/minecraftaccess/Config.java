@@ -59,21 +59,15 @@ public class Config implements ConfigData {
         }
     }
 
-    public boolean biomeIndicatorEnabled = true;
-    public boolean xpIndicatorEnabled = true;
-    public boolean facingDirectionEnabled = true;
-    public boolean playerStatusEnabled = true;
-    public boolean positionNarratorEnabled = true;
+    public boolean menuFixEnabled = true;
     public String commandSuggestionNarratorFormat = "%dx%d %s";
     public boolean use12HourTimeFormat = false;
-    public boolean actionBarEnabled = true;
-    public boolean onlySpeakActionBarUpdates = false;
-    public boolean fishingHarvestEnabled = true;
-    public boolean reportHeldItemsCountWhenChanged = true;
-    public boolean menuFixEnabled = true;
     public boolean debugMode = false;
     public int multipleClickSpeedMilliseconds = 750;
 
+    @ConfigEntry.Category("features")
+    @ConfigEntry.Gui.TransitiveObject
+    public Features features = new Features();
     @ConfigEntry.Category("cameraControls")
     @ConfigEntry.Gui.TransitiveObject
     public CameraControls cameraControls = new CameraControls();
@@ -101,6 +95,21 @@ public class Config implements ConfigData {
     @ConfigEntry.Category("speechSettings")
     @ConfigEntry.Gui.TransitiveObject
     public SpeechSettings speechSettings = new SpeechSettings();
+
+    public static final class Features {
+        private Features() {
+        }
+
+        public boolean actionBarEnabled = true;
+        public boolean onlySpeakActionBarUpdates = false;
+        public boolean biomeIndicatorEnabled = true;
+        public boolean xpIndicatorEnabled = true;
+        public boolean facingDirectionEnabled = true;
+        public boolean playerStatusEnabled = true;
+        public boolean positionNarratorEnabled = true;
+        public boolean fishingHarvestEnabled = true;
+        public boolean reportHeldItemsCountWhenChanged = true;
+    }
 
     public static final class SpeechSettings {
         private SpeechSettings() {}

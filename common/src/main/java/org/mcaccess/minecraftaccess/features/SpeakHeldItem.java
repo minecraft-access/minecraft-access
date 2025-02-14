@@ -38,7 +38,7 @@ public class SpeakHeldItem {
         if (nameChanged) {
             String itemCountText = itemCount == 0 ? "" : itemCount + " ";
             MainClass.speakWithNarrator(i18n.apply(itemCountText + itemName), true);
-        } else if (countChanged && Config.getInstance().reportHeldItemsCountWhenChanged) {
+        } else if (countChanged && Config.getInstance().features.reportHeldItemsCountWhenChanged) {
             MainClass.speakWithNarrator(String.valueOf(itemCount), true);
         }
         previousItemName = itemName;

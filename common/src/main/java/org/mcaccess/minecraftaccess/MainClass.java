@@ -110,10 +110,10 @@ public class MainClass {
 
         ReadCrosshair.getInstance().tick();
 
-        if (xpIndicator != null && config.xpIndicatorEnabled)
+        if (xpIndicator != null && config.features.xpIndicatorEnabled)
             xpIndicator.update();
 
-        if (biomeIndicator != null && config.biomeIndicatorEnabled)
+        if (biomeIndicator != null && config.features.biomeIndicatorEnabled)
             biomeIndicator.update();
 
         facingDirection.update();
@@ -121,7 +121,7 @@ public class MainClass {
         PositionNarrator.getInstance().update();
 
         if (WorldUtils.getClientPlayer() != null) {
-            if (playerStatus != null && config.playerStatusEnabled) {
+            if (playerStatus != null && config.features.playerStatusEnabled) {
                 playerStatus.update();
             }
 

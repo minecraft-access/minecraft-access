@@ -70,11 +70,11 @@ public class GuiMixin {
     @Inject(at = @At("HEAD"), method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V")
     public void speakActionbar(Component message, boolean tinted, CallbackInfo ci) {
         Config config = Config.getInstance();
-        if (config.actionBarEnabled) {
+        if (config.features.actionBarEnabled) {
             String msg = message.getString();
             boolean contentChanged = !this.minecraft_access$previousActionBarContent.equals(msg);
             if (contentChanged) {
-                if (config.onlySpeakActionBarUpdates) {
+                if (config.features.onlySpeakActionBarUpdates) {
                     minecraft_access$onlySpeakChangedParts(msg);
                 } else {
                     MainClass.speakWithNarratorIfNotEmpty(msg, true);

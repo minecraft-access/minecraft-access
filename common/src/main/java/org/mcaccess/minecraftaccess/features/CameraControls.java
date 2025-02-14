@@ -195,7 +195,7 @@ public class CameraControls {
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
-        if (Config.getInstance().facingDirectionEnabled) {
+        if (Config.getInstance().features.facingDirectionEnabled) {
             if (direction.isRotatingHorizontal && horizontalDirection != null)
                 MainClass.speakWithNarrator(horizontalDirection, true);
             else if (!direction.isRotatingHorizontal && verticalDirection != null)
@@ -216,7 +216,7 @@ public class CameraControls {
 
         log.debug("Rotating camera to: {}", direction.name());
 
-        if (Config.getInstance().facingDirectionEnabled) {
+        if (Config.getInstance().features.facingDirectionEnabled) {
             if (direction.in(Orientation.LAYER.MIDDLE)) {
                 MainClass.speakWithNarrator(PlayerPositionUtils.getHorizontalFacingDirectionInWords(), true);
             } else {
