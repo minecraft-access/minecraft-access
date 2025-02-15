@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.utils.position;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
@@ -18,34 +19,24 @@ public class PlayerPositionUtils {
     private static final String POSITION_FORMAT = "{x}, {y}, {z}";
 
     public static double getX() {
-        String tempPosX = String.valueOf(getPlayerPosition().orElseThrow().x);
-        tempPosX = tempPosX.substring(0, tempPosX.indexOf(".") + 2);
-
-        return Double.parseDouble(tempPosX);
+        return Math.round(getPlayerPosition().orElseThrow().x * 10.0) / 10.0;
     }
 
     public static double getY() {
-        String tempPosY;
-        tempPosY = String.valueOf(getPlayerPosition().orElseThrow().y);
-        tempPosY = tempPosY.substring(0, tempPosY.indexOf(".") + 2);
-
-        return Double.parseDouble(tempPosY);
+        return Math.round(getPlayerPosition().orElseThrow().y * 10.0) / 10.0;
     }
 
     public static double getZ() {
-        String tempPosZ;
-        tempPosZ = String.valueOf(getPlayerPosition().orElseThrow().z);
-        tempPosZ = tempPosZ.substring(0, tempPosZ.indexOf(".") + 2);
-
-        return Double.parseDouble(tempPosZ);
+        return Math.round(getPlayerPosition().orElseThrow().z * 10.0) / 10.0;
     }
 
     /**
-     * Player position is at player's leg.
+     * Wrapper around {@link ClientPlayer#position()}
+     *
+     * @return Position of player's feet or {@link Optional#empty()} if {@link Minecraft#player} is null
      */
     public static Optional<Vec3> getPlayerPosition() {
-        Minecraft client = Minecraft.getInstance();
-        return client.player == null ? java.util.Optional.empty() : Optional.of(client.player.position());
+        return Optional.ofNullable(Minecraft.getInstance().player).map(LocalPlayer::position);
     }
 
     public static Optional<BlockPos> getPlayerBlockPosition() {

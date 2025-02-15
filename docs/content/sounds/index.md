@@ -32,9 +32,9 @@ Sounds can be played by pressing the play button.
 
 ## Player Warnings
 
-| Description                                                                  | Sound                                      |
-|------------------------------------------------------------------------------|--------------------------------------------|
-| [Health], [hunger], or [air] reached the configured danger warning threshold | {{< wikiSound "Anvil_land" >}} Metal sound |
+| Description                                                                           | Sound                                                               |
+|---------------------------------------------------------------------------------------|---------------------------------------------------------------------|
+| [Health], [hunger], [air], or [frost] reached the configured danger warning threshold | {{< wikiSound "Respawn_anchor_deplete1" >}} Shatter and woosh sound |
 
 ## Disclaimer
 
@@ -52,4 +52,5 @@ the [Minecraft Usage Guidelines] apply.
 [health]: https://minecraft.wiki/w/Health
 [hunger]: https://minecraft.wiki/w/Hunger
 [air]: https://minecraft.wiki/w/Damage#Drowning
+[frost]: https://minecraft.wiki/w/Powder_Snow#Freezing
 [Minecraft Usage Guidelines]: https://www.minecraft.net/en-us/usage-guidelines

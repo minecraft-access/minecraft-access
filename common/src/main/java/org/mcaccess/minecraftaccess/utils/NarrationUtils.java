@@ -38,6 +38,7 @@ import org.mcaccess.minecraftaccess.config.config_maps.ReadCrosshairConfigMap;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -183,9 +184,10 @@ private static String getSheepInfo(Sheep sheep, String currentQuery) {
     return translatedColor + " " + shearable;
 }
 
-public static String narrateNumber(double d) {
-    return d >= 0 ? String.valueOf(d) : I18n.get("minecraft_access.other.negative", -d);
-}
+    public static String narrateNumber(double d) {
+        DecimalFormat df = new DecimalFormat();
+        return d >= 0 ? String.valueOf(df.format(d)) : I18n.get("minecraft_access.other.negative", df.format(-d));
+    }
 
 public static String narrateRelativePositionOfPlayerAnd(BlockPos blockPos) {
     Minecraft minecraftClient = Minecraft.getInstance();

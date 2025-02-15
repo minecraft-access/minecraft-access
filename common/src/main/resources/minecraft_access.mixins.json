@@ -50,7 +50,8 @@
     "TextFieldHelperAccessor",
     "TextFieldHelperMixin",
     "ToastManagerMixin",
-    "TutorialToastAccessor"
+    "TutorialToastAccessor",
+    "WinScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

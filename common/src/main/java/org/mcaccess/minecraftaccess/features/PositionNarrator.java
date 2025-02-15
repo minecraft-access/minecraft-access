@@ -37,33 +37,26 @@ public class PositionNarrator {
     }
 
     public void update() {
-        try {
-            if (!OtherConfigsMap.getInstance().isPositionNarratorEnabled()) return;
+        if (!OtherConfigsMap.getInstance().isPositionNarratorEnabled()) return;
 
-            Minecraft minecraftClient = Minecraft.getInstance();
-            if (minecraftClient == null) return;
-            if (minecraftClient.player == null) return;
-            if (minecraftClient.screen != null) return;
+        Minecraft minecraftClient = Minecraft.getInstance();
+        if (minecraftClient == null) return;
+        if (minecraftClient.player == null) return;
+        if (minecraftClient.screen != null) return;
 
-            boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-            if (isLeftAltPressed) {
-                if (KeyX.canBeTriggered()) {
-                    MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXPos(), true);
-                } else if (KeyC.canBeTriggered()) {
-                    MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableYPos(), true);
-                } else if (KeyZ.canBeTriggered()) {
-                    MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableZPos(), true);
-                }
+        boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
+        if (isLeftAltPressed) {
+            if (KeyX.canBeTriggered()) {
+                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXPos(), true);
+            } else if (KeyC.canBeTriggered()) {
+                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableYPos(), true);
+            } else if (KeyZ.canBeTriggered()) {
+                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableZPos(), true);
             }
+        }
 
-            if (positionNarrationKey.canBeTriggered()) {
-                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXYZPosition(), true);
-            }
-
-        } catch (Exception e) {
-            log.error("An error occurred in PositionNarrator.", e);
+        if (positionNarrationKey.canBeTriggered()) {
+            MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXYZPosition(), true);
         }
     }
-
-
 }
