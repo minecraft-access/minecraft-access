@@ -42,9 +42,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-    // Dependent on Tolk.jar from the Tolk repo:
-    // https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip
-    implementation files('lib/Tolk.jar')
+    implementation 'com.davykager.tolk:Tolk:1.0.0'
 
     // dependent on log4j for dynamic changing
     implementation 'org.apache.logging.log4j:log4j-api:2.22.1'

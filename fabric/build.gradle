@@ -36,10 +36,8 @@ dependencies {
 
     modImplementation include("dev.architectury:architectury-fabric:${project.architectury_api_version}")
 
-    // Dependent on Tolk.jar from the Tolk repo:
-    // https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip
-    implementation "com.davykager.tolk:Tolk:1.0.0"
-    include "com.davykager.tolk:Tolk:1.0.0"
+    implementation 'com.davykager.tolk:Tolk:1.0.0'
+    include 'com.davykager.tolk:Tolk:1.0.0'
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

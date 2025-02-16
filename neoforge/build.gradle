@@ -40,10 +40,8 @@ repositories {
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
 
-    // Dependent on Tolk.jar from the Tolk repo:
-    // https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip
-    implementation "com.davykager.tolk:Tolk:1.0.0"
-    forgeRuntimeLibrary "com.davykager.tolk:Tolk:1.0.0"
+    implementation 'com.davykager.tolk:Tolk:1.0.0'
+    forgeRuntimeLibrary 'com.davykager.tolk:Tolk:1.0.0'
 
     modImplementation include("dev.architectury:architectury-neoforge:${project.architectury_api_version}")
 
