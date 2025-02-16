@@ -17,11 +17,11 @@ public class ScreenReaderWindows implements ScreenReaderInterface {
             return;
         }
 
-        log.info("Initializing Tolk for windows at: " + path);
+        log.info("Initializing Tolk for windows at: {}", path);
         Tolk.trySAPI(true);
         Tolk.load();
-        if (Tolk.isLoaded() && !Tolk.detectScreenReader().equals(null)) {
-            log.info("Successfully initialized Tolk with the " + Tolk.detectScreenReader() + " driver.");
+        if (Tolk.isLoaded()) {
+            log.info("Successfully initialized Tolk speech system with the {} driver.", Tolk.detectScreenReader());
         } else {
             log.error("Unable to initialize Tolk");
         }

@@ -42,7 +42,7 @@ public class ScreenReaderLinux implements ScreenReaderInterface {
 
         if (re == 1) {
             mainInstance = instance;
-           log.info("Successfully initialized screen reader");
+           log.info("Successfully initialized Speechd speech system");
         } else {
             log.error("Unable to initialize screen reader");
         }
