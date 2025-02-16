@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 @SuppressWarnings("rawtypes")
-@Mixin(SubCategoryListEntry.class)
+@Mixin(value = SubCategoryListEntry.class, remap = false)
 abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractConfigListEntry>> {
     @SuppressWarnings({"deprecation", "UnstableApiUsage"})
     public SubCategoryListEntryMixin(Component fieldName, @Nullable Supplier<Optional<Component[]>> tooltipSupplier) {
