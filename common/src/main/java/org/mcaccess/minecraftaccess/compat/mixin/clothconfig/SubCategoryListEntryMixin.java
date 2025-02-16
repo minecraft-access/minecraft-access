@@ -66,7 +66,7 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
 
         /**
          * Make the label widget expandable through keyboard.
-         * Although this widget is treated as one of {@link SubCategoryListEntry#children},
+         * Although this widget is treated as one of {@link SubCategoryListEntry#children()},
          * it's this very widget's job to handle mouse operation.
          */
         @Override
