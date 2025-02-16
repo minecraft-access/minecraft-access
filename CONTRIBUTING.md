@@ -105,7 +105,6 @@ is for providing user information to client side game when developing.
 * `.github`: GitHub related stuff like workflow (CI) files.
 * `gradle`: Mainly contains Gradle wrapper configuration, Gradle wrapper's version is passively upgraded as Loom's version is upgraded.
 * `doc`: Project documentations.
-* `.gitmodules`: The I18N part ([`assets/<mod name>/lang`](https://fabricmc.net/wiki/tutorial:lang)) of this mod is separated as an independent repository - [minecraft-access-i18n](https://github.com/khanshoaib3/minecraft-access-i18n), and being used by this main repository in form of git submodule.
 * `build.gradle`: Root Gradle build script of this Gradle managing project. ([Gradle doc about `build.gradle` file](https://docs.gradle.org/current/userguide/build_file_basics.html))
 * `gradle.properties`: Configuration about mod and dependencies versioning.
 * `settings.gradle`: Defines that this project has three subprojects: `common`, `fabric`, `neoforge`. ([Gradle doc about `settings.gradle` file](https://docs.gradle.org/current/userguide/settings_file_basics.html))
@@ -135,7 +134,7 @@ is for providing user information to client side game when developing.
 
 ### Program Structure
 
-The root package class path of this project is `com.github.khanshoaib3.minecraft_access`,
+The root package class path of this project is `org.mcaccess.minecraftaccess`,
 below I'll use relative paths to describe code.
 
 There are two types of logic in this project, classified by the execution entry point.

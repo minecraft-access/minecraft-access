@@ -24,11 +24,7 @@ repositories {
 }
 
 architectury {
-    common(rootProject.enabled_platforms.split(","))
-}
-
-loom {
-    accessWidenerPath = file("src/main/resources/minecraft_access.accesswidener")
+    common("fabric", "neoforge")
 }
 
 dependencies {
@@ -36,7 +32,9 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
-    modImplementation 'maven.modrinth:jade:15.1.5+fabric'
+    modImplementation "maven.modrinth:jade:${jade_fabric_version}+fabric"
+
+    modImplementation "dev.architectury:architectury:${project.architectury_api_version}"
 
     // https://projectlombok.org
     compileOnly 'org.projectlombok:lombok:1.18.30'
@@ -66,4 +64,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // Since JDK 21
+    // ref: https://stackoverflow.com/questions/77951485/getting-a-java-agent-has-been-loaded-warning-in-intellij-after-upgrading-jdk-17
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
 }

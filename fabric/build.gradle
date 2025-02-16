@@ -15,8 +15,6 @@ architectury {
 }
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-
     // Loom sets the log4j config while in development (in prod the log4j config might be dictated by the launcher or just the game itself).
     // This loom gradle config specifies that loom uses our customized log4j config file.
     // ref: https://fabricmc.net/wiki/documentation:fabric_loom
@@ -34,13 +32,9 @@ configurations {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    // Use this part of fabric api to generate asserts to resource packs,
-    // so the lang resources can be loaded.
-    // Use jij Jar-in-Jar style to dependent on this part,
-    // so we needn't to depend on whole fabric-api.
-    // ref: https://fabricmc.net/wiki/documentation:fabric_loom#dependency_configurations
-    modApi include("net.fabricmc.fabric-api:fabric-resource-loader-v0:${rootProject.fabric_resource_loader_version}")
-    modApi include("net.fabricmc.fabric-api:fabric-key-binding-api-v1:${rootProject.fabric_key_binding_api_version}")
+    modImplementation include("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
+
+    modImplementation include("dev.architectury:architectury-fabric:${project.architectury_api_version}")
 
     // Dependent on Tolk.jar from the Tolk repo:
     // https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip
@@ -57,6 +51,9 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand Map.of("version", project.version,
                 "fabric_loader_version", rootProject.fabric_loader_version,
+                "fabric_api_version", rootProject.fabric_api_version,
+                "architectury_api_version", rootProject.architectury_api_version,
+                "jade_fabric_version", rootProject.jade_fabric_version,
                 "minecraft_version", rootProject.minecraft_version)
     }
 }

@@ -15,8 +15,6 @@ architectury {
 }
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-
     // Loom sets the log4j config while in development (in prod the log4j config might be dictated by the launcher or just the game itself).
     // This loom gradle config specifies that loom uses our customized log4j config file.
     // ref: https://fabricmc.net/wiki/documentation:fabric_loom
@@ -32,12 +30,6 @@ configurations {
     developmentNeoForge.extendsFrom common
 }
 
-// since 1.20.6
-//configurations.configureEach {
-//    resolutionStrategy.force("net.sf.jopt-simple:jopt-simple:5.0.4")
-//
-//}
-
 repositories {
     maven {
         name = 'NeoForged'
@@ -52,6 +44,8 @@ dependencies {
     // https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip
     implementation "com.davykager.tolk:Tolk:1.0.0"
     forgeRuntimeLibrary "com.davykager.tolk:Tolk:1.0.0"
+
+    modImplementation include("dev.architectury:architectury-neoforge:${project.architectury_api_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
@@ -69,6 +63,8 @@ processResources {
     filesMatching("META-INF/neoforge.mods.toml") {
         expand Map.of("version", project.version,
                 "neoforge_version", rootProject.neoforge_version,
+                "architectury_api_version", rootProject.architectury_api_version,
+                "jade_neoforge_version", rootProject.jade_neoforge_version,
                 "minecraft_version", rootProject.minecraft_version)
     }
 }
@@ -82,9 +78,6 @@ shadowJar {
 }
 
 remapJar {
-    // Forge doesn't need remap since 1.20.6
-//    enabled false
-    //noinspection GrDeprecatedAPIUsage
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier = null
