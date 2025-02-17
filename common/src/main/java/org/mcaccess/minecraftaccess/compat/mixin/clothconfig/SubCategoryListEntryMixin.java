@@ -46,14 +46,16 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         }
     }
 
-    /**
-     * Combining with {@link SubCategoryListEntryMixin#nextFocusPath(FocusNavigationEvent)},
-     * makes this class focusable through in keyboard navigation.
-     */
-    @Override
-    public void setFocused(boolean focused) {
-        if (!focused) this.setFocused(null);
-    }
+// This part of code makes the subcategory becomes focusable again after navigate through.
+// But this code also causes mouse can't focus on option edit boxes inside the subcategory.
+//    /**
+//     * Combining with {@link SubCategoryListEntryMixin#nextFocusPath(FocusNavigationEvent)},
+//     * makes this class focusable through in keyboard navigation.
+//     */
+//    @Override
+//    public void setFocused(boolean focused) {
+//        if (!focused) this.setFocused(null);
+//    }
 
     @Mixin(value = SubCategoryListEntry.CategoryLabelWidget.class, remap = false)
     abstract static class CategoryLabelWidgetMixin implements GuiEventListener, NarratableEntry {
