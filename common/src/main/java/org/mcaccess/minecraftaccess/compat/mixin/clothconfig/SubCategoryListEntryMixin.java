@@ -9,8 +9,10 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,6 +39,9 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
     @Final
     private SubCategoryListEntry.CategoryLabelWidget widget;
 
+    @Shadow
+    public abstract @NotNull List<? extends GuiEventListener> children();
+
     @Override
     public ComponentPath nextFocusPath(FocusNavigationEvent event) {
         // The condition below can't be replaced with "this.isFocused()".
@@ -44,8 +49,12 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         // Because "subcategory.isFocused()" always returns false, then run the "super.nextFocusPath(event)", and it always returns null.
         // So we use another way to check if current subcategory is focused instead to avoid this problem.
         boolean isFocusedByParent = this.getParent().getFocused() == this;
-        if (isDisplayed() && !isFocusedByParent && !isExpanded()) {
-            return ComponentPath.path(this, ComponentPath.leaf(this.widget));
+
+        if (!isFocusedByParent && isDisplayed()) {
+            boolean backward = NavigationUtils.isDirectionBackward(event);
+            List<? extends GuiEventListener> children = this.children();
+            GuiEventListener target = isExpanded() ? (backward ? children.getLast() : children.getFirst()) : this.widget;
+            return ComponentPath.path(this, ComponentPath.leaf(target));
         } else {
             return super.nextFocusPath(event);
         }
