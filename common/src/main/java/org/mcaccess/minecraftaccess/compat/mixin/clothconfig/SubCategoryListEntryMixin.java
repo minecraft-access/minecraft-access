@@ -39,23 +39,17 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
 
     @Override
     public ComponentPath nextFocusPath(FocusNavigationEvent event) {
-        if (isDisplayed() && !isFocused() && !isExpanded()) {
+        // The condition below can't be replaced with "this.isFocused()".
+        // Once the subcategory is navigated through and remain unexpanded, the subcategory can't be focused again.
+        // Because "subcategory.isFocused()" always returns false, then run the "super.nextFocusPath(event)", and it always returns null.
+        // So we use another way to check if current subcategory is focused instead to avoid this problem.
+        boolean isFocusedByParent = this.getParent().getFocused() == this;
+        if (isDisplayed() && !isFocusedByParent && !isExpanded()) {
             return ComponentPath.path(this, ComponentPath.leaf(this.widget));
         } else {
             return super.nextFocusPath(event);
         }
     }
-
-// This part of code makes the subcategory becomes focusable again after navigate through.
-// But this code also causes mouse can't focus on option edit boxes inside the subcategory.
-//    /**
-//     * Combining with {@link SubCategoryListEntryMixin#nextFocusPath(FocusNavigationEvent)},
-//     * makes this class focusable through in keyboard navigation.
-//     */
-//    @Override
-//    public void setFocused(boolean focused) {
-//        if (!focused) this.setFocused(null);
-//    }
 
     @Mixin(value = SubCategoryListEntry.CategoryLabelWidget.class, remap = false)
     abstract static class CategoryLabelWidgetMixin implements GuiEventListener, NarratableEntry {
