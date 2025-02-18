@@ -36,6 +36,9 @@ dependencies {
 
     modImplementation include("dev.architectury:architectury-fabric:${project.architectury_api_version}")
 
+    implementation 'com.davykager.tolk:Tolk:1.0.0'
+    include 'com.davykager.tolk:Tolk:1.0.0'
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }

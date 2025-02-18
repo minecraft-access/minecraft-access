@@ -26,7 +26,7 @@ public class ScreenReaderMacOS implements ScreenReaderInterface {
             speechSynthesizer,
             objcRuntimeInstance.sel_getUid("init"));
 
-        log.info("Successfully initialized screen reader");
+        log.info("Successfully initialized MacOS speech system");
     }
 
     @Override

@@ -40,6 +40,9 @@ repositories {
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
 
+    implementation 'com.davykager.tolk:Tolk:1.0.0'
+    forgeRuntimeLibrary 'com.davykager.tolk:Tolk:1.0.0'
+
     modImplementation include("dev.architectury:architectury-neoforge:${project.architectury_api_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }

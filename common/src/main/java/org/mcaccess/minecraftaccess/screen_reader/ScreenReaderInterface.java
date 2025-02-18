@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.screen_reader;
 
-
 public interface ScreenReaderInterface {
 
     /**
