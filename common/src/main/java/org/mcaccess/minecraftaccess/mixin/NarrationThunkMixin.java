@@ -24,9 +24,9 @@ public class NarrationThunkMixin<T> {
      */
     @SuppressWarnings("unchecked")
     @Inject(at = @At("TAIL"), method = "<init>")
-    private void removeFormattingCodes(Object value, BiConsumer<Consumer<String>, T> transformer, CallbackInfo ci) {
-        if (value instanceof String) {
-            this.contents = (T) ((String) value).replaceAll("§.", "");
+    private void removeFormattingCodes(T value, BiConsumer<Consumer<String>, T> transformer, CallbackInfo ci) {
+        if (value instanceof String str) {
+            this.contents = (T) str.replaceAll("§.", "");
         }
     }
 }
