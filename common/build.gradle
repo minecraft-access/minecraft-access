@@ -31,9 +31,7 @@ dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-
     modImplementation "maven.modrinth:jade:${jade_fabric_version}+fabric"
-
     modImplementation "dev.architectury:architectury:${project.architectury_api_version}"
 
     // lombok that makes the life easier
@@ -61,7 +59,5 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    // Since JDK 21
-    // ref: https://stackoverflow.com/questions/77951485/getting-a-java-agent-has-been-loaded-warning-in-intellij-after-upgrading-jdk-17
     jvmArgs("-XX:+EnableDynamicAgentLoading")
 }
