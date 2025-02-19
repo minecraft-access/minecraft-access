@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
@@ -40,7 +39,7 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
     private SubCategoryListEntry.CategoryLabelWidget widget;
 
     @Shadow
-    public abstract @NotNull List<? extends GuiEventListener> children();
+    public abstract List<AbstractConfigListEntry> filteredEntries();
 
     @Override
     public ComponentPath nextFocusPath(FocusNavigationEvent event) {
@@ -52,7 +51,7 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
 
         if (!isFocusedByParent && isDisplayed()) {
             boolean backward = NavigationUtils.isDirectionBackward(event);
-            List<? extends GuiEventListener> children = this.children();
+            List<? extends GuiEventListener> children = this.filteredEntries();
             GuiEventListener target = isExpanded() ? (backward ? children.getLast() : children.getFirst()) : this.widget;
             return ComponentPath.path(this, ComponentPath.leaf(target));
         } else {

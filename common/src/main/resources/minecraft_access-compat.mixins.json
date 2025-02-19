@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "clothconfig.ClothConfigScreenMixin",
+    "clothconfig.ContainerEventHandlerMixin",
     "clothconfig.DynamicElementListWidgetElementEntryMixin",
     "clothconfig.SubCategoryListEntryMixin",
     "clothconfig.SubCategoryListEntryMixin$CategoryLabelWidgetMixin"
