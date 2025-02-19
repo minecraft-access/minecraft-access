@@ -50,10 +50,13 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         boolean isFocusedByParent = this.getParent().getFocused() == this;
 
         if (!isFocusedByParent && isDisplayed()) {
-            boolean backward = NavigationUtils.isDirectionBackward(event);
-            List<? extends GuiEventListener> children = this.filteredEntries();
-            GuiEventListener target = isExpanded() ? (backward ? children.getLast() : children.getFirst()) : this.widget;
-            return ComponentPath.path(this, ComponentPath.leaf(target));
+            if (isExpanded()) {
+                List<? extends GuiEventListener> children = this.filteredEntries();
+                GuiEventListener target = NavigationUtils.isDirectionBackward(event) ? children.getLast() : children.getFirst();
+                return ComponentPath.path(this, NavigationUtils.getFocusPathStartFrom(target, event));
+            } else {
+                return ComponentPath.path(this, ComponentPath.leaf(this.widget));
+            }
         } else {
             return super.nextFocusPath(event);
         }
