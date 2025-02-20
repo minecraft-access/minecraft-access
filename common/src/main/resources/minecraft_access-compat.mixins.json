@@ -4,9 +4,9 @@
   "package": "org.mcaccess.minecraftaccess.compat.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "clothconfig.CleanMouseClickingFocus",
     "clothconfig.ClothConfigScreenMixin",
     "clothconfig.ContainerEventHandlerMixin",
-    "clothconfig.DynamicElementListWidgetElementEntryMixin",
     "clothconfig.SubCategoryListEntryMixin",
     "clothconfig.SubCategoryListEntryMixin$CategoryLabelWidgetMixin"
   ],
