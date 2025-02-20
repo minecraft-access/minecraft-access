@@ -4,6 +4,7 @@ import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import org.jetbrains.annotations.Nullable;
+import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,13 +18,6 @@ abstract class DynamicElementListWidgetElementEntryMixin implements ContainerEve
 
     @Inject(method = "setFocused", at = @At("TAIL"))
     public void cleanPeerFocusStates(GuiEventListener guiEventListener, CallbackInfo ci) {
-        this.children().forEach(c -> {
-            if (c != this.focused) {
-                c.setFocused(false);
-                if (c instanceof ContainerEventHandler c2) {
-                    c2.setFocused(null);
-                }
-            }
-        });
+        this.children().stream().filter(c -> c != this.focused).forEach(NavigationUtils::clearFocus);
     }
 }

@@ -34,4 +34,12 @@ public class NavigationUtils {
         // thankfully, the original method already been recursive style
         return root instanceof ContainerEventHandler container ? container.nextFocusPath(event) : ComponentPath.leaf(root);
     }
+
+    public static void clearFocus(GuiEventListener component) {
+        if (component instanceof ContainerEventHandler container) {
+            container.setFocused(null);
+        } else {
+            component.setFocused(false);
+        }
+    }
 }
