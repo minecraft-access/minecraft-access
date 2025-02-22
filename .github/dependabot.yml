@@ -5,58 +5,20 @@ updates:
     schedule:
       interval: daily
 
-  # Maintain dependencies for GitHub Actions
-  - package-ecosystem: "github-actions"
+  - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
-      actions-minor:
+      gh-actions:
         update-types:
           - minor
           - patch
-          
-  # All Gradle dependencies grouped together
-  - package-ecosystem: "gradle"
+
+  - package-ecosystem: gradle
     directory: "/"
     schedule:
-      interval: "weekly"
-    groups:
-      gradle-dependencies:
-        patterns:
-          - "*"
-        update-types:
-          - minor
-          - patch
-        
-  - package-ecosystem: "gradle"
-    directory: "/common"
-    schedule:
-      interval: "weekly"
-    groups:
-      gradle-dependencies:
-        patterns:
-          - "*"
-        update-types:
-          - minor
-          - patch
-        
-  - package-ecosystem: "gradle"
-    directory: "/fabric"
-    schedule:
-      interval: "weekly"
-    groups:
-      gradle-dependencies:
-        patterns:
-          - "*"
-        update-types:
-          - minor
-          - patch
-        
-  - package-ecosystem: "gradle"
-    directory: "/neoforge"
-    schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
       gradle-dependencies:
         patterns:

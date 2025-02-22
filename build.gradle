@@ -1,11 +1,7 @@
-// Sadly, you can't use a gradle variable for a plugin version
-// ref: https://stackoverflow.com/questions/37555196/in-gradle-how-to-use-a-variable-for-a-plugin-version
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    // From developers of architectury: "shouldn't hardcode the loom version, just put *-SNAPSHOT"
-    // ref: https://maven.architectury.dev/dev/architectury/architectury-loom/
-    id "dev.architectury.loom" version "1.9-SNAPSHOT" apply false
-    id 'com.palantir.git-version' version '3.1.0'
+    alias(libs.plugins.architecturyPlugin)
+    alias(libs.plugins.architecturyLoom) apply false
+    alias(libs.plugins.gitVersion)
 }
 
 def git = versionDetails()
@@ -23,11 +19,11 @@ if (System.getenv("GITHUB_ACTIONS") == "true") {
 }
 
 architectury {
-    minecraft = rootProject.minecraft_version
+    minecraft = libs.minecraft.get().version
 }
 
 subprojects {
-    apply plugin: "dev.architectury.loom"
+    apply plugin: libs.plugins.architecturyLoom.get().pluginId
     version = "${rootProject.version}+${project.name}"
 
     loom {
@@ -35,38 +31,49 @@ subprojects {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        minecraft libs.minecraft
         mappings loom.layered() {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
+            parchment variantOf(libs.parchment) {
+                artifactType("zip")
+            }
+        }
+    }
+
+//do NOT add anything to this block
+    repositories {
+        maven {
+            name = 'ParchmentMC'
+            url = 'https://maven.parchmentmc.org'
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Modrinth'
+                    url = 'https://api.modrinth.com/maven'
+                }
+            }
+            filter {
+                includeGroup 'maven.modrinth'
+            }
+        }
+        maven {
+            name = 'Neoforged'
+            url = 'https://maven.neoforged.net/releases/'
         }
     }
 }
 
 allprojects {
     apply plugin: "java"
-    apply plugin: "architectury-plugin"
+    apply plugin: libs.plugins.architecturyPlugin.get().pluginId
     apply plugin: "maven-publish"
 
-    archivesBaseName = rootProject.archives_base_name
-    group = rootProject.maven_group
-
-    repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
-        maven {
-            name = 'ParchmentMC'
-            url = 'https://maven.parchmentmc.org'
-        }
-    }
+    archivesBaseName = "minecraft-access"
+    group = "org.mcaccess.minecraftaccess"
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
-        // Minecraft 1.20.5 now requires Java 21 to run.
-        // ref: https://fabricmc.net/2024/04/19/1205.html
         options.release = 21
     }
 

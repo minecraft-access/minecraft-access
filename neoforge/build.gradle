@@ -3,10 +3,7 @@ plugins {
     // In addition to ensuring that your end-users have the library available when they use your own thing,
     // it also helps avoid collisions with other things that are also using the same library.
     // ref: https://gist.github.com/SizableShrimp/949e7c219bfc94487a45226b64ac7749
-    //
-    // Latest Test Compatibility: gradle version 8.x shadow version 8.0.0+
-    // ref: https://github.com/johnrengelman/shadow
-    id "com.gradleup.shadow" version "8.3.5"
+    alias(libs.plugins.shadow)
 }
 
 architectury {
@@ -30,26 +27,13 @@ configurations {
     developmentNeoForge.extendsFrom common
 }
 
-repositories {
-    maven {
-        name = 'NeoForged'
-        url = 'https://maven.neoforged.net/releases'
-    }
-}
-
 dependencies {
-    neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+    neoForge libs.neoForge
 
-    modImplementation include("dev.architectury:architectury-neoforge:${project.architectury_api_version}")
+    modImplementation include(libs.architecturyApiNeoForge.get().toString())
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
-
-    // https://github.com/LlamaLad7/MixinExtras
-    // fabric has this dependency,
-    // we already used this dependency in common module,
-    // so let forge use it too
-//    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.0"))
 }
 
 processResources {
@@ -57,10 +41,10 @@ processResources {
 
     filesMatching("META-INF/neoforge.mods.toml") {
         expand Map.of("version", project.version,
-                "neoforge_version", rootProject.neoforge_version,
-                "architectury_api_version", rootProject.architectury_api_version,
-                "jade_neoforge_version", rootProject.jade_neoforge_version,
-                "minecraft_version", rootProject.minecraft_version)
+                "neoforge_version", libs.neoForge.get().version,
+                "architectury_api_version", libs.architecturyApiNeoForge.get().version,
+                "jade_neoforge_version", libs.jadeNeoForge.get().version,
+                "minecraft_version", libs.minecraft.get().version)
     }
 }
 
@@ -93,4 +77,3 @@ components.java {
         skip()
     }
 }
-
