@@ -1,5 +1,15 @@
 package org.mcaccess.minecraftaccess;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.platform.Platform;
+import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.util.Strings;
 import org.mcaccess.minecraftaccess.config.Config;
 import org.mcaccess.minecraftaccess.config.config_maps.AccessMenuConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
@@ -12,15 +22,9 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.POIMarking;
 import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import com.mojang.text2speech.Narrator;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.util.Strings;
 
 @Slf4j
 public class MainClass {
@@ -36,7 +40,7 @@ public class MainClass {
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
 
-    public static boolean isNeoForge = false;
+    public static boolean isNeoForge = Platform.isNeoForge();
     public static boolean interrupt = true;
     private static boolean alreadyDisabledAdvancementKey = false;
 
@@ -44,14 +48,6 @@ public class MainClass {
      * Initializes the mod
      */
     public static void init() {
-        try {
-            _init();
-        } catch (Exception e) {
-            log.error("An error occurred while initializing Minecraft Access.", e);
-        }
-    }
-
-    private static void _init() {
         Config.getInstance().loadConfig();
 
         String msg = "Initializing Minecraft Access";
@@ -72,6 +68,12 @@ public class MainClass {
         MainClass.accessMenu = new AccessMenu();
         MainClass.fluidDetector = new FluidDetector();
 
+        for (KeyMapping km : KeyBindingsHandler.getInstance().getKeys()) {
+            KeyMappingRegistry.register(km);
+        }
+
+        ClientTickEvent.CLIENT_POST.register(MainClass::clientTickEventsMethod);
+
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
@@ -79,26 +81,13 @@ public class MainClass {
         }, "Shutdown-thread"));
     }
 
-    /**
-     * This method gets called at the end of every tick
-     *
-     * @param minecraftClient The current minecraft client object
-     */
-    public static void clientTickEventsMethod(MinecraftClient minecraftClient) {
-        try {
-            _clientTickEventsMethod(minecraftClient);
-        } catch (Exception e) {
-            log.error("An error occurred while running Minecraft Access client tick events", e);
-        }
-    }
-
-    private static void _clientTickEventsMethod(MinecraftClient minecraftClient) {
+    public static void clientTickEventsMethod(Minecraft minecraftClient) {
         OtherConfigsMap otherConfigsMap = OtherConfigsMap.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
 
         if (!MainClass.alreadyDisabledAdvancementKey && minecraftClient.options != null) {
-            minecraftClient.options.advancementsKey.setBoundKey(InputUtil.fromTranslationKey("key.keyboard.unknown"));
+            minecraftClient.options.keyAdvancements.setKey(InputConstants.getKey("key.keyboard.unknown"));
             MainClass.alreadyDisabledAdvancementKey = true;
             log.info("Unbound advancements key");
         }
@@ -123,18 +112,17 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (MinecraftClient.getInstance() != null && WorldUtils.getClientPlayer() != null) {
+        if (Minecraft.getInstance() != null && WorldUtils.getClientPlayer() != null) {
             if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
                 playerStatus.update();
             }
 
             MouseKeySimulation.runOnTick();
 
-            EffectNarration.getInstance().update();
-
-            if (MinecraftClient.getInstance().currentScreen == null) {
+            if (Minecraft.getInstance().screen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.update();
+                EffectNarration.getInstance().update();
             }
         }
 
@@ -159,7 +147,7 @@ public class MainClass {
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = OtherConfigsMap.getInstance().isDebugMode();
+        boolean debugMode = OtherConfigsMap.getInstance().isDebugMode() || Platform.isDevelopmentEnvironment();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);
@@ -179,12 +167,8 @@ public class MainClass {
 
     public static void speakWithNarrator(String text, boolean interrupt) {
         MainClass.interrupt = interrupt;
-        if (isNeoForge) {
-            MinecraftClient.getInstance().getNarratorManager().narrate(text);
-            return;
-        }
-
-        Narrator.getNarrator().say(text, interrupt);
+        Minecraft.getInstance().getNarrator().sayNow(text);
+        return;
     }
 
     public static void speakWithNarratorIfNotEmpty(String text, boolean interrupt) {

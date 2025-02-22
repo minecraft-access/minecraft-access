@@ -1,21 +1,21 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.font.TextFieldHelper;
+import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen;
+import net.minecraft.client.gui.screens.inventory.BookEditScreen;
+import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.StringUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
-import net.minecraft.client.gui.screen.ingame.BookEditScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.PageTurnWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.SelectionManager;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,38 +35,38 @@ public abstract class BookEditScreenMixin {
     @Shadow
     private List<String> pages;
     @Shadow
-    private PageTurnWidget nextPageButton;
+    private PageButton forwardButton;
     @Shadow
-    private PageTurnWidget previousPageButton;
+    private PageButton backButton;
     @Shadow
-    private boolean signing;
+    private boolean isSigning;
     @Shadow
-    private ButtonWidget cancelButton;
+    private Button cancelButton;
     @Shadow
-    private ButtonWidget finalizeButton;
+    private Button finalizeButton;
     @Shadow
-    private ButtonWidget signButton;
+    private Button signButton;
     @Shadow
-    private ButtonWidget doneButton;
-    @Shadow
-    @Final
-    private SelectionManager currentPageSelectionManager;
-
-    @Shadow
-    protected abstract void moveToLineStart();
-
-    @Shadow
-    protected abstract void moveToLineEnd();
-
-    @Shadow
-    protected abstract void moveUpLine();
-
-    @Shadow
-    protected abstract void moveDownLine();
-
+    private Button doneButton;
     @Shadow
     @Final
-    private SelectionManager bookTitleSelectionManager;
+    private TextFieldHelper pageEdit;
+
+    @Shadow
+    protected abstract void keyHome();
+
+    @Shadow
+    protected abstract void keyEnd();
+
+    @Shadow
+    protected abstract void keyUp();
+
+    @Shadow
+    protected abstract void keyDown();
+
+    @Shadow
+    @Final
+    private TextFieldHelper titleEdit;
     @Unique
     private static final Keystroke minecraft_access$tabKey = new Keystroke(() -> KeyUtils.isAnyPressed(GLFW.GLFW_KEY_TAB));
     @Unique
@@ -78,10 +78,10 @@ public abstract class BookEditScreenMixin {
     private static final int BUTTON_OFFSET = 3;
 
     @Inject(at = @At("HEAD"), method = "render")
-    public void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient == null) return;
-        if (minecraftClient.currentScreen == null) return;
+        if (minecraftClient.screen == null) return;
 
         // Switch between buttons with Tab key
         // Only switch once until release and press Tab again
@@ -90,7 +90,7 @@ public abstract class BookEditScreenMixin {
         }
 
         if (minecraft_access$spaceKey.isPressed()) {
-            if (this.signing) {
+            if (this.isSigning) {
                 if (this.cancelButton.isHovered()) {
                     this.cancelButton.onPress();
                     return;
@@ -117,7 +117,7 @@ public abstract class BookEditScreenMixin {
      */
     @Unique
     private void minecraft_access$switchMouseHoveredButton() {
-        if (this.signing) {
+        if (this.isSigning) {
             // finalizeButton & cancelButton under the screen
             switch (minecraft_access$currentFocusedButtonStateCode) {
                 case 0 -> minecraft_access$hoverMouseOnTo(this.cancelButton);
@@ -146,29 +146,29 @@ public abstract class BookEditScreenMixin {
     }
 
     @Unique
-    private void minecraft_access$hoverMouseOnTo(ButtonWidget button) {
-        MouseUtils.performAt(((ClickableWidgetAccessor) button).callGetX() + BUTTON_OFFSET,
-                ((ClickableWidgetAccessor) button).callGetY() + BUTTON_OFFSET,
+    private void minecraft_access$hoverMouseOnTo(Button button) {
+        MouseUtils.performAt(((AbstractWidgetAccessor) button).callGetX() + BUTTON_OFFSET,
+                ((AbstractWidgetAccessor) button).callGetY() + BUTTON_OFFSET,
                 MouseUtils::move);
     }
 
     @Unique
     private void minecraft_access$moveMouseAway() {
-        MouseUtils.performAt(((ClickableWidgetAccessor) this.signButton).callGetX() - 10,
-                ((ClickableWidgetAccessor) this.signButton).callGetY() - 10,
+        MouseUtils.performAt(((AbstractWidgetAccessor) this.signButton).callGetX() - 10,
+                ((AbstractWidgetAccessor) this.signButton).callGetY() - 10,
                 MouseUtils::move);
-        MainClass.speakWithNarrator(I18n.translate("minecraft_access.book_edit.focus_moved_away"), true);
+        MainClass.speakWithNarrator(I18n.get("minecraft_access.book_edit.focus_moved_away"), true);
     }
 
     /**
-     * Rewrite the keyPressed method to reuse {@link SelectionManager} keypress handling to reuse logic in {@link SelectionManagerMixin}.
+     * Rewrite the keyPressed method to reuse {@link TextFieldHelper} keypress handling to reuse logic in {@link TextFieldHelperMixin}.
      * They should have been written this method in this way, as well as in {@link AbstractSignEditScreen}.
      */
-    @Inject(at = @At("HEAD"), method = "keyPressedEditMode", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "bookKeyPressed", cancellable = true)
     private void rewriteKeyPressedHandling(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         cir.cancel();
 
-        if (this.currentPageSelectionManager.handleSpecialKey(keyCode)) {
+        if (this.pageEdit.keyPressed(keyCode)) {
             cir.setReturnValue(true);
             return;
         }
@@ -176,41 +176,41 @@ public abstract class BookEditScreenMixin {
         switch (keyCode) {
             case GLFW.GLFW_KEY_ENTER:
             case GLFW.GLFW_KEY_KP_ENTER: {
-                this.currentPageSelectionManager.insert("\n");
+                this.pageEdit.insertText("\n");
                 cir.setReturnValue(true);
                 return;
             }
             case GLFW.GLFW_KEY_UP: {
-                this.moveUpLine();
+                this.keyUp();
                 minecraft_access$speakCurrentLineContent();
                 cir.setReturnValue(true);
                 return;
             }
             case GLFW.GLFW_KEY_DOWN: {
-                this.moveDownLine();
+                this.keyDown();
                 minecraft_access$speakCurrentLineContent();
                 cir.setReturnValue(true);
                 return;
             }
             case GLFW.GLFW_KEY_PAGE_UP: {
-                this.previousPageButton.onPress();
+                this.backButton.onPress();
                 minecraft_access$speakCurrentPageContent();
                 cir.setReturnValue(true);
                 return;
             }
             case GLFW.GLFW_KEY_PAGE_DOWN: {
-                this.nextPageButton.onPress();
+                this.forwardButton.onPress();
                 minecraft_access$speakCurrentPageContent();
                 cir.setReturnValue(true);
                 return;
             }
             case GLFW.GLFW_KEY_HOME: {
-                this.moveToLineStart();
+                this.keyHome();
                 cir.setReturnValue(true);
                 return;
             }
             case GLFW.GLFW_KEY_END: {
-                this.moveToLineEnd();
+                this.keyEnd();
                 cir.setReturnValue(true);
                 return;
             }
@@ -218,16 +218,16 @@ public abstract class BookEditScreenMixin {
         cir.setReturnValue(false);
     }
 
-    @Inject(at = @At("RETURN"), method = "keyPressedSignMode")
+    @Inject(at = @At("RETURN"), method = "titleKeyPressed")
     private void speakWholeSigningTextWhileSigning(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        String signingText = ((SelectionManagerAccessor) this.bookTitleSelectionManager).getStringGetter().get();
+        String signingText = ((TextFieldHelperAccessor) this.titleEdit).getGetMessageFn().get();
         MainClass.speakWithNarratorIfNotEmpty(signingText, true);
     }
 
     @Unique
     private void minecraft_access$speakCurrentLineContent() {
         String pageText = minecraft_access$getPageText();
-        int cursor = this.currentPageSelectionManager.getSelectionStart();
+        int cursor = this.pageEdit.getCursorPos();
         String lineText = StringUtils.getLineTextWhereTheCursorIsLocatedIn(pageText, cursor);
         MainClass.speakWithNarratorIfNotEmpty(lineText, true);
     }
@@ -240,7 +240,7 @@ public abstract class BookEditScreenMixin {
     @Unique
     private void minecraft_access$speakCurrentPageContent() {
         String pageText = minecraft_access$getPageText();
-        MutableText pageIndicatorText = Text.translatable("book.pageIndicator", this.currentPage + 1, this.pages.size());
+        MutableComponent pageIndicatorText = Component.translatable("book.pageIndicator", this.currentPage + 1, this.pages.size());
         pageText = "%s\n\n%s".formatted(pageText, pageIndicatorText.getString());
         MainClass.speakWithNarratorIfNotEmpty(pageText, true);
     }

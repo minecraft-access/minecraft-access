@@ -15,8 +15,6 @@ architectury {
 }
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-
     // Loom sets the log4j config while in development (in prod the log4j config might be dictated by the launcher or just the game itself).
     // This loom gradle config specifies that loom uses our customized log4j config file.
     // ref: https://fabricmc.net/wiki/documentation:fabric_loom
@@ -48,6 +46,9 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand Map.of("version", project.version,
                 "fabric_loader_version", rootProject.fabric_loader_version,
+                "fabric_api_version", rootProject.fabric_api_version,
+                "architectury_api_version", rootProject.architectury_api_version,
+                "jade_fabric_version", rootProject.jade_fabric_version,
                 "minecraft_version", rootProject.minecraft_version)
     }
 }

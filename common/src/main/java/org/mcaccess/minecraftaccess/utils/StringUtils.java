@@ -1,5 +1,9 @@
 package org.mcaccess.minecraftaccess.utils;
 
+import net.minecraft.util.FormattedCharSequence;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 public class StringUtils {
 
     public static String getLineTextWhereTheCursorIsLocatedIn(String whole, int cursor) {
@@ -41,5 +45,15 @@ public class StringUtils {
         } else {
             return msg.split("\\s");
         }
+    }
+
+    @Contract(pure = true)
+    public static @NotNull String formattedCharSequenceToString(@NotNull FormattedCharSequence charSequence) {
+        StringBuilder builder = new StringBuilder();
+        charSequence.accept((index, style, codePoint) -> {
+            builder.appendCodePoint(codePoint);
+            return true;
+        });
+        return builder.toString();
     }
 }

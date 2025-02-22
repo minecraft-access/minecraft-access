@@ -1,32 +1,31 @@
 package org.mcaccess.minecraftaccess.features;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.Getter;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.effect.MobEffectInstance;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
-import lombok.Getter;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.effect.StatusEffectInstance;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EffectNarration {
     @Getter
     private static EffectNarration instance = new EffectNarration();
 
-    private List<StatusEffectInstance> previousEffects = new ArrayList<>();
+    private List<MobEffectInstance> previousEffects = new ArrayList<>();
 
     public void update() {
-        List<StatusEffectInstance> currentEffects = new ArrayList<>(WorldUtils.getClientPlayer().getStatusEffects());
+        List<MobEffectInstance> currentEffects = new ArrayList<>(WorldUtils.getClientPlayer().getActiveEffects());
 
-        List<StatusEffectInstance> newEffects = new ArrayList<>();
-        List<StatusEffectInstance> lostEffects = new ArrayList<>();
+        List<MobEffectInstance> newEffects = new ArrayList<>();
+        List<MobEffectInstance> lostEffects = new ArrayList<>();
 
-        for (StatusEffectInstance effect : currentEffects) {
+        for (MobEffectInstance effect : currentEffects) {
             boolean isNewEffect = true;
-            for (StatusEffectInstance previousEffect : previousEffects) {
-                if (effect.getEffectType().equals(previousEffect.getEffectType())) {
+            for (MobEffectInstance previousEffect : previousEffects) {
+                if (effect.getEffect().equals(previousEffect.getEffect())) {
                     isNewEffect = false;
                     break;
                 }
@@ -36,10 +35,10 @@ public class EffectNarration {
             }
         }
 
-        for (StatusEffectInstance effect : previousEffects) {
+        for (MobEffectInstance effect : previousEffects) {
             boolean isLostEffect = true;
-            for (StatusEffectInstance currentEffect : currentEffects) {
-                if (effect.getEffectType().equals(currentEffect.getEffectType())) {
+            for (MobEffectInstance currentEffect : currentEffects) {
+                if (effect.getEffect().equals(currentEffect.getEffect())) {
                     isLostEffect = false;
                     break;
                 }
@@ -52,16 +51,16 @@ public class EffectNarration {
         StringBuilder toSpeak = new StringBuilder();
 
         if (!newEffects.isEmpty()) {
-            toSpeak.append(I18n.translate("minecraft_access.effect_narration.gained")).append(" ");
-            for (StatusEffectInstance effect : newEffects) {
-                toSpeak.append(I18n.translate(effect.getTranslationKey())).append(", ");
+            toSpeak.append(I18n.get("minecraft_access.effect_narration.gained")).append(" ");
+            for (MobEffectInstance effect : newEffects) {
+                toSpeak.append(I18n.get(effect.getDescriptionId())).append(", ");
             }
         }
 
         if (!lostEffects.isEmpty()) {
-            toSpeak.append(I18n.translate("minecraft_access.effect_narration.lost")).append(" ");
-            for (StatusEffectInstance effect : lostEffects) {
-                toSpeak.append(I18n.translate(effect.getTranslationKey())).append(", ");
+            toSpeak.append(I18n.get("minecraft_access.effect_narration.lost")).append(" ");
+            for (MobEffectInstance effect : lostEffects) {
+                toSpeak.append(I18n.get(effect.getDescriptionId())).append(", ");
             }
         }
 
@@ -71,13 +70,13 @@ public class EffectNarration {
     }
 
     public void narrateCurrentPlayerEffects() {
-        if (WorldUtils.getClientPlayer().getStatusEffects().isEmpty()) {
-            MainClass.speakWithNarrator(I18n.translate("minecraft_access.effect_narration.no_effects"), true);
+        if (WorldUtils.getClientPlayer().getActiveEffects().isEmpty()) {
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.effect_narration.no_effects"), true);
             return;
         }
 
         StringBuilder toSpeak = new StringBuilder();
-        for (StatusEffectInstance effect : WorldUtils.getClientPlayer().getStatusEffects()) {
+        for (MobEffectInstance effect : WorldUtils.getClientPlayer().getActiveEffects()) {
             toSpeak.append(NarrationUtils.narrateEffect(effect));
         }
 

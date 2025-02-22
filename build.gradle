@@ -5,7 +5,7 @@ plugins {
     // From developers of architectury: "shouldn't hardcode the loom version, just put *-SNAPSHOT"
     // ref: https://maven.architectury.dev/dev/architectury/architectury-loom/
     id "dev.architectury.loom" version "1.9-SNAPSHOT" apply false
-    id 'com.palantir.git-version' version '3.0.0'
+    id 'com.palantir.git-version' version '3.1.0'
 }
 
 def git = versionDetails()
@@ -36,10 +36,9 @@ subprojects {
 
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        // Ref: https://discord.com/channels/792699517631594506/1255221515964911626/1256712441329614942
-        mappings loom.layered {
-            it.mappings("net.fabricmc:yarn:${rootProject.fabric_yarn_version}")
-            it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$rootProject.yarn_mappings_patch_neoforge_version")
+        mappings loom.layered() {
+            officialMojangMappings()
+            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
         }
     }
 }
@@ -58,6 +57,10 @@ allprojects {
         // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
         // See https://docs.gradle.org/current/userguide/declaring_repositories.html
         // for more information about repositories.
+        maven {
+            name = 'ParchmentMC'
+            url = 'https://maven.parchmentmc.org'
+        }
     }
 
     tasks.withType(JavaCompile).configureEach {
