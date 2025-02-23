@@ -64,20 +64,20 @@ public abstract class EditBoxMixin {
         switch (keyCode) {
             case GLFW.GLFW_KEY_LEFT: {
                 if (Screen.hasControlDown()) {
-                    String hoveredText = this.getCursorHoverOverText(this.getWordPosition(-1));
+                    String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(-1));
                     MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
                 } else {
-                    String hoveredText = this.getCursorHoverOverText(this.getCursorPos(-1));
+                    String hoveredText = this.mca$getCursorHoverOverText(this.getCursorPos(-1));
                     MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
                 }
                 return;
             }
             case GLFW.GLFW_KEY_RIGHT: {
                 if (Screen.hasControlDown()) {
-                    String hoveredText = this.getCursorHoverOverText(this.getWordPosition(1));
+                    String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(1));
                     MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
                 } else {
-                    String hoveredText = this.getCursorHoverOverText(this.getCursorPos(1));
+                    String hoveredText = this.mca$getCursorHoverOverText(this.getCursorPos(1));
                     MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
                 }
                 return;
@@ -113,13 +113,13 @@ public abstract class EditBoxMixin {
         // don't speak under this condition
         boolean allTextAreSelected = this.highlightPos == 0;
         if (!allTextAreSelected) {
-            String erasedText = getCursorHoverOverText(cursorPos);
+            String erasedText = mca$getCursorHoverOverText(cursorPos);
             MainClass.speakWithNarratorIfNotEmpty(erasedText, true);
         }
     }
 
     @Unique
-    private String getCursorHoverOverText(int changedCursorPos) {
+    private String mca$getCursorHoverOverText(int changedCursorPos) {
         int currentCursorPos = this.cursorPos;
         int startPos = Math.min(changedCursorPos, currentCursorPos);
         int endPos = Math.max(changedCursorPos, currentCursorPos);
