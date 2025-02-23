@@ -8,6 +8,7 @@
     "clothconfig.CleanMouseClickingFocus",
     "clothconfig.ClothConfigScreenAccessor",
     "clothconfig.ClothConfigScreenMixin",
+    "clothconfig.ClothConfigScreenMixin$ListWidgetMixin",
     "clothconfig.ContainerEventHandlerMixin",
     "clothconfig.SubCategoryListEntryMixin",
     "clothconfig.SubCategoryListEntryMixin$CategoryLabelWidgetMixin"

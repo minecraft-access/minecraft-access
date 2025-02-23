@@ -44,9 +44,9 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         // Once the subcategory is navigated through and remain unexpanded, the subcategory can't be focused again.
         // Because "subcategory.isFocused()" always returns false, then run the "super.nextFocusPath(event)", and it always returns null.
         // So we use another way to check if current subcategory is focused instead to avoid this problem.
-        boolean isFocusedByParent = this.getParent().getFocused() == this;
+        boolean isNotFocusedByParent = this.getParent().getFocused() != this;
 
-        if (!isFocusedByParent && isDisplayed()) {
+        if (isNotFocusedByParent && isDisplayed()) {
             if (isExpanded()) {
                 List<? extends GuiEventListener> children = this.filteredEntries();
                 GuiEventListener target = NavigationUtils.isDirectionBackward(event) ? children.getLast() : children.getFirst();
