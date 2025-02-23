@@ -10,6 +10,7 @@ import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,11 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
      */
     @Override
     protected void setInitialFocus() {
+    }
+
+    @Override
+    public @NotNull Component getNarrationMessage() {
+        return super.getNarrationMessage().copy().append(I18n.get("minecraft_access.other.words_connection")).append(getSelectedCategory());
     }
 
     @SuppressWarnings("rawtypes")
