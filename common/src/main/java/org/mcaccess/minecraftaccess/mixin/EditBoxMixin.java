@@ -2,10 +2,13 @@ package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,6 +45,10 @@ abstract class EditBoxMixin extends AbstractWidget {
     @Shadow
     public abstract String getHighlighted();
 
+    @Shadow
+    @Nullable
+    private String suggestion;
+
     @Unique
     private boolean mca$previousFocused = false;
 
@@ -66,6 +73,15 @@ abstract class EditBoxMixin extends AbstractWidget {
         cir.setReturnValue(Component.empty());
         cir.cancel();
     }
+
+    @Inject(method = "updateWidgetNarration", at = @At("TAIL"))
+    private void speakSuggestionWhenContentIsEmpty(NarrationElementOutput output, CallbackInfo ci) {
+        // I'm surprised that this is not originally accessible
+        if (this.value.isBlank() && this.suggestion != null) {
+            output.add(NarratedElementType.HINT, this.suggestion);
+        }
+    }
+
 
     @Inject(at = @At("HEAD"), method = "setFocused")
     private void setFocused(boolean focused, CallbackInfo ci) {
