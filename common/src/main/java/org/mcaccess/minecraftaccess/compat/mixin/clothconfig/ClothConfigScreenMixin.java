@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
+import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
 import me.shedaniel.clothconfig2.gui.AbstractTabbedConfigScreen;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
@@ -48,14 +49,17 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
     @Shadow
     private AbstractWidget buttonLeftTab;
 
+    @Shadow
+    public ClothConfigScreen.ListWidget<AbstractConfigEntry<AbstractConfigEntry<?>>> listWidget;
+
     ClothConfigScreenMixin(Screen parent, Component title, ResourceLocation backgroundLocation) {
         super(parent, title, backgroundLocation);
     }
 
     @Inject(at = @At("TAIL"), method = "init")
     void addComponentsAsNarratables(CallbackInfo ci) {
-        // so that child components can be narrated in Screen.addElementNarrations()
         List<NarratableEntry> narratables = ((ScreenAccessor) this).getNarratables();
+        narratables.addAll(this.listWidget.children());
         narratables.addAll(this.tabButtons);
     }
 
