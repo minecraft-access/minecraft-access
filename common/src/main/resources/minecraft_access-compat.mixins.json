@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "clothconfig.CleanMouseClickingFocus",
+    "clothconfig.ClothConfigScreenAccessor",
     "clothconfig.ClothConfigScreenMixin",
     "clothconfig.ContainerEventHandlerMixin",
     "clothconfig.SubCategoryListEntryMixin",
