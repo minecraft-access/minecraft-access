@@ -29,9 +29,6 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
     }
 
     @Shadow
-    public abstract void setFocused(@Nullable GuiEventListener guiEventListener);
-
-    @Shadow
     public abstract boolean isExpanded();
 
     @Shadow
