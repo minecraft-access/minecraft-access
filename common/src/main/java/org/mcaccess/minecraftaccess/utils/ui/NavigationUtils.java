@@ -14,10 +14,10 @@ public class NavigationUtils {
      * @return true if Tab backward or Arrow up, otherwise false
      */
     public static boolean isDirectionBackward(FocusNavigationEvent event) {
-        if (event instanceof FocusNavigationEvent.ArrowNavigation arrow) {
-            return arrow.direction().equals(ScreenDirection.UP);
-        } else if (event instanceof FocusNavigationEvent.TabNavigation tab) {
-            return !tab.forward();
+        if (event instanceof FocusNavigationEvent.ArrowNavigation(ScreenDirection direction)) {
+            return direction.equals(ScreenDirection.UP);
+        } else if (event instanceof FocusNavigationEvent.TabNavigation(boolean forward)) {
+            return !forward;
         }
         return false;
     }
@@ -28,7 +28,7 @@ public class NavigationUtils {
      *
      * @param root  from input component
      * @param event original event
-     * @return to deepest focusable child
+     * @return to the deepest focusable child
      */
     public static @Nullable ComponentPath getFocusPathStartFrom(GuiEventListener root, FocusNavigationEvent event) {
         // thankfully, the original method already been recursive style
