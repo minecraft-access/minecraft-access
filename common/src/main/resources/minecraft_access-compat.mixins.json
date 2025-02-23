@@ -4,6 +4,7 @@
   "package": "org.mcaccess.minecraftaccess.compat.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "clothconfig.AbstractConfigListEntryMixin",
     "clothconfig.CleanMouseClickingFocus",
     "clothconfig.ClothConfigScreenAccessor",
     "clothconfig.ClothConfigScreenMixin",
