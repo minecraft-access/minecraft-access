@@ -43,7 +43,6 @@
     "RecipeButtonMixin",
     "ScreenAccessor",
     "ScreenMixin",
-    "ScreenNarrationCollectorMixin",
     "SlotAccessor",
     "StonecutterScreenAccessor",
     "TamableAnimalMixin",

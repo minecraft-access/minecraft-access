@@ -1,7 +1,5 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.suggestion.Suggestion;
 import net.minecraft.client.gui.components.CommandSuggestions;
@@ -9,8 +7,8 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 /**
- * Since text modifying narrations are suppressed in {@link ScreenNarrationCollectorMixin},
+ * Since text modifying narrations are suppressed in {@link EditBoxMixin},
  * manually speak (command) suggestions (in {@link AbstractCommandBlockEditScreen} and {@link ChatScreen}).
  */
 @Mixin(CommandSuggestions.SuggestionsList.class)

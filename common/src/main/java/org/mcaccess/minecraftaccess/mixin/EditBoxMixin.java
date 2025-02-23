@@ -1,7 +1,10 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen;
+import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.util.Strings;
 import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
@@ -18,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * to simulate screen reader's text speaking behavior when editing text in input fields.
  */
 @Mixin(EditBox.class)
-public abstract class EditBoxMixin {
+abstract class EditBoxMixin extends AbstractWidget {
     @Shadow
     private String value;
     @Shadow
@@ -38,6 +41,36 @@ public abstract class EditBoxMixin {
 
     @Shadow
     public abstract String getHighlighted();
+
+    @Unique
+    private boolean mca$previousFocused = false;
+
+    public EditBoxMixin(int x, int y, int width, int height, Component message) {
+        super(x, y, width, height, message);
+    }
+
+    /**
+     * The original logic will repeat whole text input in {@link EditBox} on every text modifying operation.
+     * For example, when editing command in {@link CommandBlockEditScreen}, the game will say:
+     * "Console Command edit box: input text......"
+     * It's quite annoying, so we want to suppress these narrations.
+     * But we still need to speak the whole text once when first focused
+     */
+    @Inject(method = "createNarrationMessage", at = @At("HEAD"), cancellable = true)
+    private void suppressWholeContentNarration(CallbackInfoReturnable<Component> cir) {
+        if (!this.mca$previousFocused && this.isFocused()) {
+            this.mca$previousFocused = true;
+            return;
+        }
+
+        cir.setReturnValue(Component.empty());
+        cir.cancel();
+    }
+
+    @Inject(at = @At("HEAD"), method = "setFocused")
+    private void setFocused(boolean focused, CallbackInfo ci) {
+        if (!focused) this.mca$previousFocused = false;
+    }
 
     /**
      * Prevents any character input if alt is held down.
