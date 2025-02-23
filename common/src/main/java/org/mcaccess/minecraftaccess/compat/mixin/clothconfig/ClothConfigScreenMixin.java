@@ -35,8 +35,28 @@ import java.util.List;
  */
 @Mixin(value = ClothConfigScreen.class, remap = false)
 abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
+    @Shadow
+    @Final
+    private List<ClothConfigTabButton> tabButtons;
+
+    @Shadow
+    public abstract Component getSelectedCategory();
+
+    @Shadow
+    private AbstractWidget buttonRightTab;
+
+    @Shadow
+    private AbstractWidget buttonLeftTab;
+
     ClothConfigScreenMixin(Screen parent, Component title, ResourceLocation backgroundLocation) {
         super(parent, title, backgroundLocation);
+    }
+
+    @Inject(at = @At("TAIL"), method = "init")
+    void addComponentsAsNarratables(CallbackInfo ci) {
+        // so that child components can be narrated in Screen.addElementNarrations()
+        List<NarratableEntry> narratables = ((ScreenAccessor) this).getNarratables();
+        narratables.addAll(this.tabButtons);
     }
 
     /**
