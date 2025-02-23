@@ -7,17 +7,26 @@ import me.shedaniel.clothconfig2.gui.ClothConfigTabButton;
 import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.mixin.ScreenAccessor;
 import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
@@ -42,6 +51,41 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
     @Override
     public @NotNull Component getNarrationMessage() {
         return super.getNarrationMessage().copy().append(I18n.get("minecraft_access.other.words_connection")).append(getSelectedCategory());
+    }
+
+    /**
+     * Inspired by {@link net.minecraft.client.gui.components.tabs.TabNavigationBar#keyPressed(int, int, int)}.
+     * Use Control + Tab (and Control + Shift + Tab) to switch between tab buttons.
+     */
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (Screen.hasControlDown() && keyCode == GLFW.GLFW_KEY_TAB) {
+            mca$switchCategory(!Screen.hasShiftDown());
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Unique
+    private void mca$switchCategory(boolean forward) {
+        int nextIndex = this.selectedCategoryIndex + (forward ? 1 : -1);
+        if (Math.clamp(nextIndex, 0, this.tabButtons.size() - 1) != nextIndex) {
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.reached_the_border"), true);
+            return;
+        }
+
+        ClothConfigTabButton tabButton = this.tabButtons.get(nextIndex);
+
+        if (tabButton.isMouseOver(tabButton.getX() + 1, tabButton.getY() + 1)) {
+            // the tab button is visible, click it
+            tabButton.mouseClicked(tabButton.getX() + 1, tabButton.getY() + 1, 0);
+        } else {
+            // the tab button is invisible, scroll tab menu
+            var arrowButton = forward ? this.buttonRightTab : this.buttonLeftTab;
+            arrowButton.mouseClicked(arrowButton.getX() + 1, arrowButton.getY() + 1, 0);
+            // but the scroll needs ticking to be finished, so directly trigger the tab button by calling onPress
+            tabButton.onPress();
+        }
     }
 
     @SuppressWarnings("rawtypes")
