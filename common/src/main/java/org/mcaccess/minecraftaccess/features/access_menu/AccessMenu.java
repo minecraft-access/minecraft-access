@@ -208,9 +208,13 @@ public class AccessMenu {
 
         String translationKey = "minecraft_access.access_menu.time_of_day";
         if (OtherConfigsMap.getInstance().isUse12HourTimeFormat()) {
-            if (hours > 12) {
+            if (hours == 0) {
+                hours = 12;
+                translationKey += "_am";
+            } else if (hours > 12) {
                 hours -= 12;
                 translationKey += "_pm";
+            } else if (hours == 12) {
                 translationKey += "_pm";
             } else {
                 translationKey += "_am";
