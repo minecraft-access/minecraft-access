@@ -12,14 +12,11 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -37,6 +34,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
+import org.mcaccess.minecraftaccess.config.config_maps.ReadCrosshairConfigMap;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
@@ -59,6 +57,7 @@ public class NarrationUtils {
         // When the entity is named, this value is its custom name,
         // otherwise it is its type.
         String nameOrType = entity.getName().getString();
+        boolean entityIsSitting = false;
         String type = entity.hasCustomName() ? I18n.get(entity.getType().getDescriptionId()) : nameOrType;
         boolean isDroppedItem = entity instanceof ItemEntity itemEntity && itemEntity.onGround() || entity instanceof AbstractArrow abstractArrow && abstractArrow.pickup.equals(AbstractArrow.Pickup.ALLOWED);
 
@@ -76,29 +75,69 @@ public class NarrationUtils {
 
         List<String> equipments = new ArrayList<>();
 
-        if (entity instanceof Animal animal) {
-            switch (animal) {
-                case Sheep sheep -> text = getSheepInfo(sheep, text);
-                case TamableAnimal tamableAnimal -> {
-                    // wolf, cat, parrot
-                    String isTameText = I18n.get("minecraft_access.read_crosshair.is_tamed", text);
-                    text = tamableAnimal.isTame() ? isTameText : text;
-                    text = tamableAnimal.isInSittingPose() ? addSittingInfo(text) : text;
+        if (ReadCrosshairConfigMap.getInstance().isSpeakAdditionalEntityPoses()) {
+            switch (entity.getPose()) {
+                case SLEEPING -> text = I18n.get("minecraft_access.read_crosshair.sleeping", text);
+                case DYING -> text = I18n.get("minecraft_access.read_crosshair.dying", text);
+                case DIGGING -> text = I18n.get("minecraft_access.read_crosshair.digging", text);
+                case FALL_FLYING -> text = I18n.get("minecraft_access.read_crosshair.fall_flying", text);
+                case ROARING -> text = I18n.get("minecraft_access.read_crosshair.roaring", text);
+                case SLIDING -> text = I18n.get("minecraft_access.read_crosshair.sliding", text);
+                case SWIMMING -> text = I18n.get("minecraft_access.read_crosshair.swimming", text);
+                case SITTING -> entityIsSitting = true;
+                case CROAKING -> text = I18n.get("minecraft_access.read_crosshair.croaking", text);
+                case EMERGING -> text = I18n.get("minecraft_access.read_crosshair.emerging", text);
+                case SHOOTING -> text = I18n.get("minecraft_access.read_crosshair.shooting", text);
+                case INHALING -> text = I18n.get("minecraft_access.read_crosshair.inhaling", text);
+                case SNIFFING -> text = I18n.get("minecraft_access.read_crosshair.sniffing", text);
+                case CROUCHING -> text = I18n.get("minecraft_access.read_crosshair.crouching", text);
+                case LONG_JUMPING -> text = I18n.get("minecraft_access.read_crosshair.long_jumping", text);
+                case USING_TONGUE -> text = I18n.get("minecraft_access.read_crosshair.using_tongue", text);
+                case STANDING -> {
                 }
-                case Fox fox -> text = fox.isSitting() ? addSittingInfo(text) : text;
-                case Panda panda -> text = panda.isSitting() ? addSittingInfo(text) : text;
-                case Camel camel -> text = camel.isCamelSitting() ? addSittingInfo(text) : text;
+                default -> {
+                    log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", entity.getPose().name());
+                }
+            }
+        }
+
+        if (!entityIsSitting) {
+            switch (entity) {
+                case Fox fox -> entityIsSitting = fox.isSitting();
+                case Panda panda -> entityIsSitting = panda.isSitting();
+                case Camel camel -> entityIsSitting = camel.isCamelSitting();
+                case TamableAnimal tamableAnimal -> entityIsSitting = tamableAnimal.isInSittingPose();
                 default -> {
                 }
             }
-
-            if (animal.isBaby())
-                text = I18n.get("minecraft_access.read_crosshair.animal_entity_baby", text);
-            if (animal.isLeashed())
-                text = I18n.get("minecraft_access.read_crosshair.animal_entity_leashed", text);
         }
 
-        if (entity instanceof LivingEntity livingEntity) {
+        if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame())
+            text = I18n.get("minecraft_access.read_crosshair.tamed", text);
+
+        if (entityIsSitting)
+            text = I18n.get("minecraft_access.read_crosshair.sitting", text);
+
+        if (entity instanceof
+                Mob mob && mob.isBaby())
+            text = I18n.get("minecraft_access.read_crosshair.baby", text);
+
+        if (entity instanceof
+                Leashable leashable && leashable.isLeashed())
+            text = I18n.get("minecraft_access.read_crosshair.leashed", text);
+
+        if (entity instanceof
+                Sheep sheep) {
+            text = getSheepInfo(sheep, text);
+        } else if (entity instanceof
+                ZombieVillager zombieVillager && zombieVillager.isConverting()) {
+            text = I18n.get("minecraft_access.read_crosshair.zombie_villager_is_curing", text);
+        } else if (isDroppedItem) {
+            text = I18n.get("minecraft_access.point_of_interest.locking.dropped_item", text);
+        }
+
+        if (entity instanceof
+                LivingEntity livingEntity) {
             for (ItemStack equipment : livingEntity.getAllSlots()) {
                 if (equipment.isEmpty())
                     continue;
@@ -106,23 +145,6 @@ public class NarrationUtils {
                 equipments.add(equipmentName);
             }
         }
-
-        if (entity instanceof Monster) {
-            if (entity instanceof ZombieVillager zombieVillager) {
-                text = zombieVillager.isConverting() ?
-                        I18n.get("minecraft_access.read_crosshair.zombie_villager_is_curing", text) :
-                        text;
-            }
-        }
-
-        if (!equipments.isEmpty()) {
-            String wordConnection = I18n.get("minecraft_access.other.words_connection");
-            var values = Map.of("entity", text, "equipments", String.join(wordConnection, equipments));
-            text = I18n.get("minecraft_access.other.entity_with_equipments", values);
-        }
-
-        if (isDroppedItem)
-            text = I18n.get("minecraft_access.point_of_interest.locking.dropped_item", text);
 
         return text;
     }
@@ -145,10 +167,10 @@ public class NarrationUtils {
         return I18n.get("minecraft_access.read_crosshair.is_sitting", currentQuery);
     }
 
-    private static String getSheepInfo(Sheep sheepEntity, String currentQuery) {
-        String dyedColor = sheepEntity.getColor().getName();
+    private static String getSheepInfo(Sheep sheep, String currentQuery) {
+        String dyedColor = sheep.getColor().getName();
         String translatedColor = I18n.get("color.minecraft." + dyedColor);
-        String shearable = sheepEntity.readyForShearing() ?
+        String shearable = sheep.readyForShearing() ?
                 I18n.get("minecraft_access.read_crosshair.shearable", currentQuery) :
                 I18n.get("minecraft_access.read_crosshair.not_shearable", currentQuery);
         return translatedColor + " " + shearable;
@@ -257,60 +279,56 @@ public class NarrationUtils {
         String currentQuery = name + side;
 
         // Different special narration (toSpeak) about different type of blocks
-        try {
-            if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
-                toSpeak = NarrationUtils.narrateFluidBlock(blockPos);
-                return new Tuple<>(toSpeak, toSpeak);
-            }
+        if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
+            toSpeak = NarrationUtils.narrateFluidBlock(blockPos);
+            return new Tuple<>(toSpeak, toSpeak);
+        }
 
-            if (blockEntity != null) {
-                // The all signs tag include all types of signs, so it should also work with the hanging signs in 1.20.x
-                if (blockState.is(BlockTags.ALL_SIGNS)) {
-                    toSpeak = getSignInfo((SignBlockEntity) blockEntity, client.player, toSpeak);
-                } else if (blockEntity instanceof BeehiveBlockEntity beehiveBlockEntity) {
-                    Tuple<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, toSpeak, currentQuery);
-                    toSpeak = beehiveInfo.getA();
-                    currentQuery = beehiveInfo.getB();
+        if (blockEntity != null) {
+            if (blockState.is(BlockTags.ALL_SIGNS)) {
+                toSpeak = getSignInfo((SignBlockEntity) blockEntity, client.player, toSpeak);
+            } else if (blockEntity instanceof BeehiveBlockEntity beehiveBlockEntity) {
+                Tuple<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, toSpeak, currentQuery);
+                toSpeak = beehiveInfo.getA();
+                currentQuery = beehiveInfo.getB();
+            } else
+                // Speak monster spawner mob type
+                if (blockEntity instanceof SpawnerBlockEntity spawner) {
+                    // Will not support non-vanilla custom configured multiple-mob spawner (like generated with command)
+                    Entity entity = ((BaseSpawnerAccessor) spawner.getSpawner()).getDisplayEntity();
+                    // Monster spawners that are gotten from the creative inventory are empty.
+                    String entityName = I18n.get("minecraft_access.read_crosshair.spawner_empty");
+                    if (entity != null) {
+                        entityName = Objects.requireNonNull(entity.getDisplayName()).getString();
+                    }
+                    toSpeak = entityName + " " + toSpeak;
+                    currentQuery = entityName + currentQuery;
                 }
+        }
+
+        if (block instanceof BushBlock || block instanceof CocoaBlock) {
+            Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
+            toSpeak = cropsInfo.getA();
+            currentQuery = cropsInfo.getB();
+        } else if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
+            toSpeak = I18n.get("minecraft_access.crop.wet_farmland", toSpeak);
+            currentQuery = "wet" + currentQuery;
+        } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
+            if (blockState.getValue(EndPortalFrameBlock.HAS_EYE)) {
+                toSpeak = I18n.get("minecraft_access.read_crosshair.end_portal_frame_with_eye", toSpeak);
+            } else {
+                toSpeak = I18n.get("minecraft_access.read_crosshair.end_portal_frame_empty", toSpeak);
             }
+        }
 
-            if (block instanceof BushBlock || block instanceof CocoaBlock) {
-                Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
-                toSpeak = cropsInfo.getA();
-                currentQuery = cropsInfo.getB();
-            }
+        // Redstone related
+        Tuple<String, String> redstoneRelatedInfo = getRedstoneRelatedInfo(clientWorld, blockPos, block, blockState, toSpeak, currentQuery);
+        toSpeak = redstoneRelatedInfo.getA();
+        currentQuery = redstoneRelatedInfo.getB();
 
-            // Check if farmland is wet
-            if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
-                toSpeak = I18n.get("minecraft_access.crop.wet_farmland", toSpeak);
-                currentQuery = "wet" + currentQuery;
-            }
-
-            // Speak monster spawner mob type
-            if (blockEntity instanceof SpawnerBlockEntity spawner) {
-                // Will not support non-vanilla custom configured multiple-mob spawner (like generated with command)
-                Entity entity = ((BaseSpawnerAccessor) spawner.getSpawner()).getDisplayEntity();
-                // Monster spawners that gotten from creative creating screen is empty.
-                String entityName = "Empty";
-                if (entity != null) {
-                    entityName = Objects.requireNonNull(entity.getDisplayName()).getString();
-                }
-                toSpeak = entityName + " " + toSpeak;
-                currentQuery = entityName + currentQuery;
-            }
-
-            // Redstone related
-            Tuple<String, String> redstoneRelatedInfo = getRedstoneRelatedInfo(clientWorld, blockPos, block, blockState, toSpeak, currentQuery);
-            toSpeak = redstoneRelatedInfo.getA();
-            currentQuery = redstoneRelatedInfo.getB();
-
-            if (clientWorld.getFluidState(blockPos).is(Fluids.WATER)) {
-                toSpeak = I18n.get("minecraft_access.crop.water_logged", toSpeak);
-                currentQuery = "waterlogged" + currentQuery;
-            }
-
-        } catch (Exception e) {
-            log.error("An error occurred while adding narration text for special blocks", e);
+        if (clientWorld.getFluidState(blockPos).is(Fluids.WATER)) {
+            toSpeak = I18n.get("minecraft_access.crop.water_logged", toSpeak);
+            currentQuery = "waterlogged" + currentQuery;
         }
 
         return new Tuple<>(toSpeak, currentQuery);
@@ -324,7 +342,8 @@ public class NarrationUtils {
         return narrateBlockForContentChecking(pos, side).getA();
     }
 
-    private static String getSignInfo(SignBlockEntity signEntity, LocalPlayer player, String toSpeak) {
+    private static String getSignInfo(SignBlockEntity signEntity, LocalPlayer
+            player, String toSpeak) {
         String[] lines = new String[4];
 
         for (int i = 0; i < 4; i++) {
@@ -335,7 +354,9 @@ public class NarrationUtils {
         return I18n.get("minecraft_access.read_crosshair.sign_" + (signEntity.isFacingFrontText(player) ? "front" : "back") + "_content", toSpeak, content);
     }
 
-    private static @NotNull Tuple<String, String> getRedstoneRelatedInfo(ClientLevel world, BlockPos blockPos, Block block, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getRedstoneRelatedInfo(ClientLevel
+                                                                                 world, BlockPos blockPos, Block block, BlockState blockState, String toSpeak, String
+                                                                                 currentQuery) {
         boolean isEmittingPower = world.hasSignal(blockPos, Direction.DOWN);
         boolean isReceivingPower = world.hasNeighborSignal(blockPos);
 
@@ -412,7 +433,8 @@ public class NarrationUtils {
         return new Tuple<>(toSpeak, currentQuery);
     }
 
-    private static @NotNull Tuple<String, String> getRedstoneWireInfo(BlockState blockState, BlockPos pos, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getRedstoneWireInfo(BlockState
+                                                                              blockState, BlockPos pos, String toSpeak, String currentQuery) {
         int powerLevel = blockState.getValue(RedStoneWireBlock.POWER);
         if (powerLevel > 0) {
             toSpeak = I18n.get("minecraft_access.read_crosshair.redstone_wire_power", toSpeak, powerLevel);
@@ -459,7 +481,9 @@ public class NarrationUtils {
         return new Tuple<>(toSpeak, currentQuery);
     }
 
-    private static @NotNull Tuple<String, String> getBeehiveInfo(BeehiveBlockEntity blockEntity, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getBeehiveInfo
+            (BeehiveBlockEntity blockEntity, BlockState blockState, String
+                    toSpeak, String currentQuery) {
         boolean isSmoked = blockEntity.isSedated();
         int honeyLevel = blockState.getValue(BeehiveBlock.HONEY_LEVEL);
         Direction facingDirection = blockState.getValue(BeehiveBlock.FACING);
@@ -486,7 +510,8 @@ public class NarrationUtils {
      * torch flower, pitcher crop.<br>
      * Watermelon vein and pumpkin vein are not harvestable so not be included here.
      */
-    private static @NotNull Tuple<String, String> getCropsInfo(Block block, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getCropsInfo(Block
+                                                                       block, BlockState blockState, String toSpeak, String currentQuery) {
         int currentAge, maxAge;
 
         switch (block) {
