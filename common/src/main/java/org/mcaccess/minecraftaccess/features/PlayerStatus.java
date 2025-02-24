@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
@@ -24,7 +25,6 @@ public class PlayerStatus {
             Interval.ms(3000));
 
     public void update() {
-        try {
             Minecraft minecraftClient = Minecraft.getInstance();
             if (minecraftClient == null) return;
             if (minecraftClient.player == null) return;
@@ -47,19 +47,19 @@ public class PlayerStatus {
 
                 if (!(isStatusKeyPressed && Screen.hasAltDown())) {
                     if (absorption > 0) {
-                        toSpeak += I18n.get("minecraft_access.player_status.base_with_absorption", health, absorption, maxHealth, hunger, maxHunger, armor);
+                        toSpeak += I18n.get("minecraft_access.player_status.base_with_absorption", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(absorption), NarrationUtils.narrateNumber(maxHealth), NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger), NarrationUtils.narrateNumber(armor));
                     } else {
-                        toSpeak += I18n.get("minecraft_access.player_status.base", health, maxHealth, hunger, maxHunger, armor);
+                        toSpeak += I18n.get("minecraft_access.player_status.base", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth), NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger), NarrationUtils.narrateNumber(armor));
                     }
                 }
 
                 if ((minecraftClient.player.isUnderWater() || minecraftClient.player.getAirSupply() < minecraftClient.player.getMaxAirSupply()) && !minecraftClient.player.canBreatheUnderwater()) {
                     air = Math.max(air, 0.0);
-                    toSpeak += I18n.get("minecraft_access.player_status.air", air, maxAir);
+                    toSpeak += I18n.get("minecraft_access.player_status.air", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir));
                 }
 
                 if ((minecraftClient.player.isInPowderSnow || frostExposurePercent > 0) && minecraftClient.player.canFreeze())
-                    toSpeak += I18n.get("minecraft_access.player_status.frost", frostExposurePercent);
+                    toSpeak += I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent));
 
                 if (toSpeak.length() == 0)
                     toSpeak += I18n.get("minecraft_access.player_status.no_conditional_status");
@@ -67,8 +67,5 @@ public class PlayerStatus {
                 MainClass.speakWithNarrator(toSpeak, true);
             }
             narrationKey.updateStateForNextTick();
-        } catch (Exception e) {
-            log.error("An error occurred in PlayerStatus.", e);
-        }
     }
 }
