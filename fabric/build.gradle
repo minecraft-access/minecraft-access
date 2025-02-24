@@ -1,8 +1,4 @@
 plugins {
-    // The shadow gradle plugin assists with repackaging a 3rd-party library jar within your own jar
-    // In addition to ensuring that your end-users have the library available when they use your own thing,
-    // it also helps avoid collisions with other things that are also using the same library.
-    // ref: https://gist.github.com/SizableShrimp/949e7c219bfc94487a45226b64ac7749
     alias(libs.plugins.shadow)
 }
 

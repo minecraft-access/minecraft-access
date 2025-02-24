@@ -40,7 +40,8 @@ subprojects {
         }
     }
 
-//do NOT add anything to this block
+    // If you add something to the repositories block
+    // add it to the settings.gradle file for Dependabot
     repositories {
         maven {
             name = 'ParchmentMC'
