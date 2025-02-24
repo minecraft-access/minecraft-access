@@ -34,7 +34,6 @@
     "MerchantScreenAccessor",
     "MinecraftMixin",
     "NarrationElementOutputMixin",
-    "NarrationThunkMixin",
     "OptionsMixin",
     "PageButtonMixin",
     "RecipeBookComponentAccessor",
