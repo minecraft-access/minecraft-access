@@ -8,7 +8,6 @@ dependencies {
     modImplementation libs.fabricLoader
 
     modImplementation libs.jadeFabric
-
     modImplementation libs.architecturyApi
 
     // https://projectlombok.org/setup/gradle
