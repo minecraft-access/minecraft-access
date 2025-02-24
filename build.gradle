@@ -5,7 +5,7 @@ plugins {
     // From developers of architectury: "shouldn't hardcode the loom version, just put *-SNAPSHOT"
     // ref: https://maven.architectury.dev/dev/architectury/architectury-loom/
     id "dev.architectury.loom" version "1.9-SNAPSHOT" apply false
-    id 'com.palantir.git-version' version '3.0.0'
+    id 'com.palantir.git-version' version '3.1.0'
 }
 
 def git = versionDetails()
