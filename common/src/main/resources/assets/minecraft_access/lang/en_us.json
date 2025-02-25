@@ -249,7 +249,7 @@
   "text.autoconfig.minecraft-access.option.features.positionNarratorEnabled": "Enable position narrator",
   "text.autoconfig.minecraft-access.option.features.fishingHarvestEnabled": "Speak fishing harvest",
   "text.autoconfig.minecraft-access.option.features.alwaysSpeakPickedUpItemsEnabled": "Always speak picked up items",
-  "text.autoconfig.minecraft-access.option.features.reportHeldItemsCountWhenChanged": "Report help items count when changed",
+  "text.autoconfig.minecraft-access.option.features.reportHeldItemsCountWhenChanged": "Notify held items count when changed",
   "text.autoconfig.minecraft-access.option.inventoryControls.autoOpenRecipeBook": "Automatically open recipe book",
   "text.autoconfig.minecraft-access.option.inventoryControls.delayMilliseconds": "Delay (milliseconds)",
   "text.autoconfig.minecraft-access.option.inventoryControls.enabled": "Enabled",
