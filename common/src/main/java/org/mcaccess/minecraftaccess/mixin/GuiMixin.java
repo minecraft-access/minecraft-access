@@ -25,7 +25,7 @@ import java.util.List;
  * Narrates titles
  */
 @Mixin(Gui.class)
-public class GuiMixin {
+abstract class GuiMixin {
     @Shadow
     private int toolHighlightTimer;
 
@@ -49,13 +49,11 @@ public class GuiMixin {
      * so we use previousContent to check if the content has changed and need to be narrated.
      */
     @WrapOperation(
-            method = {"Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;I)V", "Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V"},
+            method = "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V")
     )
-    private void speakItemName(ProfilerFiller profiler, Operation<Void> original) {
+    protected void speakItemName(ProfilerFiller profiler, Operation<Void> original) {
         this.minecraft_access$feature.speakHeldItem(this.lastToolHighlight, this.toolHighlightTimer);
-
-
         original.call(profiler);
     }
 
