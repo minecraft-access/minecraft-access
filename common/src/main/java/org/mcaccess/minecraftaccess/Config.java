@@ -108,6 +108,7 @@ public class Config implements ConfigData {
         public boolean playerStatusEnabled = true;
         public boolean positionNarratorEnabled = true;
         public boolean fishingHarvestEnabled = true;
+        public boolean alwaysSpeakPickedUpItemsEnabled = false;
         public boolean reportHeldItemsCountWhenChanged = true;
     }
 

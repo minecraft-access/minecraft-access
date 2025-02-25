@@ -43,7 +43,6 @@
     "RecipeButtonMixin",
     "ScreenAccessor",
     "ScreenMixin",
-    "ScreenNarrationCollectorMixin",
     "SingleItemRecipeAccessor",
     "SlotAccessor",
     "StonecutterScreenAccessor",

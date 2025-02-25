@@ -30,13 +30,12 @@ public abstract class ClientPacketListenerMixin implements TickablePacketListene
     @Inject(at = @At("HEAD"), method = "handleTakeItemEntity")
     public void handleTakeItemEntity(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
         Minecraft client = Minecraft.getInstance();
-        if (client == null) return;
         LocalPlayer player = client.player;
         if (player == null) return;
 
         PacketUtils.ensureRunningOnSameThread(packet, this, client);
         Config.Features config = Config.getInstance().features;
-        if (config.isAlwaysSpeakPickedUpItemsEnabled() || (config.isFishingHarvestEnabled() && player.getMainHandItem().getItem() instanceof FishingRodItem)) {
+        if (config.alwaysSpeakPickedUpItemsEnabled || (config.fishingHarvestEnabled && player.getMainHandItem().getItem() instanceof FishingRodItem)) {
             int cId = packet.getPlayerId();
             int pId = player.getId();
             // Is this item picked by "me" or other players?
