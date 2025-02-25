@@ -59,12 +59,12 @@ public class FluidDetector {
         if (minecraftClient.level == null) return;
         if (minecraftClient.player == null) return;
 
+        config = Config.getInstance().accessMenu.fluidDetector;
+
         BlockPos pos = minecraftClient.player.blockPosition();
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
-
-        loadConfig();
 
         BlockPos startingPointPos = new BlockPos(new Vec3i(posX, posY, posZ));
         BlockPos closestFluidPos = findFluid(minecraftClient, startingPointPos, config.range, water);
@@ -129,9 +129,5 @@ public class FluidDetector {
         }
 
         return null;
-    }
-
-    private void loadConfig() {
-        config = Config.getInstance().accessMenu.fluidDetector;
     }
 }

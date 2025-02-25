@@ -406,10 +406,9 @@ public class MouseUtils {
         if (client == null) return new Coordinates(x, y);
         Window window = client.getWindow();
         if (window == null) return new Coordinates(x, y);
-        Config.MouseSimulation config = Config.getInstance().mouseSimulation;
 
         int realX, realY;
-        if (config.macMouseFix) {
+        if (Config.getInstance().mouseSimulation.macMouseFix) {
             realX = (int) ((x * window.getGuiScale()));
             realY = (int) ((y * window.getGuiScale()));
         } else {

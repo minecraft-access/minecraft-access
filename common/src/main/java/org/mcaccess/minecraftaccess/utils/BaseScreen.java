@@ -66,9 +66,4 @@ public class BaseScreen extends Screen {
         context.drawCenteredString(this.font, this.title, this.width / 2, 15, 16777215);
         super.render(context, mouseX, mouseY, delta);
     }
-
-    @Override
-    public void onClose() {
-        if (this.minecraft != null) this.minecraft.setScreen(previousScreen);
-    }
 }

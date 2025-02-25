@@ -3,8 +3,8 @@ package org.mcaccess.minecraftaccess.features;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.phys.Vec3;
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.DoubleClick;
@@ -38,9 +38,7 @@ import org.slf4j.LoggerFactory;
 public class CameraControls {
     private static final Logger log = LoggerFactory.getLogger(CameraControls.class);
 
-    private static boolean enabled;
-    private static float normalRotatingDeltaAngle;
-    private static float modifiedRotatingDeltaAngle;
+    private static CameraConfig config;
     private static final Interval interval = Interval.defaultDelay();
 
     private static final DoubleClick straightUpDoubleClick;
@@ -52,10 +50,20 @@ public class CameraControls {
         straightDownDoubleClick = new DoubleClick(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().cameraControlsDown));
     }
 
+    record CameraConfig(boolean enabled, float normalRotatingAngle, float modifiedRotatingAngle) {
+        static final float DELTA_90_DEGREES = 600f; // 90 / 0.15
+
+        public CameraConfig(Config.CameraControls config) {
+            this(config.enabled,
+                    DELTA_90_DEGREES / (90 / config.normalRotatingAngle),
+                    DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle));
+        }
+    }
+
     public static void update() {
         if (!interval.isReady()) return;
         loadConfigurations();
-        if (!enabled) return;
+        if (!config.enabled) return;
         keyListener();
     }
 
@@ -63,12 +71,9 @@ public class CameraControls {
      * Loads the configs from config.json
      */
     private static void loadConfigurations() {
-        float delta90Degrees = 600f; // 90 / 0.15
-
         Config.CameraControls config = Config.getInstance().cameraControls;
+        CameraControls.config = new CameraConfig(config);
         interval.setDelay(config.delayMilliseconds, Interval.Unit.Millisecond);
-        normalRotatingDeltaAngle = delta90Degrees / (90 / config.normalRotatingAngle);
-        modifiedRotatingDeltaAngle = delta90Degrees / (90 / config.modifiedRotatingAngle);
     }
 
     /**
@@ -133,7 +138,7 @@ public class CameraControls {
             rotateCameraTo(Orientation.SOUTH);
         }
 
-        float rotateAngle = isLeftAltPressed ? modifiedRotatingDeltaAngle : normalRotatingDeltaAngle;
+        float rotateAngle = isLeftAltPressed ? config.modifiedRotatingAngle : config.normalRotatingAngle;
 
         if (isUpKeyPressed) {
             anyFunctionTriggered = true;
@@ -196,9 +201,9 @@ public class CameraControls {
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
         if (Config.getInstance().features.facingDirectionEnabled) {
-            if (direction.isRotatingHorizontal && horizontalDirection != null)
+            if (direction.isRotatingHorizontal)
                 MainClass.speakWithNarrator(horizontalDirection, true);
-            else if (!direction.isRotatingHorizontal && verticalDirection != null)
+            else if (verticalDirection != null)
                 MainClass.speakWithNarrator(verticalDirection, true);
         }
     }

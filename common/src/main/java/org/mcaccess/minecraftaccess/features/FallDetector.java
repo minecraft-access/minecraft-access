@@ -33,8 +33,7 @@ public class FallDetector {
         clock = Clock.systemDefaultZone();
         minecraftClient = Minecraft.getInstance();
         previousTimeInMillis = clock.millis();
-
-        loadConfig();
+        config = Config.getInstance().fallDetector;
     }
 
     public static synchronized FallDetector getInstance() {
@@ -43,7 +42,7 @@ public class FallDetector {
 
     public void update() {
         try {
-            loadConfig();
+            config = Config.getInstance().fallDetector;
 
             if (!config.enabled) return;
 
@@ -129,9 +128,5 @@ public class FallDetector {
         if (!(minecraftClient.level.getBlockState(blockPos).isAir())) return 0;
 
         return 1 + getDepth(blockPos.below(), --maxDepth);
-    }
-
-    private void loadConfig() {
-        config = Config.getInstance().fallDetector;
     }
 }

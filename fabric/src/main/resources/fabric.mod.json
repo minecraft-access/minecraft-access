@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "Minecraft Access",
   "description": "A mod that helps visually impaired players to play Minecraft.",
-   "license": "GNU GPLv3",
+  "license": "GNU GPLv3",
   "icon": "logo-mc-access.png",
   "authors": [
     "Shoaib",
@@ -18,7 +18,7 @@
     "sources": "https://github.com/minecraft-access/minecraft-access",
     "issues": "https://github.com/khanshoaib3/minecraft-access/issues"
   },
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "main": [
       "org.mcaccess.minecraftaccess.fabric.MainClassFabric"

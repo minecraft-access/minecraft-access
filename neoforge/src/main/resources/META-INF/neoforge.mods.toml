@@ -40,10 +40,10 @@ versionRange = "[${jade_neoforge_version},)"
 
 [[dependencies.minecraft_access]]
 modId = "cloth_config"
+reason = "For this mod's config menu"
 type = "required"
 
-[[mixins]]
-config = "minecraft_access.mixins.json"
-
-[[mixins]]
-config = "minecraft_access-compat.mixins.json"
+mixins = [
+    { config = "minecraft_access.mixins.json" },
+    { config = "minecraft_access-compat.mixins.json" }
+]

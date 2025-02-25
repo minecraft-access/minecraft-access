@@ -82,14 +82,6 @@ public class MainClass {
      * @param minecraftClient The current minecraft client object
      */
     public static void clientTickEventsMethod(Minecraft minecraftClient) {
-        try {
-            _clientTickEventsMethod(minecraftClient);
-        } catch (Exception e) {
-            log.error("An error occurred while running Minecraft Access client tick events", e);
-        }
-    }
-
-    private static void _clientTickEventsMethod(Minecraft minecraftClient) {
         Config config = Config.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
@@ -165,7 +157,7 @@ public class MainClass {
 
     public static ScreenReaderInterface getScreenReader() {
         return MainClass.screenReader;
-    } //TODO remove this
+    }
 
     public static void setScreenReader(ScreenReaderInterface screenReader) {
         MainClass.screenReader = screenReader;

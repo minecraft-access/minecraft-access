@@ -2,10 +2,11 @@ package org.mcaccess.minecraftaccess.features;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.sounds.SoundEvents;
-import org.mcaccess.minecraftaccess.Config;
 import net.minecraft.sounds.SoundSource;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
@@ -14,7 +15,7 @@ import org.mcaccess.minecraftaccess.utils.PlayerUtils;
  */
 @Slf4j
 public class PlayerWarnings {
-    private Minecraft minecraftClient;
+    private LocalPlayer player;
 
     private boolean isHealthBelowFirstThreshold;
     private boolean isHealthBelowSecondThreshold;
@@ -25,31 +26,29 @@ public class PlayerWarnings {
     private static final Config.PlayerWarnings config = Config.getInstance().playerWarnings;
 
     public void update() {
-        minecraftClient = Minecraft.getInstance();
-        if (minecraftClient == null) return;
+        Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient.player == null) return;
         if (minecraftClient.screen != null) return;
+        player = minecraftClient.player;
 
-        double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
+        double maxHealth = Math.round((player.getMaxHealth() / 2.0) * 10.0) / 10.0;
         double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
-        double maxAir = Math.round((minecraftClient.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
-        double frostExposurePercent = Math.round((minecraftClient.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
+        double maxAir = Math.round((player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
+        double frostExposurePercent = Math.round((player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
 
         healthWarning(PlayerUtils.getHearts(), maxHealth);
-        if (!minecraftClient.player.isCreative()) {
+        if (!player.isCreative()) {
             hungerWarning(PlayerUtils.getHunger(), maxHunger);
-            airWarning(Math.round((minecraftClient.player.getAirSupply() / 20.0) * 10.0) / 10.0, maxAir);
+            airWarning(Math.round((player.getAirSupply() / 20.0) * 10.0) / 10.0, maxAir);
             frostWarning(frostExposurePercent);
         }
     }
 
     private void healthWarning(double health, double maxHealth) {
-        if (minecraftClient.player == null) return;
-
         if (health <= config.firstHealthThreshold && health > config.secondHealthThreshold && !isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowFirstThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.health_low", health, maxHealth), true);
-            if (config.playSound) minecraftClient.player.playSound(SoundEvents.ANVIL_LAND, 1.0f, 1.0f);
+            if (config.playSound) player.playSound(SoundEvents.ANVIL_LAND, 1.0f, 1.0f);
             playWarningSound();
         }
 
@@ -64,8 +63,6 @@ public class PlayerWarnings {
     }
 
     private void hungerWarning(double hunger, double maxHunger) {
-        if (minecraftClient.player == null) return;
-
         if (hunger <= config.hungerThreshold && hunger > 0 && !isFoodBelowThreshold) {
             isFoodBelowThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.hunger_low", hunger, maxHunger), true);
@@ -77,8 +74,6 @@ public class PlayerWarnings {
 
     private void airWarning(double air, double maxAir) {
         air = Math.max(air, 0.0);
-        if (minecraftClient.player == null) return;
-
         if (air <= config.airThreshold && air > 0 && !isAirBelowThreshold) {
             isAirBelowThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.air_low", air, maxAir), true);
@@ -89,8 +84,6 @@ public class PlayerWarnings {
     }
 
     private void frostWarning(double frostExposurePercent) {
-        if (minecraftClient.player == null) return;
-
         if (frostExposurePercent >= config.frostThreshold && frostExposurePercent < 100 && !isFrostAboveThreshold) {
             isFrostAboveThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.frost_low", frostExposurePercent), true);
@@ -101,7 +94,8 @@ public class PlayerWarnings {
     }
 
     private void playWarningSound() {
-        if (config.playSound)
-            minecraftClient.player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.PLAYERS, 1.0f, 1.0f);
+        if (config.playSound) {
+            player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.PLAYERS, 1.0f, 1.0f);
+        }
     }
 }
