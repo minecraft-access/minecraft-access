@@ -1,4 +1,6 @@
-# Mod Setup
+---
+title: "Mod Setup"
+---
 
 Currently, this mod supports the Windows and Linux operating systems ([help us to port it to macOS](https://github.com/khanshoaib3/minecraft-access/issues/22)).
 The latest version of this mod (as well as other mod dependencies) can be downloaded at the [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest).
@@ -14,18 +16,6 @@ If you know where this tutorial could be improved, please also let us know.
 > They don’t provide help with the installation,
 > but they can give you a little more insight into things that are relevant.
 > If you don't want to read them, skip them and move on, you won't miss anything important.
-
-## Index
-
-1. [Purchase the Game and Download the Launcher](#purchase-the-game-and-download-the-launcher)
-    1. [Purchase the Game](#purchase-the-game)
-    2. [Download the Launcher](#download-the-launcher)
-2. [Choose and Install Your Chosen Mod Loader](#choose-and-install-your-chosen-mod-loader)
-    1. [Install Fabric](#install-fabric)
-    2. [Install NeoForge](#install-neoforge)
-3. [Install Your Mods](#install-your-mods)
-4. [Start the Game](#start-the-game)
-5. [Update the Game and Mods](#update-the-game-and-mods)
 
 ## Purchase the Game and Download the Launcher
 
@@ -75,7 +65,7 @@ Keep going after you’ve logged in, fill in the purchase information, and click
 
 ### Use a Modpack Version of the Mod
 
-The community member [@BrailleBennett](https://github.com/BrailleBennett) has created a modpack that contains everything you need to get started with Minecraft. If you wish to use this pack, go to its [guide file](/docs/setup/modpack.md). There is no need to return to this guide after you finish that one, as it is not relevant to the pack.
+The community member [@BrailleBennett](https://github.com/BrailleBennett) has created a modpack that contains everything you need to get started with Minecraft. If you wish to use this pack, go to its [guide file]({{% relref "./modpack" %}}). There is no need to return to this guide after you finish that one, as it is not relevant to the pack.
 This is usually seen as the easiest and most convenient option for new users.
 
 ### Download the Launcher
@@ -144,7 +134,7 @@ Start the installer, a window pops up for you to choose the installation configu
 ### Install NeoForge
 
 NeoForge is for advanced users who wish to heavily modify their game; the installation process for it is more complex.
-See the [advanced guide](/docs/setup/advanced.md) for some more detailed instructions for installing Java, NeoForge,
+See the [advanced guide]({{% relref "./advanced" %}}) for some more detailed instructions for installing Java, NeoForge,
 and having more than one mod directory.
 
 ## Install Your Mods
@@ -166,7 +156,7 @@ you can also manage them automatically with an extra application such as [Modrin
 
 Now let's download mod files.
 To download this mod and the dependencies of this mod, it is recommended you download them from the Minecraft Access's official [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest), where you can find download links of suitable versions of the required mods, under the `Mod Version Compatibility` section of each release.
-By the way, you may be interested in the mods provided in the [good resources](/docs/good-resources.md#quality-of-life-mods) page of the documentation, they are good mods that our visually impaired users have found and tested through practice.
+By the way, you may be interested in the mods provided in the [good resources]({{% relref "/good-resources#quality-of-life-mods" %}}) page of the documentation, they are good mods that our visually impaired users have found and tested through practice.
 
 After all the mods you want are downloaded, you can move on to putting them into the right location for the mod loader to recognize them.
 The default path on Windows is: `%appdata%\.minecraft\mods` (the `%appdata%` is a shortcut for `C:\Users\username\AppData\Roaming`), you can directly paste it into File Explorer then press the enter key to jump to it or paste it into the run box accessed with the Windows+R keys and click enter.
@@ -207,7 +197,7 @@ If the game crashes and a bunch of error logs pop up,
 the biggest probability is that there is an incompatibility between the mod files and mod loader,
 or between the mod files and game version.
 Please read the [Update the Game and Mods](#update-the-game-and-mods) section.
-And here is a [complex self-help FAQ](/docs/faq.md#self-help-guide-for-abnormal-situations)
+And here is a [complex self-help FAQ]({{% relref "/faq#self-help-guide-for-abnormal-situations" %}})
 for you to address the problem,
 from not being able to hear the narration to a full game crash.
 
@@ -256,13 +246,3 @@ which is challenging to show in the error log because it is hard to predict.
 For this type of error, there is a simple yet cumbersome method for all modded games:
 move all mod files out of the Mods folder and into a temporary folder,
 then add them back to the Mods folder one by one, try to start the game every time you move back a file.
-
-## Other Pages
-
-* [Home](/README.md)
-* [Features](/docs/features.md)
-* [Keybindings](/docs/keybindings.md)
-* [Configuration](/docs/config.md)
-* [Sound Effects](https://html-preview.github.io/?url=https://github.com/khanshoaib3/minecraft-access/blob/1.21/docs/sounds.html)
-* [FAQ](/docs/faq.md)
-* [Good Resources](/docs/good-resources.md)

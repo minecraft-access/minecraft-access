@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.sounds.SoundEvents;
 import org.mcaccess.minecraftaccess.Config;
+import net.minecraft.sounds.SoundSource;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
@@ -49,12 +50,13 @@ public class PlayerWarnings {
             isHealthBelowFirstThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.health_low", health, maxHealth), true);
             if (config.playSound) minecraftClient.player.playSound(SoundEvents.ANVIL_LAND, 1.0f, 1.0f);
+            playWarningSound();
         }
 
         if (health <= config.secondHealthThreshold && health > 0 && isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowSecondThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.health_low", health, maxHealth), true);
-            if (config.playSound) minecraftClient.player.playSound(SoundEvents.ANVIL_LAND, 1.0f, 1.0f);
+            playWarningSound();
         }
 
         if (isHealthBelowFirstThreshold && health > config.firstHealthThreshold) isHealthBelowFirstThreshold = false;
@@ -67,7 +69,7 @@ public class PlayerWarnings {
         if (hunger <= config.hungerThreshold && hunger > 0 && !isFoodBelowThreshold) {
             isFoodBelowThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.hunger_low", hunger, maxHunger), true);
-            if (config.playSound) minecraftClient.player.playSound(SoundEvents.ANVIL_LAND, 1.0f, 1.0f);
+            playWarningSound();
         }
 
         if (isFoodBelowThreshold && hunger > config.hungerThreshold) isFoodBelowThreshold = false;
@@ -80,7 +82,7 @@ public class PlayerWarnings {
         if (air <= config.airThreshold && air > 0 && !isAirBelowThreshold) {
             isAirBelowThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.air_low", air, maxAir), true);
-            if (config.playSound) minecraftClient.player.playSound(SoundEvents.ANVIL_LAND, 1.0f, 1.0f);
+            playWarningSound();
         }
 
         if (isAirBelowThreshold && air > config.airThreshold) isAirBelowThreshold = false;
@@ -92,9 +94,14 @@ public class PlayerWarnings {
         if (frostExposurePercent >= config.frostThreshold && frostExposurePercent < 100 && !isFrostAboveThreshold) {
             isFrostAboveThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.frost_low", frostExposurePercent), true);
-            if (config.playSound) minecraftClient.player.playSound(SoundEvents.ANVIL_LAND, 1.0f, 1.0f);
+            playWarningSound();
         }
 
         if (isFrostAboveThreshold && frostExposurePercent < config.frostThreshold) isFrostAboveThreshold = false;
+    }
+
+    private void playWarningSound() {
+        if (config.playSound)
+            minecraftClient.player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.PLAYERS, 1.0f, 1.0f);
     }
 }

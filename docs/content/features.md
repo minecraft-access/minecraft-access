@@ -1,4 +1,6 @@
-# Minecraft Access Features
+---
+title: "Features"
+---
 
 This page contains details for all the features that are currently in the mod.
 
@@ -7,34 +9,6 @@ If you have any suggestions on improvements to existing features or about a new 
 
 There is also a page for [viewing all sound effects](https://html-preview.github.io/?url=https://github.com/khanshoaib3/minecraft-access/blob/1.21/docs/sounds.html) used in this mod.
 
-## Table Of Contents
-
-1. [Camera Controls](#camera-controls)
-2. [Mouse Simulation](#mouse-simulation)
-3. [Read Crosshair](#read-crosshair)
-    * [Relative Position Sound Cue](#relative-position-sound-cue)
-    * [Partial Speaking](#partial-speaking)
-4. [Inventory Controls](#inventory-controls)
-5. [Points of Interest](#points-of-interest)
-    * [POI Locking](#poi-locking)
-    * [POI Marking](#poi-marking)
-6. [Fall Detector](#fall-detector)
-7. [Access Menu](#access-menu)
-8. [Play Status](#player-status)
-    * [Position Narrator](#position-narrator)
-    * [Health n Hunger](#health-n-hunger)
-    * [Player Warnings](#player-warnings)
-9. [Book Editing](#book-editing)
-10. [Speak Text Editing](#speak-text-editing)
-11. [Other Small Features](#other-small-features)
-    * [Speak held item](#speak-held-item)
-    * [Biome Indicator](#biome-indicator)
-    * [XP Indicator](#xp-indicator)
-    * [Speak Harvest Of Fishing](#speak-picked-up-items-while-holding-fishing-rod)
-    * [Speak Chat Messages](#speak-chat-messages)
-    * [Speak Action Bar Updates](#speak-action-bar-messages)
-    * [I18N Fallback Mechanism](#i18n-fallback-mechanism)
-
 ## Camera Controls
 
 Like most 3D games, you can rotate the camera 360 degrees freely in Minecraft with the mouse, and the direction you look is the direction to go forward while you press the W key.
@@ -42,7 +16,7 @@ This feature allows you to control the camera (your in-game facing direction and
 The mod will automatically report the current direction as the camera moves,
 such as `North`, `South East`, `Up`, `Down`, and `Straight`.
 
-See also: [Keybindings](/docs/keybindings.md#camera-controls), [Configuration](/docs/config.md#camera-controls)
+See also: [Keybindings]({{% relref "/keybindings#camera-controls" %}}), [Configuration]({{% relref "/config#camera-controls" %}})
 
 ## Mouse Simulation
 
@@ -54,7 +28,7 @@ key and `Pick Block` key set to the default mouse keys.
 This feature will only simulate mouse operations,
 not directly execute the attack or place operation; it needs the mouse key bindings as a medium.
 
-See also: [Keybindings](/docs/keybindings.md#mouse-simulation), [Configuration](/docs/config.md#mouse-simulation)
+See also: [Keybindings]({{% relref "/keybindings#mouse-simulation" %}}), [Configuration]({{% relref "/config#mouse-simulation" %}})
 
 ## Read Crosshair
 
@@ -76,7 +50,7 @@ such as `Ripe Wheat Crops Up`, `White Sheep Shearable`, `Opened Oak Door South`,
 
 According to the [wiki](https://minecraft.wiki/w/Breaking#Basics_of_breaking), the breaking distance in survival mode is 4.5 blocks (in Java Edition), but the `ReadCrosshair` feature will speak targets at most 6 blocks away. So if the mod says something, but you can't interact with it, move forward a little closer to it.
 
-See also: [Configuration](/docs/config.md#read-crosshair)
+See also: [Configuration]({{% relref "/config#read-crosshair" %}})
 
 ### Relative Position Sound Cue
 
@@ -86,7 +60,7 @@ Volume to represent distance, the louder the sound, the closer the distance.
 Pitch to represent elevation, the higher the sound, the higher the target relative to you.
 You can turn off this feature or change the sound volume in config.
 
-See also: [Configuration](/docs/config.md#relative-position-sound-cue)
+See also: [Configuration]({{% relref "/config#relative-position-sound-cue" %}})
 
 ### Partial Speaking
 
@@ -97,7 +71,7 @@ For example,
 you can disable the announcement of grass blocks from the narration
 by setting the mode to blacklist and adding grass as a phrase.
 
-See also: [Configuration](/docs/config.md#partial-speaking)
+See also: [Configuration]({{% relref "/config#partial-speaking" %}})
 
 ## Inventory Controls
 
@@ -125,7 +99,7 @@ Please note that:
 3. After you put things into an [Anvil](https://minecraft.wiki/w/Anvil), the cursor will be automatically focused onto the rename input text field, all you need to do is press the `Enter` key to go back to slot selection.
 4. Servers will build custom inventory screens to serve as special option menus, some servers like hypixel will continuously change the option (item) names, which will cause this mod to continuously speak the changed item name. Disable the `Speak Focused Slot Changes` config to solve this problem.
 
-See also: [Configuration](/docs/config.md#inventory-controls), [Keybindings](/docs/keybindings.md#inventory-controls)
+See also: [Configuration]({{% relref "/config#inventory-controls" %}}), [Keybindings]({{% relref "/keybindings#inventory-controls" %}})
 
 ## Points of Interest
 
@@ -138,7 +112,7 @@ Precious blocks like raw ores can be seen at a glance by sighted players, but vi
 By the same logic, entities (players, animals, monsters) are movable, so scanning and locking onto them helps you get close to and interact with them.
 Be aware that if you keep any menu screen open, the mod will stop scanning and notifying you of entities for a cleaner screen narration, which may get you in danger if there are monsters around you.
 
-See also: [Configuration](/docs/config.md#point-of-interest), [Keybindings](/docs/keybindings.md#point-of-interest)
+See also: [Configuration]({{% relref "/config#point-of-interest" %}}), [Keybindings]({{% relref "/keybindings#point-of-interest" %}})
 
 ### POI Locking
 
@@ -156,7 +130,7 @@ Note that:
 When you start drawing the bow, you will automatically lock onto the nearest hostile mob. A sound will play indicating if you can hit your target and how far the bow has been drawn.
 If the sound playing is a piano, you can shoot the target, and if it's a bass, you can't shoot the target. The sound will increase in pitch 3 times as you draw the bow, stopping when the bow is fully drawn.
 
-See also: [Configuration](/docs/config.md#entitiesblocks-locking), [Keybindings](/docs/keybindings.md#point-of-interest)
+See also: [Configuration]({{% relref "/config#entitiesblocks-locking" %}}), [Keybindings]({{% relref "/keybindings#point-of-interest" %}})
 
 ### POI Marking
 
@@ -165,14 +139,14 @@ You can mark the type while you’re pointing at it (with your crosshair).
 You can set the mod to only scan and notify for marked types
 or suppress scanning and notifying for pre-configured types.
 
-See also: [Configuration](/docs/config.md#entitiesblocks-marking), [Keybindings](/docs/keybindings.md#point-of-interest)
+See also: [Configuration]({{% relref "/config#entitiesblocks-marking" %}}), [Keybindings]({{% relref "/keybindings#point-of-interest" %}})
 
 ## Fall Detector
 
 This feature will alert you with a foot stomping sound cue when you're near the edge of a big drop.
 It will play a sound effect for every location that meets the set threshold distance, the louder the sound, the closer you are to the edge.
 
-See also: [Configuration](/docs/config.md#fall-detector)
+See also: [Configuration]({{% relref "/config#fall-detector" %}})
 
 ## Access Menu
 
@@ -195,9 +169,9 @@ so you will need to bind the ones you want to use yourself.
 | 9. Refresh screen Reader              | Refresh the screen Reader                                                                                                                                                                    |
 | 0. Open Config Menu                   | Opens the Config Menu which can be used to change the configs of this mod that take effect immediately                                                                                       |
 
-See also: [Configuration](/docs/config.md#access-menu), [Keybindings](/docs/keybindings.md#access-menu)
+See also: [Configuration]({{% relref "/config#access-menu" %}}), [Keybindings]({{% relref "/keybindings#access-menu" %}})
 
-## Player Status
+## Player Condition
 
 Some features that help you understand the status of the character you control.
 
@@ -205,13 +179,13 @@ Some features that help you understand the status of the character you control.
 
 Minecraft has a built-in [absolute coordinate system](https://minecraft.wiki/w/Coordinates), x-axis for the longitude, z for the latitude, and y for the elevation. This feature provides keystrokes to read out coordinates.
 
-See also: [Configuration](/docs/config.md#position-narrator), [Keybindings](/docs/keybindings.md#position-narrator)
+See also: [Configuration]({{% relref "/config#position-narrator" %}}), [Keybindings]({{% relref "/keybindings#position-narrator" %}})
 
-### Health n Hunger
+### Player Status
 
-This feature adds a key to speak your health and hunger.
+This feature adds a key to speak your current status, which includes things like health, hunger, armor, air remaining (if in water), etc.
 
-See also: [Configuration](/docs/config.md#health-n-hunger), [Keybindings](/docs/keybindings.md#health-n-hunger)
+See also: [Configuration]({{% relref "/config#health-n-hunger" %}}), [Keybindings]({{% relref "/keybindings#player-status" %}})
 
 ### Player Warnings
 
@@ -222,7 +196,7 @@ You'll hear something like `Warning, Health is {current health}`.
 If you enable the `Play Sound` config, you'll also hear a sound cue along with the warning words.
 You may also want to learn about [the various damage types](https://minecraft.wiki/w/Damage) in the game.
 
-See also: [Configuration](/docs/config.md#player-warnings)
+See also: [Configuration]({{% relref "/config#player-warnings" %}})
 
 ## Book Editing
 
@@ -230,7 +204,7 @@ The [Book Editing Screen](https://minecraft.wiki/w/Book_and_Quill#Writing) is a 
 We've added some not re-mappable keys and narration cues to make it 100% accessible.
 This section as a brief guide on how to use this screen, listing the keys corresponding to the functions.
 
-See also: [Keybindings](/docs/keybindings.md#book-editing)
+See also: [Keybindings]({{% relref "/keybindings#book-editing" %}})
 
 ## Speak Text Editing
 
@@ -246,19 +220,19 @@ The mod also simplifies the original [command](https://minecraft.wiki/w/Commands
 The content of one command suggestion narration will be like `{the order of focused suggestion}x{total number of suggestions} {suggestion} selected`,
 the format can be customized in the config.
 
-See also: [Configuration](/docs/config.md#other-configurations)
+See also: [Configuration]({{% relref "/config#other-configurations" %}})
 
 ## Other Small Features
 
 Some small features that are automatically triggered based on your actions.
 
-See also: [Configuration](/docs/config.md#other-configurations)
+See also: [Configuration]({{% relref "/config#other-configurations" %}})
 
 ### Speak Held Item
 
 When you switch held items, speak the name and number of items in your hand (main hand only).
 The item [durability](https://minecraft.wiki/w/Durability) information is included.
-If you feel that continuous item count reporting is annoying, you can disable it in the [configuration](/docs/config.md#other-configurations).
+If you feel that continuous item count reporting is annoying, you can disable it in the [configuration]({{% relref "/config#other-configurations" %}}).
 
 ### Biome Indicator
 
@@ -281,7 +255,7 @@ you can turn off showing chat messages in the original `Chat Settings...` option
 or press `P`
 to open the [Social Interactions Screen](https://minecraft.wiki/w/Social_interactions) to mute particular players.
 
-See also: [Keybindings](/docs/keybindings.md#speak-chat-messages)
+See also: [Keybindings]({{% relref "/keybindings#speak-chat-messages" %}})
 
 ### Speak Action Bar Messages
 
@@ -290,7 +264,7 @@ usually they are used as server announcements or for showing mod-specific inform
 for example, in hypixel it shows extra `health, defense, mana` values of players.
 When you feel like the mod is repeating action bar messages,
 that's because the messages are partially updated but the mod will speak the whole sentence,
-try enabling the `Only Speak Action Bar Updates` config in the [configuration](/docs/config.md#other-configurations)
+try enabling the `Only Speak Action Bar Updates` config in the [configuration]({{% relref "/config#other-configurations" %}})
 and find what you like the most.
 
 ### I18N Fallback Mechanism
@@ -300,7 +274,3 @@ This mod has a fallback mechanism for I18n in case it fails on unsupported langu
 If any text is not translated to your language in I18N yet, the mod will use the English version instead.
 Setting the game to your familiar language is recommended, even if it's not supported by this mod,
 since you can still benefit from the translation of the game's original text, such as the names of blocks or entities.
-
-## Other Pages
-
-* [Home](/README.md)

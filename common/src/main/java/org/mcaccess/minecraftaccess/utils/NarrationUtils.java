@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -154,7 +155,8 @@ public class NarrationUtils {
     }
 
     public static String narrateNumber(double d) {
-        return d >= 0 ? String.valueOf(d) : I18n.get("minecraft_access.other.negative", -d);
+        DecimalFormat df = new DecimalFormat();
+        return d >= 0 ? String.valueOf(df.format(d)) : I18n.get("minecraft_access.other.negative", df.format(-d));
     }
 
     public static String narrateRelativePositionOfPlayerAnd(BlockPos blockPos) {

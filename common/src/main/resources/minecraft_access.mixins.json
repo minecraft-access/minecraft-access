@@ -7,6 +7,7 @@
     "AbstractContainerScreenAccessor",
     "AbstractRecipeBookScreenAccessor",
     "AbstractWidgetAccessor",
+    "AdvancementToastAccessor",
     "AnvilScreenAccessor",
     "AnvilScreenMixin",
     "BaseSpawnerAccessor",
@@ -42,16 +43,19 @@
     "RecipeButtonMixin",
     "ScreenAccessor",
     "ScreenMixin",
+    "ScreenNarrationCollectorMixin",
+    "SingleItemRecipeAccessor",
     "SlotAccessor",
     "StonecutterScreenAccessor",
+    "SystemToastAccessor",
     "TamableAnimalMixin",
     "TextFieldHelperAccessor",
-    "TextFieldHelperMixin"
+    "TextFieldHelperMixin",
+    "ToastManagerMixin",
+    "TutorialToastAccessor",
+    "WinScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "SingleItemRecipeAccessor"
-  ]
+  }
 }
