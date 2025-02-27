@@ -11,8 +11,8 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.FluidDetectorConfigMap;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 /**
@@ -20,8 +20,7 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
  */
 @Slf4j
 public class FluidDetector {
-    private int range;
-    private float volume;
+    private Config.AccessMenu.FluidDetector config;
 
     /**
      * Finds the closest water source and plays a sound at its position.
@@ -60,15 +59,15 @@ public class FluidDetector {
         if (minecraftClient.level == null) return;
         if (minecraftClient.player == null) return;
 
+        config = Config.getInstance().accessMenu.fluidDetector;
+
         BlockPos pos = minecraftClient.player.blockPosition();
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
 
-        loadConfigurations();
-
         BlockPos startingPointPos = new BlockPos(new Vec3i(posX, posY, posZ));
-        BlockPos closestFluidPos = findFluid(minecraftClient, startingPointPos, this.range, water);
+        BlockPos closestFluidPos = findFluid(minecraftClient, startingPointPos, config.range, water);
         if (closestFluidPos == null) {
             log.debug("Unable to find closest fluid source");
             MainClass.speakWithNarrator(I18n.get("minecraft_access.other.not_found"), true);
@@ -77,7 +76,7 @@ public class FluidDetector {
 
         log.debug("{FluidDetector} playing sound at %dx %dy %dz".formatted(closestFluidPos.getX(), closestFluidPos.getY(), closestFluidPos.getZ()));
         minecraftClient.level.playSound(minecraftClient.player, closestFluidPos, SoundEvents.ITEM_PICKUP,
-                SoundSource.BLOCKS, this.volume, 1f);
+                SoundSource.BLOCKS, config.volume, 1f);
 
         String posDifference = NarrationUtils.narrateRelativePositionOfPlayerAnd(closestFluidPos);
         String name = minecraftClient.level.getBlockState(closestFluidPos).getBlock().getName().getString();
@@ -130,11 +129,5 @@ public class FluidDetector {
         }
 
         return null;
-    }
-
-    private void loadConfigurations() {
-        FluidDetectorConfigMap map = FluidDetectorConfigMap.getInstance();
-        this.range = map.getRange();
-        this.volume = map.getVolume();
     }
 }

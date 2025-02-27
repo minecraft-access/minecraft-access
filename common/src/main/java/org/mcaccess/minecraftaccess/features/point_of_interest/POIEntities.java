@@ -14,23 +14,21 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
-import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
+import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Scans the area for entities, groups them and plays a sound at their location.
  */
 @Slf4j
 public class POIEntities {
-    private int range;
-    private boolean playSound;
-    private float volume;
+    private Config.POI.Entities config;
     private final Interval interval = Interval.defaultDelay();
-    private boolean enabled;
 
     private static final POIEntities INSTANCE = new POIEntities();
     private @Nullable Class<? extends Entity> marked = null;
@@ -38,15 +36,28 @@ public class POIEntities {
     public final POIGroup<Entity> hostileGroup = new POIGroup<>(
             SoundEvents.NOTE_BLOCK_BELL.value(),
             2f,
-            entity -> entity instanceof Monster || entity instanceof NeutralMob monster && (monster.isAngry() || Minecraft.getInstance().player.getUUID().equals(monster.getPersistentAngerTarget()) || Minecraft.getInstance().player.getUUID().equals(monster.getLastHurtByMob()))
+            entity -> switch (entity) {
+                case Monster ignored -> true;
+                case NeutralMob mob -> {
+                    if (mob.isAngry()) {
+                        // Logic borrowed from NeutralMob.isAngryAt()
+                        UUID playerId = WorldUtils.getClientPlayer().getUUID();
+                        if (playerId.equals(mob.getPersistentAngerTarget())) yield true;
+                        if (mob.getLastHurtByMob() != null && playerId.equals(mob.getLastHurtByMob().getUUID()))
+                            yield true;
+                    }
+                    yield false;
+                }
+                default -> false;
+            }
     );
 
     @SuppressWarnings("unchecked")
-    final POIGroup<Entity>[] groups = new POIGroup[] {
+    final POIGroup<Entity>[] groups = new POIGroup[]{
             new POIGroup<Entity>(// Your Pets
                     SoundEvents.NOTE_BLOCK_FLUTE.value(),
                     1f,
-                    entity -> entity instanceof TamableAnimal pet && Minecraft.getInstance().player.getUUID().equals(pet.getOwnerUUID())
+                    entity -> entity instanceof TamableAnimal pet && pet.isOwnedBy(WorldUtils.getClientPlayer())
             ),
             new POIGroup<Entity>(// Other Pets
                     SoundEvents.NOTE_BLOCK_COW_BELL.value(),
@@ -86,22 +97,21 @@ public class POIEntities {
     }
 
     private POIEntities() {
-        loadConfigurations();
+        loadConfig();
     }
 
     public void update(boolean isMarking, Entity markedEntity) {
         if (isMarking) setMarked(markedEntity);
-        loadConfigurations();
+        loadConfig();
 
-        if (!enabled) return;
+        if (!config.enabled) return;
         if (!interval.isReady()) return;
 
-        Minecraft minecraftClient = Minecraft.getInstance();
+        Minecraft client = Minecraft.getInstance();
 
-        if (minecraftClient == null) return;
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.screen != null) return; //Prevent running if any screen is opened
+        if (client.player == null) return;
+        if (client.level == null) return;
+        if (client.screen != null) return; //Prevent running if any screen is opened
 
         log.debug("POIEntities started.");
 
@@ -109,8 +119,8 @@ public class POIEntities {
             group.clear();
         }
 
-        AABB scanBox = minecraftClient.player.getBoundingBox().inflate(range, range, range);
-        List<Entity> entities = minecraftClient.level.getEntities(minecraftClient.player, scanBox);
+        AABB scanBox = client.player.getBoundingBox().inflate(config.range, config.range, config.range);
+        List<Entity> entities = client.level.getEntities(client.player, scanBox);
 
         for (POIGroup<Entity> group : groups) {
             entities.removeIf(group::add);
@@ -118,7 +128,7 @@ public class POIEntities {
 
         for (POIGroup<Entity> group : groups) {
             for (Entity entity : group.getItems()) {
-                if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled() && !(marked == null || marked.isInstance(entity))) {
+                if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled && !(marked == null || marked.isInstance(entity))) {
                     continue;
                 }
                 playSoundAt(entity.blockPosition(), group);
@@ -127,21 +137,17 @@ public class POIEntities {
     }
 
     private void playSoundAt(BlockPos pos, POIGroup<Entity> group) {
-        if (!playSound || volume == 0f) return;
+        if (!config.playSound || config.volume == 0f) return;
         log.debug("Play sound at [x:{} y:{} z{}]", pos.getX(), pos.getY(), pos.getZ());
-        group.playSound(pos.getCenter(), volume);
+        group.playSound(pos.getCenter(), config.volume);
     }
 
     /**
      * Loads the configs from config.json
      */
-    private void loadConfigurations() {
-        POIEntitiesConfigMap map = POIEntitiesConfigMap.getInstance();
-        this.enabled = map.isEnabled();
-        this.range = map.getRange();
-        this.playSound = map.isPlaySound();
-        this.volume = map.getVolume();
-        this.interval.setDelay(map.getDelay(), Interval.Unit.Millisecond);
+    private void loadConfig() {
+        config = Config.getInstance().poi.entities;
+        interval.setDelay(config.delay, Interval.Unit.Millisecond);
     }
 
     private void setMarked(@Nullable Entity entity) {

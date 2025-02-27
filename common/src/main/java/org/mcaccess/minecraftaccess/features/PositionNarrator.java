@@ -1,11 +1,11 @@
 package org.mcaccess.minecraftaccess.features;
 
+import org.mcaccess.minecraftaccess.Config;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
@@ -37,7 +37,7 @@ public class PositionNarrator {
     }
 
     public void update() {
-        if (!OtherConfigsMap.getInstance().isPositionNarratorEnabled()) return;
+       if (!Config.getInstance().features.positionNarratorEnabled) return;
 
         Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient == null) return;
