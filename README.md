@@ -46,9 +46,10 @@ Any type of contribution is welcome:
 ## License
 
 This mod as well as other relative things like documentation are distributed under the [GPL-3.0 license](https://github.com/minecraft-access/minecraft-access?tab=GPL-3.0-1-ov-file#readme).
-Here are licenses of modules that this mod packages into the jar file for convenience:
+Here are licenses of modules that this mod packages into its jar file for distribution convenience:
 
 - **architectury-api**: [GNU Lesser General Public License v3.0](https://github.com/architectury/architectury-api/blob/1.21.4/LICENSE.md)
 - **fabric-api**: [Apache License 2.0](https://github.com/FabricMC/fabric/blob/1.21.4/LICENSE)
 - **tolk**: [GNU Lesser General Public License v3.0](https://github.com/dkager/tolk/blob/master/LICENSE.txt)
 - **libspeechdwrapper**: [No license specified](https://github.com/khanshoaib3/libspeechdwrapper)
+- **nvdaControllerClient64.dll**: [GNU LESSER GENERAL PUBLIC LICENSE](https://github.com/nvaccess/nvda/blob/master/extras/controllerClient/license.txt)

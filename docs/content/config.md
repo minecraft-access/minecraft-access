@@ -5,13 +5,12 @@ title: "Configuration"
 This page contains all the configuration that controls the features on-off and behavior.
 
 The configuration can be modified in two ways: via the config menu or directly editing the configuration file.
-The `Config Menu` can be opened via opening the `Access Menu` (press F4) then click `Open Config Menu` button.
-The configuration file (named as `config.json`) can be found in the `{minecraft directory}/config/minecraft_access/` directory.
+The `Config Menu` can be opened via opening the `Access Menu` (press F4) then click `Open Config Menu` button, or through this mod's settings in mod management menu.
+The configuration file (named as `minecraft_access.json`) can be found in the `{minecraft directory}/config` directory.
 You can use Notepad or any text editor to edit the file.
 You can also use online JSON editor like [Json Editor Online](https://jsoneditoronline.org/), [Json Formatter](https://jsonformatter.org/json-editor) or [Code Beautify JSON Online Editor](https://jsonformatter.org/json-editor).
 
-If you want to reset the config back to default values, delete the configuration file while the game is not running,
-or click `Reset Config` button in the `Config Menu`.
+If you want to reset the config back to default values, there are reset buttons aside options in the config menu.
 
 ## Camera Controls
 
@@ -21,12 +20,6 @@ or click `Reset Config` button in the `Config Menu`.
 | Normal Rotating Angle   | 22.5          | The rotation angle when we press the camera moving keys                                       |
 | Modified Rotating Angle | 11.25         | The rotation angle when we press the camera moving keys while holding down the `Left Alt` key |
 | Delay (in milliseconds) | 250           | Cooldown between two feature executions                                                       |
-
-This config is under `Other Configurations` section in the config file and config menu.
-
-| Configuration           | Default Value | Description                                                              |
-|-------------------------|---------------|--------------------------------------------------------------------------|
-| Enable Facing Direction | true          | Whether to automatically speak the current direction as the camera moves |
 
 See also: [Feature Description]({{% relref "/features#camera-controls" %}}), [keybindings]({{% relref "/keybindings#camera-controls" %}})
 
@@ -153,7 +146,7 @@ See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 
 ## Position Narrator
 
-These configs are under `Other Configurations` section in the config file and config menu.
+These configs are under `General` section in the config file and config menu.
 
 | Configuration            | Default Value      | Description                                                                                          |
 |--------------------------|--------------------|------------------------------------------------------------------------------------------------------|
@@ -164,10 +157,10 @@ See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [
 
 ## Player Status
 
-This config is under `Other Configurations` section in the config file and config menu.
+This config is under `Features` section in the config file and config menu.
 
-| Configuration          | Default Value | Description                    |
-|------------------------|---------------|--------------------------------|
+| Configuration       | Default Value | Description                    |
+|---------------------|---------------|--------------------------------|
 | Enable PlayerStatus | true          | Whether to enable this feature |
 
 See also: [Feature Description]({{% relref "/features#player-status" %}}), [keybindings]({{% relref "/keybindings#player-status" %}})
@@ -192,7 +185,6 @@ See also: [Feature Description]({{% relref "/features#player-warnings" %}})
 | Enabled                 | true          | Whether to enable this feature      |
 | Range                   | 6             | Range of drop to scan               |
 | Depth Threshold         | 4             | The threshold for playing the sound |
-| Play Alternate Sound    | true          | Unused                              |
 | Sound Volume            | 0.25          | Volume of the sound cue             |
 | Delay (in milliseconds) | 2500          | Execute at set intervals            |
 
@@ -213,19 +205,25 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybin
 | Range         | 10            | Range of fluid to scan, be careful, the default 10 blocks will already make the game lag for a second or two |
 | Sound Volume  | 0.25          | Volume of the sound cue                                                                                      |
 
-## Other Configurations
+### Features
+
+| Configuration                        | Default Value | Description                                                                                                                                      |
+|--------------------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| Enable Biome Indicator               | true          | Whether to enable [`Biome Indicator`]({{% relref "/features#biome-indicator" %}}) feature                                                        |
+| Enable XP Indicator                  | true          | Whether to enable [`XP Indicator`]({{% relref "/features#xp-indicator" %}}) feature                                                              |
+| Enable Facing Direction              | true          | Whether to automatically speak the current direction as the camera moves                                                                         |
+| Speak Action Bar Messages            | true          | Whether to speak the messages updated in [action bar](https://minecraft.wiki/w/Commands/title), useful when you're in modded multiplayer servers |
+| Only Speak Action Bar Updates        | false         | Only speak changed part of action bar message when the message is partially updated, useful for some mods like Hypixel                           |
+| Speak Harvest Of Fishing             | true          | Whether to speak the harvest of fishing                                                                                                          |
+| Always Speak Picked Up Items         | false         | Whether to speak any items you pick up (this will also enable speaking of fishing harvests)                                                      |
+| Report Held Items Count When Changed | true          | Whether to report the number of held items when it changed                                                                                       |
+
+## General
 
 | Configuration                          | Default Value | Description                                                                                                                                                               |
 |----------------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Enable Biome Indicator                 | true          | Whether to enable [`Biome Indicator`]({{% relref "/features#biome-indicator" %}}) feature                                                                                 |
-| Enable XP Indicator                    | true          | Whether to enable [`XP Indicator`]({{% relref "/features#xp-indicator" %}}) feature                                                                                       |
 | Command Suggestion Narrator Format     | `%dx%d %s`    | The speaking format of the command suggestion, two `%d` represent the order of focused suggestion and total number of suggestions, `%s` represents the suggestion content |
 | Use 12 Hour Time Format                | false         | Whether to use 12 hour time format when speaking the time                                                                                                                 | 
-| Speak Action Bar Messages              | true          | Whether to speak the messages updated in [action bar](https://minecraft.wiki/w/Commands/title), useful when you're in modded multiplayer servers                          |
-| Only Speak Action Bar Updates          | false         | Only speak changed part of action bar message when the message is partially updated, useful for some mods like Hypixel                                                    |
-| Speak Harvest Of Fishing               | true          | Whether to speak the harvest of fishing                                                                                                                                   |
-| Always Speak Picked Up Items           | false         | Whether to speak any items you pick up (this will also enable speaking of fishing harvests)                                                                                |
-| Report Held Items Count When Changed   | true          | Whether to report the number of held items when it changed                                                                                                                |
 | Enable Menu Fix                        | true          | Whether to reset the cursor position when opening a menu (to prevent speak out unnecessary content)                                                                       |
 | Debug Mode                             | true          | Developer config, whether to print debug messages into log                                                                                                                |
 | Multiple Click Speed (in milliseconds) | 750           | The maximum time interval between two keystrokes in multiple click operations like `double-click`                                                                         |
