@@ -23,6 +23,7 @@ dependencies {
     // Unit test dependencies
     testImplementation libs.junitJupiter
     testImplementation libs.junitJupiterParams
+    testRuntimeOnly libs.junitPlatformLauncher
     testImplementation libs.assertjCore
     testImplementation libs.mockitoCore
     testImplementation libs.mockitoJunitJupiter
