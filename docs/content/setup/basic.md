@@ -2,8 +2,8 @@
 title: "Mod Setup"
 ---
 
-Currently, this mod supports the Windows and Linux operating systems ([help us to port it to macOS](https://github.com/khanshoaib3/minecraft-access/issues/22)).
-The latest version of this mod (as well as other mod dependencies) can be downloaded at the [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest).
+Currently, this mod supports the Windows and Linux operating systems ([help us to port it to macOS](https://github.com/minecraft-access/minecraft-access/issues/22)).
+The latest version of this mod (as well as other mod dependencies) can be downloaded at the [releases page](https://github.com/minecraft-access/minecraft-access/releases/latest).
 
 ## Tutorial for Beginners: From Purchasing the Game To Installing This Mod
 
@@ -117,7 +117,7 @@ just below the `Download for Windows` button.
 Start the installer, a window pops up for you to choose the installation configurations:
 
 1. The `Client` tab is selected by default, don't change it.
-2. The first combo box is for selecting the game version you want to install, please refer to the current game version that is supported by this mod on the [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest) (under the `Mod Version Compatibility` section), and change the combo box to select that game version.
+2. The first combo box is for selecting the game version you want to install, please refer to the current game version that is supported by this mod on the [releases page](https://github.com/minecraft-access/minecraft-access/releases/latest) (under the `Mod Version Compatibility` section), and change the combo box to select that game version.
 3. Next, there is a checkbox for showing game snapshot versions; you can ignore it.
 4. The second combo box is for selecting the Fabric loader version, the latest version is selected by default, you should also not touch this either.
 5. Then there is an input field for specifying the installation location,
@@ -155,7 +155,7 @@ This guide will describe how to download and install mods manually;
 you can also manage them automatically with an extra application such as [Modrinth](https://modrinth.com/app) or [CurseForge for Windows](https://www.curseforge.com/download/app).
 
 Now let's download mod files.
-To download this mod and the dependencies of this mod, it is recommended you download them from the Minecraft Access's official [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest), where you can find download links of suitable versions of the required mods, under the `Mod Version Compatibility` section of each release.
+To download this mod and the dependencies of this mod, it is recommended you download them from the Minecraft Access's official [releases page](https://github.com/minecraft-access/minecraft-access/releases/latest), where you can find download links of suitable versions of the required mods, under the `Mod Version Compatibility` section of each release.
 By the way, you may be interested in the mods provided in the [good resources]({{% relref "/good-resources#quality-of-life-mods" %}}) page of the documentation, they are good mods that our visually impaired users have found and tested through practice.
 
 After all the mods you want are downloaded, you can move on to putting them into the right location for the mod loader to recognize them.

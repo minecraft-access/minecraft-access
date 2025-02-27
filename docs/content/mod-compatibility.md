@@ -37,7 +37,7 @@ Compatibility For 1.20.6
 Compatibility For 1.20.4
 ---------------------------
 
-Haven't changed since [1.5.0+1.20.4](https://github.com/khanshoaib3/minecraft-access/releases/tag/v1.5.0-1.20) (released on 2024 Jan 16).
+Haven't changed since [1.5.0+1.20.4](https://github.com/minecraft-access/minecraft-access/releases/tag/v1.5.0-1.20) (released on 2024 Jan 16).
 
 * Minecraft: 1.20.4 ([read setup guide]({{% relref "/setup/basic" %}}))
 * Fabric Loader: >=0.15.1 ([download Fabric Loader](https://fabricmc.net/use/installer/))
@@ -48,7 +48,7 @@ Haven't changed since [1.5.0+1.20.4](https://github.com/khanshoaib3/minecraft-ac
 Compatibility For 1.20.1
 ---------------------------
 
-Haven't changed since [1.4.1+1.20.1](https://github.com/khanshoaib3/minecraft-access/releases/tag/v1.4.1-1.20.1) (released on 2023 Dec 13).
+Haven't changed since [1.4.1+1.20.1](https://github.com/minecraft-access/minecraft-access/releases/tag/v1.4.1-1.20.1) (released on 2023 Dec 13).
 
 * Minecraft: 1.20.1 ([read setup guide]({{% relref "/setup/basic" %}}))
 * Fabric Loader: >=0.14.21 ([download Fabric Loader](https://fabricmc.net/use/installer/))
@@ -59,7 +59,7 @@ Haven't changed since [1.4.1+1.20.1](https://github.com/khanshoaib3/minecraft-ac
 Compatibility For 1.19.3
 ---------------------------
 
-Haven't changed since [1.0.1-beta.2 for 1.19.3](https://github.com/khanshoaib3/minecraft-access/releases/tag/v1.0.1-beta.2) (released on 2023 June 18).
+Haven't changed since [1.0.1-beta.2 for 1.19.3](https://github.com/minecraft-access/minecraft-access/releases/tag/v1.0.1-beta.2) (released on 2023 June 18).
 
 * Minecraft: 1.19.3 ([read setup guide]({{% relref "/setup/basic" %}}))
 * Fabric Loader: >=0.14.21 ([download Fabric Loader](https://fabricmc.net/use/installer/))

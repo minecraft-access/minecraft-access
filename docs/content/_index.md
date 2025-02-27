@@ -11,10 +11,10 @@ This mod supports:
 
 * Game version `1.21`, `1.20.6`, `1.20.4`, `1.20.1`, `1.19.3`
 * On [Fabric](https://fabricmc.net/use/installer/) and [NeoForge](https://neoforged.net) mod loaders
-* On Windows and Linux operating systems ([Help us port the mod to macOS](https://github.com/khanshoaib3/minecraft-access/issues/22))
+* On Windows and Linux operating systems ([Help us port the mod to macOS](https://github.com/minecraft-access/minecraft-access/issues/22))
 * Works despite the language setting of the game (though the mod-specific narration will [fall back to English]({{% relref "/features#i18n-fallback-mechanism" %}}) if the mod does not support the language yet)
 
-Each version of this mod will be pre-released on [GitHub](https://github.com/khanshoaib3/minecraft-access/releases) and announced in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first as a beta testing stage, after one week of feedback collection, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions) and [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files).
+Each version of this mod will be pre-released on [GitHub](https://github.com/minecraft-access/minecraft-access/releases) and announced in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first as a beta testing stage, after one week of feedback collection, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions) and [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files).
 
 ## Useful Links
 
@@ -37,4 +37,4 @@ Any type of contribution is welcome:
 * Help us [translate]({{% relref "/faq#how-can-i-contribute-to-i18n" %}}) this mod into other languages.
 * Create more text or video tutorials about how to play the game with this mod ([examples]({{% relref "/good-resources#gameplay-with-this-mod" %}})).
 * Make sound effects for this mod.
-* For development contributions, please read [CONTRIBUTING.md](https://github.com/khanshoaib3/minecraft-access/blob/1.21/CONTRIBUTING.md) for more details.
+* For development contributions, please read [CONTRIBUTING.md](https://github.com/minecraft-access/minecraft-access/blob/1.21/CONTRIBUTING.md) for more details.
