@@ -41,4 +41,14 @@ Any type of contribution is welcome:
 * Help us translate this mod into other languages via [Weblate](https://hosted.weblate.org/engage/minecraft-access/).
 * Create more text or video tutorials about how to play the game with this mod ([examples](https://docs.mcaccess.org/good-resources#gameplay-with-this-mod)).
 * Make sound effects for this mod.
-* For development contributions, please read [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+* For development contributions, please read [CONTRIBUTING.md](https://github.com/minecraft-access/minecraft-access/blob/dev/CONTRIBUTING.md) for more details.
+
+## License
+
+This mod as well as other relative things like documentation are distributed under the [GPL-3.0 license](https://github.com/minecraft-access/minecraft-access?tab=GPL-3.0-1-ov-file#readme).
+Here are licenses of modules that this mod packages into the jar file for convenience:
+
+- **architectury-api**: [GNU Lesser General Public License v3.0](https://github.com/architectury/architectury-api/blob/1.21.4/LICENSE.md)
+- **fabric-api**: [Apache License 2.0](https://github.com/FabricMC/fabric/blob/1.21.4/LICENSE)
+- **tolk**: [GNU Lesser General Public License v3.0](https://github.com/dkager/tolk/blob/master/LICENSE.txt)
+- **libspeechdwrapper**: [No license specified](https://github.com/khanshoaib3/libspeechdwrapper)
