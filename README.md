@@ -13,7 +13,7 @@ This mod has available versions for:
 * On the [Fabric](https://fabricmc.net/use/installer/) and [NeoForge](https://neoforged.net) mod loaders
 * On Windows, macOS and Linux operating systems
 
-Whenever the mod's code is updated, or whenever we need an upcoming feature someone contributed to be tested, a build will be automatically published in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first to allow for testing, after enough feedback has been gathered, or no serious bugs have been reported in the build, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions), [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files), and [GitHub](https://github.com/minecraft-access/minecraft-access/releases).
+Whenever the mod's code is updated, or whenever we need an upcoming feature someone contributed to be tested, a build will be automatically published in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first to allow for testing, after enough feedback has been gathered, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions), [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files), and [GitHub](https://github.com/minecraft-access/minecraft-access/releases).
 
 ## Other Pages
 
@@ -41,4 +41,15 @@ Any type of contribution is welcome:
 * Help us translate this mod into other languages via [Weblate](https://hosted.weblate.org/engage/minecraft-access/).
 * Create more text or video tutorials about how to play the game with this mod ([examples](https://docs.mcaccess.org/good-resources#gameplay-with-this-mod)).
 * Make sound effects for this mod.
-* For development contributions, please read [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+* For development contributions, please read [CONTRIBUTING.md](https://github.com/minecraft-access/minecraft-access/blob/dev/CONTRIBUTING.md) for more details.
+
+## License
+
+This mod as well as other relative things like documentation are distributed under the [GPL-3.0 license](https://github.com/minecraft-access/minecraft-access?tab=GPL-3.0-1-ov-file#readme).
+Here are licenses of modules that this mod packages into its jar file for distribution convenience:
+
+- **architectury-api**: [GNU Lesser General Public License v3.0](https://github.com/architectury/architectury-api/blob/1.21.4/LICENSE.md)
+- **fabric-api**: [Apache License 2.0](https://github.com/FabricMC/fabric/blob/1.21.4/LICENSE)
+- **tolk**: [GNU Lesser General Public License v3.0](https://github.com/dkager/tolk/blob/master/LICENSE.txt)
+- **libspeechdwrapper**: [No license specified](https://github.com/khanshoaib3/libspeechdwrapper)
+- **nvdaControllerClient64.dll**: [GNU LESSER GENERAL PUBLIC LICENSE](https://github.com/nvaccess/nvda/blob/master/extras/controllerClient/license.txt)
