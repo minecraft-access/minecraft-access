@@ -4,3 +4,25 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      gh-actions:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      gradle-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
