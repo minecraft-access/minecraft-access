@@ -13,7 +13,7 @@ This mod has available versions for:
 * On the [Fabric](https://fabricmc.net/use/installer/) and [NeoForge](https://neoforged.net) mod loaders
 * On Windows, macOS and Linux operating systems
 
-Whenever the mod's code is updated, or whenever we need an upcoming feature someone contributed to be tested, a build will be automatically published in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first to allow for testing, after enough feedback has been gathered, or no serious bugs have been reported in the build, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions), [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files), and [GitHub](https://github.com/minecraft-access/minecraft-access/releases).
+Whenever the mod's code is updated, or whenever we need an upcoming feature someone contributed to be tested, a build will be automatically published in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first to allow for testing, after enough feedback has been gathered, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions), [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files), and [GitHub](https://github.com/minecraft-access/minecraft-access/releases).
 
 ## Other Pages
 
