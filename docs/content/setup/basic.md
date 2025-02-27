@@ -65,7 +65,7 @@ Keep going after you’ve logged in, fill in the purchase information, and click
 
 ### Use a Modpack Version of the Mod
 
-The community member [@BrailleBennett](https://github.com/BrailleBennett) has created a modpack that contains everything you need to get started with Minecraft. If you wish to use this pack, go to its [guide file]({{% relref "./modpack" %}}). There is no need to return to this guide after you finish that one, as it is not relevant to the pack.
+The community member [@BrailleBennett](https://github.com/BrailleBennett) has created a modpack that contains everything you need to get started with Minecraft. If you wish to use this pack, go to its [setup guide page]({{% relref "./modpack" %}}). There is no need to return to this guide after you finish that one, as it is not relevant to the pack.
 This is usually seen as the easiest and most convenient option for new users.
 
 ### Download the Launcher

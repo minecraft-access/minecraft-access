@@ -73,6 +73,8 @@ See also: [Feature Description]({{% relref "/features#relative-position-sound-cu
 | Target Mode     | `block`                                                                                                  | Which type would you like to apply this feature to, either `all`, `entity` or `block`                                  |
 | Targets         | [`slab`,&ZeroWidthSpace;`planks`,&ZeroWidthSpace;`block`,&ZeroWidthSpace;`stone`,&ZeroWidthSpace;`sign`] | Indicated what to be spoken                                                                                            |
 
+[//]: # (A zero-width space is a character which is completely invisible but tells the browser that it may wrap text there, without it that whole thing is treated as one gigantic word, and it tries its best to not wrap it, causing everything to go haywire.)
+
 The `Targets` config can only be configured in `config.json` file.
 Values are written in Minecraft resource location format, the so-called
 `snake_case` (consists of lowercase letters with underscores).

@@ -137,7 +137,7 @@ Since this project is hosted on GitHub, it's natural for us to choose GitHub Act
 - For every PR commit and building, `push` workflow will be triggered for building and running the test suite against changes.
 - The `publish-pr-build` workflow is responsible for building snapshot versions and uploading them to Discord. Snapshot versions are built when PR is merged to main branch or a PR is tagged with `bedrock-breakers` label.
 - When a new version is ready, we'll manually run the `release` workflow to automatically tag the version, collect changelog, publish mod to the GitHub release, [CurseForge](https://www.curseforge.com/minecraft/mc-mods/minecraft-access) and [Modrinth](https://modrinth.com/mod/minecraft-access).
-- The [`docs` workflow](.github/workflows/docs.yml) is for building the documentation and uploading them to GitHub pages.
+- The `docs` workflow is for building the documentation and uploading them to GitHub pages.
 
 ## Documentation
 

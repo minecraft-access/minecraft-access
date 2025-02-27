@@ -2,7 +2,7 @@
 title: "Downloads"
 ---
 
-Minecraft Access is available for Fabric or Neoforge on Windows, Linux and Mac.
+Minecraft Access is available for Fabric and Neoforge on Windows, Linux and Mac.
 
 If you're on Windows, see the [Fabric setup guide]({{% relref "/setup/basic" %}}) (recommended) or the [Neoforge setup guide]({{% relref "/setup/advanced" %}}).
 
