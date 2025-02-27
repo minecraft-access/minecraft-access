@@ -84,14 +84,14 @@ For more developing tips, see [this section of Fabric wiki](https://docs.fabricm
   - `src/test`: Unit test suite.
 - `fabric`: Gradle subproject, Fabric-dependent mod code.
   - `build.gradle`: Gradle build script of the Fabric version of the mod.
-  - `src/main/java`: Source code.
   - `src/main/resources`:
     - `fabric.mod.json`: [Fabric mod configuration](https://fabricmc.net/wiki/documentation:fabric_mod_json).
 - `neoforge`: Gradle subproject, NeoForge-dependent mod code.
   - `build.gradle`: Gradle build script of the NeoForge version of the mod.
-  - `src/main/java`: Source code.
   - `src/main/resources`:
     - `META-INF/neoforge.mods.toml`: [NeoForge mod configuration](https://docs.neoforged.net/docs/gettingstarted/modfiles/#neoforgemodstoml).
+
+Please note that this repository has one repository as its git submodule - the website theme for generated documentation site.
 
 ### Program Structure
 
@@ -134,10 +134,15 @@ Applying less mock and embracing programming strategies like [`Functional Core, 
 This project has an automatic test-build-release pipeline thanks to [@TheSuperGamer20578](https://github.com/TheSuperGamer20578).
 Since this project is hosted on GitHub, it's natural for us to choose GitHub Action as the CI system.
 
-- For every PR commit and building, [`push` workflow](.github/workflows/push.yml) will be triggered for building and running the test suite against changes.
-- The [`publish-pr-build` workflow](.github/workflows/publish-pr-build.yml) is responsible for building snapshot versions and uploading them to Discord. Snapshot versions are built when PR is merged to main branch or a PR is tagged with `bedrock-breakers` label.
-- When a new version is ready, we'll manually run the [`release` workflow](.github/workflows/release.yml) to automatically tag the version, collect changelog, publish mod to the GitHub release, [CurseForge](https://www.curseforge.com/minecraft/mc-mods/minecraft-access) and [Modrinth](https://modrinth.com/mod/minecraft-access).
+- For every PR commit and building, `push` workflow will be triggered for building and running the test suite against changes.
+- The `publish-pr-build` workflow is responsible for building snapshot versions and uploading them to Discord. Snapshot versions are built when PR is merged to main branch or a PR is tagged with `bedrock-breakers` label.
+- When a new version is ready, we'll manually run the `release` workflow to automatically tag the version, collect changelog, publish mod to the GitHub release, [CurseForge](https://www.curseforge.com/minecraft/mc-mods/minecraft-access) and [Modrinth](https://modrinth.com/mod/minecraft-access).
 - The [`docs` workflow](.github/workflows/docs.yml) is for building the documentation and uploading them to GitHub pages.
+
+## Documentation
+
+This project has a [Hugo](https://gohugo.io/) based static website serves as wiki and gate for contact ways and distribution channels - [mcaccess.org](https://mcaccess.org/).
+The website theme has its [independent repository](https://github.com/minecraft-access/hugo-themes), it's because we'd like to reuse same theme across other possible websites like a blog.
 
 ## Recommended Approaches
 
