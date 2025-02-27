@@ -3,12 +3,9 @@ title: "Downloads"
 ---
 
 Minecraft Access is available for Fabric and Neoforge on Windows, Linux and Mac.
-
 If you're on Windows, see the [Fabric setup guide]({{% relref "/setup/basic" %}}) (recommended) or the [Neoforge setup guide]({{% relref "/setup/advanced" %}}).
-
-If you're on MacOS, see the [MacOS setup guide]({{% relref "/setup/macos" %}})
-
-Note: Currently there is no setup guide for Linux
+If you're on MacOS, see the [MacOS setup guide]({{% relref "/setup/macos" %}}).
+If you're on Linux, see the [Linux setup guide]({{% relref "/setup/linux" %}}).
 
 Minecraft Access is also a part of the [Visually Impaired Access Mods modpack](https://modrinth.com/modpack/vi-access) available on Modrinth. See the [modpack setup guide]({{% relref "/setup/modpack" %}}).
 

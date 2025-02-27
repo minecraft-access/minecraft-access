@@ -2,7 +2,7 @@
 title: "Mod Setup"
 ---
 
-Currently, this mod supports the Windows and Linux operating systems ([help us to port it to macOS](https://github.com/minecraft-access/minecraft-access/issues/22)).
+This mod supports Windows, macOS and Linux operating systems.
 The latest version of this mod (as well as other mod dependencies) can be downloaded at the [releases page](https://github.com/minecraft-access/minecraft-access/releases/latest).
 
 ## Tutorial for Beginners: From Purchasing the Game To Installing This Mod
@@ -129,7 +129,6 @@ Start the installer, a window pops up for you to choose the installation configu
 7. Finally, click the `Install` button to start the installation.
    It will download some files from the Internet, if the network is fast, the installation takes less than a minute.
    A pop-up will show up to notify you that the installation is successful.
-   We currently do not have a guide written for how to install Fabric on Linux (but it's most certainly easier than choosing to install NeoForge), so you will have to [google it](https://www.google.com/search?q=install+minecraft+fabric+on+linux) by yourself, sorry.
 
 ### Install NeoForge
 
@@ -160,7 +159,6 @@ By the way, you may be interested in the mods provided in the [good resources]({
 
 After all the mods you want are downloaded, you can move on to putting them into the right location for the mod loader to recognize them.
 The default path on Windows is: `%appdata%\.minecraft\mods` (the `%appdata%` is a shortcut for `C:\Users\username\AppData\Roaming`), you can directly paste it into File Explorer then press the enter key to jump to it or paste it into the run box accessed with the Windows+R keys and click enter.
-Note that on Linux, the default game directory is `~/.minecraft` and the mod directory is `~/.minecraft/mods`.
 We'll put downloaded mod files inside it, both Fabric and NeoForge will load mods from this folder by default if installed. You can look up how to use alternate installation locations if you wish to maintain both Fabric and NeoForge installations at the same time.
 You will need to start the game once after installing the mod loader for the `mods` folder to be created.
 
@@ -201,20 +199,6 @@ And here is a [complex self-help FAQ]({{% relref "/faq#self-help-guide-for-abnor
 for you to address the problem,
 from not being able to hear the narration to a full game crash.
 
-### Additional Installation for Linux
-
-We need
-to install a few extra things that this mod depends on
-after installing the mod to make this mod work properly if you’re using Linux.
-
-1. We need to install the [libspeechdwrapper](https://github.com/khanshoaib3/libspeechdwrapper) for invoking the screen reader's API.
-   Download the library from [its GitHub repository](https://github.com/khanshoaib3/libspeechdwrapper/raw/main/lib/libspeechdwrapper.so) and move it into the minecraft directory (default `~/.minecraft`).
-
-2. Although the mod overrides the library used for TTS, minecraft still needs the `flite` library to be installed, so you can install it using your distro's package manager itself.
-
-3. We also need to install [xdotool](https://github.com/jordansissel/xdotool),
-   which is used for simulating the mouse actions.
-   Follow the [instructions](https://github.com/jordansissel/xdotool#installation) to install it.
 
 ## Update the Game and Mods
 For [Fabric](#install-fabric),
