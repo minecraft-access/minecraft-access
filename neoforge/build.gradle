@@ -42,14 +42,10 @@ dependencies {
 
     modImplementation include("dev.architectury:architectury-neoforge:${project.architectury_api_version}")
 
+    modApi include('me.shedaniel.cloth:cloth-config-neoforge:17.0.144')
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
-
-    // https://github.com/LlamaLad7/MixinExtras
-    // fabric has this dependency,
-    // we already used this dependency in common module,
-    // so let forge use it too
-//    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.0"))
 }
 
 processResources {

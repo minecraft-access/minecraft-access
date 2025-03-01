@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.features.access_menu;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -11,9 +12,8 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.lwjgl.glfw.GLFW;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.ConfigMenu;
-import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -50,7 +50,7 @@ public class AccessMenu {
      */
     private static final MenuFunction[] FUNCTIONS = new MenuFunction[]{
             new MenuFunction(0, new IntervalKeystroke(KeyBindingsHandler.getInstance().openConfigMenu),
-                    () -> Minecraft.getInstance().setScreen(new ConfigMenu("config_menu"))),
+                    () -> Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, null).get())),
             new MenuFunction(1, new IntervalKeystroke(KeyBindingsHandler.getInstance().narrateTarget),
                     AccessMenu::getBlockAndFluidTargetInformation),
             new MenuFunction(2, new IntervalKeystroke(KeyBindingsHandler.getInstance().targetPosition),
@@ -90,7 +90,6 @@ public class AccessMenu {
     public void update() {
         try {
             minecraftClient = Minecraft.getInstance();
-            if (minecraftClient == null) return;
             if (minecraftClient.player == null) return;
 
             Screen currentScreen = minecraftClient.screen;
@@ -145,7 +144,8 @@ public class AccessMenu {
             HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
             if (hit == null) return;
             switch (hit.getType()) {
-                case MISS, ENTITY -> MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
+                case MISS, ENTITY ->
+                        MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
                 case BLOCK -> {
                     try {
                         BlockHitResult blockHit = (BlockHitResult) hit;
@@ -167,7 +167,8 @@ public class AccessMenu {
             HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
             if (hit == null) return;
             switch (hit.getType()) {
-                case MISS, ENTITY -> MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
+                case MISS, ENTITY ->
+                        MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
                 case BLOCK -> {
                     try {
                         BlockHitResult blockHitResult = (BlockHitResult) hit;
@@ -238,7 +239,7 @@ public class AccessMenu {
             int minutes = (int) ((daytime % 1000) * 60 / 1000);
 
             String translationKey = "minecraft_access.access_menu.time_of_day";
-            if (OtherConfigsMap.getInstance().isUse12HourTimeFormat()) {
+            if (Config.getInstance().use12HourTimeFormat) {
                 if (hours > 12) {
                     hours -= 12;
                     translationKey += "_pm";

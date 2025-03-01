@@ -6,8 +6,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-import java.util.function.Function;
-
 public class BaseScreen extends Screen {
     int centerX;
     int buttonHeight;
@@ -67,36 +65,5 @@ public class BaseScreen extends Screen {
         this.renderBackground(context, mouseX, mouseY, delta);
         context.drawCenteredString(this.font, this.title, this.width / 2, 15, 16777215);
         super.render(context, mouseX, mouseY, delta);
-    }
-
-    /* Pre 1.20.x
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        DrawableHelper.drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
-        super.render(matrices, mouseX, mouseY, delta);
-    }
-    */
-
-    @Override
-    public void onClose() {
-        if (this.minecraft != null) this.minecraft.setScreen(previousScreen);
-    }
-
-    protected static String featureToggleButtonMessage(boolean enabled) {
-        return I18n.get("minecraft_access.gui.common.button.feature_toggle_button." + (enabled ? "enabled" : "disabled"));
-    }
-
-    /**
-     * A reusable function for calculating feature toggle button message.
-     */
-    protected static Function<Boolean, String> featureToggleButtonMessageWith(String buttonTranslationKey) {
-        return (Boolean b) -> I18n.get("minecraft_access.gui.common.button.toggle_button." + (b ? "enabled" : "disabled"),
-                I18n.get(buttonTranslationKey));
-    }
-
-    protected static String floatValueButtonMessageWith(String buttonTranslationKey, double value) {
-        return I18n.get("minecraft_access.gui.common.button.button_with_float_value",
-                I18n.get(buttonTranslationKey), value);
     }
 }

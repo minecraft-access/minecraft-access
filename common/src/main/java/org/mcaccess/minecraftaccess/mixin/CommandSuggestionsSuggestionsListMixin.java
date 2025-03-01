@@ -7,8 +7,8 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 /**
- * Since text modifying narrations are suppressed in {@link ScreenNarrationCollectorMixin},
+ * Since text modifying narrations are suppressed in {@link EditBoxMixin},
  * manually speak (command) suggestions (in {@link AbstractCommandBlockEditScreen} and {@link ChatScreen}).
  */
 @Mixin(CommandSuggestions.SuggestionsList.class)
@@ -38,17 +38,17 @@ public class CommandSuggestionsSuggestionsListMixin {
     private void simplifySuggestionNarration(CallbackInfoReturnable<Component> cir) {
         // Don't know why they update this value here
         this.lastNarratedEntry = this.current;
-        String textToSpeak = getSuggestionTextToSpeak();
+        String textToSpeak = mca$getSuggestionTextToSpeak();
         cir.setReturnValue(Component.nullToEmpty(textToSpeak));
         cir.cancel();
     }
 
     @Unique
-    private String getSuggestionTextToSpeak() {
+    private String mca$getSuggestionTextToSpeak() {
         Suggestion suggestion = this.suggestionList.get(this.current);
         Message message = suggestion.getTooltip();
 
-        String format = OtherConfigsMap.getInstance().getCommandSuggestionNarratorFormat();
+        String format = Config.getInstance().commandSuggestionNarratorFormat;
         String textToSpeak = format.formatted(this.current + 1, this.suggestionList.size(), suggestion.getText());
 
         if (message != null) {
@@ -67,7 +67,7 @@ public class CommandSuggestionsSuggestionsListMixin {
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void speakFirstSuggestionWhenSuggestionsAreShown(CallbackInfo ci) {
-        String first = getSuggestionTextToSpeak();
+        String first = mca$getSuggestionTextToSpeak();
         MainClass.speakWithNarratorIfNotEmpty(first, true);
     }
 }

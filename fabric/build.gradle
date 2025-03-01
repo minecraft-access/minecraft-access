@@ -30,11 +30,21 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
+repositories {
+    maven {
+        url 'https://maven.terraformersmc.com/'
+    }
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modImplementation include("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
 
     modImplementation include("dev.architectury:architectury-fabric:${project.architectury_api_version}")
+    modApi include('me.shedaniel.cloth:cloth-config-fabric:17.0.144') {
+        exclude group: 'net.fabricmc.fabric-api'
+    }
+    modImplementation 'com.terraformersmc:modmenu:13.0.0-beta.1'
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

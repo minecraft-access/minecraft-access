@@ -6,8 +6,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.mcaccess.minecraftaccess.features.SpeakHeldItem;
 import org.mcaccess.minecraftaccess.utils.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -61,12 +61,12 @@ public class GuiMixin {
 
     @Inject(at = @At("HEAD"), method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V")
     public void speakActionbar(Component message, boolean tinted, CallbackInfo ci) {
-        OtherConfigsMap configsMap = OtherConfigsMap.getInstance();
-        if (configsMap.isActionBarEnabled()) {
+        Config config = Config.getInstance();
+        if (config.features.actionBarEnabled) {
             String msg = message.getString();
             boolean contentChanged = !this.minecraft_access$previousActionBarContent.equals(msg);
             if (contentChanged) {
-                if (configsMap.isOnlySpeakActionBarUpdates()) {
+                if (config.features.onlySpeakActionBarUpdates) {
                     minecraft_access$onlySpeakChangedParts(msg);
                 } else {
                     MainClass.speakWithNarratorIfNotEmpty(msg, true);

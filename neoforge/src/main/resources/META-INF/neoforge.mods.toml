@@ -7,38 +7,43 @@ license = "GNU GPLv3"
 modId = "minecraft_access"
 version = "${version}"
 displayName = "Minecraft Access"
-authors = "Shoaib, Boholder, TheSuperGamer20578"
+authors = "Shoaib, Boholder, TheSuperGamer20578, BrailleBennett, Molitvan"
 description = '''
 A mod that helps visually impaired players to play Minecraft.
 '''
 logoFile = "logo-mc-access.png"
-
-[[dependencies.minecraft_access]]
-modId = "architectury"
-type="required"
-versionRange = "[${architectury_api_version},)"
-ordering = "BEFORE"
-side="CLIENT"
-
-[[dependencies.minecraft_access]]
-modId = "jade"
-type="optional"
-reason="Jade can be used to integrate with the built in narrator of the mod by improving support with other mods and providing more information about things you look at"
-versionRange = "[${jade_neoforge_version},)"
-ordering = "NONE"
+modUrl = "https://modrinth.com/mod/minecraft-access"
+displayURL = "https://mcaccess.org"
 
 [[dependencies.minecraft_access]]
 modId = "neoforge"
-type="required"
+type = "required"
 versionRange = "[${neoforge_version},)"
-ordering = "NONE"
 
 [[dependencies.minecraft_access]]
 modId = "minecraft"
-type="required"
+type = "required"
 versionRange = "[${minecraft_version},)"
-ordering = "NONE"
-side = "BOTH"
 
-[[mixins]]
-config = "minecraft_access.mixins.json"
+[[dependencies.minecraft_access]]
+modId = "architectury"
+type = "required"
+versionRange = "[${architectury_api_version},)"
+ordering = "BEFORE"
+side = "CLIENT"
+
+[[dependencies.minecraft_access]]
+modId = "jade"
+type = "optional"
+reason = "Jade can be used to integrate with the built in narrator of the mod by improving support with other mods and providing more information about things you look at"
+versionRange = "[${jade_neoforge_version},)"
+
+[[dependencies.minecraft_access]]
+modId = "cloth_config"
+reason = "For this mod's config menu"
+type = "required"
+
+mixins = [
+    { config = "minecraft_access.mixins.json" },
+    { config = "minecraft_access-compat.mixins.json" }
+]

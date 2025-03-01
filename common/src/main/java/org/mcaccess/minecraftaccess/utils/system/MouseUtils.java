@@ -8,8 +8,8 @@ import com.sun.jna.Structure;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.MouseSimulationConfigMap;
 
 import java.util.Arrays;
 import java.util.List;
@@ -406,10 +406,9 @@ public class MouseUtils {
         if (client == null) return new Coordinates(x, y);
         Window window = client.getWindow();
         if (window == null) return new Coordinates(x, y);
-        MouseSimulationConfigMap config = MouseSimulationConfigMap.getInstance();
 
         int realX, realY;
-        if (config.getMacMouseFix()) {
+        if (Config.getInstance().mouseSimulation.macMouseFix) {
             realX = (int) ((x * window.getGuiScale()));
             realY = (int) ((y * window.getGuiScale()));
         } else {
