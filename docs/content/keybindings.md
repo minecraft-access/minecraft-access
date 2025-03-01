@@ -9,7 +9,7 @@ You can change these keybindings in the settings (open `Options...` then `Contro
 You may find that some features have duplicate keys, such as I, J, K, L as the arrow keys in various features.
 It's ok since the same key takes effect in different interfaces for different functions.
 
-You may want to take a look at [all the original game controls](https://minecraft.wiki/w/Controls#Java_Edition) as well.
+You may want to take a look at [all the original controls](https://minecraft.wiki/w/Controls#Java_Edition) as well.
 
 ## Camera Controls
 
@@ -117,12 +117,12 @@ See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [
 
 ## Speak Player Status
 
-| Single Key            | Default Keybinding | Description                                                                                |
-|-----------------------|--------------------|--------------------------------------------------------------------------------------------|
+| Single Key                       | Default Keybinding | Description                                  |
+|----------------------------------|--------------------|----------------------------------------------|
 | `Speak Player Status` | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
 
-| Key Combination  | Description                                                                   |
-|------------------|-------------------------------------------------------------------------------|
+| Key Combination  | Description               |
+|------------------|---------------------------|
 | `Left Alt` + `R` | Speak only the conditional statuses of the player like air and frost exposure |
 
 See also: [Feature Description]({{% relref "/features#player-status" %}}), [Configuration]({{% relref "/config#player-status" %}})
@@ -171,18 +171,3 @@ The chat message will be spoken when that message shows up, whether the sender i
 These keys are used to repeat previous chat messages.
 
 See also: [Feature Description]({{% relref "/features#speak-chat-messages" %}})
-
-### Cloth Config Menu Controls
-
-These controls work on any config menu that uses the Cloth Config.
-
-| Single Key         | Default Keybinding | Description          |
-|--------------------|--------------------|----------------------|
-| `Tab`              | not re-mappable    | Focus on next option |
-| `Enter` or `Space` | not re-mappable    | Interact             |
-
-| Key Combination          | Description                        |
-|--------------------------|------------------------------------|
-| `Tab` + `Shift`          | Focus on previous option           |
-| `Tab` + `Ctrl`           | Switch to next config category     |
-| `Tab` + `Ctrl` + `Shift` | Switch to previous config category |
