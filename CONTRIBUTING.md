@@ -146,7 +146,7 @@ The website theme has its [independent repository](https://github.com/minecraft-
 
 ## Recommended Approaches
 
-### Tell Us What You Intend To Do Before Doing it
+### Tell us what you intend to do before doing it
 
 When you decide to make contributions, we expect you to comment in the corresponding issue, make a new issue, or talk in the `mc-dev` channel of our [Discord server](https://discord.gg/yQjjsDqWQX).
 Industry experience tells us that shift-left checks and discussions are good for software development — for example, we can provide more relevant knowledge, project details, and advice to help you do things better.
@@ -155,6 +155,35 @@ It can only be done if we know what you want to do, though.
 Of course there is no mandatory requirement (praise [the freewheeling open source community](http://www.catb.org/~esr/writings/cathedral-bazaar/)!), the code for this project is open source under an opensource license.
 This means that you do not need to get anyone's permission to make changes to your fork of this project, you just need to make it work for **your personal needs**.
 If you feel that your changes will also benefit the upstream (main project), you can submit a Pull Request to [the main repository](https://github.com/minecraft-access/minecraft-access), and only then does the `contributing` begin.
+
+### Modify along with refactor
+
+Keeping public environments (the whole repository, I mean) clean.
+If you find that there are grammar mistakes or typos in the documentation, please correct them.
+If you find that there are [IDE inspection notices](https://www.jetbrains.com/help/idea/code-inspection.html) on the file you're working on, please accept them no matter who introduced them (you can split these changes as a separate commit from your modification).
+
+### Make all related changes in one pull request
+
+Update the documentation along with the code.
+Make sure that there is no unused code in the submit pull request.
+"There are more subsequent PRs" is not a valid reason.
+
+### Review first
+
+This is for who has review authority for this project.
+Start reviewing as soon as you can.
+If there are PRs waiting for your review while you have time to work on this project, you should review them first, rather than continuing with your own features.
+
+> When you’re actually reading the code and giving feedback, take your time, but start your review immediately — ideally, within minutes.
+> 
+> When you start reviews immediately, you create a virtuous cycle.
+> Your review turnaround becomes purely a function of the size and complexity of the author’s changelist.
+> This incentivizes authors to send small, narrowly-scoped changelists.
+> These are easier and more pleasant for you to review, so you review them faster, and the cycle continues.
+> 
+> If you’re forced to decline reviews more than about once per month, it likely means that your team needs to reduce its pace so that you can maintain sane development practices.
+> 
+> cite: [How to Do Code Reviews Like a Human - Michael Lynch](https://mtlynch.io/human-code-reviews-1/)
 
 [Weblate]: https://hosted.weblate.org/engage/minecraft-access/
 [Discord]: https://discord.gg/yQjjsDqWQX
