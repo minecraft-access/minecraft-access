@@ -164,9 +164,11 @@ public class MainClass {
     }
 
     public static void speakWithNarrator(String text, boolean interrupt) {
+        // Remove formatting codes
+        // ref: https://minecraft.wiki/w/Formatting_codes
+        text = text.replaceAll("§.", "");
         MainClass.interrupt = interrupt;
         Minecraft.getInstance().getNarrator().sayNow(text);
-        return;
     }
 
     public static void speakWithNarratorIfNotEmpty(String text, boolean interrupt) {
