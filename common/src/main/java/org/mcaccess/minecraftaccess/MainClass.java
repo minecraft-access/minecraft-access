@@ -28,7 +28,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 @Slf4j
 public class MainClass {
-    public static final String MOD_ID = "minecraft_access";
     private static ScreenReaderInterface screenReader = null;
 
     public static InventoryControls inventoryControls = null;
@@ -40,7 +39,6 @@ public class MainClass {
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
 
-    public static boolean isNeoForge = Platform.isNeoForge();
     public static boolean interrupt = true;
     private static boolean alreadyDisabledAdvancementKey = false;
 
@@ -86,7 +84,7 @@ public class MainClass {
 
         changeLogLevelBaseOnDebugConfig();
 
-        if (!MainClass.alreadyDisabledAdvancementKey && minecraftClient.options != null) {
+        if (!MainClass.alreadyDisabledAdvancementKey) {
             minecraftClient.options.keyAdvancements.setKey(InputConstants.getKey("key.keyboard.unknown"));
             MainClass.alreadyDisabledAdvancementKey = true;
             log.info("Unbound advancements key");
@@ -112,7 +110,7 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (Minecraft.getInstance() != null && WorldUtils.getClientPlayer() != null) {
+        if (WorldUtils.getClientPlayer() != null) {
             if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
                 playerStatus.update();
             }
