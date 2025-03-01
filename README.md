@@ -5,13 +5,8 @@
 Minecraft Access is a [Minecraft](https://minecraft.net) mod that specifically helps visually impaired players play Minecraft.
 It is an integration and replacement for [a series of previous mods](https://github.com/accessible-minecraft).
 This mod primarily borrows the help of a screen reader to describe (narrate) the game interface, and incorporates sound cues to provide orientation perception in this 3D world.
+This mod supports [Fabric](https://fabricmc.net/use/installer/) and [NeoForge](https://neoforged.net) mod loaders on Windows, macOS and Linux operating systems.
 Currently, this mod [has enough features](https://docs.mcaccess.org/faq#is-the-mod-enough-to-play-the-game-normally) to help visually impaired players play the game normally.
-
-This mod has available versions for:
-
-* Game versions `1.19.3`, `1.20.1`, `1.20.4`, `1.20.6`, `1.21.1`, `1.21.4`.
-* On the [Fabric](https://fabricmc.net/use/installer/) and [NeoForge](https://neoforged.net) mod loaders
-* On Windows, macOS and Linux operating systems
 
 Whenever the mod's code is updated, or whenever we need an upcoming feature someone contributed to be tested, a build will be automatically published in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first to allow for testing, after enough feedback has been gathered, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions), [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files), and [GitHub](https://github.com/minecraft-access/minecraft-access/releases).
 
@@ -29,8 +24,8 @@ Whenever the mod's code is updated, or whenever we need an upcoming feature some
 
 ## Useful Links
 
+* [The official Minecraft Access website](https://mcaccess.org) - find documentation, the official Minecraft server, and more on the official website for the project.
 * [Playability Discord server](https://discord.gg/yQjjsDqWQX) - Join our Discord server if you want to chat with this mod's users and developers.
-* [The main website](https://mcaccess.org) - find documentation, the official Minecraft server, and more on the official website for the project.
 
 ## Contributions
 
@@ -45,7 +40,7 @@ Any type of contribution is welcome:
 
 ## License
 
-This mod as well as other relative things like documentation are distributed under the [GPL-3.0 license](https://github.com/minecraft-access/minecraft-access?tab=GPL-3.0-1-ov-file#readme).
+This mod as well as other relative things like documentation are distributed under the [GPL-3.0 license](./LICENSE).
 Here are licenses of modules that this mod packages into its jar file for distribution convenience:
 
 - **architectury-api**: [GNU Lesser General Public License v3.0](https://github.com/architectury/architectury-api/blob/1.21.4/LICENSE.md)

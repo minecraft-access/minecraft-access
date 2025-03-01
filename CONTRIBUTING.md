@@ -20,7 +20,7 @@ This project uses [Gradle](https://docs.gradle.org/current/userguide/getting_sta
 thus you need to at least know the basics of Gradle, like how to start a Gradle task, how to add new dependencies, how to build the project...
 [here is a tutorial from Gradle official](https://docs.gradle.org/current/userguide/getting_started_eng.html#getting_started).
 
-This project supports Fabric and NeoForge (stopped supporting Forge after 1.20) with the help of [Architectury Loom](https://docs.architectury.dev/loom/introduction), a framework for multi-platform modding taht derivatives from [Fabric Loom](https://fabricmc.net/wiki/documentation:fabric_loom).
+This project supports Fabric and NeoForge (stopped supporting Forge after 1.20) with the help of [Architectury Loom](https://docs.architectury.dev/loom/introduction), a framework for multi-platform modding that is derived from [Fabric Loom](https://fabricmc.net/wiki/documentation:fabric_loom).
 Architectury Loom functions as a Gradle plugin and mod configurator, it won't affect the code.
 For questions about architectury, you can ask in [their Discord server](https://discord.architectury.dev/) instead of searching for [documentation](https://docs.architectury.dev/loom/introduction), but it doesn't harm to search before asking.
 Since Architectury Loom is a derivative of Fabric Loom, the [Fabric Loom's documentation](https://fabricmc.net/wiki/documentation:fabric_loom) also applies to Architectury Loom in most cases, which is more detail than Architectury Loom's.

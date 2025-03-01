@@ -9,7 +9,7 @@ title: "Changelog"
 - Speak current perspective when switched to [#314](https://github.com/minecraft-access/minecraft-access/issues/314)
 - Blocks and entities can now be narrated with Jade, providing much more detailed information.
 - Add basic aim assist for bows (temporarily lock onto the nearest hostile mob when drawing a bow, play sounds indicating how much the bow has been drawn and if the target can be shot)
-- Implement support for running  the mod on MacOS
+- Implement support for running  the mod on macOS
 - Each function in the access menu can now be bound as a key on your keyboard (all unbound by default aside from narrate target)
 - HealthNHunger is now player status
 - Made the readout of player status more concise which also delivers values faster
@@ -49,7 +49,7 @@ title: "Changelog"
 
 ### Support 1.21.4
 This mod doesn't yet support new features such as [crafter](https://minecraft.wiki/w/Crafter) and [pale garden](https://minecraft.wiki/w/Pale_Garden), but at least you can play the latest version now! Compatibility for 1.21.4:
-* Minecraft: 1.21.4 ([read setup guide](/docs/setup/basic.md)))
+* Minecraft: 1.21.4 ([read setup guide]({{% relref "/setup/basic" %}})))
 * Fabric Loader: >=0.16.9 ([download Fabric Loader](https://fabricmc.net/use/installer/))
 * NeoForge: 21.4.33-beta ([download NeoForge installer](https://maven.neoforged.net/releases/net/neoforged/neoforge/21.3.4-beta/neoforge-21.3.4-beta-installer.jar))
 * Java: >=21 ([download x64 Windows installer](https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.msi), [download page for all Operating Systems](https://www.oracle.com/java/technologies/downloads/#java21))
