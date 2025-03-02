@@ -19,7 +19,7 @@ You must restart your computer after the Java installation is completed.
 ## Install NeoForge
 
 NeoForge requires you to select the right version of the game at the time you download the installer.
-Reports have been received that higher versions of NeoForge that are compatible with the game version may not be compatible with this mod (this mod is always built on one specific NeoForge version), so it is recommended to download the tested version of NeoForge from the link in the [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest) (under the `Mod Version Compatibility` section).
+Reports have been received that higher versions of NeoForge that are compatible with the game version may not be compatible with this mod (this mod is always built on one specific NeoForge version), so it is recommended to download the tested version of NeoForge from the link in the [releases page](https://github.com/minecraft-access/minecraft-access/releases/latest) (under the `Mod Version Compatibility` section).
 If you still want to download the latest version of NeoForge for some reason, [here is the download page for that version of NeoForge](https://neoforged.net/).
 Select the `Installer` button under the `Download Recommended` section.
 An executable jar file will be downloaded with the name format `neoforge-<neoforge-version>-installer.jar`, for example `neoforge-21.1.4-installer.jar`.

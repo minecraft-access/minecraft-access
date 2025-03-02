@@ -2,13 +2,6 @@
 title: "Good Resources"
 ---
 
-## Helpful Links
-
-* [Documentation for this mod](https://github.com/khanshoaib3/minecraft-access) - Check what features this mod provides.
-* [Primary developer's X account](https://x.com/shoaib_mk0) - You can follow the developer on X to get notified when a new update drops.
-* [Playability Discord server](https://discord.gg/yQjjsDqWQX) - You can join our Discord server if you need help setting up the mod or with any issue related to Minecraft Java Edition.
-* [Visually Impaired Access Modpack]({{% relref "/setup/modpack" %}}) - A mod pack that contains this mod and some quality of life mods, made with heart by [@BrailleBennett](https://github.com/BrailleBennett) for the Fabric mod loader.
-
 ## Quality of Life Mods
 
 Here are some mods that can improve your game experience.
