@@ -124,6 +124,7 @@ public class MainClass {
             if (Minecraft.getInstance().screen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.update();
+                EffectNarration.getInstance().update();
             }
         }
 
@@ -140,9 +141,10 @@ public class MainClass {
 
         FallDetector.getInstance().update();
 
-        Keystroke.updateInstances();
-
         HUDStatus.getInstance().update();
+
+        // This should always be at the bottom
+        Keystroke.updateInstances();
     }
 
     /**

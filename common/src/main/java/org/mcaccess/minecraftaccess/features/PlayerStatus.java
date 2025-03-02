@@ -17,20 +17,24 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
  */
 @Slf4j
 public class PlayerStatus {
-    IntervalKeystroke narrationKey = new IntervalKeystroke(
-            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().speakPlayerStatusKey),
+    IntervalKeystroke narrationKey = new IntervalKeystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().speakPlayerStatusKey),
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
             Interval.ms(3000));
 
     public void update() {
-        try {
+        if (KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().speakPlayerStatusKey)) {
             Minecraft minecraftClient = Minecraft.getInstance();
             if (minecraftClient == null) return;
             if (minecraftClient.player == null) return;
             if (minecraftClient.screen != null) return;
 
             if (narrationKey.canBeTriggered()) {
+                if (Screen.hasControlDown()) {
+                    EffectNarration.getInstance().narrateCurrentPlayerEffects();
+                    return;
+                }
+
                 double health = Math.round((minecraftClient.player.getHealth() / 2.0) * 10.0) / 10.0;
                 double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
                 double absorption = Math.round((minecraftClient.player.getAbsorptionAmount() / 2.0) * 10.0) / 10.0;
@@ -41,11 +45,9 @@ public class PlayerStatus {
                 double maxAir = Math.round((minecraftClient.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
                 double frostExposurePercent = Math.round((minecraftClient.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
 
-                boolean isStatusKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().speakPlayerStatusKey);
-
                 String toSpeak = "";
 
-                if (!(isStatusKeyPressed && Screen.hasAltDown())) {
+                if (!Screen.hasAltDown()) {
                     if (absorption > 0) {
                         toSpeak += I18n.get("minecraft_access.player_status.base_with_absorption", health, absorption, maxHealth, hunger, maxHunger, armor);
                     } else {
@@ -66,9 +68,7 @@ public class PlayerStatus {
 
                 MainClass.speakWithNarrator(toSpeak, true);
             }
-            narrationKey.updateStateForNextTick();
-        } catch (Exception e) {
-            log.error("An error occurred in PlayerStatus.", e);
         }
+        narrationKey.updateStateForNextTick();
     }
 }
