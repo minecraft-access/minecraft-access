@@ -61,6 +61,17 @@ public class ReadCrosshairConfigMenu extends BaseScreen {
                 });
         this.addRenderableWidget(speakBlockSidesButton);
 
+        Function<Boolean, String> speakAdditionalEntityPosesText = featureToggleButtonMessageWith("minecraft_access.gui.read_crosshair_config_menu.button.speak_additional_entity_poses_button");
+        Button speakAdditionalEntityPosesButton = this.buildButtonWidget(
+                speakAdditionalEntityPosesText.apply(initMap.isSpeakAdditionalEntityPoses()),
+                (button) -> {
+                    ReadCrosshairConfigMap map = ReadCrosshairConfigMap.getInstance();
+                    map.setSpeakAdditionalEntityPoses(!map.isSpeakAdditionalEntityPoses());
+                    button.setMessage(Component.nullToEmpty(speakAdditionalEntityPosesText.apply(map.isSpeakAdditionalEntityPoses())));
+                    Config.getInstance().writeJSON();
+                });
+        this.addRenderableWidget(speakAdditionalEntityPosesButton);
+
         Function<Boolean, String> disableConsecutiveBlocksText = featureToggleButtonMessageWith("minecraft_access.gui.read_crosshair_config_menu.button.disable_speaking_consecutive_blocks_button");
         Button disableConsecutiveBlocksButton = this.buildButtonWidget(
                 disableConsecutiveBlocksText.apply(initMap.isDisableSpeakingConsecutiveBlocks()),
