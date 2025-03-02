@@ -36,12 +36,13 @@ dependencies {
 
     modImplementation "dev.architectury:architectury:${project.architectury_api_version}"
 
-    // lombok that makes the life easier
-    // https://projectlombok.org/setup/gradle
+    // https://projectlombok.org
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    implementation 'com.davykager.tolk:Tolk:1.0.0'
 
     // dependent on log4j for dynamic changing
     implementation 'org.apache.logging.log4j:log4j-api:2.22.1'
