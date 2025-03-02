@@ -146,7 +146,7 @@ The website theme has its [independent repository](https://github.com/minecraft-
 
 ## Recommended Approaches
 
-### Tell us what you intend to do before doing it
+### Tell Us What You Intend To Do Before Doing It
 
 When you decide to make contributions, we expect you to comment in the corresponding issue, make a new issue, or talk in the `mc-dev` channel of our [Discord server](https://discord.gg/yQjjsDqWQX).
 Industry experience tells us that shift-left checks and discussions are good for software development — for example, we can provide more relevant knowledge, project details, and advice to help you do things better.
@@ -156,16 +156,16 @@ Of course there is no mandatory requirement (praise [the freewheeling open sourc
 This means that you do not need to get anyone's permission to make changes to your fork of this project, you just need to make it work for **your personal needs**.
 If you feel that your changes will also benefit the upstream (main project), you can submit a Pull Request to [the main repository](https://github.com/minecraft-access/minecraft-access), and only then does the `contributing` begin.
 
-### Modify along with refactor
+### Modify Along With Refactor
 
 Keeping public environments (the whole repository, I mean) clean.
 If you find that there are grammar mistakes or typos in the documentation, please correct them.
-If you find that there are [IDE inspection notices](https://www.jetbrains.com/help/idea/code-inspection.html) on the file you're working on, please accept them no matter who introduced them (you can split these changes as a separate commit from your modification).
+If you find that there are [IDE inspection notices](https://www.jetbrains.com/help/idea/code-inspection.html) on the file you're working on, please accept them.
 
 ### Make all related changes in one pull request
 
 Update the documentation along with the code.
-Make sure that there is no unused code in the submit pull request.
+Make sure that there is no unused code in the submitted pull request.
 "There are more subsequent PRs" is not a valid reason.
 
 ### Review first
