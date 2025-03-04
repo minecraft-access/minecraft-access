@@ -34,6 +34,7 @@ public class MainClass {
     public static PlayerWarnings playerWarnings = null;
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
+    public static SpeakHeldItem speakHeldItem = null;
 
     public static boolean isNeoForge = Platform.isNeoForge();
     public static boolean interrupt = true;
@@ -62,6 +63,7 @@ public class MainClass {
         MainClass.playerWarnings = new PlayerWarnings();
         MainClass.accessMenu = new AccessMenu();
         MainClass.fluidDetector = new FluidDetector();
+        speakHeldItem = new SpeakHeldItem();
 
         for (KeyMapping km : KeyBindingsHandler.getInstance().getKeys()) {
             KeyMappingRegistry.register(km);
@@ -130,6 +132,8 @@ public class MainClass {
 
         if (accessMenu != null && config.accessMenu.enabled)
             accessMenu.update();
+
+        speakHeldItem.speakHeldItem();
 
         // POI Marking will handle POI Scan and POI Locking features inside it
         POIMarking.getInstance().update();

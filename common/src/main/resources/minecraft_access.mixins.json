@@ -24,6 +24,7 @@
     "EntityAccessor",
     "EyeOfEnderMixin",
     "GameNarratorMixin",
+    "GuiAccessor",
     "GuiGraphicsMixin",
     "GuiMixin",
     "I18NAccessor",
