@@ -26,7 +26,8 @@ configurations {
 dependencies {
     neoForge libs.neoForge
 
-    modImplementation include(libs.architecturyApiNeoForge.get().toString())
+    modRuntimeOnly libs.architecturyApiNeoForge
+    include libs.architecturyApiNeoForge
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }

@@ -25,8 +25,12 @@ configurations {
 
 dependencies {
     modImplementation libs.fabricLoader
-    modImplementation include(libs.fabricApi.get().toString())
-    modImplementation include(libs.architecturyApiFabric.get().toString())
+
+    modRuntimeOnly libs.fabricApi
+    include libs.fabricApi
+
+    modRuntimeOnly libs.architecturyApiFabric
+    include libs.architecturyApiFabric
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
