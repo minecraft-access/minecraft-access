@@ -13,8 +13,8 @@ import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.FishingRodItem;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,16 +30,12 @@ public abstract class ClientPacketListenerMixin implements TickablePacketListene
     @Inject(at = @At("HEAD"), method = "handleTakeItemEntity")
     public void handleTakeItemEntity(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
         Minecraft client = Minecraft.getInstance();
-        if (client == null) return;
-
-        PacketUtils.ensureRunningOnSameThread(packet, this, client);
-
         LocalPlayer player = client.player;
-        OtherConfigsMap otherConfig = OtherConfigsMap.getInstance();
-
         if (player == null) return;
 
-        if (otherConfig.isAlwaysSpeakPickedUpItemsEnabled() || (otherConfig.isFishingHarvestEnabled() && player.getMainHandItem().getItem() instanceof FishingRodItem)) {
+        PacketUtils.ensureRunningOnSameThread(packet, this, client);
+        Config.Features config = Config.getInstance().features;
+        if (config.alwaysSpeakPickedUpItemsEnabled || (config.fishingHarvestEnabled && player.getMainHandItem().getItem() instanceof FishingRodItem)) {
             int cId = packet.getPlayerId();
             int pId = player.getId();
             // Is this item picked by "me" or other players?

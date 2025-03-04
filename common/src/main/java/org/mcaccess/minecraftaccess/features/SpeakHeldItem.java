@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.features;
 
 import net.minecraft.client.Minecraft;
+import org.mcaccess.minecraftaccess.Config;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import org.mcaccess.minecraftaccess.mixin.GuiAccessor;
 
@@ -38,12 +38,11 @@ public class SpeakHeldItem {
     private void speakIfHeldChanged(String itemName, int itemCount, Function<String, String> i18n) {
         boolean nameChanged = !previousItemName.equals(itemName);
         boolean countChanged = previousItemCount != itemCount;
-        boolean reportHeldItemsCountWhenChanged = OtherConfigsMap.getInstance().isReportHeldItemsCountWhenChanged();
 
         if (nameChanged) {
             String itemCountText = itemCount == 0 ? "" : itemCount + " ";
             MainClass.speakWithNarrator(i18n.apply(itemCountText + itemName), true);
-        } else if (countChanged && reportHeldItemsCountWhenChanged) {
+        } else if (countChanged && Config.getInstance().features.reportHeldItemsCountWhenChanged) {
             MainClass.speakWithNarrator(String.valueOf(itemCount), true);
         }
         previousItemName = itemName;

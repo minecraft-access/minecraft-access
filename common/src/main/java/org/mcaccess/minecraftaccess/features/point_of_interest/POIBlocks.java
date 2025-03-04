@@ -11,8 +11,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
-import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
@@ -29,7 +28,6 @@ import java.util.function.Predicate;
 public class POIBlocks {
     @Getter
     private static final POIBlocks INSTANCE = new POIBlocks();
-    private LocalPlayer player;
     private ClientLevel world;
 
     private static final Block[] POI_BLOCKS = new Block[]{
@@ -84,13 +82,8 @@ public class POIBlocks {
             .map(b -> (Predicate<BlockState>) state -> state.is(b))
             .toList();
 
+    private Config.POI.Blocks config;
     private Set<BlockPos> checkedBlocks = Set.of();
-    private boolean enabled;
-    private boolean detectFluidBlocks;
-    private int range;
-    private boolean playSound;
-    private float volume;
-    private boolean playSoundForOtherBlocks;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
     private boolean isMarking = false;
@@ -107,18 +100,18 @@ public class POIBlocks {
     );
 
     @SuppressWarnings("unchecked")
-    private final POIGroup<BlockPos>[] groups = new POIGroup[] {
+    private final POIGroup<BlockPos>[] groups = new POIGroup[]{
             markedGroup,
             oreGroup,
             new POIGroup<BlockPos>(// Doors
-                SoundEvents.NOTE_BLOCK_BIT.value(),
-                2f,
-                pos -> world.getBlockState(pos).getBlock() instanceof DoorBlock || world.getBlockState(pos).getBlock() instanceof TrapDoorBlock
+                    SoundEvents.NOTE_BLOCK_BIT.value(),
+                    2f,
+                    pos -> world.getBlockState(pos).getBlock() instanceof DoorBlock || world.getBlockState(pos).getBlock() instanceof TrapDoorBlock
             ),
             new POIGroup<BlockPos>(// Fluids
                     SoundEvents.NOTE_BLOCK_BIT.value(),
                     2f,
-                    pos -> this.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof LiquidBlock && PlayerUtils.isNotInFluid() && world.getFluidState(pos).getAmount() == 8
+                    pos -> config.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof LiquidBlock && PlayerUtils.isNotInFluid() && world.getFluidState(pos).getAmount() == 8
             ),
             new POIGroup<BlockPos>(// Functional blocks
                     SoundEvents.NOTE_BLOCK_BIT.value(),
@@ -133,22 +126,21 @@ public class POIBlocks {
     };
 
     private POIBlocks() {
-        loadConfigurations();
+        loadConfig();
     }
 
     public void update(boolean isMarking, Block markedBlock) {
         this.isMarking = isMarking;
         if (isMarking) setMarkedBlock(markedBlock);
-        loadConfigurations();
+        loadConfig();
 
-        if (!enabled) return;
+        if (!config.enabled) return;
         if (!interval.isReady()) return;
 
         Minecraft client = Minecraft.getInstance();
-        if (client == null) return;
         if (client.player == null) return;
         if (client.screen != null) return; //Prevent running if any screen is opened
-        player = client.player;
+        LocalPlayer player = client.player;
         world = client.level;
 
         for (POIGroup<BlockPos> group : groups) {
@@ -162,21 +154,21 @@ public class POIBlocks {
         // Scan blocks exposed in the space around player
         checkBlock(pos.below(), 0);
         checkBlock(pos.above(2), 0);
-        checkBlock(pos, this.range);
-        checkBlock(pos.above(), this.range);
+        checkBlock(pos, config.range);
+        checkBlock(pos.above(), config.range);
 
-        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
+        if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
             for (BlockPos blockPos : markedGroup.getItems()) {
-                markedGroup.playSound(blockPos.getCenter(), volume);
+                markedGroup.playSound(blockPos.getCenter(), config.volume);
             }
-        } else if (playSound && !playSoundForOtherBlocks) {
+        } else if (config.playSound && !config.playSoundForOtherBlocks) {
             for (BlockPos blockPos : oreGroup.getItems()) {
-                oreGroup.playSound(blockPos.getCenter(), volume);
+                oreGroup.playSound(blockPos.getCenter(), config.volume);
             }
-        } else if (playSound) {
+        } else if (config.playSound) {
             for (POIGroup<BlockPos> group : groups) {
                 for (BlockPos blockPos : group.getItems()) {
-                    group.playSound(blockPos.getCenter(), volume);
+                    group.playSound(blockPos.getCenter(), config.volume);
                 }
             }
         }
@@ -184,15 +176,9 @@ public class POIBlocks {
         log.debug("POIBlock ended.");
     }
 
-    private void loadConfigurations() {
-        POIBlocksConfigMap poiBlocksConfigMap = POIBlocksConfigMap.getInstance();
-        this.enabled = poiBlocksConfigMap.isEnabled();
-        this.detectFluidBlocks = poiBlocksConfigMap.isDetectFluidBlocks();
-        this.range = poiBlocksConfigMap.getRange();
-        this.playSound = poiBlocksConfigMap.isPlaySound();
-        this.volume = poiBlocksConfigMap.getVolume();
-        this.playSoundForOtherBlocks = poiBlocksConfigMap.isPlaySoundForOtherBlocks();
-        this.interval.setDelay(poiBlocksConfigMap.getDelay(), Interval.Unit.Millisecond);
+    private void loadConfig() {
+        config = Config.getInstance().poi.blocks;
+        interval.setDelay(config.delay, Interval.Unit.Millisecond);
     }
 
     private void checkBlock(BlockPos blockPos, int val) {
@@ -228,10 +214,10 @@ public class POIBlocks {
     }
 
     public @UnmodifiableView List<BlockPos> getLockingCandidates() {
-        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
+        if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
             return markedGroup.getItems();
         }
 
         return Arrays.stream(groups).flatMap(group -> group.getItems().stream()).toList();
-   }
+    }
 }

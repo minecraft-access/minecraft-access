@@ -46,11 +46,11 @@ public class SlotsGroup {
     }
 
     public SlotItem getFirstGroupItem() {
-        return this.slotItems.get(0);
+        return this.slotItems.getFirst();
     }
 
     public SlotItem getLastGroupItem() {
-        return this.slotItems.get(this.slotItems.size() - 1);
+        return this.slotItems.getLast();
     }
 
     public boolean hasSlotItemAbove(@NotNull SlotItem slotItem) {

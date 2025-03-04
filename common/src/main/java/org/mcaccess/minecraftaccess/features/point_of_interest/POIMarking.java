@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import org.mcaccess.minecraftaccess.Config;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,7 +13,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
@@ -40,7 +40,7 @@ public class POIMarking {
      * if this feature is enabled.
      */
     public void update() {
-        if (POIMarkingConfigMap.getInstance().isEnabled()) {
+        if (Config.getInstance().poi.marking.enabled) {
             boolean controlPressed = Screen.hasControlDown();
             boolean AltPressed = Screen.hasAltDown();
             boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().lockingHandlerKey);
@@ -66,7 +66,6 @@ public class POIMarking {
         if (onMarking) return;
 
         Minecraft client = Minecraft.getInstance();
-        if (client == null) return;
         HitResult hit = client.hitResult;
         if (hit == null) return;
 

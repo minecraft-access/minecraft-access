@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.screen_reader;
 
+import org.mcaccess.minecraftaccess.Config;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import lombok.extern.slf4j.Slf4j;
-import org.mcaccess.minecraftaccess.config.config_maps.SpeechSettingsConfigMap;
 
 @Slf4j
 public class ScreenReaderMacOS implements ScreenReaderInterface {
@@ -48,8 +48,7 @@ public class ScreenReaderMacOS implements ScreenReaderInterface {
         }
 
         // Get speech rate here in case the user changes it
-        SpeechSettingsConfigMap map = SpeechSettingsConfigMap.getInstance();
-        float speechRate = map.getSpeechRate()/100;
+        float speechRate = Config.getInstance().speechSettings.speechRate / 100;
 
         // Convert the text to be spoken into an NSString object
         Pointer stringObject = objcRuntimeInstance.objc_msgSend(

@@ -7,8 +7,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.level.Level;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
 import org.mcaccess.minecraftaccess.features.point_of_interest.LockingHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,7 +32,7 @@ public abstract class EyeOfEnderMixin extends Entity implements ItemSupplier {
     @Inject(at = @At("HEAD"), method = "tick")
     private void tick(CallbackInfo callbackInfo) {
         if (this.life != 1) return;
-        if (!POILockingConfigMap.getInstance().isAutoLockEyeOfEnderEntity())
+        if (!Config.getInstance().poi.locking.autoLockEyeOfEnderEntity)
             return;
 
        log.debug("Auto locking on eye of ender entity");

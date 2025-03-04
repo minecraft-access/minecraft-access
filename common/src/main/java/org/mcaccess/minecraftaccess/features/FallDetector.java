@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import org.mcaccess.minecraftaccess.config.config_maps.FallDetectorConfigMap;
+import org.mcaccess.minecraftaccess.Config;
 
 import java.time.Clock;
 import java.util.HashSet;
@@ -19,12 +19,7 @@ public class FallDetector {
     private long previousTimeInMillis;
     Minecraft minecraftClient;
     private int count;
-
-    private boolean enabled;
-    private int range;
-    private int depth;
-    private float volume;
-    private int delayInMilliseconds;
+    private Config.FallDetector config;
 
     static {
         try {
@@ -38,8 +33,7 @@ public class FallDetector {
         clock = Clock.systemDefaultZone();
         minecraftClient = Minecraft.getInstance();
         previousTimeInMillis = clock.millis();
-
-        loadConfigurations();
+        config = Config.getInstance().fallDetector;
     }
 
     public static synchronized FallDetector getInstance() {
@@ -48,9 +42,9 @@ public class FallDetector {
 
     public void update() {
         try {
-            loadConfigurations();
+            config = Config.getInstance().fallDetector;
 
-            if (!enabled) return;
+            if (!config.enabled) return;
 
             if (minecraftClient == null) return;
             if (minecraftClient.player == null) return;
@@ -62,12 +56,12 @@ public class FallDetector {
             if (!minecraftClient.player.onGround()) return;
 
             long currentTimeInMillis = clock.millis();
-            if (currentTimeInMillis - previousTimeInMillis < delayInMilliseconds) return;
+            if (currentTimeInMillis - previousTimeInMillis < config.delay) return;
             previousTimeInMillis = currentTimeInMillis;
 
-           log.debug("Searching for fall in nearby area...");
+            log.debug("Searching for fall in nearby area...");
             SearchNearbyPositions();
-           log.debug("Searching ended.");
+            log.debug("Searching ended.");
         } catch (Exception e) {
             log.error("An error occurred in fall detector.", e);
         }
@@ -102,10 +96,10 @@ public class FallDetector {
     }
 
     private boolean isValid(BlockPos dir, BlockPos center, HashSet<BlockPos> searched) {
-        if (Math.abs(dir.getX() - center.getX()) > range)
+        if (Math.abs(dir.getX() - center.getX()) > config.range)
             return false;
 
-        if (Math.abs(dir.getZ() - center.getZ()) > range)
+        if (Math.abs(dir.getZ() - center.getZ()) > config.range)
             return false;
 
         //noinspection RedundantIfStatement
@@ -120,10 +114,10 @@ public class FallDetector {
         if (minecraftClient.level == null) return;
         if (!(minecraftClient.level.getBlockState(toCheck).isAir())) return;
 
-        if (getDepth(toCheck, depth) < depth) return;
+        if (getDepth(toCheck, config.depth) < config.depth) return;
 
-       log.debug("%d) Found qualified fall position: x:%d y:%d z:%d".formatted(++count, toCheck.getX(), toCheck.getY(), toCheck.getZ()));
-        minecraftClient.level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, volume, 1f, true);
+        log.debug("{}) Found qualified fall position: x:{} y:{} z:{}", ++count, toCheck.getX(), toCheck.getY(), toCheck.getZ());
+        minecraftClient.level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, config.volume, 1f, true);
     }
 
     private int getDepth(BlockPos blockPos, int maxDepth) {
@@ -134,15 +128,5 @@ public class FallDetector {
         if (!(minecraftClient.level.getBlockState(blockPos).isAir())) return 0;
 
         return 1 + getDepth(blockPos.below(), --maxDepth);
-    }
-
-    private void loadConfigurations() {
-        FallDetectorConfigMap fallDetectorConfigMap = FallDetectorConfigMap.getInstance();
-        enabled = fallDetectorConfigMap.isEnabled();
-        range = fallDetectorConfigMap.getRange();
-        depth = fallDetectorConfigMap.getDepth();
-//        playSound = fallDetectorConfigMap.isPlayAlternateSound();
-        volume = fallDetectorConfigMap.getVolume();
-        delayInMilliseconds = fallDetectorConfigMap.getDelay();
     }
 }

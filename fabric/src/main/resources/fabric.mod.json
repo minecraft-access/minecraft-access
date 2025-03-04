@@ -4,32 +4,50 @@
   "version": "${version}",
   "name": "Minecraft Access",
   "description": "A mod that helps visually impaired players to play Minecraft.",
+  "license": "GNU GPLv3",
+  "icon": "logo-mc-access.png",
   "authors": [
     "Shoaib",
     "Boholder",
-    "TheSuperGamer20578"
+    "TheSuperGamer20578",
+    "BrailleBennett",
+    "Molitvan"
   ],
   "contact": {
     "homepage": "https://mcaccess.org",
-    "sources": "https://github.com/minecraft-access/minecraft-access"
+    "sources": "https://github.com/minecraft-access/minecraft-access",
+    "issues": "https://github.com/khanshoaib3/minecraft-access/issues"
   },
-  "license": "GNU GPLv3",
   "environment": "client",
   "entrypoints": {
     "main": [
       "org.mcaccess.minecraftaccess.fabric.MainClassFabric"
+    ],
+    "modmenu": [
+      "org.mcaccess.minecraftaccess.fabric.ModMenu"
     ]
   },
-  "icon": "logo-mc-access.png",
   "mixins": [
-    "minecraft_access.mixins.json"
+    "minecraft_access.mixins.json",
+    "minecraft_access-compat.mixins.json"
   ],
   "depends": {
     "fabricloader": "^${fabric_loader_version}",
     "architectury": "^${architectury_api_version}",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "${minecraft_version}",
+    "cloth-config": "*"
   },
   "suggests": {
     "jade": "^${jade_fabric_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/yQjjsDqWQX",
+        "modmenu.wiki": "https://docs.mcaccess.org/",
+        "modmenu.github_releases": "https://github.com/minecraft-access/minecraft-access/releases",
+        "modmenu.modrinth": "https://modrinth.com/mod/minecraft-access"
+      }
+    }
   }
 }
