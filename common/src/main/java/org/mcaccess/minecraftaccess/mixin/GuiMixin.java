@@ -2,11 +2,8 @@ package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.ItemStack;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.features.SpeakHeldItem;
 import org.mcaccess.minecraftaccess.utils.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features;
 
+import net.minecraft.client.Minecraft;
 import org.mcaccess.minecraftaccess.Config;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
