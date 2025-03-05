@@ -18,7 +18,7 @@ fabricLoader = "net.fabricmc:fabric-loader:0.16.10"
 jadeFabric = "maven.modrinth:jade:17.2.2+fabric"
 jadeNeoForge = "maven.modrinth:jade:17.3.0+neoforge"
 minecraft = "com.mojang:minecraft:1.21.4"
-neoForge = "net.neoforged:neoforge:21.4.102-beta"
+neoForge = "net.neoforged:neoforge:21.4.103-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.4:2025.02.16"
 
 assertjCore = "org.assertj:assertj-core:3.27.3"

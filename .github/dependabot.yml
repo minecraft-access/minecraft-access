@@ -22,7 +22,11 @@ updates:
     groups:
       gradle-dependencies:
         patterns:
+          # Use wildcard to bundle plugins and libs into one PR
           - "*"
         update-types:
           - minor
           - patch
+    ignore:
+        # Ignore Jade since Dependabot can't tell Fabric and Neo builds apart
+        - dependency-name: "maven.modrinth:jade"
