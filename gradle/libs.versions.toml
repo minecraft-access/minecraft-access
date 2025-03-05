@@ -1,0 +1,40 @@
+# To manually find version numbers, use
+# https://linkie.shedaniel.dev/dependencies
+# https://parchmentmc.org/docs/getting-started for version table
+
+[versions]
+architecturyApi = "15.0.3"
+jmh = "1.37"
+junitJupiter = "5.12.0"
+log4j = "2.24.3"
+mockito = "5.16.0"
+
+[libraries]
+architecturyApi = { module = "dev.architectury:architectury", version.ref = "architecturyApi" }
+architecturyApiFabric = { module = "dev.architectury:architectury-fabric", version.ref = "architecturyApi" }
+architecturyApiNeoForge = { module = "dev.architectury:architectury-neoforge", version.ref = "architecturyApi" }
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.118.0+1.21.4"
+fabricLoader = "net.fabricmc:fabric-loader:0.16.10"
+jadeFabric = "maven.modrinth:jade:17.2.2+fabric"
+jadeNeoForge = "maven.modrinth:jade:17.3.0+neoforge"
+minecraft = "com.mojang:minecraft:1.21.4"
+neoForge = "net.neoforged:neoforge:21.4.103-beta"
+parchment = "org.parchmentmc.data:parchment-1.21.4:2025.02.16"
+
+assertjCore = "org.assertj:assertj-core:3.27.3"
+jmhCore = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
+jmhGeneratorAnnprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
+junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
+junitJupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiter" }
+junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.12.0"
+log4jApi = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
+log4jCore = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+lombok = "org.projectlombok:lombok:1.18.36"
+mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+
+[plugins]
+architecturyLoom = { id = "dev.architectury.loom", version = "1.9-SNAPSHOT" }
+architecturyPlugin = { id = "architectury-plugin", version = "3.4-SNAPSHOT" }
+gitVersion = { id = "com.palantir.git-version", version = "3.1.0" }
+shadow = { id = "com.gradleup.shadow", version = "8.3.6" }
