@@ -3,10 +3,6 @@ architectury {
 }
 
 dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
-    modImplementation libs.fabricLoader
-
     modImplementation libs.jadeFabric
     modImplementation libs.architecturyApi
 

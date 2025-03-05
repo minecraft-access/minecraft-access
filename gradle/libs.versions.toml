@@ -10,7 +10,6 @@ log4j = "2.24.3"
 mockito = "5.16.0"
 
 [libraries]
-# Primary Dependencies
 architecturyApi = { module = "dev.architectury:architectury", version.ref = "architecturyApi" }
 architecturyApiFabric = { module = "dev.architectury:architectury-fabric", version.ref = "architecturyApi" }
 architecturyApiNeoForge = { module = "dev.architectury:architectury-neoforge", version.ref = "architecturyApi" }
@@ -21,7 +20,7 @@ jadeNeoForge = "maven.modrinth:jade:17.3.0+neoforge"
 minecraft = "com.mojang:minecraft:1.21.4"
 neoForge = "net.neoforged:neoforge:21.4.102-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.4:2025.02.16"
-# Secondary Dependencies
+
 assertjCore = "org.assertj:assertj-core:3.27.3"
 jmhCore = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmhGeneratorAnnprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
