@@ -1,11 +1,13 @@
 package org.mcaccess.minecraftaccess.features;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.mixin.GuiAccessor;
 
 import java.util.function.Function;
 
@@ -19,7 +21,9 @@ public class SpeakHeldItem {
     public static final Function<String, String> HOTBAR_I18N = toSpeak -> I18n.get("minecraft_access.other.selected", toSpeak);
     public static final Function<String, String> EMPTY_SLOT_I18N = toSpeak -> I18n.get("minecraft_access.inventory_controls.empty_slot", toSpeak);
 
-    public void speakHeldItem(ItemStack currentStack, int heldItemTooltipFade) {
+    public void speakHeldItem() {
+        ItemStack currentStack = ((GuiAccessor) Minecraft.getInstance().gui).getLastToolHighlight();
+        int heldItemTooltipFade = ((GuiAccessor) Minecraft.getInstance().gui).getToolHighlightTimer();
         boolean currentStackIsEmpty = currentStack.isEmpty();
         if (heldItemTooltipFade == 0 && currentStackIsEmpty) {
             // Speak "empty slot" when the selected slot is empty
