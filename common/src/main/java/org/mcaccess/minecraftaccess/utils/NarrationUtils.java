@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -558,5 +559,30 @@ public class NarrationUtils {
                 (fluidValue) -> "[unregistered " + fluidValue + "]"
         );
         return I18n.get(translationKey);
+    }
+
+    public static String narrateEffect(MobEffectInstance effect) {
+        StringBuilder result = new StringBuilder();
+
+        result.append(I18n.get(effect.getDescriptionId())).append(" ");
+
+        int amplifier = effect.getAmplifier();
+        if (amplifier > 1) {
+            result.append(String.valueOf(amplifier)).append(" ");
+        }
+
+        if (effect.isInfiniteDuration()) {
+            result.append(I18n.get("effect.duration.infinite"));
+        } else {
+            // StatusEffectInstance#getDuration returns ticks, so we divide by 20 in order to convert to seconds
+            // 1 second = 20 ticks
+            int duration = effect.getDuration() / 20;
+            int minutes = duration / 60;
+            int seconds = duration % 60;
+
+            result.append("%02d:%02d".formatted(minutes, seconds));
+        }
+
+        return result.toString();
     }
 }
