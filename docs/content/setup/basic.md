@@ -2,8 +2,8 @@
 title: "Mod Setup"
 ---
 
-Currently, this mod supports the Windows and Linux operating systems ([help us to port it to macOS](https://github.com/khanshoaib3/minecraft-access/issues/22)).
-The latest version of this mod (as well as other mod dependencies) can be downloaded at the [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest).
+This mod supports Windows, macOS and Linux operating systems.
+The latest version of this mod (as well as other mod dependencies) can be downloaded at the [releases page](https://github.com/minecraft-access/minecraft-access/releases/latest).
 
 ## Tutorial for Beginners: From Purchasing the Game To Installing This Mod
 
@@ -65,7 +65,7 @@ Keep going after you’ve logged in, fill in the purchase information, and click
 
 ### Use a Modpack Version of the Mod
 
-The community member [@BrailleBennett](https://github.com/BrailleBennett) has created a modpack that contains everything you need to get started with Minecraft. If you wish to use this pack, go to its [guide file]({{% relref "./modpack" %}}). There is no need to return to this guide after you finish that one, as it is not relevant to the pack.
+The community member [@BrailleBennett](https://github.com/BrailleBennett) has created a modpack that contains everything you need to get started with Minecraft. If you wish to use this pack, go to its [setup guide page]({{% relref "./modpack" %}}). There is no need to return to this guide after you finish that one, as it is not relevant to the pack.
 This is usually seen as the easiest and most convenient option for new users.
 
 ### Download the Launcher
@@ -117,7 +117,7 @@ just below the `Download for Windows` button.
 Start the installer, a window pops up for you to choose the installation configurations:
 
 1. The `Client` tab is selected by default, don't change it.
-2. The first combo box is for selecting the game version you want to install, please refer to the current game version that is supported by this mod on the [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest) (under the `Mod Version Compatibility` section), and change the combo box to select that game version.
+2. The first combo box is for selecting the game version you want to install, please refer to the current game version that is supported by this mod on the [releases page](https://github.com/minecraft-access/minecraft-access/releases/latest) (under the `Mod Version Compatibility` section), and change the combo box to select that game version.
 3. Next, there is a checkbox for showing game snapshot versions; you can ignore it.
 4. The second combo box is for selecting the Fabric loader version, the latest version is selected by default, you should also not touch this either.
 5. Then there is an input field for specifying the installation location,
@@ -129,7 +129,6 @@ Start the installer, a window pops up for you to choose the installation configu
 7. Finally, click the `Install` button to start the installation.
    It will download some files from the Internet, if the network is fast, the installation takes less than a minute.
    A pop-up will show up to notify you that the installation is successful.
-   We currently do not have a guide written for how to install Fabric on Linux (but it's most certainly easier than choosing to install NeoForge), so you will have to [google it](https://www.google.com/search?q=install+minecraft+fabric+on+linux) by yourself, sorry.
 
 ### Install NeoForge
 
@@ -155,12 +154,11 @@ This guide will describe how to download and install mods manually;
 you can also manage them automatically with an extra application such as [Modrinth](https://modrinth.com/app) or [CurseForge for Windows](https://www.curseforge.com/download/app).
 
 Now let's download mod files.
-To download this mod and the dependencies of this mod, it is recommended you download them from the Minecraft Access's official [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest), where you can find download links of suitable versions of the required mods, under the `Mod Version Compatibility` section of each release.
+To download this mod and the dependencies of this mod, it is recommended you download them from the Minecraft Access's official [releases page](https://github.com/minecraft-access/minecraft-access/releases/latest), where you can find download links of suitable versions of the required mods, under the `Mod Version Compatibility` section of each release.
 By the way, you may be interested in the mods provided in the [good resources]({{% relref "/good-resources#quality-of-life-mods" %}}) page of the documentation, they are good mods that our visually impaired users have found and tested through practice.
 
 After all the mods you want are downloaded, you can move on to putting them into the right location for the mod loader to recognize them.
 The default path on Windows is: `%appdata%\.minecraft\mods` (the `%appdata%` is a shortcut for `C:\Users\username\AppData\Roaming`), you can directly paste it into File Explorer then press the enter key to jump to it or paste it into the run box accessed with the Windows+R keys and click enter.
-Note that on Linux, the default game directory is `~/.minecraft` and the mod directory is `~/.minecraft/mods`.
 We'll put downloaded mod files inside it, both Fabric and NeoForge will load mods from this folder by default if installed. You can look up how to use alternate installation locations if you wish to maintain both Fabric and NeoForge installations at the same time.
 You will need to start the game once after installing the mod loader for the `mods` folder to be created.
 
@@ -201,20 +199,6 @@ And here is a [complex self-help FAQ]({{% relref "/faq#self-help-guide-for-abnor
 for you to address the problem,
 from not being able to hear the narration to a full game crash.
 
-### Additional Installation for Linux
-
-We need
-to install a few extra things that this mod depends on
-after installing the mod to make this mod work properly if you’re using Linux.
-
-1. We need to install the [libspeechdwrapper](https://github.com/khanshoaib3/libspeechdwrapper) for invoking the screen reader's API.
-   Download the library from [its GitHub repository](https://github.com/khanshoaib3/libspeechdwrapper/raw/main/lib/libspeechdwrapper.so) and move it into the minecraft directory (default `~/.minecraft`).
-
-2. Although the mod overrides the library used for TTS, minecraft still needs the `flite` library to be installed, so you can install it using your distro's package manager itself.
-
-3. We also need to install [xdotool](https://github.com/jordansissel/xdotool),
-   which is used for simulating the mouse actions.
-   Follow the [instructions](https://github.com/jordansissel/xdotool#installation) to install it.
 
 ## Update the Game and Mods
 For [Fabric](#install-fabric),

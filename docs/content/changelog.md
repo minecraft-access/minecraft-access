@@ -6,10 +6,10 @@ title: "Changelog"
 
 ## Release v1.9.0 (2024-12)
 ### New Features
-- Speak current perspective when switched to [#314](https://github.com/khanshoaib3/minecraft-access/issues/314)
+- Speak current perspective when switched to [#314](https://github.com/minecraft-access/minecraft-access/issues/314)
 - Blocks and entities can now be narrated with Jade, providing much more detailed information.
 - Add basic aim assist for bows (temporarily lock onto the nearest hostile mob when drawing a bow, play sounds indicating how much the bow has been drawn and if the target can be shot)
-- Implement support for running  the mod on MacOS
+- Implement support for running  the mod on macOS
 - Each function in the access menu can now be bound as a key on your keyboard (all unbound by default aside from narrate target)
 - HealthNHunger is now player status
 - Made the readout of player status more concise which also delivers values faster
@@ -19,7 +19,7 @@ title: "Changelog"
 - Renamed enableHealthNHunger in the config to enablePlayerStatus (**THIS IS A BREAKING CHANGE**)
 
 ### Feature Updates
-- [Vault](https://minecraft.wiki/w/Vault) and [Trial Spawner](https://minecraft.wiki/w/Trial_Spawner) are added as POI blocks [#306](https://github.com/khanshoaib3/minecraft-access/issues/306)
+- [Vault](https://minecraft.wiki/w/Vault) and [Trial Spawner](https://minecraft.wiki/w/Trial_Spawner) are added as POI blocks [#306](https://github.com/minecraft-access/minecraft-access/issues/306)
 - Remove `Position Narrator Format` config since it seems duplicate with single number narrating formats
 - The narration menu function key key is now deprecated, and has been replaced by the narrate target key as each thing can be bound independently
 - The narrator menu was renamed to the access menu to avoid confusion with the existing narrator feature in Microsoft products
@@ -32,8 +32,8 @@ title: "Changelog"
 - The mod now announces the biome you entered when you join a world instead of the xp level.
 
 ### Bug Fixes
-- Let `Enable Facing Direction` config controls auto direction speaking in `Camera Controls` [#327](https://github.com/khanshoaib3/minecraft-access/issues/327)
-- Make the `Look Straight Back` key combination (left alt + numpad 5) works again [#328](https://github.com/khanshoaib3/minecraft-access/issues/328)
+- Let `Enable Facing Direction` config controls auto direction speaking in `Camera Controls` [#327](https://github.com/minecraft-access/minecraft-access/issues/327)
+- Make the `Look Straight Back` key combination (left alt + numpad 5) works again [#328](https://github.com/minecraft-access/minecraft-access/issues/328)
 - You can now hold down keys without them speaking their output over and over
 - Fixed smithing table slots being mislabeled
 - Some neutral mobs are now recognized as hostile when angry like wolves, instead of always being passive
@@ -49,7 +49,7 @@ title: "Changelog"
 
 ### Support 1.21.4
 This mod doesn't yet support new features such as [crafter](https://minecraft.wiki/w/Crafter) and [pale garden](https://minecraft.wiki/w/Pale_Garden), but at least you can play the latest version now! Compatibility for 1.21.4:
-* Minecraft: 1.21.4 ([read setup guide](/docs/setup/basic.md)))
+* Minecraft: 1.21.4 ([read setup guide]({{% relref "/setup/basic" %}})))
 * Fabric Loader: >=0.16.9 ([download Fabric Loader](https://fabricmc.net/use/installer/))
 * NeoForge: 21.4.33-beta ([download NeoForge installer](https://maven.neoforged.net/releases/net/neoforged/neoforge/21.3.4-beta/neoforge-21.3.4-beta-installer.jar))
 * Java: >=21 ([download x64 Windows installer](https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.msi), [download page for all Operating Systems](https://www.oracle.com/java/technologies/downloads/#java21))
@@ -59,10 +59,10 @@ Release v1.8.0 (2024-08)
 
 ### Bug Fixes
 
-- Fix binding sprint to the `R` key isn't work [#310](https://github.com/khanshoaib3/minecraft-access/issues/310)
-- Fix can't speak music discs name in inventory screen [#311](https://github.com/khanshoaib3/minecraft-access/issues/311)
-- Improve vertical facing direction speaking [#313](https://github.com/khanshoaib3/minecraft-access/issues/313)
-- Now the two methods of look straight up/down work like what manual says (single `.` and `0`, or hold `Right Alt` then press `Up` nad `Down`) . [#321](https://github.com/khanshoaib3/minecraft-access/issues/321)
+- Fix binding sprint to the `R` key isn't work [#310](https://github.com/minecraft-access/minecraft-access/issues/310)
+- Fix can't speak music discs name in inventory screen [#311](https://github.com/minecraft-access/minecraft-access/issues/311)
+- Improve vertical facing direction speaking [#313](https://github.com/minecraft-access/minecraft-access/issues/313)
+- Now the two methods of look straight up/down work like what manual says (single `.` and `0`, or hold `Right Alt` then press `Up` nad `Down`) . [#321](https://github.com/minecraft-access/minecraft-access/issues/321)
 
 ### Others
 
@@ -85,7 +85,7 @@ Release v1.7.0 (2024-07)
 ### Bug Fixes
 
 - Fixed detection of unknown (modded) item groups in GUIs
-- Fix the problem that camera look straight up/down keys don't work [#298](https://github.com/khanshoaib3/minecraft-access/issues/298)
+- Fix the problem that camera look straight up/down keys don't work [#298](https://github.com/minecraft-access/minecraft-access/issues/298)
 - Fix the problem that mod keybindings aren't shown in settings menu
 
 ### Others
@@ -120,8 +120,8 @@ Release v1.6.0 (2024-06)
 
 - Speak variant of dog, cat, axolotl
 - Speak animals and monsters currently wearing equipment
-- Speak enchant cost in anvil [#277](https://github.com/khanshoaib3/minecraft-access/pull/277)
-- Speak hovered tooltip when `Inventory Control` feature is disabled [#281](https://github.com/khanshoaib3/minecraft-access/pull/281)
+- Speak enchant cost in anvil [#277](https://github.com/minecraft-access/minecraft-access/pull/277)
+- Speak hovered tooltip when `Inventory Control` feature is disabled [#281](https://github.com/minecraft-access/minecraft-access/pull/281)
 
 ### Bug Fixes
 
@@ -179,14 +179,14 @@ Release v1.5.2 (2024-01)
 
 ### Refactoring, Documentation and Chores
 
-Now there are [three workflows](https://github.com/khanshoaib3/minecraft-access/blob/1.21/.github/workflows):
+Now there are [three workflows](https://github.com/minecraft-access/minecraft-access/blob/1.21/.github/workflows):
 
 * `test`: Triggered by PR, runs tests suite
 * `build`: Manually triggered, builds mod files, you can download built files from action page
 * `publish`: Manually triggered, creates GitHub release, publish mod files to Modrinth and CurseForge
 
 For running `release` workflow, the repo must have `MODRINTH_TOKEN` and `CURSEFORGE_TOKEN` in repo's secret settings.
-For running `build` workflow to build previous version of mod, [lang repo](https://github.com/khanshoaib3/minecraft-access-i18n) must have same version tag (git tag) as target build version.
+For running `build` workflow to build previous version of mod, [lang repo](https://github.com/minecraft-access/minecraft-access-i18n) must have same version tag (git tag) as target build version.
 
 Release v1.5.1 (2024-01)
 ---------------------------
@@ -225,26 +225,26 @@ Release v1.4.3 (2024-01)
 
 ### Bug Fixes
 
-* Fix the bug that you can't use `Left Alt` + `Center Camera Key` to look straight back. [#225](https://github.com/khanshoaib3/minecraft-access/issues/225)
+* Fix the bug that you can't use `Left Alt` + `Center Camera Key` to look straight back. [#225](https://github.com/minecraft-access/minecraft-access/issues/225)
 
 Release v1.4.2 (2023-12)
 ---------------------------
 
 ### Bug Fixes
 
-* Fix the bug that ReadCrosshair spam when the player in the fluid and looks at fluid. [#222](https://github.com/khanshoaib3/minecraft-access/issues/222)
+* Fix the bug that ReadCrosshair spam when the player in the fluid and looks at fluid. [#222](https://github.com/minecraft-access/minecraft-access/issues/222)
 
 Release v1.4.1 (2023-12)
 ---------------------------
 
 ### Bug Fixes
 
-* Fix the bug that can not speak hotbar in latest version of forge (1.20.1-47.2.17) [#218](https://github.com/khanshoaib3/minecraft-access/issues/218)
+* Fix the bug that can not speak hotbar in latest version of forge (1.20.1-47.2.17) [#218](https://github.com/minecraft-access/minecraft-access/issues/218)
 
 ### Feature Changes
 
 * Breaking change: config `Speak Action Bar Updates` is renamed to `Speak Action Bar Messages`.
-* New config `Only Speak Action Bar Updates` for only speak changed part of action bar message when the message is partially updated, useful for some mods like hypixel. [#220](https://github.com/khanshoaib3/minecraft-access/issues/220)
+* New config `Only Speak Action Bar Updates` for only speak changed part of action bar message when the message is partially updated, useful for some mods like hypixel. [#220](https://github.com/minecraft-access/minecraft-access/issues/220)
 
 ### Dependencies Changes
 
@@ -261,22 +261,22 @@ Release v1.4.0 (2023-11)
 * Suppress annoying original `speak whole sentence` narration on every text editing operation.
 * Simplify the original command suggestion narration for a better typing experience with lesser annoying too-detailed narrations.
 
-See also: [description of this feature]({{% relref "/features#speak-text-editing" %}}) [#187](https://github.com/khanshoaib3/minecraft-access/issues/187)
+See also: [description of this feature]({{% relref "/features#speak-text-editing" %}}) [#187](https://github.com/minecraft-access/minecraft-access/issues/187)
 
 #### I18N Fallback Mechanism
 
 A fallback mechanism is added to I18n in case it fails on unsupported languages, or text that not translated in time in supported languages.
 If any I18N failed on your language, the mod will use the English version instead.
 Set the game to your familiar language is recommended, even if it's not supported by this mod, since you can still be benefited from translatable game original text, such as name of blocks or creatures.
-If you want to contribute to translating work, we manage the translation of this mod in [another GitHub repository](https://github.com/khanshoaib3/minecraft-access-i18n#minecraft-access-i18n), take a look.
+If you want to contribute to translating work, we manage the translation of this mod in [another GitHub repository](https://github.com/minecraft-access/minecraft-access-i18n#minecraft-access-i18n), take a look.
 
 ### Feature Changes
 
-* Now whenever you're looking at a block and entity, the mod will play a piano sound cue to indicate relative location between you and target. see also: [description of this feature]({{% relref "/features#relative-position-sound-cue" %}}) [#191](https://github.com/khanshoaib3/minecraft-access/issues/191)
+* Now whenever you're looking at a block and entity, the mod will play a piano sound cue to indicate relative location between you and target. see also: [description of this feature]({{% relref "/features#relative-position-sound-cue" %}}) [#191](https://github.com/minecraft-access/minecraft-access/issues/191)
 * Now the mod will only speak item count when held item type isn't changed (when picking up or spending items), with a new config `Report Held Items Count When Changed`, see the [configuration]({{% relref "/config#other-configurations" %}}).
-* Now the mod will speak sitting state of cat, dog, parrot, [and so on](https://minecraft.wiki/w/Sitting#Mechanics) in `Read Crosshair`. [#192](https://github.com/khanshoaib3/minecraft-access/issues/192)
+* Now the mod will speak sitting state of cat, dog, parrot, [and so on](https://minecraft.wiki/w/Sitting#Mechanics) in `Read Crosshair`. [#192](https://github.com/minecraft-access/minecraft-access/issues/192)
 * Not the mod will speak if an animal is tamed in `Read Crosshair`.
-* Now the mod can tell if a zombie villager is under curing in `Read Crosshair`. [#195](https://github.com/khanshoaib3/minecraft-access/issues/195)
+* Now the mod can tell if a zombie villager is under curing in `Read Crosshair`. [#195](https://github.com/minecraft-access/minecraft-access/issues/195)
 * Now the mod will additionally speak an entity's type if it has a custom name given by the name tag.
 * Move `Shearable` word in front of sheep information in `Read Crosshair`.
 * Now the mod will tell if your [taming operation](https://minecraft.fandom.com/wiki/Taming) is successful or not.
@@ -284,8 +284,8 @@ If you want to contribute to translating work, we manage the translation of this
 
 ### Bug Fixes
 
-* Fix the bug that keybindings can't be rebound to mouse 4,5 keys (mouse side keys) [#190](https://github.com/khanshoaib3/minecraft-access/issues/190)
-* Fix the bug that a dead entity can be locked before it disappears. [#208](https://github.com/khanshoaib3/minecraft-access/issues/208)
+* Fix the bug that keybindings can't be rebound to mouse 4,5 keys (mouse side keys) [#190](https://github.com/minecraft-access/minecraft-access/issues/190)
+* Fix the bug that a dead entity can be locked before it disappears. [#208](https://github.com/minecraft-access/minecraft-access/issues/208)
 
 ### Dependencies Changes
 
@@ -299,25 +299,25 @@ Release v1.3.0 (2023-09)
 
 ### Feature Changes
 
-* BREAKING CHANGE: Remove left and right mouse simulation keys in `Inventory Controls` and have the `Mouse Simulation` feature replace their functions. [#168](https://github.com/khanshoaib3/minecraft-access/issues/168)
+* BREAKING CHANGE: Remove left and right mouse simulation keys in `Inventory Controls` and have the `Mouse Simulation` feature replace their functions. [#168](https://github.com/minecraft-access/minecraft-access/issues/168)
 
 ### Bug Fixes
 
-* Fix a bug that `PositionNarrator` speaks multiple times with single keystroke. [#164](https://github.com/khanshoaib3/minecraft-access/issues/164)
-* Fix a bug that custom keybindings can not take effect immediately until restart the game. [#167](https://github.com/khanshoaib3/minecraft-access/issues/167)
-* Fix a bug that all vanilla keys rebinding are invalid. [#171](https://github.com/khanshoaib3/minecraft-access/issues/171)
+* Fix a bug that `PositionNarrator` speaks multiple times with single keystroke. [#164](https://github.com/minecraft-access/minecraft-access/issues/164)
+* Fix a bug that custom keybindings can not take effect immediately until restart the game. [#167](https://github.com/minecraft-access/minecraft-access/issues/167)
+* Fix a bug that all vanilla keys rebinding are invalid. [#171](https://github.com/minecraft-access/minecraft-access/issues/171)
 * Fix a bug that POI Entity config can not take effect immediately until restart the game.
 
 ### Refactoring, Documentation and Chores
 
-* Rewrite big README into [manual structure](https://github.com/khanshoaib3/minecraft-access/blob/1.20/README.md) for better readability. [#134](https://github.com/khanshoaib3/minecraft-access/issues/134)
+* Rewrite big README into [manual structure](https://github.com/minecraft-access/minecraft-access/blob/1.20/README.md) for better readability. [#134](https://github.com/minecraft-access/minecraft-access/issues/134)
 
 Release v1.2.2 (2023-09-12)
 ---------------------------
 
 ### Bug Fixes
 
-* Fix camera straight up down without right alt [#159](https://github.com/khanshoaib3/minecraft-access/pull/159) [#160](https://github.com/khanshoaib3/minecraft-access/pull/160)
+* Fix camera straight up down without right alt [#159](https://github.com/minecraft-access/minecraft-access/pull/159) [#160](https://github.com/minecraft-access/minecraft-access/pull/160)
 
 ### Refactoring, Documentation and Chores
 
@@ -333,58 +333,58 @@ Release v1.2.1 (2023-08-31)
 
 ### Changes and Fixes
 
-* Remove `speak different slots with same item content` function in `held item (hotbar) narration`, since it will cause the mod to speak in more places it shouldn't, and there is no alternative way to reimplement this function. [#151](https://github.com/khanshoaib3/minecraft-access/pull/151) [#152](https://github.com/khanshoaib3/minecraft-access/pull/152)
+* Remove `speak different slots with same item content` function in `held item (hotbar) narration`, since it will cause the mod to speak in more places it shouldn't, and there is no alternative way to reimplement this function. [#151](https://github.com/minecraft-access/minecraft-access/pull/151) [#152](https://github.com/minecraft-access/minecraft-access/pull/152)
 
 Release v1.2.0 (2023-08-30)
 ---------------------------
 
 ### New Features
 
-* Camera Look straight Up and Down. [#131](https://github.com/khanshoaib3/minecraft-access/pull/131) [#132](https://github.com/khanshoaib3/minecraft-access/pull/132) [#133](https://github.com/khanshoaib3/minecraft-access/pull/133) [#135](https://github.com/khanshoaib3/minecraft-access/pull/135)
-* New Brazilian Portuguese Translation. <https://github.com/khanshoaib3/minecraft-access-i18n/pull/18>
+* Camera Look straight Up and Down. [#131](https://github.com/minecraft-access/minecraft-access/pull/131) [#132](https://github.com/minecraft-access/minecraft-access/pull/132) [#133](https://github.com/minecraft-access/minecraft-access/pull/133) [#135](https://github.com/minecraft-access/minecraft-access/pull/135)
+* New Brazilian Portuguese Translation. <https://github.com/minecraft-access/minecraft-access-i18n/pull/18>
 
 ### Changes and Fixes
 
-* Improve held item (hotbar) narration: speak empty slots, speak different slots with same item content. [#121](https://github.com/khanshoaib3/minecraft-access/pull/121) [#122](https://github.com/khanshoaib3/minecraft-access/pull/122)
-* The direction and power of `Redstone Wire` are now be spoken in `Read Crosshair` feature. [#142](https://github.com/khanshoaib3/minecraft-access/pull/142) [#143](https://github.com/khanshoaib3/minecraft-access/pull/143)
-* Fix a bug that `Find Closest Water/Lava Source` will recognize the water/lava fall as a valid still fluid block. [#144](https://github.com/khanshoaib3/minecraft-access/pull/144) [#145](https://github.com/khanshoaib3/minecraft-access/pull/145)
+* Improve held item (hotbar) narration: speak empty slots, speak different slots with same item content. [#121](https://github.com/minecraft-access/minecraft-access/pull/121) [#122](https://github.com/minecraft-access/minecraft-access/pull/122)
+* The direction and power of `Redstone Wire` are now be spoken in `Read Crosshair` feature. [#142](https://github.com/minecraft-access/minecraft-access/pull/142) [#143](https://github.com/minecraft-access/minecraft-access/pull/143)
+* Fix a bug that `Find Closest Water/Lava Source` will recognize the water/lava fall as a valid still fluid block. [#144](https://github.com/minecraft-access/minecraft-access/pull/144) [#145](https://github.com/minecraft-access/minecraft-access/pull/145)
 
 Release v1.1.1-beta.1 (for 1.20.1) v1.0.4-beta.1 (for 1.19.3) (2023-08-05)
 ---------------------------
 
 ## Changes and Fixes
 
-* Optimize screen groups order, in the order of interactive frequency, for reducing the number of user keystrokes. [#107](https://github.com/khanshoaib3/minecraft-access/pull/107) [#108](https://github.com/khanshoaib3/minecraft-access/pull/108)
+* Optimize screen groups order, in the order of interactive frequency, for reducing the number of user keystrokes. [#107](https://github.com/minecraft-access/minecraft-access/pull/107) [#108](https://github.com/minecraft-access/minecraft-access/pull/108)
 
 Release v1.1.0 (for 1.20.1) v1.0.3 (for 1.19.3) (2023-08-02)
 ---------------------------
 
 ### New Features
 
-* Simulate mouse with keyboard. [#94](https://github.com/khanshoaib3/minecraft-access/pull/94) [#95](https://github.com/khanshoaib3/minecraft-access/pull/95)
-* Speak monster spawner mob type. [#97](https://github.com/khanshoaib3/minecraft-access/pull/97) [#100](https://github.com/khanshoaib3/minecraft-access/pull/100)
+* Simulate mouse with keyboard. [#94](https://github.com/minecraft-access/minecraft-access/pull/94) [#95](https://github.com/minecraft-access/minecraft-access/pull/95)
+* Speak monster spawner mob type. [#97](https://github.com/minecraft-access/minecraft-access/pull/97) [#100](https://github.com/minecraft-access/minecraft-access/pull/100)
 
 ## Changes and Fixes
 
-* Fixed speaking multiple items in one recipe book slot when item icon changed. [#79](https://github.com/khanshoaib3/minecraft-access/pull/79) [#80](https://github.com/khanshoaib3/minecraft-access/pull/80)
-* Close the `Narrator Menu` if the F4 key is pressed while the menu is open. [#83](https://github.com/khanshoaib3/minecraft-access/pull/83) [#84](https://github.com/khanshoaib3/minecraft-access/pull/84)
+* Fixed speaking multiple items in one recipe book slot when item icon changed. [#79](https://github.com/minecraft-access/minecraft-access/pull/79) [#80](https://github.com/minecraft-access/minecraft-access/pull/80)
+* Close the `Narrator Menu` if the F4 key is pressed while the menu is open. [#83](https://github.com/minecraft-access/minecraft-access/pull/83) [#84](https://github.com/minecraft-access/minecraft-access/pull/84)
 
 Release v1.1.0-beta.2 (for 1.20.1) v1.0.2 (for 1.19.3) (2023-07-08)
 ---------------------------
 
 ### New Features
 
-* Customizable partial speaking in `Read CrossHair`. [#69](https://github.com/khanshoaib3/minecraft-access/pull/69) [#70](https://github.com/khanshoaib3/minecraft-access/pull/70)
+* Customizable partial speaking in `Read CrossHair`. [#69](https://github.com/minecraft-access/minecraft-access/pull/69) [#70](https://github.com/minecraft-access/minecraft-access/pull/70)
 
 ## Changes and Fixes
 
-* Fix a bug that recipe book has no next page button clicking in `1.20`. [#71](https://github.com/khanshoaib3/minecraft-access/pull/71)
-* Fixed inventory control in `1.20`. [#73](https://github.com/khanshoaib3/minecraft-access/pull/73)
-* Fix mod crashing on loading wrong config.json [#76](https://github.com/khanshoaib3/minecraft-access/pull/76) [#77](https://github.com/khanshoaib3/minecraft-access/pull/77)
-* Fix the failure that mouse click event is performed before mouse cursor moving event in Windows. [#65](https://github.com/khanshoaib3/minecraft-access/pull/65) [#66](https://github.com/khanshoaib3/minecraft-access/pull/66)
-* Fix a bug about KeyBindingsHandler's initialization. [#63](https://github.com/khanshoaib3/minecraft-access/pull/63) [#64](https://github.com/khanshoaib3/minecraft-access/pull/64)
+* Fix a bug that recipe book has no next page button clicking in `1.20`. [#71](https://github.com/minecraft-access/minecraft-access/pull/71)
+* Fixed inventory control in `1.20`. [#73](https://github.com/minecraft-access/minecraft-access/pull/73)
+* Fix mod crashing on loading wrong config.json [#76](https://github.com/minecraft-access/minecraft-access/pull/76) [#77](https://github.com/minecraft-access/minecraft-access/pull/77)
+* Fix the failure that mouse click event is performed before mouse cursor moving event in Windows. [#65](https://github.com/minecraft-access/minecraft-access/pull/65) [#66](https://github.com/minecraft-access/minecraft-access/pull/66)
+* Fix a bug about KeyBindingsHandler's initialization. [#63](https://github.com/minecraft-access/minecraft-access/pull/63) [#64](https://github.com/minecraft-access/minecraft-access/pull/64)
 
-**Full Changelog**: <https://github.com/khanshoaib3/minecraft-access/compare/v1.1.0-beta.1...v1.1.0-beta.2>
+**Full Changelog**: <https://github.com/minecraft-access/minecraft-access/compare/v1.1.0-beta.1...v1.1.0-beta.2>
 
 Release v1.1.0-beta.1 (for 1.20.1) (2023-07-02)
 ---------------------------
@@ -394,7 +394,7 @@ Release v1.1.0-beta.1 (for 1.20.1) (2023-07-02)
 * Added sign's front and back text narration.
 * Added torch flower and pitcher crop's ripe level info in `Read Crosshair`.
 
-**Full Changelog**: <https://github.com/khanshoaib3/minecraft-access/compare/v1.0.1...v1.1.0-beta.1>
+**Full Changelog**: <https://github.com/minecraft-access/minecraft-access/compare/v1.0.1...v1.1.0-beta.1>
 
 Release v1.0.1 (for 1.19.3) (2023-07-01)
 ---------------------------
@@ -403,9 +403,9 @@ Release v1.0.1 (for 1.19.3) (2023-07-01)
 
 * Fall detector is back but in this version instead of speaking `warning fall detected`, a sound is played at block (Anvil Block Hit sound to be specific). There will be an alternate sound option in the next update.
 * The mod now automatically setups the screen reader libraries. You would still need to download the other required mods (fabric api and architectury api).
-* Narrator menu hotkeys - You can now trigger the narrator menu options without opening the menu. More about this [here](https://github.com/khanshoaib3/minecraft-access#narrator-menu).
+* Narrator menu hotkeys - You can now trigger the narrator menu options without opening the menu. More about this [here](https://github.com/minecraft-access/minecraft-access#narrator-menu).
 * Added a mod configuration menu. You can open this menu from the `Open Config Menu` option in Narrator/F4 Menu.
-* POI marking feature, with this feature you can select to only detect a specific type of block/entity, more on this [here](https://github.com/khanshoaib3/minecraft-access#points-of-interest)
+* POI marking feature, with this feature you can select to only detect a specific type of block/entity, more on this [here](https://github.com/minecraft-access/minecraft-access#points-of-interest)
 * The mod now reports the items picked up when fishing.
 
 ## Changes and Fixes
@@ -426,30 +426,30 @@ Release v1.0.1 (for 1.19.3) (2023-07-01)
 
 ## What's Changed
 
-* Added config option to speak time in 12 hours format by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/21>
-* Chat History Reader by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/23>
-* Misc by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/24>
-* Bug Fixes by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/28>
-* Auto Library Installer by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/29>
-* I18N SlotsGroup by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/30>
-* Mainly move facing-direction functions by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/31>
-* Reset previousQuery after every 5000ms by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/32>
-* Fix some SlotGroups non-config-key groupNames. by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/34>
-* Bee Hive Info by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/40>
-* Chore Narration improvements by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/38>
-* Add FluidDetector config. by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/37>
-* Config Menu by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/45>
-* Add narration about crops ripe level and farmland wet state. Refactor block narration methods. close [#44](https://github.com/khanshoaib3/minecraft-access/pull/44) by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/46>
-* Add Narrator Menu hotkey and Narrator Menu number key listening by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/47>
-* Add speak harvest of fishing feature, to be clear it will report what your picked up when you're holding a fishing rod. by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/52>
-* Comparator info fix; Bug fix for redstone related blocks; Refactored i18n entries; by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/53>
-* Add speak harvest of fishing config by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/54>
-* Fix debugMode dynamic config. close [#50](https://github.com/khanshoaib3/minecraft-access/pull/50) by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/57>
-* Add marked poi scan feature by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/59>
-* Refactor key related code by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/56>
-* Fixes buggy Time Utils with camera and inventory controls key inputs. by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/63>
+* Added config option to speak time in 12 hours format by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/21>
+* Chat History Reader by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/23>
+* Misc by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/24>
+* Bug Fixes by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/28>
+* Auto Library Installer by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/29>
+* I18N SlotsGroup by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/30>
+* Mainly move facing-direction functions by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/31>
+* Reset previousQuery after every 5000ms by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/32>
+* Fix some SlotGroups non-config-key groupNames. by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/34>
+* Bee Hive Info by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/40>
+* Chore Narration improvements by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/38>
+* Add FluidDetector config. by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/37>
+* Config Menu by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/45>
+* Add narration about crops ripe level and farmland wet state. Refactor block narration methods. close [#44](https://github.com/minecraft-access/minecraft-access/pull/44) by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/46>
+* Add Narrator Menu hotkey and Narrator Menu number key listening by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/47>
+* Add speak harvest of fishing feature, to be clear it will report what your picked up when you're holding a fishing rod. by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/52>
+* Comparator info fix; Bug fix for redstone related blocks; Refactored i18n entries; by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/53>
+* Add speak harvest of fishing config by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/54>
+* Fix debugMode dynamic config. close [#50](https://github.com/minecraft-access/minecraft-access/pull/50) by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/57>
+* Add marked poi scan feature by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/59>
+* Refactor key related code by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/56>
+* Fixes buggy Time Utils with camera and inventory controls key inputs. by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/63>
 
-**Full Changelog**: <https://github.com/khanshoaib3/minecraft-access/compare/v1.0.0...v1.0.1>
+**Full Changelog**: <https://github.com/minecraft-access/minecraft-access/compare/v1.0.0...v1.0.1>
 </p>
 </details>
 
@@ -477,22 +477,22 @@ Note that you may face issue in accessing the F4 menu, this can be resolved by d
 
 ### What's Changed
 
-* Bug Fixes by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/28>
-* Auto Library Installer by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/29>
-* I18N SlotsGroup by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/30>
-* Mainly move facing-direction functions by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/31>
-* Reset previousQuery after every 5000ms by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/32>
-* Fix some SlotGroups non-config-key groupNames. by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/34>
-* Bee Hive Info by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/40>
-* Chore Narration improvements by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/38>
-* Add FluidDetector config. by @boholder in <https://github.com/khanshoaib3/minecraft-access/pull/37>
-* Config Menu by @khanshoaib3 in <https://github.com/khanshoaib3/minecraft-access/pull/45>
+* Bug Fixes by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/28>
+* Auto Library Installer by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/29>
+* I18N SlotsGroup by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/30>
+* Mainly move facing-direction functions by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/31>
+* Reset previousQuery after every 5000ms by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/32>
+* Fix some SlotGroups non-config-key groupNames. by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/34>
+* Bee Hive Info by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/40>
+* Chore Narration improvements by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/38>
+* Add FluidDetector config. by @boholder in <https://github.com/minecraft-access/minecraft-access/pull/37>
+* Config Menu by @khanshoaib3 in <https://github.com/minecraft-access/minecraft-access/pull/45>
 
 ### New Contributors
 
-* @boholder made their first contribution in <https://github.com/khanshoaib3/minecraft-access/pull/30>
+* @boholder made their first contribution in <https://github.com/minecraft-access/minecraft-access/pull/30>
 
-**Full Changelog**: <https://github.com/khanshoaib3/minecraft-access/compare/v1.0.1-beta.1...v1.0.1-beta.2>
+**Full Changelog**: <https://github.com/minecraft-access/minecraft-access/compare/v1.0.1-beta.1...v1.0.1-beta.2>
 
 </p>
 </details>
@@ -511,7 +511,7 @@ Beta 1.0.1-beta.1 (for 1.19.3) (2023-04-30)
 * Added config to disable speaking action bar updates.
 * Added sculk sensor/catalyst/shrieker to poi blocks
 
-**Full Changelog**: <https://github.com/khanshoaib3/minecraft-access/compare/v1.0.0...v1.0.1-beta.1>
+**Full Changelog**: <https://github.com/minecraft-access/minecraft-access/compare/v1.0.0...v1.0.1-beta.1>
 
 Release 1.0.0 (for 1.19.3) (2023-02-05)
 ---------------------------
@@ -526,9 +526,9 @@ This marks the release of Minecraft Access. All the features from the previous m
 * Key mappings for camera controls have also been updated to better suit keyboard with no numpad/keypad.
 * The feature that reads the crosshair target also gives additional information like whether a block is being powered by a redstone source, a door is open or closed, sheep's color, etc.
 * The narrator menu now has a few more options including time of day which now works for servers/multiplayer also.
-* There is no longer a dedicated menu for mod customization, instead we have to manually edit the config.json file. (more on this [here](https://github.com/khanshoaib3/minecraft-access#mod-configuration))
+* There is no longer a dedicated menu for mod customization, instead we have to manually edit the config.json file. (more on this [here](https://github.com/minecraft-access/minecraft-access#mod-configuration))
 
-**Full Changelog**: <https://github.com/khanshoaib3/minecraft-access/compare/v0.1.6-beta...v1.0.0>
+**Full Changelog**: <https://github.com/minecraft-access/minecraft-access/compare/v0.1.6-beta...v1.0.0>
 
 Beta Release 0.1.6 (for 1.19.3) (2023-01-07)
 ---------------------------
@@ -544,7 +544,7 @@ _Note that this will only work on 1.19.3 and for fabric it is recommended to use
 * Added player warnings feature
 * Added point of interest feature with keybind to lock on to nearest entity or block. Use Y to lock and alt + Y to unlock.
 
-**Full Changelog**: <https://github.com/khanshoaib3/minecraft-access/compare/v0.1.0-beta...v0.1.6-beta>
+**Full Changelog**: <https://github.com/minecraft-access/minecraft-access/compare/v0.1.0-beta...v0.1.6-beta>
 
 Beta Release 0.1.0 (for 1.19.3) (2022-11-20)
 ---------------------------
@@ -558,4 +558,4 @@ Beta Release 0.1.0 (for 1.19.3) (2022-11-20)
 * Facing Direction
 * Biome Indicator
 
-**Full Changelog**: <https://github.com/khanshoaib3/minecraft-access/compare/v0.0.1...v0.1.0-beta>
+**Full Changelog**: <https://github.com/minecraft-access/minecraft-access/compare/v0.0.1...v0.1.0-beta>

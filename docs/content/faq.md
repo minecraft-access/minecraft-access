@@ -67,7 +67,7 @@ If you have any questions about this mod, please read the [documentation](/READM
 
 Uh, maintaining or updating this mod is a volunteer effort.
 There are currently only two active developers.
-Any type of contribution is welcome, please go to the [issues page](https://github.com/khanshoaib3/minecraft-access/issues) for more details.
+Any type of contribution is welcome, please go to the [issues page](https://github.com/minecraft-access/minecraft-access/issues) for more details.
 If you know developers who might be willing to help contribute to this mod, please send them information about this mod and encourage them to do so.
 
 ## Has this mod been uploaded to mod platforms?
