@@ -88,40 +88,36 @@ public class AccessMenu {
     }
 
     public void update() {
-        try {
-            minecraftClient = Minecraft.getInstance();
-            if (minecraftClient == null) return;
-            if (minecraftClient.player == null) return;
+        minecraftClient = Minecraft.getInstance();
+        if (minecraftClient == null) return;
+        if (minecraftClient.player == null) return;
 
-            Screen currentScreen = minecraftClient.screen;
-            if (currentScreen == null) {
-                if (Screen.hasAltDown()) {
-                    handleInMenuActions();
+        Screen currentScreen = minecraftClient.screen;
+        if (currentScreen == null) {
+            if (Screen.hasAltDown()) {
+                handleInMenuActions();
+                return;
+            }
+
+            for (MenuFunction function : FUNCTIONS) {
+                if (function.keystroke.canBeTriggered()) {
+                    function.func.run();
                     return;
                 }
-
-                for (MenuFunction function : FUNCTIONS) {
-                    if (function.keystroke.canBeTriggered()) {
-                        function.func.run();
-                        return;
-                    }
-                }
-
-                // F3 + F4 triggers game mode changing function in vanilla game,
-                // will not open the menu under this situation.
-                boolean isF3KeyNotPressed = !KeyUtils.isF3Pressed();
-                if (menuKey.canOpenMenu() && isF3KeyNotPressed) {
-                    // The F4 is pressed before and released at current tick
-                    // To make the access menu open AFTER release the F4 key
-                    minecraftClient.setScreen(new AccessMenuGUI("access_menu"));
-                }
-
-            } else if (currentScreen instanceof AccessMenuGUI) {
-                if (menuKey.closeMenuIfMenuKeyPressing()) return;
-                handleInMenuActions();
             }
-        } catch (Exception e) {
-            log.error("An error occurred in NarratorMenu.", e);
+
+            // F3 + F4 triggers game mode changing function in vanilla game,
+            // will not open the menu under this situation.
+            boolean isF3KeyNotPressed = !KeyUtils.isF3Pressed();
+            if (menuKey.canOpenMenu() && isF3KeyNotPressed) {
+                // The F4 is pressed before and released at current tick
+                // To make the access menu open AFTER release the F4 key
+                minecraftClient.setScreen(new AccessMenuGUI("access_menu"));
+            }
+
+        } else if (currentScreen instanceof AccessMenuGUI) {
+            if (menuKey.closeMenuIfMenuKeyPressing()) return;
+            handleInMenuActions();
         }
     }
 
@@ -141,119 +137,92 @@ public class AccessMenu {
     }
 
     public static void getBlockAndFluidTargetInformation() {
-        try {
-            HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
-            if (hit == null) return;
-            switch (hit.getType()) {
-                case MISS, ENTITY -> MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
-                case BLOCK -> {
-                    try {
-                        BlockHitResult blockHit = (BlockHitResult) hit;
-                        BlockPos blockPos = blockHit.getBlockPos();
-                        String text = NarrationUtils.narrateBlock(blockPos, "") + ", " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
-                        MainClass.speakWithNarrator(text, true);
-                    } catch (Exception e) {
-                        log.error("An error occurred when speaking block information.", e);
-                    }
-                }
+        HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
+        if (hit == null) return;
+        switch (hit.getType()) {
+            case MISS, ENTITY ->
+                    MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
+            case BLOCK -> {
+                BlockHitResult blockHit = (BlockHitResult) hit;
+                BlockPos blockPos = blockHit.getBlockPos();
+                String text = NarrationUtils.narrateBlock(blockPos, "") + ", " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
+                MainClass.speakWithNarrator(text, true);
             }
-        } catch (Exception e) {
-            log.error("An error occurred when getting block and target information.", e);
         }
     }
 
     public static void getBlockAndFluidTargetPosition() {
-        try {
-            HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
-            if (hit == null) return;
-            switch (hit.getType()) {
-                case MISS, ENTITY -> MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
-                case BLOCK -> {
-                    try {
-                        BlockHitResult blockHitResult = (BlockHitResult) hit;
-                        BlockPos blockPos = blockHitResult.getBlockPos();
-                        MainClass.speakWithNarrator(NarrationUtils.narrateCoordinatesOf(blockPos), true);
-                    } catch (Exception e) {
-                        log.error("An error occurred when speaking block position.", e);
-                    }
-                }
+        HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
+        if (hit == null) return;
+        switch (hit.getType()) {
+            case MISS, ENTITY ->
+                    MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
+            case BLOCK -> {
+                BlockHitResult blockHitResult = (BlockHitResult) hit;
+                BlockPos blockPos = blockHitResult.getBlockPos();
+                MainClass.speakWithNarrator(NarrationUtils.narrateCoordinatesOf(blockPos), true);
             }
-        } catch (Exception e) {
-            log.error("An error occurred when getting block and target position.", e);
         }
     }
 
     public static void getLightLevel() {
-        try {
-            if (minecraftClient.player == null) return;
-            if (minecraftClient.level == null) return;
+        if (minecraftClient.player == null) return;
+        if (minecraftClient.level == null) return;
 
-            minecraftClient.player.clientSideCloseContainer();
+        minecraftClient.player.clientSideCloseContainer();
 
-            int light = minecraftClient.level.getMaxLocalRawBrightness(minecraftClient.player.blockPosition());
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.light_level", light), true);
-        } catch (Exception e) {
-            log.error("An error occurred when getting light level.", e);
-        }
+        int light = minecraftClient.level.getMaxLocalRawBrightness(minecraftClient.player.blockPosition());
+        MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.light_level", NarrationUtils.narrateNumber(light)), true);
     }
 
     public static void getBiome() {
-        try {
-            if (minecraftClient.player == null) return;
-            if (minecraftClient.level == null) return;
+        if (minecraftClient.player == null) return;
+        if (minecraftClient.level == null) return;
 
-            minecraftClient.player.clientSideCloseContainer();
+        minecraftClient.player.clientSideCloseContainer();
 
-            Holder<Biome> var27 = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
-            String name = I18n.get(BiomeIndicator.getBiomeName(var27));
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.biome", name), true);
-        } catch (Exception e) {
-            log.error("An error occurred when getting biome.", e);
-        }
+        Holder<Biome> var27 = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
+        String name = I18n.get(BiomeIndicator.getBiomeName(var27));
+        MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.biome", name), true);
     }
 
     public static void getXP() {
-        try {
-            if (minecraftClient.player == null) return;
+        if (minecraftClient.player == null) return;
 
-            minecraftClient.player.clientSideCloseContainer();
+        minecraftClient.player.clientSideCloseContainer();
 
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.xp",
-                            PlayerUtils.getExperienceLevel(),
-                            PlayerUtils.getExperienceProgress()),
-                    true);
-        } catch (Exception e) {
-            log.error("An error occurred when getting XP.", e);
-        }
+        MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.xp",
+                        NarrationUtils.narrateNumber(PlayerUtils.getExperienceLevel()),
+                        NarrationUtils.narrateNumber(PlayerUtils.getExperienceProgress())),
+                true);
     }
 
     public static void getTimeOfDay() {
-        try {
-            if (minecraftClient.player == null) return;
-            if (minecraftClient.level == null) return;
+        if (minecraftClient.player == null) return;
+        if (minecraftClient.level == null) return;
 
-            minecraftClient.player.clientSideCloseContainer();
-            long daytime = minecraftClient.player.clientLevel.getDayTime() + 6000;
-            int hours = (int) (daytime / 1000) % 24;
-            int minutes = (int) ((daytime % 1000) * 60 / 1000);
+        minecraftClient.player.clientSideCloseContainer();
+        long daytime = minecraftClient.player.clientLevel.getDayTime() + 6000;
+        int hours = (int) (daytime / 1000) % 24;
+        int minutes = (int) ((daytime % 1000) * 60 / 1000);
 
-            String translationKey = "minecraft_access.access_menu.time_of_day";
-            if (OtherConfigsMap.getInstance().isUse12HourTimeFormat()) {
-                if (hours > 12) {
-                    hours -= 12;
-                    translationKey += "_pm";
-                } else if (hours == 12) {
-                    translationKey += "_pm";
-                } else {
-                    translationKey += "_am";
-                }
+        String translationKey = "minecraft_access.access_menu.time_of_day";
+        if (OtherConfigsMap.getInstance().isUse12HourTimeFormat()) {
+            if (hours == 0) {
+                hours = 12;
+                translationKey += "_am";
+            } else if (hours > 12) {
+                hours -= 12;
+                translationKey += "_pm";
+            } else if (hours == 12) {
+                translationKey += "_pm";
+            } else {
+                translationKey += "_am";
             }
-
-            String toSpeak = "%02d:%02d".formatted(hours, minutes);
-            toSpeak = I18n.get(translationKey, toSpeak);
-            MainClass.speakWithNarrator(toSpeak, true);
-        } catch (Exception e) {
-            log.error("An error occurred while speaking time of day.", e);
         }
+
+        String toSpeak = "%02d:%02d".formatted(hours, minutes);
+        toSpeak = I18n.get(translationKey, toSpeak);
+        MainClass.speakWithNarrator(toSpeak, true);
     }
 }

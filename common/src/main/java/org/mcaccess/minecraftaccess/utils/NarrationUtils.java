@@ -176,9 +176,14 @@ public class NarrationUtils {
         return translatedColor + " " + shearable;
     }
 
-    public static String narrateNumber(double d) {
+    public static String narrateNumber(double num) {
         DecimalFormat df = new DecimalFormat();
-        return d >= 0 ? String.valueOf(df.format(d)) : I18n.get("minecraft_access.other.negative", df.format(-d));
+        num = Math.round(num * 10.0) / 10.0;
+        return num >= 0 ? String.valueOf(df.format(num)) : I18n.get("minecraft_access.other.negative", df.format(-num));
+    }
+
+    public static String narrateNumber(int num) {
+        return num >= 0 ? String.valueOf(num) : I18n.get("minecraft_access.other.negative", -num);
     }
 
     public static String narrateRelativePositionOfPlayerAnd(BlockPos blockPos) {
@@ -187,11 +192,8 @@ public class NarrationUtils {
         if (minecraftClient.player == null) return "up";
 
         Direction dir = minecraftClient.player.getDirection();
-
-//        Vec3 diff = minecraftClient.player.getEyePosition().subtract(Vec3.ofCenter(blockPos)); // post 1.18
         Vec3 diff = new Vec3(minecraftClient.player.getX(), minecraftClient.player.getEyeY(), minecraftClient.player.getZ()).subtract(Vec3.atCenterOf(blockPos)); // pre 1.18
         BlockPos diffBlockPos = new BlockPos((int) diff.x, (int) diff.y, (int) diff.z); // post 1.20
-//        BlockPos diffBlockPos = new BlockPos(Math.round(diff.x), Math.round(diff.y), Math.round(diff.z));
 
         String diffXBlockPos = "";
         String diffYBlockPos = "";
@@ -238,15 +240,10 @@ public class NarrationUtils {
     }
 
     public static String narrateCoordinatesOf(BlockPos blockPos) {
-        try {
-            String posX = narrateNumber(blockPos.getX());
-            String posY = narrateNumber(blockPos.getY());
-            String posZ = narrateNumber(blockPos.getZ());
-            return String.format("%s x %s y %s z", posX, posY, posZ);
-        } catch (Exception e) {
-            log.error("An error occurred when getting position narration.", e);
-            return "";
-        }
+        String posX = narrateNumber(blockPos.getX());
+        String posY = narrateNumber(blockPos.getY());
+        String posZ = narrateNumber(blockPos.getZ());
+        return String.format("%s x %s y %s z", posX, posY, posZ);
     }
 
     /**
