@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
 /**
@@ -34,8 +35,8 @@ public class XPIndicator {
         boolean increased = previousXPLevel < currentXPLevel;
         previousXPLevel = currentXPLevel;
 
-        String toSpeak = (increased) ? I18n.get("minecraft_access.xp_indicator.increased", currentXPLevel)
-                : I18n.get("minecraft_access.xp_indicator.decreased", currentXPLevel);
+        String toSpeak = (increased) ? I18n.get("minecraft_access.xp_indicator.increased", NarrationUtils.narrateNumber(currentXPLevel))
+                : I18n.get("minecraft_access.xp_indicator.decreased", NarrationUtils.narrateNumber(currentXPLevel));
         MainClass.speakWithNarrator(toSpeak, true);
     }
 }
