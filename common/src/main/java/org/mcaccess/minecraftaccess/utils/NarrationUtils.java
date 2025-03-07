@@ -115,32 +115,24 @@ public class NarrationUtils {
         if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame())
             text = I18n.get("minecraft_access.read_crosshair.tamed", text);
 
-        if (entityIsSitting)
-            text = I18n.get("minecraft_access.read_crosshair.sitting", text);
+        if (entityIsSitting) text = I18n.get("minecraft_access.read_crosshair.sitting", text);
 
-        if (entity instanceof
-                Mob mob && mob.isBaby())
-            text = I18n.get("minecraft_access.read_crosshair.baby", text);
+        if (entity instanceof Mob mob && mob.isBaby()) text = I18n.get("minecraft_access.read_crosshair.baby", text);
 
-        if (entity instanceof
-                Leashable leashable && leashable.isLeashed())
+        if (entity instanceof Leashable leashable && leashable.isLeashed())
             text = I18n.get("minecraft_access.read_crosshair.leashed", text);
 
-        if (entity instanceof
-                Sheep sheep) {
+        if (entity instanceof Sheep sheep) {
             text = getSheepInfo(sheep, text);
-        } else if (entity instanceof
-                ZombieVillager zombieVillager && zombieVillager.isConverting()) {
+        } else if (entity instanceof ZombieVillager zombieVillager && zombieVillager.isConverting()) {
             text = I18n.get("minecraft_access.read_crosshair.zombie_villager_is_curing", text);
         } else if (isDroppedItem) {
             text = I18n.get("minecraft_access.point_of_interest.locking.dropped_item", text);
         }
 
-        if (entity instanceof
-                LivingEntity livingEntity) {
+        if (entity instanceof LivingEntity livingEntity) {
             for (ItemStack equipment : livingEntity.getAllSlots()) {
-                if (equipment.isEmpty())
-                    continue;
+                if (equipment.isEmpty()) continue;
                 String equipmentName = equipment.getHoverName().getString();
                 equipments.add(equipmentName);
             }
@@ -170,9 +162,7 @@ public class NarrationUtils {
     private static String getSheepInfo(Sheep sheep, String currentQuery) {
         String dyedColor = sheep.getColor().getName();
         String translatedColor = I18n.get("color.minecraft." + dyedColor);
-        String shearable = sheep.readyForShearing() ?
-                I18n.get("minecraft_access.read_crosshair.shearable", currentQuery) :
-                I18n.get("minecraft_access.read_crosshair.not_shearable", currentQuery);
+        String shearable = sheep.readyForShearing() ? I18n.get("minecraft_access.read_crosshair.shearable", currentQuery) : I18n.get("minecraft_access.read_crosshair.not_shearable", currentQuery);
         return translatedColor + " " + shearable;
     }
 
@@ -230,8 +220,7 @@ public class NarrationUtils {
         String text;
         if (dir == Direction.NORTH || dir == Direction.SOUTH)
             text = String.format("%s  %s  %s", diffZBlockPos, diffYBlockPos, diffXBlockPos);
-        else
-            text = String.format("%s  %s  %s", diffXBlockPos, diffYBlockPos, diffZBlockPos);
+        else text = String.format("%s  %s  %s", diffXBlockPos, diffYBlockPos, diffZBlockPos);
         return text;
     }
 
@@ -339,8 +328,7 @@ public class NarrationUtils {
         return narrateBlockForContentChecking(pos, side).getA();
     }
 
-    private static String getSignInfo(SignBlockEntity signEntity, LocalPlayer
-            player, String toSpeak) {
+    private static String getSignInfo(SignBlockEntity signEntity, LocalPlayer player, String toSpeak) {
         String[] lines = new String[4];
 
         for (int i = 0; i < 4; i++) {
@@ -351,9 +339,7 @@ public class NarrationUtils {
         return I18n.get("minecraft_access.read_crosshair.sign_" + (signEntity.isFacingFrontText(player) ? "front" : "back") + "_content", toSpeak, content);
     }
 
-    private static @NotNull Tuple<String, String> getRedstoneRelatedInfo(ClientLevel
-                                                                                 world, BlockPos blockPos, Block block, BlockState blockState, String toSpeak, String
-                                                                                 currentQuery) {
+    private static @NotNull Tuple<String, String> getRedstoneRelatedInfo(ClientLevel world, BlockPos blockPos, Block block, BlockState blockState, String toSpeak, String currentQuery) {
         boolean isEmittingPower = world.hasSignal(blockPos, Direction.DOWN);
         boolean isReceivingPower = world.hasNeighborSignal(blockPos);
 
@@ -430,32 +416,28 @@ public class NarrationUtils {
         return new Tuple<>(toSpeak, currentQuery);
     }
 
-    private static @NotNull Tuple<String, String> getRedstoneWireInfo(BlockState
-                                                                              blockState, BlockPos pos, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getRedstoneWireInfo(BlockState blockState, BlockPos pos, String toSpeak, String currentQuery) {
         int powerLevel = blockState.getValue(RedStoneWireBlock.POWER);
         if (powerLevel > 0) {
             toSpeak = I18n.get("minecraft_access.read_crosshair.redstone_wire_power", toSpeak, powerLevel);
             currentQuery += "power level " + powerLevel;
         }
 
-        List<String> connectedDirections = Direction.Plane.HORIZONTAL.stream()
-                .map(direction -> {
-                    String directionName = I18n.get("minecraft_access.direction." + direction.getName());
+        List<String> connectedDirections = Direction.Plane.HORIZONTAL.stream().map(direction -> {
+            String directionName = I18n.get("minecraft_access.direction." + direction.getName());
 
-                    switch (blockState.getValue(RedStoneWireBlock.PROPERTY_BY_DIRECTION.get(direction))) {
-                        case UP -> {
-                            return directionName + " " + I18n.get("minecraft_access.direction.up");
-                        }
-                        case SIDE -> {
-                            return directionName;
-                        }
-                        default -> {
-                            return null;
-                        }
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+            switch (blockState.getValue(RedStoneWireBlock.PROPERTY_BY_DIRECTION.get(direction))) {
+                case UP -> {
+                    return directionName + " " + I18n.get("minecraft_access.direction.up");
+                }
+                case SIDE -> {
+                    return directionName;
+                }
+                default -> {
+                    return null;
+                }
+            }
+        }).filter(Objects::nonNull).collect(Collectors.toList());
 
         // Unconnected redstone dust now has all direction block states set to "side" since 20w18a (before 1.16)
         // https://minecraft.wiki/w/Redstone_Dust
@@ -478,9 +460,7 @@ public class NarrationUtils {
         return new Tuple<>(toSpeak, currentQuery);
     }
 
-    private static @NotNull Tuple<String, String> getBeehiveInfo
-            (BeehiveBlockEntity blockEntity, BlockState blockState, String
-                    toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getBeehiveInfo(BeehiveBlockEntity blockEntity, BlockState blockState, String toSpeak, String currentQuery) {
         boolean isSmoked = blockEntity.isSedated();
         int honeyLevel = blockState.getValue(BeehiveBlock.HONEY_LEVEL);
         Direction facingDirection = blockState.getValue(BeehiveBlock.FACING);
@@ -507,8 +487,7 @@ public class NarrationUtils {
      * torch flower, pitcher crop.<br>
      * Watermelon vein and pumpkin vein are not harvestable so not be included here.
      */
-    private static @NotNull Tuple<String, String> getCropsInfo(Block
-                                                                       block, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getCropsInfo(Block block, BlockState blockState, String toSpeak, String currentQuery) {
         int currentAge, maxAge;
 
         switch (block) {
@@ -575,10 +554,7 @@ public class NarrationUtils {
     }
 
     private static String getFluidI18NName(Holder<Fluid> fluid) {
-        String translationKey = fluid.unwrap().map(
-                (fluidKey) -> "block." + fluidKey.location().getNamespace() + "." + fluidKey.location().getPath(),
-                (fluidValue) -> "[unregistered " + fluidValue + "]"
-        );
+        String translationKey = fluid.unwrap().map((fluidKey) -> "block." + fluidKey.location().getNamespace() + "." + fluidKey.location().getPath(), (fluidValue) -> "[unregistered " + fluidValue + "]");
         return I18n.get(translationKey);
     }
 }
