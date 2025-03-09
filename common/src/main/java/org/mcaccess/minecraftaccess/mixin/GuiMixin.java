@@ -1,14 +1,9 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.ItemStack;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
-import org.mcaccess.minecraftaccess.features.SpeakHeldItem;
 import org.mcaccess.minecraftaccess.utils.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,37 +22,13 @@ import java.util.List;
 @Mixin(Gui.class)
 public class GuiMixin {
     @Shadow
-    private int toolHighlightTimer;
-
-    @Shadow
-    private ItemStack lastToolHighlight;
-
-    @Shadow
     private Component title;
 
     @Shadow
     private Component subtitle;
 
     @Unique
-    private final SpeakHeldItem minecraft_access$feature = new SpeakHeldItem();
-
-    @Unique
     private String minecraft_access$previousActionBarContent = "";
-
-    /**
-     * This method is continually invoked by the Gui.render(),
-     * so we use previousContent to check if the content has changed and need to be narrated.
-     */
-    @WrapOperation(
-            method = {"Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;I)V", "Lnet/minecraft/client/gui/Gui;renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V"},
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V")
-    )
-    private void speakItemName(ProfilerFiller profiler, Operation<Void> original) {
-        this.minecraft_access$feature.speakHeldItem(this.lastToolHighlight, this.toolHighlightTimer);
-
-
-        original.call(profiler);
-    }
 
     @Inject(at = @At("HEAD"), method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V")
     public void speakActionbar(Component message, boolean tinted, CallbackInfo ci) {

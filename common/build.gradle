@@ -1,67 +1,37 @@
-repositories {
-    mavenCentral()
-    // Make sure getting lombok jar from maven central (instead of forge repo or so)
-    // ref: https://discuss.gradle.org/t/how-to-make-gradle-stop-getting-a-not-existing-jar-from-a-third-party-maven-repo/48290/4
-    exclusiveContent {
-        forRepository {
-            mavenCentral()
-        }
-        filter {
-            includeGroup "org.projectlombok"
-        }
-    }
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Modrinth'
-                url = 'https://api.modrinth.com/maven'
-            }
-        }
-        filter {
-            includeGroup 'maven.modrinth'
-        }
-    }
-}
-
 architectury {
     common("fabric", "neoforge")
 }
 
 dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation libs.jadeFabric
+    modImplementation libs.architecturyApi
 
-    modImplementation "maven.modrinth:jade:${jade_fabric_version}+fabric"
-
-    modImplementation "dev.architectury:architectury:${project.architectury_api_version}"
-
-    // lombok that makes the life easier
     // https://projectlombok.org/setup/gradle
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
-    testCompileOnly 'org.projectlombok:lombok:1.18.30'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
 
     // dependent on log4j for dynamic changing
-    implementation 'org.apache.logging.log4j:log4j-api:2.22.1'
-    implementation 'org.apache.logging.log4j:log4j-core:2.22.1'
+    implementation libs.log4jApi
+    implementation libs.log4jCore
 
     // Unit test dependencies
-    testImplementation "org.junit.jupiter:junit-jupiter:5.10.0"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:5.10.0"
-    testImplementation "org.assertj:assertj-core:3.24.2"
-    testImplementation "org.mockito:mockito-core:5.4.0"
-    testImplementation "org.mockito:mockito-junit-jupiter:5.4.0"
+    testImplementation libs.junitJupiter
+    testImplementation libs.junitJupiterParams
+    testRuntimeOnly libs.junitPlatformLauncher
+    testImplementation libs.assertjCore
+    testImplementation libs.mockitoCore
+    testImplementation libs.mockitoJunitJupiter
 
     // benchmark dependencies
-    testImplementation "org.openjdk.jmh:jmh-core:1.37"
-    testAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:1.37"
+    testImplementation libs.jmhCore
+    testAnnotationProcessor libs.jmhGeneratorAnnprocess
 }
 
 test {
     useJUnitPlatform()
-    // Since JDK 21
+    // Suppress JVM warning about mockito's behavior when running unit tests with IntelliJ
     // ref: https://stackoverflow.com/questions/77951485/getting-a-java-agent-has-been-loaded-warning-in-intellij-after-upgrading-jdk-17
     jvmArgs("-XX:+EnableDynamicAgentLoading")
 }
