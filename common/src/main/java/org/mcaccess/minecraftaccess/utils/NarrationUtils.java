@@ -578,6 +578,9 @@ public class NarrationUtils {
             // StatusEffectInstance#getDuration returns ticks, so we divide by 20 in order to convert to seconds
             // 1 second = 20 ticks
             Duration d = Duration.ofSeconds(effect.getDuration() / 20);
+            // Note: In some languages (like Chinese), the formats of duration and instant are different,
+            // while the formatting below is based on a clock instant.
+            // It's tolerable rather than introducing several time related I18N keys.
             String fmt = d.toHoursPart() == 0 ? "mm':'ss" : "HH':'mm':'ss";
             result.append(DurationFormatUtils.formatDuration(d.toMillis(), fmt));
         }
