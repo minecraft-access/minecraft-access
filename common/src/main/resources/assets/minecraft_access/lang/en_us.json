@@ -59,6 +59,7 @@
   "minecraft_access.gui.access_menu_config_menu.button.fluid_detector_button": "Fluid Detector Configs",
   "minecraft_access.gui.camera_controls_config_menu.button.modified_rotating_angle": "Modified Rotation Angle",
   "minecraft_access.gui.camera_controls_config_menu.button.normal_rotating_angle": "Normal Rotation Angle",
+  "minecraft_access.gui.chat_screen.showing_message_range": "Showing messages %d threw %d",
   "minecraft_access.gui.common.button.button_with_float_value": "%s: %f",
   "minecraft_access.gui.common.button.button_with_int_value": "%s: %d",
   "minecraft_access.gui.common.button.button_with_string_value": "%s: %s",
