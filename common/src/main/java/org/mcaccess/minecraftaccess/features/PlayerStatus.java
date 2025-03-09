@@ -7,6 +7,7 @@ import net.minecraft.client.resources.language.I18n;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
@@ -26,13 +27,12 @@ public class PlayerStatus {
 
     public void update() {
             Minecraft minecraftClient = Minecraft.getInstance();
-            if (minecraftClient == null) return;
             if (minecraftClient.player == null) return;
             if (minecraftClient.screen != null) return;
 
             if (narrationKey.canBeTriggered()) {
                 if (Screen.hasControlDown()) {
-                    EffectNarration.getInstance().narrateCurrentPlayerEffects();
+                    PlayerUtils.narrateCurrentPlayerEffects();
                     return;
                 }
 

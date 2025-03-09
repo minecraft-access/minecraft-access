@@ -114,7 +114,7 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (Minecraft.getInstance() != null && WorldUtils.getClientPlayer() != null) {
+        if (WorldUtils.getClientPlayer() != null) {
             if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
                 playerStatus.update();
             }
@@ -124,7 +124,6 @@ public class MainClass {
             if (Minecraft.getInstance().screen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.update();
-                EffectNarration.getInstance().update();
             }
         }
 
