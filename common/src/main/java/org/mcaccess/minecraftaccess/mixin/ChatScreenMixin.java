@@ -28,10 +28,15 @@ public class ChatScreenMixin {
     private static final Component USAGE_TEXT = Component.translatable("chat_screen.usage");
 
     @Unique
-    private static int minecraft_access$chatMessageOffset = 0;
+    private static int minecraft_access$chatMessageOffset;
 
     @Shadow
     protected EditBox input;
+
+    @Inject(at = @At("HEAD"), method = "init")
+    private void init(CallbackInfo ci) {
+        minecraft_access$chatMessageOffset = 0;
+    }
 
     /**
      * Removes `message to send` from the spoken text when entering a chat message.
