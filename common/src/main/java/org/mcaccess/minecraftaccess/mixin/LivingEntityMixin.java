@@ -12,15 +12,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import java.util.Objects;
 
+@SuppressWarnings("EqualsBetweenInconvertibleTypes")
 @Mixin(LivingEntity.class)
 abstract class LivingEntityMixin {
 
     @Inject(method = "forceAddEffect",
             at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
     public void narrateEffectApplication(MobEffectInstance instance, Entity entity, CallbackInfo ci) {
-        //noinspection EqualsBetweenInconvertibleTypes
         if (Objects.equals(WorldUtils.getClientPlayer(), this)) {
             EffectNarrator.narrateGained(instance);
         }
@@ -29,7 +30,6 @@ abstract class LivingEntityMixin {
     @Inject(method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z",
         at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
     public void narrateEffectApplication2(MobEffectInstance instance, Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        //noinspection EqualsBetweenInconvertibleTypes
         if (Objects.equals(WorldUtils.getClientPlayer(), this)) {
             EffectNarrator.narrateGained(instance);
         }
@@ -37,7 +37,6 @@ abstract class LivingEntityMixin {
 
     @Inject(method = "removeEffectNoUpdate", at = @At("HEAD"))
     public void narrateEffectRemoval(Holder<MobEffect> effect, CallbackInfoReturnable<MobEffectInstance> cir) {
-        //noinspection EqualsBetweenInconvertibleTypes
         if (Objects.equals(WorldUtils.getClientPlayer(), this)) {
             EffectNarrator.narrateLost(effect.value());
         }
