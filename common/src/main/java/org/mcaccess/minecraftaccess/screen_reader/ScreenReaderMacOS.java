@@ -39,6 +39,8 @@ public class ScreenReaderMacOS implements ScreenReaderInterface {
         if (speechSynthesizer == null)
             return;
 
+        text = this.formatNarration(text);
+
         if (interrupt) {
             // Stop speech immediately
             objcRuntimeInstance.objc_msgSend(

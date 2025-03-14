@@ -43,6 +43,8 @@ public class ScreenReaderWindows implements ScreenReaderInterface {
         if (mainInstance == null)
             return;
 
+        text = this.formatNarration(text);
+
         char[] ch = new char[text.length() + 1]; // Last character must be null so NVDA decodes the text correctly
         for (int i = 0; i < text.length(); i++) {
             ch[i] = text.charAt(i);

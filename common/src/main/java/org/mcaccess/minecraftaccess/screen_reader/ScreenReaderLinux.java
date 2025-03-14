@@ -58,6 +58,8 @@ public class ScreenReaderLinux implements ScreenReaderInterface {
         if (mainInstance == null)
             return;
 
+        text = this.formatNarration(text);
+
         libSpeechdWrapperInterface.GoString.ByValue str = new libSpeechdWrapperInterface.GoString.ByValue();
         str.p = text;
         str.n = text.length();
