@@ -5,6 +5,7 @@ architectury {
 dependencies {
     modImplementation libs.jadeFabric
     modImplementation libs.architecturyApi
+    modApi libs.clothConfigFabric
 
     // https://projectlombok.org/setup/gradle
     compileOnly libs.lombok

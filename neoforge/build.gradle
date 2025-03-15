@@ -28,8 +28,7 @@ dependencies {
 
     modRuntimeOnly libs.architecturyApiNeoForge
     include libs.architecturyApiNeoForge
-
-    modApi include('me.shedaniel.cloth:cloth-config-neoforge:17.0.144')
+    modApi libs.clothConfigNeoForge
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
