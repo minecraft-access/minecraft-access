@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
 /**
@@ -47,14 +48,14 @@ public class PlayerWarnings {
     private void healthWarning(double health, double maxHealth) {
         if (health <= config.firstHealthThreshold && health > config.secondHealthThreshold && !isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowFirstThreshold = true;
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.health_low", health, maxHealth), true);
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.health_low", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth)), true);
             if (config.playSound) player.playSound(SoundEvents.ANVIL_LAND, 1.0f, 1.0f);
             playWarningSound();
         }
 
         if (health <= config.secondHealthThreshold && health > 0 && isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowSecondThreshold = true;
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.health_low", health, maxHealth), true);
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.health_low", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth)), true);
             playWarningSound();
         }
 
@@ -65,7 +66,7 @@ public class PlayerWarnings {
     private void hungerWarning(double hunger, double maxHunger) {
         if (hunger <= config.hungerThreshold && hunger > 0 && !isFoodBelowThreshold) {
             isFoodBelowThreshold = true;
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.hunger_low", hunger, maxHunger), true);
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.hunger_low", NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger)), true);
             playWarningSound();
         }
 
@@ -76,7 +77,7 @@ public class PlayerWarnings {
         air = Math.max(air, 0.0);
         if (air <= config.airThreshold && air > 0 && !isAirBelowThreshold) {
             isAirBelowThreshold = true;
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.air_low", air, maxAir), true);
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.air_low", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir)), true);
             playWarningSound();
         }
 
@@ -86,7 +87,7 @@ public class PlayerWarnings {
     private void frostWarning(double frostExposurePercent) {
         if (frostExposurePercent >= config.frostThreshold && frostExposurePercent < 100 && !isFrostAboveThreshold) {
             isFrostAboveThreshold = true;
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.frost_low", frostExposurePercent), true);
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.frost_low", NarrationUtils.narrateNumber(frostExposurePercent)), true);
             playWarningSound();
         }
 

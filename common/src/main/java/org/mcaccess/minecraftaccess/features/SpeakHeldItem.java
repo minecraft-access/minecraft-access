@@ -6,6 +6,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.mixin.GuiAccessor;
 
 import java.util.function.Function;
@@ -40,7 +41,7 @@ public class SpeakHeldItem {
         boolean countChanged = previousItemCount != itemCount;
 
         if (nameChanged) {
-            String itemCountText = itemCount == 0 ? "" : itemCount + " ";
+            String itemCountText = itemCount == 0 ? "" : NarrationUtils.narrateNumber(itemCount) + " ";
             MainClass.speakWithNarrator(i18n.apply(itemCountText + itemName), true);
         } else if (countChanged && Config.getInstance().features.reportHeldItemsCountWhenChanged) {
             MainClass.speakWithNarrator(String.valueOf(itemCount), true);
