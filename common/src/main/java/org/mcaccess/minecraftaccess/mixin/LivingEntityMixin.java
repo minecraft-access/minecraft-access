@@ -19,19 +19,17 @@ import java.util.Objects;
 @Mixin(LivingEntity.class)
 abstract class LivingEntityMixin {
 
-    @Inject(method = "forceAddEffect",
-            at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
-    public void narrateEffectApplication(MobEffectInstance instance, Entity entity, CallbackInfo ci) {
+    @Inject(method = "onEffectUpdated", at = @At("TAIL"))
+    public void narrateEffectApplication(MobEffectInstance effectInstance, boolean forced, Entity entity, CallbackInfo ci) {
         if (Objects.equals(WorldUtils.getClientPlayer(), this)) {
-            EffectNarrator.narrateGained(instance);
+            EffectNarrator.narrateGained(effectInstance);
         }
     }
 
-    @Inject(method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z",
-        at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
-    public void narrateEffectApplication2(MobEffectInstance instance, Entity entity, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "onEffectAdded", at = @At("TAIL"))
+    public void narrateEffectApplication2(MobEffectInstance effectInstance, Entity entity, CallbackInfo ci) {
         if (Objects.equals(WorldUtils.getClientPlayer(), this)) {
-            EffectNarrator.narrateGained(instance);
+            EffectNarrator.narrateGained(effectInstance);
         }
     }
 
