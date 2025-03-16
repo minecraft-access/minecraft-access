@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;

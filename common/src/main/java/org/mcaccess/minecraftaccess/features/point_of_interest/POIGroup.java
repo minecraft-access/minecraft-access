@@ -1,9 +1,9 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -70,8 +70,8 @@ public class POIGroup<T> {
     }
 
     private double getDistance(T item) {
-        if (item instanceof Entity) return MinecraftClient.getInstance().player.distanceTo((Entity)item);
-        if (item instanceof BlockPos) return MinecraftClient.getInstance().player.getEyePos().distanceTo(((BlockPos)item).toCenterPos());
+        if (item instanceof Entity) return Minecraft.getInstance().player.distanceTo((Entity) item);
+        if (item instanceof BlockPos) return Minecraft.getInstance().player.getEyePosition().distanceTo(((BlockPos) item).getCenter());
 
         throw new IllegalArgumentException();
     }

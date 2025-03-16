@@ -3,12 +3,10 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -41,6 +39,7 @@ public class POIEntities {
     private @Nullable Class<? extends Entity> marked = null;
 
     public final POIGroup<Entity> hostileGroup = new POIGroup<>(
+            () -> I18n.get("minecraft_access.point_of_interest.group.hostile"),
             SoundEvents.NOTE_BLOCK_BELL.value(),
             2f,
             entity -> entity instanceof Monster || entity instanceof NeutralMob monster && (monster.isAngry() || Minecraft.getInstance().player.getUUID().equals(monster.getPersistentAngerTarget()) || Minecraft.getInstance().player.getUUID().equals(monster.getLastHurtByMob()))
@@ -49,49 +48,56 @@ public class POIEntities {
     @SuppressWarnings("unchecked")
     final POIGroup<Entity>[] groups = new POIGroup[] {
             new POIGroup<Entity>(// Your Pets
+                    () -> I18n.get("minecraft_access.point_of_interest.group.your_pets"),
                     SoundEvents.NOTE_BLOCK_FLUTE.value(),
                     1f,
                     entity -> entity instanceof TamableAnimal pet && Minecraft.getInstance().player.getUUID().equals(pet.getOwnerUUID())
             ),
             new POIGroup<Entity>(// Other Pets
+                    () -> I18n.get("minecraft_access.point_of_interest.group.other_pet"),
                     SoundEvents.NOTE_BLOCK_COW_BELL.value(),
                     1f,
                     entity -> entity instanceof TamableAnimal pet && pet.isTame()
             ),
             new POIGroup<Entity>(// Bosses
+                    () -> I18n.get("minecraft_access.point_of_interest.group.boss"),
                     SoundEvents.NOTE_BLOCK_PLING.value(),
                     2f,
                     entity -> entity instanceof Mob mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolem)
             ),
             hostileGroup,
             new POIGroup<Entity>(// Passive Mobs
+                    () -> I18n.get("minecraft_access.point_of_interest.group.passive"),
                     SoundEvents.NOTE_BLOCK_BELL.value(),
                     0f,
                     entity -> entity instanceof AgeableMob || entity instanceof WaterAnimal
             ),
             new POIGroup<Entity>(// Players
+                    () -> I18n.get("minecraft_access.point_of_interest.group.player"),
                     SoundEvents.NOTE_BLOCK_CHIME.value(),
                     1f,
                     entity -> entity instanceof Player
             ),
             new POIGroup<Entity>(// Your Pets
-            () -> I18n.translate("minecraft_access.point_of_interest.group.your_pets"),
-                    SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(),
+                    () -> I18n.get("minecraft_access.point_of_interest.group.your_pets"),
+                    SoundEvents.NOTE_BLOCK_FLUTE.value(),
                     1f,
-                    entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid())
+                    entity -> entity instanceof TamableAnimal pet && Minecraft.getInstance().player.getUUID().equals(pet.getOwnerUUID())
             ),
             new POIGroup<Entity>(// Other Pets
-            () -> I18n.translate("minecraft_access.point_of_interest.group.other_pet"),
-                    SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(),
+                    () -> I18n.get("minecraft_access.point_of_interest.group.other_pet"),
+                    SoundEvents.NOTE_BLOCK_COW_BELL.value(),
                     1f,
-                    entity -> entity instanceof TameableEntity pet && pet.isTamed()
+                    entity -> entity instanceof TamableAnimal pet && pet.isTame()
             ),
             new POIGroup<Entity>(// Vehicles
+                    () -> I18n.get("minecraft_access.point_of_interest.group.vehicle"),
                     SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(),
                     1f,
                     entity -> entity instanceof VehicleEntity
             ),
             new POIGroup<Entity>(// Items
+                    () -> I18n.get("minecraft_access.point_of_interest.group.item"),
                     SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
                     2f,
                     entity -> entity instanceof ItemEntity itemEntity && itemEntity.onGround() || entity instanceof AbstractArrow projectile && projectile.pickup.equals(AbstractArrow.Pickup.ALLOWED)
