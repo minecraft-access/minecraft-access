@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.test_utils.extensions;
 
-import org.mcaccess.minecraftaccess.config.Config;
-import org.mcaccess.minecraftaccess.test_utils.MockConfig;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.mcaccess.minecraftaccess.config.Config;
+import org.mcaccess.minecraftaccess.test_utils.MockConfig;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 

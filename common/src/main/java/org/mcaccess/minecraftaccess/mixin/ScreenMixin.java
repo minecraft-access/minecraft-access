@@ -1,13 +1,13 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.MerchantScreen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,46 +21,46 @@ import java.util.List;
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
     @Shadow
-    public abstract Text getNarratedTitle();
+    public abstract Component getNarrationMessage();
 
     @Shadow
     @Nullable
-    public static Screen.SelectedElementNarrationData findSelectedElementData(List<? extends Selectable> selectables, @Nullable Selectable selectable) {
+    public static Screen.NarratableSearchResult findNarratableWidget(List<? extends NarratableEntry> selectables, @Nullable NarratableEntry selectable) {
         return null;
     }
 
     @Shadow
     @Nullable
-    private Selectable selected;
+    private NarratableEntry lastNarratable;
 
     @Shadow
     @Final
-    private List<Selectable> selectables;
+    private List<NarratableEntry> narratables;
 
     @Shadow
-    protected abstract void addElementNarrations(NarrationMessageBuilder builder);
+    protected abstract void updateNarratedWidget(NarrationElementOutput builder);
 
-    @Inject(at = @At("HEAD"), method = "addScreenNarrations", cancellable = true)
-    private void addScreenNarrationsHead(NarrationMessageBuilder builder, CallbackInfo ci) {
-        builder.put(NarrationPart.TITLE, this.getNarratedTitle());
-        this.addElementNarrations(builder);
+    @Inject(at = @At("HEAD"), method = "updateNarrationState", cancellable = true)
+    private void updateNarrationStateMixin(NarrationElementOutput builder, CallbackInfo ci) {
+        builder.add(NarratedElementType.TITLE, this.getNarrationMessage());
+        this.updateNarratedWidget(builder);
         ci.cancel();
     }
 
-    @Inject(at = @At("HEAD"), method = "addElementNarrations*", cancellable = true)
-    private void addElementNarrationsHead(NarrationMessageBuilder builder, CallbackInfo callbackInfo) {
-        if (MinecraftClient.getInstance().currentScreen instanceof MerchantScreen) {
+    @Inject(at = @At("HEAD"), method = "updateNarratedWidget", cancellable = true)
+    private void updateNarratedWidgetMixin(NarrationElementOutput builder, CallbackInfo callbackInfo) {
+        if (Minecraft.getInstance().screen instanceof MerchantScreen) {
             callbackInfo.cancel();
         }
 
-        ImmutableList<Selectable> immutableList = this.selectables.stream().filter(Selectable::isNarratable).collect(ImmutableList.toImmutableList());
-        Screen.SelectedElementNarrationData selectedElementNarrationData = findSelectedElementData(immutableList, this.selected);
+        ImmutableList<NarratableEntry> immutableList = this.narratables.stream().filter(NarratableEntry::isActive).collect(ImmutableList.toImmutableList());
+        Screen.NarratableSearchResult selectedElementNarrationData = findNarratableWidget(immutableList, this.lastNarratable);
         if (selectedElementNarrationData != null) {
-            if (selectedElementNarrationData.selectType.isFocused()) {
-                this.selected = selectedElementNarrationData.selectable;
+            if (selectedElementNarrationData.priority.isTerminal()) {
+                this.lastNarratable = selectedElementNarrationData.entry;
             }
 
-            selectedElementNarrationData.selectable.appendNarrations(builder.nextMessage());
+            selectedElementNarrationData.entry.updateNarration(builder.nest());
         }
 
         callbackInfo.cancel();

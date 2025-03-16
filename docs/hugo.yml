@@ -1,0 +1,26 @@
+languageCode: en
+title: "Minecraft Access Docs"
+enableGitInfo: true
+summaryLength: 25
+disableKinds:
+  - taxonomy
+  - term
+  - rss
+theme:
+  - docs
+
+markup:
+  tableOfContents:
+    ordered: true
+    startLevel: 2
+    endLevel: 4
+
+security:
+  http:
+    mediaTypes:
+      - "^audio/.+$"
+  funcs:
+    getenv:
+      - ^GITHUB_REPOSITORY$
+      - ^GITHUB_REF_NAME$
+      - ^GITHUB_SHA$

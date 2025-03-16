@@ -1,8 +1,8 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.KeyMapping;
 import org.jetbrains.annotations.Contract;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class Keystroke {
     /**
      * Single key, {@link TriggeredAt#PRESSING}
      */
-    public Keystroke(KeyBinding singleKey) {
+    public Keystroke(KeyMapping singleKey) {
         this(() -> KeyUtils.isAnyPressed(singleKey), TriggeredAt.PRESSING);
     }
 

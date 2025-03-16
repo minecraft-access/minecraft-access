@@ -1,30 +1,30 @@
 package org.mcaccess.minecraftaccess.utils;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 import java.util.function.Predicate;
 
 public class WorldUtils {
 
-    public static BlockPos blockPosOf(Vec3d accuratePos) {
-        return BlockPos.ofFloored(accuratePos);
+    public static BlockPos blockPosOf(Vec3 accuratePos) {
+        return BlockPos.containing(accuratePos);
     }
     public record BlockInfo(BlockPos pos, BlockState state, Block type, BlockEntity entity) {
     }
 
     public static BlockInfo getBlockInfo(BlockPos pos) {
-        ClientWorld world = getClientWorld();
+        ClientLevel world = getClientWorld();
 
         // Since Minecraft uses flyweight pattern for blocks and entities,
         // All same type of blocks share one singleton Block instance,
@@ -36,12 +36,12 @@ public class WorldUtils {
         return new BlockInfo(pos, state, block, entity);
     }
 
-    public static ClientWorld getClientWorld() {
-        return MinecraftClient.getInstance().world;
+    public static ClientLevel getClientWorld() {
+        return Minecraft.getInstance().level;
     }
 
-    public static ClientPlayerEntity getClientPlayer() {
-        return MinecraftClient.getInstance().player;
+    public static LocalPlayer getClientPlayer() {
+        return Minecraft.getInstance().player;
     }
 
     public static boolean checkAnyOfBlocks(Iterable<BlockPos> positions, Predicate<BlockState> expected) {
@@ -56,8 +56,8 @@ public class WorldUtils {
     /**
      * To indicate relative location between player and target.
      */
-    public static void playRelativePositionSoundCue(Vec3d targetPosition, double maxDistance, RegistryEntry.Reference<SoundEvent> sound, double minVolume, double maxVolume) {
-        Vec3d playerPos = PlayerPositionUtils.getPlayerPosition().orElseThrow();
+    public static void playRelativePositionSoundCue(Vec3 targetPosition, double maxDistance, Holder.Reference<SoundEvent> sound, double minVolume, double maxVolume) {
+        Vec3 playerPos = PlayerPositionUtils.getPlayerPosition().orElseThrow();
 
         // Use pitch to represent relative elevation, the higher the sound the higher the target.
         // The range of pitch is [0.5, 2.0], calculated as: 2 ^ (x / 12), where x is [-12, 12].
@@ -66,10 +66,10 @@ public class WorldUtils {
         // Since we have a custom distance,
         // the range of (targetY - playerY) is [-maxDistance, maxDistance],
         // so let the maxDistance be the denominator to map to the original range.
-        float pitch = (float) Math.pow(2, (targetPosition.getY() - playerPos.y) / maxDistance);
+        float pitch = (float) Math.pow(2, (targetPosition.y() - playerPos.y) / maxDistance);
 
         // Use volume to represent distance, the louder the sound the closer the distance.
-        double distance = Math.sqrt(targetPosition.squaredDistanceTo(playerPos.x, playerPos.y, playerPos.z));
+        double distance = Math.sqrt(targetPosition.distanceToSqr(playerPos.x, playerPos.y, playerPos.z));
         // = base volume (minVolume) + the volume delta per block ((maxVolume - minVolume) / maxDistance)
         double volumeDeltaPerBlock = (maxVolume - minVolume) / maxDistance;
         float volume = (float) (minVolume + (maxDistance - distance) * volumeDeltaPerBlock);
@@ -77,12 +77,12 @@ public class WorldUtils {
         playSoundAtPosition(sound, volume, pitch, targetPosition);
     }
 
-    public static void playSoundAtPosition(RegistryEntry.Reference<SoundEvent> sound, float volume, float pitch, Vec3d position) {
+    public static void playSoundAtPosition(Holder.Reference<SoundEvent> sound, float volume, float pitch, Vec3 position) {
         playSoundAtPosition(sound.value(), volume, pitch, position);
     }
 
-    public static void playSoundAtPosition(SoundEvent sound, float volume, float pitch, Vec3d position) {
+    public static void playSoundAtPosition(SoundEvent sound, float volume, float pitch, Vec3 position) {
         // note that the useDistance param only works for positions 100 blocks away, check its code.
-        getClientWorld().playSound(position.x, position.y, position.z, sound, SoundCategory.BLOCKS, volume, pitch, true);
+        getClientWorld().playLocalSound(position.x, position.y, position.z, sound, SoundSource.BLOCKS, volume, pitch, true);
     }
 }

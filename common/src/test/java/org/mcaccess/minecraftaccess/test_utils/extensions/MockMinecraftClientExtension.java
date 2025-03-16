@@ -1,12 +1,12 @@
 package org.mcaccess.minecraftaccess.test_utils.extensions;
 
-import org.mcaccess.minecraftaccess.test_utils.MockMinecraftClientWrapper;
-import org.mcaccess.minecraftaccess.test_utils.annotations.MockMinecraftClient;
-import net.minecraft.Bootstrap;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.mcaccess.minecraftaccess.test_utils.MockMinecraftClientWrapper;
+import org.mcaccess.minecraftaccess.test_utils.annotations.MockMinecraftClient;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -18,14 +18,14 @@ import java.util.Objects;
  * Close the mocked static instance at {@link AfterTestExecutionCallback} phase.
  */
 public class MockMinecraftClientExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
-    private MockedStatic<MinecraftClient> ms;
+    private MockedStatic<Minecraft> ms;
 
     @Override public void beforeTestExecution(ExtensionContext extensionContext) {
-        this.ms = Mockito.mockStatic(MinecraftClient.class);
+        this.ms = Mockito.mockStatic(Minecraft.class);
         MockMinecraftClientWrapper wrapper = new MockMinecraftClientWrapper();
 
         // Mock "MinecraftClient.getInstance()" that commonly used to get current MinecraftClient singleton instance.
-        this.ms.when(MinecraftClient::getInstance).thenReturn(wrapper.mockito());
+        this.ms.when(Minecraft::getInstance).thenReturn(wrapper.mockito());
 
         enableMCBootstrapFlag();
 
@@ -47,7 +47,7 @@ public class MockMinecraftClientExtension implements BeforeTestExecutionCallback
      */
     private static void enableMCBootstrapFlag() {
         try {
-            var b = Bootstrap.class.getDeclaredField("initialized");
+            var b = Bootstrap.class.getDeclaredField("isBootstrapped");
             b.trySetAccessible();
             b.set(null, true);
         } catch (NoSuchFieldException | IllegalAccessException e) {

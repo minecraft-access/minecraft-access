@@ -1,7 +1,7 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
+import net.minecraft.client.KeyMapping;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-import net.minecraft.client.option.KeyBinding;
 
 import java.util.function.BooleanSupplier;
 
@@ -12,7 +12,7 @@ public class IntervalKeystroke extends TimedKeystroke {
     /**
      * Single key, {@link TriggeredAt#PRESSING}
      */
-    public IntervalKeystroke(KeyBinding singleKey) {
+    public IntervalKeystroke(KeyMapping singleKey) {
         this(() -> KeyUtils.isAnyPressed(singleKey), TriggeredAt.PRESSING);
     }
 

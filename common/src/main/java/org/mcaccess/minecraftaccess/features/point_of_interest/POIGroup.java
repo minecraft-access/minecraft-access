@@ -4,17 +4,16 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import java.util.function.Supplier;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class POIGroup<T> {
     private Supplier<String> nameSupplier;
@@ -77,7 +76,8 @@ public class POIGroup<T> {
         throw new IllegalArgumentException();
     }
 
-    public void playSound(Vec3d pos, float volume) {
+
+    public void playSound(Vec3 pos, float volume) {
         if (sound == null) return;
         WorldUtils.playSoundAtPosition(sound, volume, soundPitch, pos);
     }

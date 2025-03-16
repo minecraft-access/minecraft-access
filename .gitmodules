@@ -1,0 +1,4 @@
+[submodule "docs/themes"]
+	path = docs/themes
+	url = https://github.com/minecraft-access/hugo-themes
+	branch = dev

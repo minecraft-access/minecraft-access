@@ -1,13 +1,13 @@
 package org.mcaccess.minecraftaccess.utils.system;
 
+import com.mojang.blaze3d.platform.Window;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.Window;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.MouseSimulationConfigMap;
 
@@ -356,7 +356,7 @@ public class MouseUtils {
     }
 
     private static void doNativeMouseAction(String name, boolean logCoordinates, String linuxXdotCommand, Consumer<CGWrapper> macOSAction, Consumer<user32dllInterface> windowsAction) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient == null)
             return;
 
@@ -364,7 +364,7 @@ public class MouseUtils {
         try {
             String coordinates = "";
             if (logCoordinates) {
-                int x = (int) minecraftClient.mouse.getX(), y = (int) minecraftClient.mouse.getY();
+                int x = (int) minecraftClient.mouseHandler.xpos(), y = (int) minecraftClient.mouseHandler.ypos();
                 coordinates = " at minecraft x:%d y:%d".formatted(x, y);
             }
             log.debug("Performing {}{}", name, coordinates);
@@ -379,7 +379,7 @@ public class MouseUtils {
                 // If not, mouse simulation will not work, so inform the user
                 // 0 is false, 1 is true
                 if (applicationServicesInstance.AXIsProcessTrusted() == 0) {
-                    MainClass.speakWithNarrator(I18n.translate("minecraft_access.messages.accessibility_permission_not_granted"), false);
+                    MainClass.speakWithNarrator(I18n.get("minecraft_access.messages.accessibility_permission_not_granted"), false);
                     return;
                 }
 
@@ -402,7 +402,7 @@ public class MouseUtils {
     }
 
     public static Coordinates calcRealPositionOfWidget(int x, int y) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         if (client == null) return new Coordinates(x, y);
         Window window = client.getWindow();
         if (window == null) return new Coordinates(x, y);
@@ -410,11 +410,11 @@ public class MouseUtils {
 
         int realX, realY;
         if (config.getMacMouseFix()) {
-            realX = (int) ((x * window.getScaleFactor()));
-            realY = (int) ((y * window.getScaleFactor()));
+            realX = (int) ((x * window.getGuiScale()));
+            realY = (int) ((y * window.getGuiScale()));
         } else {
-            realX = (int) (window.getX() + (x * window.getScaleFactor()));
-            realY = (int) (window.getY() + (y * window.getScaleFactor()));
+            realX = (int) (window.getX() + (x * window.getGuiScale()));
+            realY = (int) (window.getY() + (y * window.getGuiScale()));
         }
         return new Coordinates(realX, realY);
     }
