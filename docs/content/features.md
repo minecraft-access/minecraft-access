@@ -184,6 +184,7 @@ See also: [Configuration]({{% relref "/config#position-narrator" %}}), [Keybindi
 ### Player Status
 
 This feature adds a key to speak your current status, which includes things like health, hunger, armor, air remaining (if in water), etc.
+The mod will automatically speak gaining and losing effects.
 
 See also: [Configuration]({{% relref "/config#health-n-hunger" %}}), [Keybindings]({{% relref "/keybindings#player-status" %}})
 

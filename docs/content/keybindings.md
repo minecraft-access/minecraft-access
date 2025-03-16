@@ -117,13 +117,14 @@ See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [
 
 ## Speak Player Status
 
-| Single Key                       | Default Keybinding | Description                                  |
-|----------------------------------|--------------------|----------------------------------------------|
+| Single Key            | Default Keybinding | Description                                                                                |
+|-----------------------|--------------------|--------------------------------------------------------------------------------------------|
 | `Speak Player Status` | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
 
-| Key Combination  | Description               |
-|------------------|---------------------------|
-| `Left Alt` + `R` | Speak only the conditional statuses of the player like air and frost exposure |
+| Key Combination                    | Description                                                                   |
+|------------------------------------|-------------------------------------------------------------------------------|
+| `Left Alt` + `Speak Player Status` | Speak only the conditional statuses of the player like air and frost exposure |
+| `Control` + `Speak Player Status`  | Speak currently active effects                                                |
 
 See also: [Feature Description]({{% relref "/features#player-status" %}}), [Configuration]({{% relref "/config#player-status" %}})
 
