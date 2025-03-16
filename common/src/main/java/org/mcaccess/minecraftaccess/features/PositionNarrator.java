@@ -1,15 +1,15 @@
 package org.mcaccess.minecraftaccess.features;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
+import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Adds key bindings to speak the player's position.<br><br>
@@ -37,33 +37,26 @@ public class PositionNarrator {
     }
 
     public void update() {
-        try {
-            if (!OtherConfigsMap.getInstance().isPositionNarratorEnabled()) return;
+        if (!OtherConfigsMap.getInstance().isPositionNarratorEnabled()) return;
 
-            MinecraftClient minecraftClient = MinecraftClient.getInstance();
-            if (minecraftClient == null) return;
-            if (minecraftClient.player == null) return;
-            if (minecraftClient.currentScreen != null) return;
+        Minecraft minecraftClient = Minecraft.getInstance();
+        if (minecraftClient == null) return;
+        if (minecraftClient.player == null) return;
+        if (minecraftClient.screen != null) return;
 
-            boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-            if (isLeftAltPressed) {
-                if (KeyX.canBeTriggered()) {
-                    MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXPos(), true);
-                } else if (KeyC.canBeTriggered()) {
-                    MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableYPos(), true);
-                } else if (KeyZ.canBeTriggered()) {
-                    MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableZPos(), true);
-                }
+        boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
+        if (isLeftAltPressed) {
+            if (KeyX.canBeTriggered()) {
+                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXPos(), true);
+            } else if (KeyC.canBeTriggered()) {
+                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableYPos(), true);
+            } else if (KeyZ.canBeTriggered()) {
+                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableZPos(), true);
             }
+        }
 
-            if (positionNarrationKey.canBeTriggered()) {
-                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXYZPosition(), true);
-            }
-
-        } catch (Exception e) {
-            log.error("An error occurred in PositionNarrator.", e);
+        if (positionNarrationKey.canBeTriggered()) {
+            MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXYZPosition(), true);
         }
     }
-
-
 }

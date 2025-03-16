@@ -2,40 +2,34 @@
   "schemaVersion": 1,
   "id": "minecraft_access",
   "version": "${version}",
-
   "name": "Minecraft Access",
   "description": "A mod that helps visually impaired players to play Minecraft.",
   "authors": [
-    "Shoaib", "Boholder", "TheSuperGamer20578"
+    "Shoaib",
+    "Boholder",
+    "TheSuperGamer20578"
   ],
   "contact": {
-    "homepage": "https://github.com/khanshoaib3/minecraft-access",
-    "sources": "https://github.com/khanshoaib3/minecraft-access"
+    "homepage": "https://mcaccess.org",
+    "sources": "https://github.com/minecraft-access/minecraft-access"
   },
-
   "license": "GNU GPLv3",
-
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "client": [
-      "org.mcaccess.minecraftaccess.fabric.MinecraftAccessClient"
-    ],
-    "server": [
-      "org.mcaccess.minecraftaccess.fabric.MinecraftAccessServer"
+    "main": [
+      "org.mcaccess.minecraftaccess.fabric.MainClassFabric"
     ]
   },
+  "icon": "logo-mc-access.png",
   "mixins": [
-    "minecraft_access.mixins.json",
-    "minecraft_access-common.mixins.json"
+    "minecraft_access.mixins.json"
   ],
-
   "depends": {
-    "fabricloader": ">=${fabric_loader_version}",
-    "fabric-key-binding-api-v1": "*",
-    "fabric-resource-loader-v0": "*",
+    "fabricloader": "^${fabric_loader_version}",
+    "architectury": "^${architectury_api_version}",
     "minecraft": "${minecraft_version}"
   },
   "suggests": {
-    "another-mod": "*"
+    "jade": "^${jade_fabric_version}"
   }
 }

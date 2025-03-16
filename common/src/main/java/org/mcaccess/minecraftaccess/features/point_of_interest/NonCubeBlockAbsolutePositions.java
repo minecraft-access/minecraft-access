@@ -1,23 +1,23 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 import java.util.Map;
 import java.util.Set;
 
 /**
- * The position of the block (blockPos.toCenterPos()) is generally considered to be the center of the block (x.5,y.5,z.5).
+ * The position of the block (blockPos.getCenter()) is generally considered to be the center of the block (x.5,y.5,z.5).
  * Some blocks do not occupy the entire cube space, and for some of those that can be interacted with (thus need can be locked via POI Locking),
  * we manually calculate the locking position of these blocks (which are usually not the center of the block) by these methods.
  */
 public class NonCubeBlockAbsolutePositions {
-    public static Vec3d getTrapDoorPos(Vec3d blockPos) {
-        ClientWorld world = WorldUtils.getClientWorld();
+    public static Vec3 getTrapDoorPos(Vec3 blockPos) {
+        ClientLevel world = WorldUtils.getClientWorld();
         Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
 
         String half = "", facing = "", open = "";
@@ -34,9 +34,9 @@ public class NonCubeBlockAbsolutePositions {
 
         }
 
-        double x = blockPos.getX();
-        double y = blockPos.getY();
-        double z = blockPos.getZ();
+        double x = blockPos.x();
+        double y = blockPos.y();
+        double z = blockPos.z();
 
         if (open.equalsIgnoreCase("true")) {
             if (facing.equalsIgnoreCase("north"))
@@ -54,11 +54,11 @@ public class NonCubeBlockAbsolutePositions {
                 y += 0.4;
         }
 
-        return new Vec3d(x, y, z);
+        return new Vec3(x, y, z);
     }
 
-    public static Vec3d getLeverPos(Vec3d blockPos) {
-        ClientWorld world = WorldUtils.getClientWorld();
+    public static Vec3 getLeverPos(Vec3 blockPos) {
+        ClientLevel world = WorldUtils.getClientWorld();
         Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
 
         String face = "", facing = "";
@@ -74,9 +74,9 @@ public class NonCubeBlockAbsolutePositions {
 
         }
 
-        double x = blockPos.getX();
-        double y = blockPos.getY();
-        double z = blockPos.getZ();
+        double x = blockPos.x();
+        double y = blockPos.y();
+        double z = blockPos.z();
 
         if (face.equalsIgnoreCase("floor")) {
             y -= 0.3;
@@ -93,11 +93,11 @@ public class NonCubeBlockAbsolutePositions {
                 x += 0.3;
         }
 
-        return new Vec3d(x, y, z);
+        return new Vec3(x, y, z);
     }
 
-    public static Vec3d getLadderPos(Vec3d blockPos) {
-        ClientWorld world = WorldUtils.getClientWorld();
+    public static Vec3 getLadderPos(Vec3 blockPos) {
+        ClientLevel world = WorldUtils.getClientWorld();
         Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
 
         String facing = "";
@@ -111,9 +111,9 @@ public class NonCubeBlockAbsolutePositions {
 
         }
 
-        double x = blockPos.getX();
-        double y = blockPos.getY();
-        double z = blockPos.getZ();
+        double x = blockPos.x();
+        double y = blockPos.y();
+        double z = blockPos.z();
 
         if (facing.equalsIgnoreCase("north"))
             z += 0.35;
@@ -124,16 +124,16 @@ public class NonCubeBlockAbsolutePositions {
         else if (facing.equalsIgnoreCase("east"))
             x -= 0.35;
 
-        return new Vec3d(x, y, z);
+        return new Vec3(x, y, z);
     }
 
-    public static Vec3d getButtonPos(Vec3d blockPos) {
-        ClientWorld world = WorldUtils.getClientWorld();
+    public static Vec3 getButtonPos(Vec3 blockPos) {
+        ClientLevel world = WorldUtils.getClientWorld();
         Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
 
-        double x = blockPos.getX();
-        double y = blockPos.getY();
-        double z = blockPos.getZ();
+        double x = blockPos.x();
+        double y = blockPos.y();
+        double z = blockPos.z();
 
         String face = "", facing = "";
 
@@ -162,11 +162,11 @@ public class NonCubeBlockAbsolutePositions {
                 x += 0.4;
         }
 
-        return new Vec3d(x, y, z);
+        return new Vec3(x, y, z);
     }
 
-    public static Vec3d getDoorPos(Vec3d blockPos) {
-        ClientWorld world = WorldUtils.getClientWorld();
+    public static Vec3 getDoorPos(Vec3 blockPos) {
+        ClientLevel world = WorldUtils.getClientWorld();
         Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
 
         String facing = "", hinge = "", open = "";
@@ -182,9 +182,9 @@ public class NonCubeBlockAbsolutePositions {
 
         }
 
-        double x = blockPos.getX();
-        double y = blockPos.getY();
-        double z = blockPos.getZ();
+        double x = blockPos.x();
+        double y = blockPos.y();
+        double z = blockPos.z();
 
         if (open.equalsIgnoreCase("false")) {
             if (facing.equalsIgnoreCase("north"))
@@ -217,12 +217,12 @@ public class NonCubeBlockAbsolutePositions {
             }
         }
 
-        return new Vec3d(x, y, z);
+        return new Vec3(x, y, z);
     }
 
     @NotNull
-    private static Set<Map.Entry<Property<?>, Comparable<?>>> getEntries(Vec3d blockPos, ClientWorld world) {
+    private static Set<Map.Entry<Property<?>, Comparable<?>>> getEntries(Vec3 blockPos, ClientLevel world) {
         BlockState blockState = world.getBlockState(WorldUtils.blockPosOf(blockPos));
-        return blockState.getEntries().entrySet();
+        return blockState.getValues().entrySet();
     }
 }

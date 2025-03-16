@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
-import org.mcaccess.minecraftaccess.MainClass;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mcaccess.minecraftaccess.MainClass;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +126,7 @@ public class SlotsGroup {
 
     public String getGroupName() {
         String key = String.format("minecraft_access.slot_group.%s", groupKey);
-        String translation = groupName == null || I18n.hasTranslation(key) ? I18n.translate(key) : groupName;
+        String translation = groupName == null || I18n.exists(key) ? I18n.get(key) : groupName;
         return index == null ? translation : String.format("%s %d", translation, index);
     }
 }

@@ -1,13 +1,13 @@
 package org.mcaccess.minecraftaccess.config.config_menus;
 
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.resources.language.I18n;
+import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.config.Config;
 import org.mcaccess.minecraftaccess.utils.BaseScreen;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.resource.language.I18n;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -26,7 +26,7 @@ public class ValueEntryMenu extends BaseScreen {
         }
 
         public String buildButtonText(String fieldI18NKey) {
-            return I18n.translate("minecraft_access.gui.common.button.button_with_string_value", I18n.translate(fieldI18NKey), this.valueGetter.get());
+            return I18n.get("minecraft_access.gui.common.button.button_with_string_value", I18n.get(fieldI18NKey), this.valueGetter.get());
         }
     }
 
@@ -50,23 +50,23 @@ public class ValueEntryMenu extends BaseScreen {
         super.init();
         this.value = String.valueOf(this.configType.valueGetter.get());
         this.previousValue = this.value;
-        MainClass.speakWithNarrator(I18n.translate("minecraft_access.gui.value_entry_menu.info_text", this.value), true);
+        MainClass.speakWithNarrator(I18n.get("minecraft_access.gui.value_entry_menu.info_text", this.value), true);
     }
 
     /**
      * Removes the default title narration on menu open.
      */
     @Override
-    protected void addScreenNarrations(NarrationMessageBuilder builder) {
+    protected void updateNarrationState(NarrationElementOutput builder) {
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            this.close();
+            this.onClose();
         } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
             this.updateConfig();
-            this.close();
+            this.onClose();
         } else if (this.configType.valueType != ValueType.STRING && ((keyCode >= GLFW.GLFW_KEY_0 && keyCode <= GLFW.GLFW_KEY_9)
                 || (keyCode >= GLFW.GLFW_KEY_KP_0 && keyCode <= GLFW.GLFW_KEY_KP_9)
                 || (this.configType.valueType != ValueType.INT && (keyCode == GLFW.GLFW_KEY_PERIOD || keyCode == GLFW.GLFW_KEY_KP_DECIMAL)))) {
@@ -93,11 +93,11 @@ public class ValueEntryMenu extends BaseScreen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.speakValue();
         this.renderBackground(context, mouseX, mouseY, delta);
-        context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 15, 16777215);
-        context.drawCenteredTextWithShadow(this.textRenderer, value, this.width / 2, this.height / 2, 16777215);
+        context.drawCenteredString(this.font, this.title, this.width / 2, 15, 16777215);
+        context.drawCenteredString(this.font, value, this.width / 2, this.height / 2, 16777215);
         super.render(context, mouseX, mouseY, delta);
     }
 

@@ -41,3 +41,8 @@ build
 
 # Ignore Gragle test report logs
 /common/logs/
+
+# Hugo
+/docs/public/
+/docs/resources/
+/docs/.hugo_build.lock

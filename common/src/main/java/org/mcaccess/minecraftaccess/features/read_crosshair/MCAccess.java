@@ -1,20 +1,21 @@
 package org.mcaccess.minecraftaccess.features.read_crosshair;
 
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
 import java.util.Arrays;
 
 public class MCAccess implements CrosshairNarrator {
     private static MCAccess INSTANCE;
 
-    private MCAccess() {}
+    private MCAccess() {
+    }
 
     public static MCAccess getInstance() {
         if (INSTANCE == null) {
@@ -36,9 +37,9 @@ public class MCAccess implements CrosshairNarrator {
         }
         return switch (hit) {
             case BlockHitResult blockHitResult -> {
-                String side = speakSide ? blockHitResult.getSide().getName() : "";
+                String side = speakSide ? blockHitResult.getDirection().getName() : "";
                 yield Arrays.asList(
-                        NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getRight(),
+                        NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getB(),
                         speakConsecutiveBlocks ? blockHitResult.getBlockPos() : null
                 );
             }
@@ -51,8 +52,8 @@ public class MCAccess implements CrosshairNarrator {
     public @NotNull String narrate(boolean speakSide) {
         return switch (rayCast()) {
             case BlockHitResult blockHitResult -> {
-                String side = speakSide ? I18n.translate(String.format("minecraft_access.direction.%s", blockHitResult.getSide().getName())) : "";
-                yield NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getLeft();
+                String side = speakSide ? I18n.get(String.format("minecraft_access.direction.%s", blockHitResult.getDirection().getName())) : "";
+                yield NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getA();
             }
             case EntityHitResult entityHitResult -> NarrationUtils.narrateEntity(entityHitResult.getEntity());
             default -> throw new IllegalStateException("Unexpected value: " + rayCast());

@@ -1,31 +1,26 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import lombok.extern.slf4j.Slf4j;
-import lombok.Getter;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.mob.Angerable;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.WaterCreatureEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.vehicle.VehicleEntity;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,56 +39,68 @@ public class POIEntities {
     private @Nullable Class<? extends Entity> marked = null;
 
     public final POIGroup<Entity> hostileGroup = new POIGroup<>(
-        () -> I18n.translate("minecraft_access.point_of_interest.group.hostile"),
-    SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(),
+            () -> I18n.get("minecraft_access.point_of_interest.group.hostile"),
+            SoundEvents.NOTE_BLOCK_BELL.value(),
             2f,
-            entity -> entity instanceof HostileEntity || entity instanceof Angerable monster && (monster.hasAngerTime() || MinecraftClient.getInstance().player.getUuid().equals(monster.getAngryAt()) || MinecraftClient.getInstance().player.getUuid().equals(monster.getAttacker()))
+            entity -> entity instanceof Monster || entity instanceof NeutralMob monster && (monster.isAngry() || Minecraft.getInstance().player.getUUID().equals(monster.getPersistentAngerTarget()) || Minecraft.getInstance().player.getUUID().equals(monster.getLastHurtByMob()))
     );
 
     @SuppressWarnings("unchecked")
     final POIGroup<Entity>[] groups = new POIGroup[] {
+            new POIGroup<Entity>(// Your Pets
+                    () -> I18n.get("minecraft_access.point_of_interest.group.your_pets"),
+                    SoundEvents.NOTE_BLOCK_FLUTE.value(),
+                    1f,
+                    entity -> entity instanceof TamableAnimal pet && Minecraft.getInstance().player.getUUID().equals(pet.getOwnerUUID())
+            ),
+            new POIGroup<Entity>(// Other Pets
+                    () -> I18n.get("minecraft_access.point_of_interest.group.other_pet"),
+                    SoundEvents.NOTE_BLOCK_COW_BELL.value(),
+                    1f,
+                    entity -> entity instanceof TamableAnimal pet && pet.isTame()
+            ),
             new POIGroup<Entity>(// Bosses
-            () -> I18n.translate("minecraft_access.point_of_interest.group.boss"),
-            SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(),
+                    () -> I18n.get("minecraft_access.point_of_interest.group.boss"),
+                    SoundEvents.NOTE_BLOCK_PLING.value(),
                     2f,
-                    entity -> entity instanceof MobEntity mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolemEntity)
+                    entity -> entity instanceof Mob mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolem)
             ),
             hostileGroup,
             new POIGroup<Entity>(// Passive Mobs
-            () -> I18n.translate("minecraft_access.point_of_interest.group.passive"),
-            SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(),
+                    () -> I18n.get("minecraft_access.point_of_interest.group.passive"),
+                    SoundEvents.NOTE_BLOCK_BELL.value(),
                     0f,
-                    entity -> entity instanceof PassiveEntity || entity instanceof WaterCreatureEntity
+                    entity -> entity instanceof AgeableMob || entity instanceof WaterAnimal
             ),
             new POIGroup<Entity>(// Players
-            () -> I18n.translate("minecraft_access.point_of_interest.group.player"),
-            SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(),
+                    () -> I18n.get("minecraft_access.point_of_interest.group.player"),
+                    SoundEvents.NOTE_BLOCK_CHIME.value(),
                     1f,
-                    entity -> entity instanceof PlayerEntity
+                    entity -> entity instanceof Player
             ),
             new POIGroup<Entity>(// Your Pets
-            () -> I18n.translate("minecraft_access.point_of_interest.group.your_pets"),
-            SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(),
+                    () -> I18n.get("minecraft_access.point_of_interest.group.your_pets"),
+                    SoundEvents.NOTE_BLOCK_FLUTE.value(),
                     1f,
-                    entity -> entity instanceof TameableEntity pet && MinecraftClient.getInstance().player.getUuid().equals(pet.getOwnerUuid())
+                    entity -> entity instanceof TamableAnimal pet && Minecraft.getInstance().player.getUUID().equals(pet.getOwnerUUID())
             ),
             new POIGroup<Entity>(// Other Pets
-            () -> I18n.translate("minecraft_access.point_of_interest.group.other_pet"),
-            SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL.value(),
+                    () -> I18n.get("minecraft_access.point_of_interest.group.other_pet"),
+                    SoundEvents.NOTE_BLOCK_COW_BELL.value(),
                     1f,
-                    entity -> entity instanceof TameableEntity pet && pet.isTamed()
+                    entity -> entity instanceof TamableAnimal pet && pet.isTame()
             ),
             new POIGroup<Entity>(// Vehicles
-            () -> I18n.translate("minecraft_access.point_of_interest.group.vehicle"),
-            SoundEvents.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE.value(),
+                    () -> I18n.get("minecraft_access.point_of_interest.group.vehicle"),
+                    SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(),
                     1f,
                     entity -> entity instanceof VehicleEntity
             ),
             new POIGroup<Entity>(// Items
-            () -> I18n.translate("minecraft_access.point_of_interest.group.item"),
-            SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON,
+                    () -> I18n.get("minecraft_access.point_of_interest.group.item"),
+                    SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
                     2f,
-                    entity -> entity instanceof ItemEntity itemEntity && itemEntity.isOnGround() || entity instanceof PersistentProjectileEntity projectile && projectile.pickupType.equals(PersistentProjectileEntity.PickupPermission.ALLOWED)
+                    entity -> entity instanceof ItemEntity itemEntity && itemEntity.onGround() || entity instanceof AbstractArrow projectile && projectile.pickup.equals(AbstractArrow.Pickup.ALLOWED)
             ),
     };
 
@@ -115,23 +122,22 @@ public class POIEntities {
         if (!enabled) return;
         if (!interval.isReady()) return;
 
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        Minecraft minecraftClient = Minecraft.getInstance();
 
         if (minecraftClient == null) return;
         if (minecraftClient.player == null) return;
-        if (minecraftClient.world == null) return;
-        if (minecraftClient.currentScreen != null) return; //Prevent running if any screen is opened
+        if (minecraftClient.level == null) return;
+        if (minecraftClient.screen != null) return; //Prevent running if any screen is opened
 
         for (POIGroup<Entity> group : groups) {
             group.clear();
         }
 
-            List<Entity> currentScanResults = new ArrayList<>();
+        List<Entity> currentScanResults = new ArrayList<>();
+        log.debug("POIEntities started.");
 
-            log.debug("POIEntities started.");
-
-        Box scanBox = minecraftClient.player.getBoundingBox().expand(range, range, range);
-        List<Entity> entities = minecraftClient.world.getOtherEntities(minecraftClient.player, scanBox);
+        AABB scanBox = minecraftClient.player.getBoundingBox().inflate(range, range, range);
+        List<Entity> entities = minecraftClient.level.getEntities(minecraftClient.player, scanBox);
 
         for (POIGroup<Entity> group : groups) {
             entities.removeIf(group::add);
@@ -142,8 +148,7 @@ public class POIEntities {
                 if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled() && !(marked == null || marked.isInstance(entity))) {
                     continue;
                 }
-
-                playSoundAt(entity.getBlockPos(), group);
+                playSoundAt(entity.blockPosition(), group);
                 currentScanResults.add(entity);
             }
         }
@@ -154,7 +159,7 @@ public class POIEntities {
     private void playSoundAt(BlockPos pos, POIGroup<Entity> group) {
         if (!playSound || volume == 0f) return;
         log.debug("Play sound at [x:{} y:{} z{}]", pos.getX(), pos.getY(), pos.getZ());
-        group.playSound(pos.toCenterPos(), volume);
+        group.playSound(pos.getCenter(), volume);
     }
 
     /**
