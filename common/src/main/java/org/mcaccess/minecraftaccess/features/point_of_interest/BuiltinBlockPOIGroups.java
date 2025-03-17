@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.LeverBlock;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import java.util.Arrays;
 import java.util.function.Function;
@@ -13,7 +15,17 @@ public enum BuiltinBlockPOIGroups {
     ORE(new POIGroup<>(
         "minecraft_access.point_of_interest.group.ore",
         new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
-        pos -> Ore.ORE_BLOCK_PREDICATE.test(WorldUtils.getBlockState(pos).getBlock())
+        pos -> Ore.PREDICATE.test(WorldUtils.getBlockState(pos).getBlock())
+    )),
+    FUNCTIONAL(new POIGroup<>(// Functional blocks
+        "minecraft_access.point_of_interest.group.functional",
+        new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
+        pos -> {
+            Block block = WorldUtils.getBlockState(pos).getBlock();
+            return block instanceof ButtonBlock
+                || block instanceof LeverBlock
+                || Functional.PREDICATE.test(block);
+        }
     ));
 
     public static final Function<Block[], Predicate<Block>> BLOCK_PREDICATE_BUILDER =
@@ -48,7 +60,34 @@ public enum BuiltinBlockPOIGroups {
             Blocks.ANCIENT_DEBRIS
         };
 
-        public static final Predicate<Block> ORE_BLOCK_PREDICATE =
+        public static final Predicate<Block> PREDICATE =
             BuiltinBlockPOIGroups.BLOCK_PREDICATE_BUILDER.apply(ORE_BLOCKS);
+    }
+
+    public static class Functional {
+        public static final Block[] FUNCTION_BLOCKS = new Block[] {
+            Blocks.PISTON,
+            Blocks.STICKY_PISTON,
+            Blocks.RESPAWN_ANCHOR,
+            Blocks.BELL,
+            Blocks.OBSERVER,
+            Blocks.DAYLIGHT_DETECTOR,
+            Blocks.JUKEBOX,
+            Blocks.LODESTONE,
+            Blocks.BEE_NEST,
+            Blocks.COMPOSTER,
+            Blocks.OBSERVER,
+            Blocks.SCULK_SHRIEKER,
+            Blocks.SCULK_CATALYST,
+            Blocks.CALIBRATED_SCULK_SENSOR,
+            Blocks.SCULK_SENSOR,
+            Blocks.VAULT,
+            Blocks.TRIAL_SPAWNER,
+            Blocks.SPAWNER,
+            Blocks.CREAKING_HEART,
+        };
+
+        public static final Predicate<Block> PREDICATE =
+            BuiltinBlockPOIGroups.BLOCK_PREDICATE_BUILDER.apply(FUNCTION_BLOCKS);
     }
 }

@@ -18,7 +18,6 @@ import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Scans the area to find exposed ore blocks, doors, buttons, ladders, etc., groups them and plays a sound only at ore blocks.
@@ -29,32 +28,6 @@ public class POIBlocks {
     private static final POIBlocks instance = new POIBlocks();
     private LocalPlayer player;
     private ClientLevel world;
-
-    private static final Block[] POI_BLOCKS = new Block[] {
-        Blocks.PISTON,
-        Blocks.STICKY_PISTON,
-        Blocks.RESPAWN_ANCHOR,
-        Blocks.BELL,
-        Blocks.OBSERVER,
-        Blocks.DAYLIGHT_DETECTOR,
-        Blocks.JUKEBOX,
-        Blocks.LODESTONE,
-        Blocks.BEE_NEST,
-        Blocks.COMPOSTER,
-        Blocks.OBSERVER,
-        Blocks.SCULK_SHRIEKER,
-        Blocks.SCULK_CATALYST,
-        Blocks.CALIBRATED_SCULK_SENSOR,
-        Blocks.SCULK_SENSOR,
-        Blocks.VAULT,
-        Blocks.TRIAL_SPAWNER,
-        Blocks.SPAWNER,
-        Blocks.CREAKING_HEART,
-    };
-
-    private static final List<Predicate<BlockState>> poiBlockPredicates = Arrays.stream(POI_BLOCKS)
-        .map(b -> (Predicate<BlockState>) state -> state.is(b))
-        .toList();
 
     private Set<BlockPos> checkedBlocks = Set.of();
     private boolean enabled;
@@ -112,13 +85,7 @@ public class POIBlocks {
             pos -> this.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof LiquidBlock &&
                 PlayerUtils.isNotInFluid() && world.getFluidState(pos).getAmount() == 8
         ),
-        new POIGroup<BlockPos>(// Functional blocks
-            "minecraft_access.point_of_interest.group.functional",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
-            pos -> world.getBlockState(pos).getBlock() instanceof ButtonBlock ||
-                world.getBlockState(pos).getBlock() instanceof LeverBlock ||
-                poiBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
-        ),
+        BuiltinBlockPOIGroups.FUNCTIONAL.group,
         new POIGroup<BlockPos>(// Blocks with interface
             "minecraft_access.point_of_interest.group.gui",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BANJO.value(), 0f),
