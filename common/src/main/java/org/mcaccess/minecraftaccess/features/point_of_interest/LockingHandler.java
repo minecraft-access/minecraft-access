@@ -25,7 +25,6 @@ import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +97,6 @@ public class LockingHandler {
     private void mainLogic() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
-        if (minecraftClient == null) return;
         if (minecraftClient.player == null) return;
         if (minecraftClient.level == null) return;
         if (minecraftClient.screen != null) return;
@@ -109,7 +107,7 @@ public class LockingHandler {
     }
 
     private void handleLockingKeyPressing() {
-        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().lockingHandlerKey);
+        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
         if (isLockingKeyPressed && Screen.hasAltDown()) {
             if (lockedOnEntity != null || lockedOnBlock != null) {
                 unlock(true);
@@ -212,14 +210,13 @@ public class LockingHandler {
 
     private void relock() {
         Object target = ObjectTracker.getInstance().getCurrentObject();
-
-        if (target instanceof Entity) {
-            lockOnEntity((Entity)target);
-        }
-
-        if (target instanceof BlockPos) {
-            BlockPos targetPos = (BlockPos)target;
-            lockOnBlock(targetPos);
+        switch (target) {
+            case Entity entity -> lockOnEntity(entity);
+            case BlockPos blockPos -> {
+                if (this.lockOnBlocks) lockOnBlock(blockPos);
+            }
+            default -> {
+            }
         }
     }
 
