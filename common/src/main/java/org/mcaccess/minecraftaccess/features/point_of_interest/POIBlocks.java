@@ -30,57 +30,57 @@ public class POIBlocks {
     private LocalPlayer player;
     private ClientLevel world;
 
-    private static final Block[] POI_BLOCKS = new Block[]{
-            Blocks.PISTON,
-            Blocks.STICKY_PISTON,
-            Blocks.RESPAWN_ANCHOR,
-            Blocks.BELL,
-            Blocks.OBSERVER,
-            Blocks.DAYLIGHT_DETECTOR,
-            Blocks.JUKEBOX,
-            Blocks.LODESTONE,
-            Blocks.BEE_NEST,
-            Blocks.COMPOSTER,
-            Blocks.OBSERVER,
-            Blocks.SCULK_SHRIEKER,
-            Blocks.SCULK_CATALYST,
-            Blocks.CALIBRATED_SCULK_SENSOR,
-            Blocks.SCULK_SENSOR,
-            Blocks.VAULT,
-            Blocks.TRIAL_SPAWNER,
-            Blocks.SPAWNER,
-            Blocks.CREAKING_HEART,
+    private static final Block[] POI_BLOCKS = new Block[] {
+        Blocks.PISTON,
+        Blocks.STICKY_PISTON,
+        Blocks.RESPAWN_ANCHOR,
+        Blocks.BELL,
+        Blocks.OBSERVER,
+        Blocks.DAYLIGHT_DETECTOR,
+        Blocks.JUKEBOX,
+        Blocks.LODESTONE,
+        Blocks.BEE_NEST,
+        Blocks.COMPOSTER,
+        Blocks.OBSERVER,
+        Blocks.SCULK_SHRIEKER,
+        Blocks.SCULK_CATALYST,
+        Blocks.CALIBRATED_SCULK_SENSOR,
+        Blocks.SCULK_SENSOR,
+        Blocks.VAULT,
+        Blocks.TRIAL_SPAWNER,
+        Blocks.SPAWNER,
+        Blocks.CREAKING_HEART,
     };
 
     private static final List<Predicate<BlockState>> poiBlockPredicates = Arrays.stream(POI_BLOCKS)
-            .map(b -> (Predicate<BlockState>) state -> state.is(b))
-            .toList();
+        .map(b -> (Predicate<BlockState>) state -> state.is(b))
+        .toList();
 
-    private static final Block[] ORE_BLOCKS = new Block[]{
-            Blocks.COAL_ORE,
-            Blocks.DEEPSLATE_COAL_ORE,
-            Blocks.COPPER_ORE,
-            Blocks.DEEPSLATE_COPPER_ORE,
-            Blocks.DIAMOND_ORE,
-            Blocks.DEEPSLATE_DIAMOND_ORE,
-            Blocks.EMERALD_ORE,
-            Blocks.DEEPSLATE_EMERALD_ORE,
-            Blocks.GOLD_ORE,
-            Blocks.DEEPSLATE_GOLD_ORE,
-            Blocks.NETHER_GOLD_ORE,
-            Blocks.IRON_ORE,
-            Blocks.DEEPSLATE_IRON_ORE,
-            Blocks.LAPIS_ORE,
-            Blocks.DEEPSLATE_LAPIS_ORE,
-            Blocks.REDSTONE_ORE,
-            Blocks.DEEPSLATE_REDSTONE_ORE,
-            Blocks.NETHER_QUARTZ_ORE,
-            Blocks.ANCIENT_DEBRIS
+    private static final Block[] ORE_BLOCKS = new Block[] {
+        Blocks.COAL_ORE,
+        Blocks.DEEPSLATE_COAL_ORE,
+        Blocks.COPPER_ORE,
+        Blocks.DEEPSLATE_COPPER_ORE,
+        Blocks.DIAMOND_ORE,
+        Blocks.DEEPSLATE_DIAMOND_ORE,
+        Blocks.EMERALD_ORE,
+        Blocks.DEEPSLATE_EMERALD_ORE,
+        Blocks.GOLD_ORE,
+        Blocks.DEEPSLATE_GOLD_ORE,
+        Blocks.NETHER_GOLD_ORE,
+        Blocks.IRON_ORE,
+        Blocks.DEEPSLATE_IRON_ORE,
+        Blocks.LAPIS_ORE,
+        Blocks.DEEPSLATE_LAPIS_ORE,
+        Blocks.REDSTONE_ORE,
+        Blocks.DEEPSLATE_REDSTONE_ORE,
+        Blocks.NETHER_QUARTZ_ORE,
+        Blocks.ANCIENT_DEBRIS
     };
 
     private static final List<Predicate<BlockState>> oreBlockPredicates = Arrays.stream(ORE_BLOCKS)
-            .map(b -> (Predicate<BlockState>) state -> state.is(b))
-            .toList();
+        .map(b -> (Predicate<BlockState>) state -> state.is(b))
+        .toList();
 
     private Set<BlockPos> checkedBlocks = Set.of();
     private boolean enabled;
@@ -95,15 +95,13 @@ public class POIBlocks {
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
         "minecraft_access.point_of_interest.group.markedBlock",
-        SoundEvents.ITEM_PICKUP,
-        -5f,
+        new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
         pos -> isMarking && world.getBlockState(pos).is(markedBlock)
     );
 
     private final POIGroup<BlockPos> oreGroup = new POIGroup<>(
         "minecraft_access.point_of_interest.group.ore",
-        SoundEvents.ITEM_PICKUP,
-        -5f,
+        new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
         pos -> oreBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
     );
 
@@ -129,8 +127,7 @@ public class POIBlocks {
         oreGroup,
         new POIGroup<BlockPos>(// Doors
             "minecraft_access.point_of_interest.group.door",
-            SoundEvents.NOTE_BLOCK_BIT.value(),
-            2f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
             pos -> {
                 if (world.getBlockState(pos).getBlock() instanceof DoorBlock) {
                     return world.getBlockState(pos).getValue(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER);
@@ -141,23 +138,20 @@ public class POIBlocks {
         ),
         new POIGroup<BlockPos>(// Fluids
             "minecraft_access.point_of_interest.group.fluid",
-            SoundEvents.NOTE_BLOCK_BIT.value(),
-            2f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
             pos -> this.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof LiquidBlock &&
                 PlayerUtils.isNotInFluid() && world.getFluidState(pos).getAmount() == 8
         ),
         new POIGroup<BlockPos>(// Functional blocks
             "minecraft_access.point_of_interest.group.functional",
-            SoundEvents.NOTE_BLOCK_BIT.value(),
-            2f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
             pos -> world.getBlockState(pos).getBlock() instanceof ButtonBlock ||
                 world.getBlockState(pos).getBlock() instanceof LeverBlock ||
                 poiBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
         ),
         new POIGroup<BlockPos>(// Blocks with interface
             "minecraft_access.point_of_interest.group.gui",
-            SoundEvents.NOTE_BLOCK_BANJO.value(),
-            0f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BANJO.value(), 0f),
             pos -> {
                 if (world.getBlockState(pos).getBlock() instanceof ChestBlock) {
                     return world.getBlockState(pos).getValue(ChestBlock.TYPE).equals(ChestType.SINGLE) ||
@@ -213,18 +207,12 @@ public class POIBlocks {
         lastScanResults = currentScanResults;
 
         if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
-            for (BlockPos blockPos : markedGroup.getItems()) {
-                markedGroup.playSound(blockPos.getCenter(), volume);
-            }
+            markedGroup.playSoundForGroupItems(BlockPos::getCenter, volume);
         } else if (playSound && !playSoundForOtherBlocks) {
-            for (BlockPos blockPos : oreGroup.getItems()) {
-                oreGroup.playSound(blockPos.getCenter(), volume);
-            }
+            oreGroup.playSoundForGroupItems(BlockPos::getCenter, volume);
         } else if (playSound) {
             for (POIGroup<BlockPos> group : groups) {
-                for (BlockPos blockPos : group.getItems()) {
-                    group.playSound(blockPos.getCenter(), volume);
-                }
+                group.playSoundForGroupItems(BlockPos::getCenter, volume);
             }
         }
 
@@ -281,5 +269,5 @@ public class POIBlocks {
         }
 
         return Arrays.stream(groups).flatMap(group -> group.getItems().stream()).toList();
-   }
+    }
 }

@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -38,8 +37,7 @@ public class POIEntities {
 
     public final POIGroup<Entity> hostileGroup = new POIGroup<>(
         "minecraft_access.point_of_interest.group.hostile",
-        SoundEvents.NOTE_BLOCK_BELL.value(),
-        2f,
+        new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 2f),
         entity -> entity instanceof Monster || entity instanceof NeutralMob monster &&
             (monster.isAngry() || Minecraft.getInstance().player.getUUID().equals(monster.getPersistentAngerTarget()) ||
                 Minecraft.getInstance().player.getUUID().equals(monster.getLastHurtByMob()))
@@ -49,59 +47,50 @@ public class POIEntities {
     final POIGroup<Entity>[] groups = new POIGroup[] {
         new POIGroup<Entity>(// Your Pets
             "minecraft_access.point_of_interest.group.your_pets",
-            SoundEvents.NOTE_BLOCK_FLUTE.value(),
-            1f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_FLUTE.value(), 1f),
             entity -> entity instanceof TamableAnimal pet &&
                 Minecraft.getInstance().player.getUUID().equals(pet.getOwnerUUID())
         ),
         new POIGroup<Entity>(// Other Pets
             "minecraft_access.point_of_interest.group.other_pet",
-            SoundEvents.NOTE_BLOCK_COW_BELL.value(),
-            1f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_COW_BELL.value(), 1f),
             entity -> entity instanceof TamableAnimal pet && pet.isTame()
         ),
         new POIGroup<Entity>(// Bosses
             "minecraft_access.point_of_interest.group.boss",
-            SoundEvents.NOTE_BLOCK_PLING.value(),
-            2f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_PLING.value(), 2f),
             entity -> entity instanceof Mob mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolem)
         ),
         hostileGroup,
         new POIGroup<Entity>(// Passive Mobs
             "minecraft_access.point_of_interest.group.passive",
-            SoundEvents.NOTE_BLOCK_BELL.value(),
-            0f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0f),
             entity -> entity instanceof AgeableMob || entity instanceof WaterAnimal
         ),
         new POIGroup<Entity>(// Players
             "minecraft_access.point_of_interest.group.player",
-            SoundEvents.NOTE_BLOCK_CHIME.value(),
-            1f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_CHIME.value(), 1f),
             entity -> entity instanceof Player
         ),
         new POIGroup<Entity>(// Your Pets
             "minecraft_access.point_of_interest.group.your_pets",
-            SoundEvents.NOTE_BLOCK_FLUTE.value(),
-            1f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_FLUTE.value(), 1f),
             entity -> entity instanceof TamableAnimal pet &&
                 Minecraft.getInstance().player.getUUID().equals(pet.getOwnerUUID())
         ),
         new POIGroup<Entity>(// Other Pets
             "minecraft_access.point_of_interest.group.other_pet",
-            SoundEvents.NOTE_BLOCK_COW_BELL.value(),
-            1f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_COW_BELL.value(), 1f),
             entity -> entity instanceof TamableAnimal pet && pet.isTame()
         ),
         new POIGroup<Entity>(// Vehicles
             "minecraft_access.point_of_interest.group.vehicle",
-            SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(),
-            1f,
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f),
             entity -> entity instanceof VehicleEntity
         ),
         new POIGroup<Entity>(// Items
             "minecraft_access.point_of_interest.group.item",
-            SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
-            2f,
+            new POIGroup.Sound(SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, 2f),
             entity -> entity instanceof ItemEntity itemEntity && itemEntity.onGround() ||
                 entity instanceof AbstractArrow projectile && projectile.pickup.equals(AbstractArrow.Pickup.ALLOWED)
         ),
@@ -152,18 +141,14 @@ public class POIEntities {
                     !(marked == null || marked.isInstance(entity))) {
                     continue;
                 }
-                playSoundAt(entity.blockPosition(), group);
+                if (playSound && volume != 0f) {
+                    group.playSoundAt(entity.blockPosition().getCenter(), volume);
+                }
                 currentScanResults.add(entity);
             }
         }
 
         lastScanResults = currentScanResults;
-    }
-
-    private void playSoundAt(BlockPos pos, POIGroup<Entity> group) {
-        if (!playSound || volume == 0f) return;
-        log.debug("Play sound at [x:{} y:{} z{}]", pos.getX(), pos.getY(), pos.getZ());
-        group.playSound(pos.getCenter(), volume);
     }
 
     /**

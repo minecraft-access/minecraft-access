@@ -8,28 +8,29 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class POIGroup<T> {
     private final String nameTranslateKey;
-    private final SoundEvent sound;
-    private final float soundPitch;
+    private final Sound sound;
 
     private final Predicate<T> predicate;
     private final List<T> items = new ArrayList<>();
 
-    public POIGroup(String nameTranslateKey, SoundEvent sound, float soundPitch, Predicate<T> predicate) {
+    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> predicate) {
         this.nameTranslateKey = nameTranslateKey;
         this.sound = sound;
-        this.soundPitch = soundPitch;
         this.predicate = predicate;
     }
 
     public POIGroup(String nameTranslateKey, Predicate<T> predicate) {
-        this(nameTranslateKey, null, 0, predicate);
+        this(nameTranslateKey, new Sound(null, 0), predicate);
     }
 
     public String getTranslatedName() {
@@ -75,13 +76,28 @@ public class POIGroup<T> {
         return Double.MAX_VALUE;
     }
 
+    public void playSoundForGroupItems(Function<T, Vec3> mapper, float volume) {
+        for (T item : items) {
+            Vec3 pos = mapper.apply(item);
+            playSoundAt(pos, volume);
+        }
+    }
 
-    public void playSound(Vec3 pos, float volume) {
-        if (sound == null) return;
-        WorldUtils.playSoundAtPosition(sound, volume, soundPitch, pos);
+    public void playSoundAt(Vec3 pos, float volume) {
+        sound.play(pos, volume);
     }
 
     public boolean isEmpty() {
         return items.isEmpty();
+    }
+
+    public record Sound(SoundEvent tone, float pitch) {
+        static Logger log = LoggerFactory.getLogger(POIGroup.Sound.class);
+
+        public void play(Vec3 pos, float volume) {
+            if (tone == null) return;
+            log.debug("Play POI sound [{}] at [x:{} y:{} z{}]", tone, pos.x, pos.y, pos.z);
+            WorldUtils.playSoundAtPosition(tone, volume, pitch, pos);
+        }
     }
 }
