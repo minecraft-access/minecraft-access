@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.*;
@@ -18,7 +17,6 @@ import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -96,21 +94,21 @@ public class POIBlocks {
     private boolean isMarking = false;
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
-            () -> I18n.get("minecraft_access.point_of_interest.group.markedBlock"),
-            SoundEvents.ITEM_PICKUP,
-            -5f,
-            pos -> isMarking && world.getBlockState(pos).is(markedBlock)
+        "minecraft_access.point_of_interest.group.markedBlock",
+        SoundEvents.ITEM_PICKUP,
+        -5f,
+        pos -> isMarking && world.getBlockState(pos).is(markedBlock)
     );
 
     private final POIGroup<BlockPos> oreGroup = new POIGroup<>(
-            () -> I18n.get("minecraft_access.point_of_interest.group.ore"),
-            SoundEvents.ITEM_PICKUP,
-            -5f,
-            pos -> oreBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
+        "minecraft_access.point_of_interest.group.ore",
+        SoundEvents.ITEM_PICKUP,
+        -5f,
+        pos -> oreBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
     );
 
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
-            () -> I18n.get("minecraft_access.point_of_interest.group.otherBlocks"),
+        "minecraft_access.point_of_interest.group.otherBlocks",
         pos -> otherBlocksFilter(pos)
     );
 
@@ -127,43 +125,49 @@ public class POIBlocks {
 
     @SuppressWarnings("unchecked")
     public final POIGroup<BlockPos>[] groups = new POIGroup[] {
-            markedGroup,
-            oreGroup,
-            new POIGroup<BlockPos>(// Doors
-                    () -> I18n.get("minecraft_access.point_of_interest.group.door"),
-                SoundEvents.NOTE_BLOCK_BIT.value(),
-                2f,
-                              pos -> {
-                                  if (world.getBlockState(pos).getBlock() instanceof DoorBlock)
-                                      return world.getBlockState(pos).getValue(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER);
-                                  else if (world.getBlockState(pos).getBlock() instanceof TrapDoorBlock) return true;
+        markedGroup,
+        oreGroup,
+        new POIGroup<BlockPos>(// Doors
+            "minecraft_access.point_of_interest.group.door",
+            SoundEvents.NOTE_BLOCK_BIT.value(),
+            2f,
+            pos -> {
+                if (world.getBlockState(pos).getBlock() instanceof DoorBlock) {
+                    return world.getBlockState(pos).getValue(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER);
+                } else if (world.getBlockState(pos).getBlock() instanceof TrapDoorBlock) return true;
 
-                    return false;
+                return false;
+            }
+        ),
+        new POIGroup<BlockPos>(// Fluids
+            "minecraft_access.point_of_interest.group.fluid",
+            SoundEvents.NOTE_BLOCK_BIT.value(),
+            2f,
+            pos -> this.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof LiquidBlock &&
+                PlayerUtils.isNotInFluid() && world.getFluidState(pos).getAmount() == 8
+        ),
+        new POIGroup<BlockPos>(// Functional blocks
+            "minecraft_access.point_of_interest.group.functional",
+            SoundEvents.NOTE_BLOCK_BIT.value(),
+            2f,
+            pos -> world.getBlockState(pos).getBlock() instanceof ButtonBlock ||
+                world.getBlockState(pos).getBlock() instanceof LeverBlock ||
+                poiBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
+        ),
+        new POIGroup<BlockPos>(// Blocks with interface
+            "minecraft_access.point_of_interest.group.gui",
+            SoundEvents.NOTE_BLOCK_BANJO.value(),
+            0f,
+            pos -> {
+                if (world.getBlockState(pos).getBlock() instanceof ChestBlock) {
+                    return world.getBlockState(pos).getValue(ChestBlock.TYPE).equals(ChestType.SINGLE) ||
+                        world.getBlockState(pos).getValue(ChestBlock.TYPE).equals(ChestType.RIGHT);
+                } else {
+                    return world.getBlockState(pos).getMenuProvider(world, pos) != null;
                 }
-            ),
-            new POIGroup<BlockPos>(// Fluids
-                    () -> I18n.get("minecraft_access.point_of_interest.group.fluid"),
-                    SoundEvents.NOTE_BLOCK_BIT.value(),
-                    2f,
-                    pos -> this.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof LiquidBlock && PlayerUtils.isNotInFluid() && world.getFluidState(pos).getAmount() == 8
-            ),
-            new POIGroup<BlockPos>(// Functional blocks
-                    () -> I18n.get("minecraft_access.point_of_interest.group.functional"),
-                    SoundEvents.NOTE_BLOCK_BIT.value(),
-                    2f,
-                    pos -> world.getBlockState(pos).getBlock() instanceof ButtonBlock || world.getBlockState(pos).getBlock() instanceof LeverBlock || poiBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
-            ),
-            new POIGroup<BlockPos>(// Blocks with interface
-                    () -> I18n.get("minecraft_access.point_of_interest.group.gui"),
-                    SoundEvents.NOTE_BLOCK_BANJO.value(),
-                    0f,
-                    pos -> {
-                        if (world.getBlockState(pos).getBlock() instanceof ChestBlock)
-                            return world.getBlockState(pos).getValue(ChestBlock.TYPE).equals(ChestType.SINGLE) || world.getBlockState(pos).getValue(ChestBlock.TYPE).equals(ChestType.RIGHT);
-                        else return world.getBlockState(pos).getMenuProvider(world, pos) != null;
-                    }
-            ),
-            otherBlocksGroup, // This group should always be at the end of this list
+            }
+        ),
+        otherBlocksGroup, // This group should always be at the end of this list
     };
 
     private POIBlocks() {
