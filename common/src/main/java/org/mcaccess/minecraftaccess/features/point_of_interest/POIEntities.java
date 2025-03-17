@@ -132,7 +132,7 @@ public class POIEntities {
         List<Entity> entities = minecraftClient.level.getEntities(minecraftClient.player, scanBox);
 
         for (POIGroup<Entity> group : groups) {
-            entities.removeIf(group::add);
+            entities.removeIf(group::addIfQualified);
         }
 
         for (POIGroup<Entity> group : groups) {

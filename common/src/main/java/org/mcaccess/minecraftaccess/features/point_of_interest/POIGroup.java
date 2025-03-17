@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -10,11 +11,10 @@ import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class POIGroup<T> {
     private final String nameTranslateKey;
@@ -37,7 +37,7 @@ public class POIGroup<T> {
         return I18n.get(nameTranslateKey);
     }
 
-    public boolean add(T item) {
+    public boolean addIfQualified(T item) {
         if (predicate.test(item)) {
             items.add(item);
             return true;
@@ -49,31 +49,29 @@ public class POIGroup<T> {
         items.clear();
     }
 
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
     @Contract(pure = true)
     public @UnmodifiableView List<T> getItems() {
         return Collections.unmodifiableList(items);
     }
 
-    public @UnmodifiableView List<T> getItems(Boolean sorted) {
-        if (!sorted) return getItems();
-
+    public @UnmodifiableView List<T> sortByDistance() {
         List<T> result = new ArrayList<>(items);
-
-        result.sort((item1, item2) -> {
-            double distance1 = getDistance(item1);
-            double distance2 = getDistance(item2);
-            return Double.compare(distance1, distance2);
-        });
-
+        Map<T, Double> cache = result.stream().collect(Collectors.toMap(k -> k, this::distanceBetweenPlayerAnd));
+        result.sort(Comparator.comparing(cache::get));
         return Collections.unmodifiableList(result);
     }
 
-    private double getDistance(T item) {
-        if (item instanceof Entity) return WorldUtils.getClientPlayer().distanceTo((Entity) item);
-        if (item instanceof BlockPos) {
-            return WorldUtils.getClientPlayer().getEyePosition().distanceTo(((BlockPos) item).getCenter());
-        }
-        return Double.MAX_VALUE;
+    private double distanceBetweenPlayerAnd(T item) {
+        LocalPlayer player = WorldUtils.getClientPlayer();
+        return switch (item) {
+            case Entity entity -> player.distanceTo(entity);
+            case BlockPos blockPos -> player.getEyePosition().distanceTo(blockPos.getCenter());
+            default -> Double.MAX_VALUE;
+        };
     }
 
     public void playSoundForGroupItems(Function<T, Vec3> mapper, float volume) {
@@ -83,12 +81,9 @@ public class POIGroup<T> {
         }
     }
 
+    // TODO remove this method, encapsulated detail exposure
     public void playSoundAt(Vec3 pos, float volume) {
         sound.play(pos, volume);
-    }
-
-    public boolean isEmpty() {
-        return items.isEmpty();
     }
 
     public record Sound(SoundEvent tone, float pitch) {

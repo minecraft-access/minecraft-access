@@ -136,7 +136,7 @@ public class ObjectTracker {
         }
 
         currentGroup = groups.get(currentGroupIndex + step);
-        currentObject = currentGroup.getItems(true).get(0);
+        currentObject = currentGroup.sortByDistance().getFirst();
         MainClass.speakWithNarrator(currentGroup.getTranslatedName(), true);
         narrateCurrentObject(false);
     }
@@ -144,7 +144,7 @@ public class ObjectTracker {
     private void moveObject(int step) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
-        List<?> objects = currentGroup.getItems(true);
+        List<?> objects = currentGroup.sortByDistance();
         int currentObjectIndex = objects.indexOf(currentObject);
 
         if ((currentObjectIndex + step) > (objects.size() - 1)) {

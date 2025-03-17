@@ -252,7 +252,7 @@ public class POIBlocks {
         }
 
         for (POIGroup<BlockPos> group : groups) {
-            if (group.add(blockPos) && group != otherBlocksGroup) {
+            if (group.addIfQualified(blockPos) && group != otherBlocksGroup) {
                 currentScanResults.add(blockPos);
                 break;
             }
