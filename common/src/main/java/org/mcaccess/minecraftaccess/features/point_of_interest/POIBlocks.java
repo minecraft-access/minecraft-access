@@ -56,32 +56,6 @@ public class POIBlocks {
         .map(b -> (Predicate<BlockState>) state -> state.is(b))
         .toList();
 
-    private static final Block[] ORE_BLOCKS = new Block[] {
-        Blocks.COAL_ORE,
-        Blocks.DEEPSLATE_COAL_ORE,
-        Blocks.COPPER_ORE,
-        Blocks.DEEPSLATE_COPPER_ORE,
-        Blocks.DIAMOND_ORE,
-        Blocks.DEEPSLATE_DIAMOND_ORE,
-        Blocks.EMERALD_ORE,
-        Blocks.DEEPSLATE_EMERALD_ORE,
-        Blocks.GOLD_ORE,
-        Blocks.DEEPSLATE_GOLD_ORE,
-        Blocks.NETHER_GOLD_ORE,
-        Blocks.IRON_ORE,
-        Blocks.DEEPSLATE_IRON_ORE,
-        Blocks.LAPIS_ORE,
-        Blocks.DEEPSLATE_LAPIS_ORE,
-        Blocks.REDSTONE_ORE,
-        Blocks.DEEPSLATE_REDSTONE_ORE,
-        Blocks.NETHER_QUARTZ_ORE,
-        Blocks.ANCIENT_DEBRIS
-    };
-
-    private static final List<Predicate<BlockState>> oreBlockPredicates = Arrays.stream(ORE_BLOCKS)
-        .map(b -> (Predicate<BlockState>) state -> state.is(b))
-        .toList();
-
     private Set<BlockPos> checkedBlocks = Set.of();
     private boolean enabled;
     private boolean detectFluidBlocks;
@@ -99,11 +73,7 @@ public class POIBlocks {
         pos -> isMarking && world.getBlockState(pos).is(markedBlock)
     );
 
-    private final POIGroup<BlockPos> oreGroup = new POIGroup<>(
-        "minecraft_access.point_of_interest.group.ore",
-        new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
-        pos -> oreBlockPredicates.stream().anyMatch(p -> p.test(world.getBlockState(pos)))
-    );
+    private final POIGroup<BlockPos> oreGroup = BuiltinBlockPOIGroups.ORE.group;
 
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
         "minecraft_access.point_of_interest.group.otherBlocks",
