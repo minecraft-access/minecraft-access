@@ -69,11 +69,7 @@ public class LockingHandler {
         loadConfigurations();
         if (!enabled) return;
         if (!interval.isReady()) return;
-        try {
-            mainLogic();
-        } catch (Exception e) {
-            log.error("An error while updating LockingHandler", e);
-        }
+        mainLogic();
     }
 
     /**
