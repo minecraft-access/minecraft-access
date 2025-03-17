@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -33,7 +32,7 @@ public class POIGroup<T> {
         this(nameTranslateKey, null, 0, predicate);
     }
 
-    public String getName() {
+    public String getTranslatedName() {
         return I18n.get(nameTranslateKey);
     }
 
@@ -65,16 +64,15 @@ public class POIGroup<T> {
             return Double.compare(distance1, distance2);
         });
 
-        return result;
+        return Collections.unmodifiableList(result);
     }
 
     private double getDistance(T item) {
-        if (item instanceof Entity) return Minecraft.getInstance().player.distanceTo((Entity) item);
+        if (item instanceof Entity) return WorldUtils.getClientPlayer().distanceTo((Entity) item);
         if (item instanceof BlockPos) {
-            return Minecraft.getInstance().player.getEyePosition().distanceTo(((BlockPos) item).getCenter());
+            return WorldUtils.getClientPlayer().getEyePosition().distanceTo(((BlockPos) item).getCenter());
         }
-
-        throw new IllegalArgumentException();
+        return Double.MAX_VALUE;
     }
 
 
