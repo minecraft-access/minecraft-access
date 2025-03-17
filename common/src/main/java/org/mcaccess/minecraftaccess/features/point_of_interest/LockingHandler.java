@@ -57,7 +57,6 @@ public class LockingHandler {
     private boolean aimAssistEnabled;
     private boolean aimAssistAudioCuesEnabled;
     private float aimAssistAudioCuesVolume;
-    private boolean onPOIMarkingNow = false;
 
     static {
         instance = new LockingHandler();
@@ -66,8 +65,7 @@ public class LockingHandler {
     private LockingHandler() {
     }
 
-    public void update(boolean onMarking) {
-        this.onPOIMarkingNow = onMarking;
+    public void update() {
         loadConfigurations();
         if (!enabled) return;
         if (!interval.isReady()) return;
