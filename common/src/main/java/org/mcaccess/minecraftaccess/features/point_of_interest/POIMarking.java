@@ -45,7 +45,7 @@ public class POIMarking {
         if (POIMarkingConfigMap.getInstance().isEnabled()) {
             boolean controlPressed = Screen.hasControlDown();
             boolean AltPressed = Screen.hasAltDown();
-            boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().lockingHandlerKey);
+            boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
 
             if (lockingKeyPressed && AltPressed && controlPressed) {
                 unmark();
@@ -69,7 +69,6 @@ public class POIMarking {
         if (onMarking) return;
 
         Minecraft client = Minecraft.getInstance();
-        if (client == null) return;
         HitResult hit = client.hitResult;
         if (hit == null) return;
 
