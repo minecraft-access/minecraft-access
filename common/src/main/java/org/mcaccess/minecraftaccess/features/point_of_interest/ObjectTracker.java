@@ -145,7 +145,14 @@ public class ObjectTracker {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
         List<?> objects = currentGroup.getItems(true);
-        int currentObjectIndex = objects.indexOf(currentObject);
+            int currentObjectIndex = objects.indexOf(currentObject);
+
+        if (currentObjectIndex == -1) {
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.start_of_list"), true);
+            currentObject = objects.get(0);
+            narrateCurrentObject(false);
+            return;
+        }
 
         if ((currentObjectIndex + step) > (objects.size() - 1)) {
             MainClass.speakWithNarrator(I18n.get("minecraft_access.other.end_of_list"), true);
@@ -159,7 +166,7 @@ public class ObjectTracker {
             return;
         }
 
-        currentObject = currentGroup.getItems().get(currentObjectIndex + step);
+        currentObject = objects.get(currentObjectIndex + step);
         narrateCurrentObject(true);
     }
 
