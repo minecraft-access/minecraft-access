@@ -28,14 +28,14 @@ public class ChatScreenMixin {
     private static final Component USAGE_TEXT = Component.translatable("chat_screen.usage");
 
     @Unique
-    private static int minecraft_access$chatMessagePage;
+    private static int minecraft_access$currentChatMessagePage;
 
     @Shadow
     protected EditBox input;
 
     @Inject(at = @At("HEAD"), method = "init")
     private void init(CallbackInfo ci) {
-        minecraft_access$chatMessagePage = 0;
+        minecraft_access$currentChatMessagePage = 0;
     }
 
     /**
@@ -80,40 +80,41 @@ public class ChatScreenMixin {
     private static boolean minecraft_access$repeatPreviousChatMessage(int keyCode) {
         long window = Minecraft.getInstance().getWindow().getWindow();
         int numMessages = ((ChatComponentAccessor) Minecraft.getInstance().gui.getChat()).getAllMessages().size();
-        int oldChatMessagePage = minecraft_access$chatMessagePage;
+        int newChatMessagePage = minecraft_access$currentChatMessagePage;
         if (Screen.hasAltDown()) {
             if (InputConstants.isKeyDown(window, InputConstants.KEY_GRAVE) || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_KP_MULTIPLY)) {
                 if (Screen.hasControlDown()) {
-                    minecraft_access$chatMessagePage = numMessages / 10;
+                    newChatMessagePage = numMessages / 10;
                 } else {
-                    minecraft_access$chatMessagePage = 0;
+                    newChatMessagePage = 0;
                 }
             } else if (InputConstants.isKeyDown(window, InputConstants.KEY_EQUALS) || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_KP_ADD)) {
-                minecraft_access$chatMessagePage -= 1;
+                newChatMessagePage -= 1;
                 if (Screen.hasControlDown()) {
-                    minecraft_access$chatMessagePage -= 4;
+                    newChatMessagePage -= 4;
                 }
             } else if (InputConstants.isKeyDown(window, InputConstants.KEY_MINUS) || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_KP_SUBTRACT)) {
-                minecraft_access$chatMessagePage += 1;
+                newChatMessagePage += 1;
                 if (Screen.hasControlDown()) {
-                    minecraft_access$chatMessagePage += 4;
+                    newChatMessagePage += 4;
                 }
             }
 
-            minecraft_access$chatMessagePage = Math.clamp(minecraft_access$chatMessagePage, 0, numMessages / 10);
+            newChatMessagePage = Math.clamp(newChatMessagePage, 0, numMessages / 10);
 
-            if (oldChatMessagePage != minecraft_access$chatMessagePage) {
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.gui.chat_screen.showing_message_range", (minecraft_access$chatMessagePage * 10) + 1, (minecraft_access$chatMessagePage + 1) * 10), true);
+            if (newChatMessagePage != minecraft_access$currentChatMessagePage) {
+                minecraft_access$currentChatMessagePage = newChatMessagePage;
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.gui.chat_screen.showing_message_range", (newChatMessagePage * 10) + 1, (newChatMessagePage + 1) * 10), true);
             }
 
             for (int i = 1; i <= 9; i++) {
                 if (keyCode == GLFW.GLFW_KEY_0 + i || keyCode == GLFW.GLFW_KEY_KP_0 + i) {
-                    minecraft_access$speakPreviousChatAtIndex(i + minecraft_access$chatMessagePage * 10 - 1);
+                    minecraft_access$speakPreviousChatAtIndex(i + minecraft_access$currentChatMessagePage * 10 - 1);
                     return true;
                 }
             }
             if (InputConstants.isKeyDown(window, GLFW.GLFW_KEY_0) || InputConstants.isKeyDown(window, InputConstants.KEY_NUMPAD0)) {
-                minecraft_access$speakPreviousChatAtIndex(10 + minecraft_access$chatMessagePage * 10 - 1);
+                minecraft_access$speakPreviousChatAtIndex(10 + minecraft_access$currentChatMessagePage * 10 - 1);
             }
         }
         return false;
