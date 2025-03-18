@@ -114,9 +114,32 @@ Be aware that if you keep any menu screen open, the mod will stop scanning and n
 
 See also: [Configuration]({{% relref "/config#point-of-interest" %}}), [Keybindings]({{% relref "/keybindings#point-of-interest" %}})
 
+### Object Tracker
+
+The object tracker allows you to get an idea of your surroundings by listing all POI blocks and entities near you, allowing you to hear where they are and lock onto any of them.
+
+All special blocks and entities (objects) are grouped in the following groups:
+- Entities
+    - Your pets
+    - Other pets
+    - Bosses
+    - Hostile mobs
+    - Passive mobs
+    - Players
+    - Vehicles
+    - Items
+- Blocks
+    - Ores
+    - Doors
+    - Fluids
+    - Functional blocks
+    - Blocks with interface
+
+There is one other group that's special called other blocks. In this group, one of every block type surrounding you will be listed. This can be useful when trying to find something specific that isn't in the groups above.
+
 ### POI Locking
 
-You can lock onto the closest target with a key, then your camera will follow the target as it moves, so you can approach it more easily.
+You can lock onto the object currently being targetted by the object tracker with a key, then your camera will follow the target as it moves, so you can approach it more easily.
 For example, when you want to mine an ore, capture an animal or fight a monster.
 
 Note that:
@@ -134,10 +157,12 @@ See also: [Configuration]({{% relref "/config#entitiesblocks-locking" %}}), [Key
 
 ### POI Marking
 
-Sometimes you may need to search for a special type of block or entity that is not in the pre-configured list.
+Sometimes you may need to search for a special type of block that is not in the pre-configured list.
 You can mark the type while you’re pointing at it (with your crosshair).
 You can set the mod to only scan and notify for marked types
 or suppress scanning and notifying for pre-configured types.
+
+Additionally, when a block is marked, a new group will appear at the top of the object tracker containing all blocks of that type nearby.
 
 See also: [Configuration]({{% relref "/config#entitiesblocks-marking" %}}), [Keybindings]({{% relref "/keybindings#point-of-interest" %}})
 

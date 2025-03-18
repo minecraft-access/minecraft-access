@@ -102,6 +102,10 @@ See also: [Feature Description]({{% relref "/features#inventory-controls" %}}), 
 
 ## Point of Interest
 
+| Configuration                           | Default Value | Description                                                 |
+|-----------------------------------------|---------------|-------------------------------------------------------------|
+| Speak Relative Distance to Entity/Block | false         | Speak relative distance to the target when using the object tracker or locking |
+
 See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 [keybindings]({{% relref "/keybindings#point-of-interest" %}})
 
@@ -134,7 +138,6 @@ See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 | Enabled                                 | true          | Whether to enable this feature                                                               |
 | Lock on Blocks                          | true          | Enable lock on POI blocks as well, if false, only entities can be locked                     |
 | Play Sound                              | true          | Play a sound cue at positions of detected entities                                           |
-| Speak Relative Distance to Entity/Block | false         | Speak relative distance to the target when locking on                                        |
 | Play Sound Instead Of Speak             | false         | Play a base drum sound cue on unlock instead of speak `unlock`                               |
 | Auto Lock on to Eye of Ender when Used  | true          | Automatically lock on to the [Eye of Ender](https://minecraft.wiki/w/Eye_of_Ender) when used |
 | Delay (in milliseconds)                 | 100           | Cooldown between two feature executions                                                      |
