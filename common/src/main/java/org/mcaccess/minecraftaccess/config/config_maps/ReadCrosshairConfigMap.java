@@ -18,6 +18,8 @@ public class ReadCrosshairConfigMap {
     private boolean useJade;
     @SerializedName("Speak Block Sides")
     private boolean speakSide;
+    @SerializedName("Speak Additional Entity Poses")
+    private boolean speakAdditionalEntityPoses;
     @SerializedName("Disable Speaking Consecutive Blocks With Same Name")
     private boolean disableSpeakingConsecutiveBlocks;
     @SerializedName("Repeat Speaking Interval (in milliseconds) (0 to disable)")
@@ -35,6 +37,7 @@ public class ReadCrosshairConfigMap {
         m.setEnabled(true);
         m.setUseJade(true);
         m.setSpeakSide(true);
+        m.setSpeakAdditionalEntityPoses(true);
         m.setDisableSpeakingConsecutiveBlocks(false);
         m.setRepeatSpeakingInterval(0L);
         m.relativePositionSoundCueConfigMap = RCRelativePositionSoundCueConfigMap.buildDefault();
