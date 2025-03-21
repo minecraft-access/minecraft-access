@@ -355,7 +355,7 @@ public class NarrationUtils {
         } else if ((block instanceof RedstoneTorchBlock || block instanceof LeverBlock || block instanceof ButtonBlock) && isEmittingPower) { // From 1.19.3
             toSpeak = I18n.get("minecraft_access.read_crosshair.powered", toSpeak);
             currentQuery += "powered";
-        } else if (block instanceof DoorBlock doorBlock && doorBlock.isOpen(blockState)) {
+        } else if ((block instanceof DoorBlock doorBlock && doorBlock.isOpen(blockState)) || (block instanceof FenceGateBlock && blockState.getValue(FenceGateBlock.OPEN))) {
             toSpeak = I18n.get("minecraft_access.read_crosshair.opened", toSpeak);
             currentQuery += "open";
         } else if (block instanceof HopperBlock) {
