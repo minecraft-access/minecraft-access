@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.config.config_maps.ReadCrosshairConfigMap;
@@ -39,6 +41,7 @@ import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
 import java.text.DecimalFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -556,5 +559,33 @@ public class NarrationUtils {
     private static String getFluidI18NName(Holder<Fluid> fluid) {
         String translationKey = fluid.unwrap().map((fluidKey) -> "block." + fluidKey.location().getNamespace() + "." + fluidKey.location().getPath(), (fluidValue) -> "[unregistered " + fluidValue + "]");
         return I18n.get(translationKey);
+    }
+
+    /**
+     * @return {EffectName} {Amplifier} {Duration}
+     */
+    public static String narrateEffect(MobEffectInstance effect) {
+        StringBuilder result = new StringBuilder();
+        result.append(I18n.get(effect.getDescriptionId())).append(" ");
+
+        int amplifier = effect.getAmplifier();
+        if (amplifier > 1) {
+            result.append(amplifier).append(" ");
+        }
+
+        if (effect.isInfiniteDuration()) {
+            result.append(I18n.get("effect.duration.infinite"));
+        } else {
+            // StatusEffectInstance#getDuration returns ticks, so we divide by 20 in order to convert to seconds
+            // 1 second = 20 ticks
+            Duration d = Duration.ofSeconds(effect.getDuration() / 20);
+            // Note: In some languages (like Chinese), the formats of duration and instant are different,
+            // while the formatting below is based on a clock instant.
+            // It's tolerable rather than introducing several time related I18N keys.
+            String fmt = d.toHoursPart() == 0 ? "mm':'ss" : "HH':'mm':'ss";
+            result.append(DurationFormatUtils.formatDuration(d.toMillis(), fmt));
+        }
+
+        return result.toString();
     }
 }
