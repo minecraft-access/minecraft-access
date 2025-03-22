@@ -14,6 +14,9 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum BuiltinEntityPOIGroups {
     HOSTILE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.hostile",
@@ -69,6 +72,7 @@ public enum BuiltinEntityPOIGroups {
             }
     ));
 
+    public static final List<POIGroup<Entity>> ALL = Arrays.stream(values()).map(bg -> bg.group).toList();
     public final POIGroup<Entity> group;
 
     BuiltinEntityPOIGroups(POIGroup<Entity> group) {

@@ -332,6 +332,7 @@
   "minecraft_access.effect_narration.no_effects": "No status effects",
   "minecraft_access.effect_narration.gained": "Gained",
   "minecraft_access.effect_narration.lost": "Lost",
+  "minecraft_access.point_of_interest.group.markedEntity": "Marked Entities",
   "minecraft_access.point_of_interest.group.boss": "Bosses",
   "minecraft_access.point_of_interest.group.hostile": "Hostile mobs",
   "minecraft_access.point_of_interest.group.passive": "Passive mobs",

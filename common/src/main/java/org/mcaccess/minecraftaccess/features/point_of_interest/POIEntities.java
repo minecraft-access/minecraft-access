@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
@@ -13,9 +15,11 @@ import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Scans the area for entities, groups them and plays a sound at their location.
@@ -31,8 +35,15 @@ public class POIEntities {
     private static final POIEntities INSTANCE = new POIEntities();
     private @Nullable Class<? extends Entity> marked = null;
 
+    private final POIGroup<Entity> markedGroup = new POIGroup<>(
+            "minecraft_access.point_of_interest.group.markedEntity",
+            new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
+            e -> marked != null && marked.isInstance(e)
+    );
+
     @SuppressWarnings("unchecked")
-    final POIGroup<Entity>[] groups = Arrays.stream(BuiltinEntityPOIGroups.values()).map(bg -> bg.group).toArray(POIGroup[]::new);
+    final POIGroup<Entity>[] groups = Stream.of(List.of(markedGroup), BuiltinEntityPOIGroups.ALL)
+            .flatMap(Collection::stream).toArray(POIGroup[]::new);
 
     public static POIEntities getInstance() {
         return INSTANCE;
@@ -63,21 +74,6 @@ public class POIEntities {
         log.debug("POIEntities ended.");
     }
 
-    private void playerSoundAtFoundPOI(boolean isMarking) {
-        for (POIGroup<Entity> group : groups) {
-            for (Entity entity : group.getItems()) {
-                boolean notMarkedTarget = marked != null && !marked.isInstance(entity);
-                if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled() && notMarkedTarget) {
-                    // Suppress non-marked entities when marking is enabled
-                    continue;
-                }
-                if (playSound && volume != 0f) {
-                    group.playSoundAt(entity.blockPosition().getCenter(), volume);
-                }
-            }
-        }
-    }
-
     private void scanEntitiesAroundPlayer() {
         // initialize
         List<Entity> currentScanResults = new ArrayList<>();
@@ -99,6 +95,18 @@ public class POIEntities {
         }
 
         lastScanResults = currentScanResults;
+    }
+
+    private void playerSoundAtFoundPOI(boolean isMarking) {
+        if (volume == 0f) return;
+        Function<Entity, Vec3> mapper = e -> e.blockPosition().getCenter();
+        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
+            markedGroup.playSoundForGroupItems(mapper, volume);
+        } else if (playSound) {
+            for (POIGroup<Entity> group : groups) {
+                group.playSoundForGroupItems(mapper, volume);
+            }
+        }
     }
 
     /**

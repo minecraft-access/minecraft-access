@@ -81,13 +81,8 @@ public class POIGroup<T> {
     public void playSoundForGroupItems(Function<T, Vec3> mapper, float volume) {
         for (T item : items) {
             Vec3 pos = mapper.apply(item);
-            playSoundAt(pos, volume);
+            sound.play(pos, volume);
         }
-    }
-
-    // TODO remove this method, encapsulated detail exposure
-    public void playSoundAt(Vec3 pos, float volume) {
-        sound.play(pos, volume);
     }
 
     public record Sound(SoundEvent tone, float pitch) {
