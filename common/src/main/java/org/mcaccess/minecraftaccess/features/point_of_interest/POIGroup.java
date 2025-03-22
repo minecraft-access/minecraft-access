@@ -18,6 +18,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class POIGroup<T> {
+    Logger log = LoggerFactory.getLogger(POIGroup.class);
+
     private final String nameTranslateKey;
     private final Sound sound;
 
@@ -43,6 +45,7 @@ public class POIGroup<T> {
      */
     public boolean addIfQualified(T item) {
         if (predicate.test(item)) {
+            log.debug("[{}] Add POI item [{}]", getTranslatedName(), item);
             items.add(item);
             return true;
         }

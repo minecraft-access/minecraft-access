@@ -2,9 +2,11 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -50,7 +52,7 @@ public enum BuiltinEntityPOIGroups {
     PASSIVE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.passive",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0f),
-            NeutralMob.class::isInstance
+            e -> e instanceof AgeableMob || e instanceof WaterAnimal || e instanceof NeutralMob
     )),
     PLAYER(new POIGroup<>(// Players
             "minecraft_access.point_of_interest.group.player",
