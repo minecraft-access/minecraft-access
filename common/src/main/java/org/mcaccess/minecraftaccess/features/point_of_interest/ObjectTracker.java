@@ -96,20 +96,20 @@ public class ObjectTracker {
         speakDistance = map.isSpeakTargetPosition();
     }
 
-    private void narrateCurrentObject(boolean interupt) {
+    private void narrateCurrentObject(boolean interrupt) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
         if (currentObject instanceof Entity entity) {
             String message = NarrationUtils.narrateEntity(entity);
             if (speakDistance) message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
-            MainClass.speakWithNarrator(message, interupt);
+            MainClass.speakWithNarrator(message, interrupt);
             WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, entity.position());
         }
 
         if (currentObject instanceof BlockPos blockPos) {
             String message = NarrationUtils.narrateBlock(blockPos, null);
             if (speakDistance) message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
-            MainClass.speakWithNarrator(message, interupt);
+            MainClass.speakWithNarrator(message, interrupt);
             WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, blockPos.getCenter());
         }
     }
