@@ -32,8 +32,6 @@ public class POIBlocks {
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
 
-    private static final POIGroup<BlockPos> ORE_GROUP = BuiltinBlockPOIGroups.ORE.group;
-
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
         "minecraft_access.point_of_interest.group.markedBlock",
         new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
@@ -62,7 +60,7 @@ public class POIBlocks {
     @SuppressWarnings("unchecked")
     public final POIGroup<BlockPos>[] groups = new POIGroup[] {
             markedGroup,
-            ORE_GROUP,
+            BuiltinBlockPOIGroups.ORE.group,
             BuiltinBlockPOIGroups.DOOR.group,
             BuiltinBlockPOIGroups.FLUID.group,
             BuiltinBlockPOIGroups.FUNCTIONAL.group,
@@ -98,7 +96,7 @@ public class POIBlocks {
                     group.playSoundForGroupItems(BlockPos::getCenter, volume);
                 }
             } else {
-                ORE_GROUP.playSoundForGroupItems(BlockPos::getCenter, volume);
+                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(BlockPos::getCenter, volume);
             }
         }
 
