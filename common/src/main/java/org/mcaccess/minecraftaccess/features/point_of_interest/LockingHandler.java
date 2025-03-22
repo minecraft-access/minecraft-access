@@ -205,6 +205,7 @@ public class LockingHandler {
 
     private void relock() {
         Object target = ObjectTracker.getInstance().getCurrentObject();
+        if (target == null) return;
         switch (target) {
             case Entity entity -> lockOnEntity(entity);
             case BlockPos blockPos when this.lockOnBlocks -> lockOnBlock(blockPos);
