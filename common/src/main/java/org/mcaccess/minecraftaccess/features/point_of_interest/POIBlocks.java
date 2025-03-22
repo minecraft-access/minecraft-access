@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Block;
@@ -86,26 +85,13 @@ public class POIBlocks {
         if (client.player == null) return;
         if (client.screen != null) return; //Prevent running if any screen is opened
 
-        scanBlocksAround(client.player);
-
-        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
-            markedGroup.playSoundForGroupItems(BlockPos::getCenter, volume);
-        } else if (playSound) {
-            if (playSoundForOtherNonOreBlocks) {
-                for (POIGroup<BlockPos> group : groups) {
-                    group.playSoundForGroupItems(BlockPos::getCenter, volume);
-                }
-            } else {
-                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(BlockPos::getCenter, volume);
-            }
-        }
-
+        log.debug("POIBlock started.");
+        scanBlocksAroundPlayer();
+        playerSoundAtFoundPOI(isMarking);
         log.debug("POIBlock ended.");
     }
 
-    private void scanBlocksAround(LocalPlayer player) {
-        log.debug("POIBlock started.");
-
+    private void scanBlocksAroundPlayer() {
         // initialize
         List<BlockPos> currentScanResults = new ArrayList<>();
         for (POIGroup<BlockPos> group : groups) {
@@ -123,13 +109,27 @@ public class POIBlocks {
         });
 
         // where player's leg be
-        BlockPos pos = player.blockPosition();
+        BlockPos pos = WorldUtils.getClientPlayer().blockPosition();
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.below(), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos, this.range);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(), this.range);
 
         lastScanResults = currentScanResults;
+    }
+
+    private void playerSoundAtFoundPOI(boolean isMarking) {
+        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
+            markedGroup.playSoundForGroupItems(BlockPos::getCenter, volume);
+        } else if (playSound) {
+            if (playSoundForOtherNonOreBlocks) {
+                for (POIGroup<BlockPos> group : groups) {
+                    group.playSoundForGroupItems(BlockPos::getCenter, volume);
+                }
+            } else {
+                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(BlockPos::getCenter, volume);
+            }
+        }
     }
 
     private void loadConfigurations() {
