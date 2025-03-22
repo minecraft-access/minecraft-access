@@ -3,17 +3,7 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.animal.WaterAnimal;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
@@ -21,6 +11,7 @@ import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,60 +29,8 @@ public class POIEntities {
     private static final POIEntities INSTANCE = new POIEntities();
     private @Nullable Class<? extends Entity> marked = null;
 
-    public static final POIGroup<Entity> HOSTILE_GROUP = BuiltinEntityPOIGroups.HOSTILE.group;
-
     @SuppressWarnings("unchecked")
-    final POIGroup<Entity>[] groups = new POIGroup[] {
-        new POIGroup<Entity>(// Your Pets
-            "minecraft_access.point_of_interest.group.your_pets",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_FLUTE.value(), 1f),
-            entity -> entity instanceof TamableAnimal pet &&
-                Minecraft.getInstance().player.getUUID().equals(pet.getOwnerUUID())
-        ),
-        new POIGroup<Entity>(// Other Pets
-            "minecraft_access.point_of_interest.group.other_pet",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_COW_BELL.value(), 1f),
-            entity -> entity instanceof TamableAnimal pet && pet.isTame()
-        ),
-        new POIGroup<Entity>(// Bosses
-            "minecraft_access.point_of_interest.group.boss",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_PLING.value(), 2f),
-            entity -> entity instanceof Mob mob && mob.getMaxHealth() >= 80 && !(entity instanceof IronGolem)
-        ),
-            HOSTILE_GROUP,
-        new POIGroup<Entity>(// Passive Mobs
-            "minecraft_access.point_of_interest.group.passive",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0f),
-            entity -> entity instanceof AgeableMob || entity instanceof WaterAnimal
-        ),
-        new POIGroup<Entity>(// Players
-            "minecraft_access.point_of_interest.group.player",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_CHIME.value(), 1f),
-            entity -> entity instanceof Player
-        ),
-        new POIGroup<Entity>(// Your Pets
-            "minecraft_access.point_of_interest.group.your_pets",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_FLUTE.value(), 1f),
-            entity -> entity instanceof TamableAnimal pet &&
-                Minecraft.getInstance().player.getUUID().equals(pet.getOwnerUUID())
-        ),
-        new POIGroup<Entity>(// Other Pets
-            "minecraft_access.point_of_interest.group.other_pet",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_COW_BELL.value(), 1f),
-            entity -> entity instanceof TamableAnimal pet && pet.isTame()
-        ),
-        new POIGroup<Entity>(// Vehicles
-            "minecraft_access.point_of_interest.group.vehicle",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f),
-            entity -> entity instanceof VehicleEntity
-        ),
-        new POIGroup<Entity>(// Items
-            "minecraft_access.point_of_interest.group.item",
-            new POIGroup.Sound(SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, 2f),
-            entity -> entity instanceof ItemEntity itemEntity && itemEntity.onGround() ||
-                entity instanceof AbstractArrow projectile && projectile.pickup.equals(AbstractArrow.Pickup.ALLOWED)
-        ),
-    };
+    final POIGroup<Entity>[] groups = Arrays.stream(BuiltinEntityPOIGroups.values()).map(bg -> bg.group).toArray(POIGroup[]::new);
 
     public static POIEntities getInstance() {
         return INSTANCE;

@@ -4,7 +4,14 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 public enum BuiltinEntityPOIGroups {
@@ -20,6 +27,45 @@ public enum BuiltinEntityPOIGroups {
                     return mobAttackedPlayer || mobAngryAtPlayer;
                 }
                 return false;
+            }
+    )),
+    YOUR_PETS(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.your_pets",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_FLUTE.value(), 1f),
+            entity -> entity instanceof TamableAnimal pet && pet.isOwnedBy(WorldUtils.getClientPlayer())
+    )),
+    OTHER_PETS(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.other_pet",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_COW_BELL.value(), 1f),
+            entity -> entity instanceof TamableAnimal pet && pet.isTame()
+    )),
+    BOSS(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.boss",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_PLING.value(), 2f),
+            entity -> entity instanceof EnderDragon || entity instanceof WitherBoss
+    )),
+    PASSIVE(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.passive",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0f),
+            NeutralMob.class::isInstance
+    )),
+    PLAYER(new POIGroup<>(// Players
+            "minecraft_access.point_of_interest.group.player",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_CHIME.value(), 1f),
+            Player.class::isInstance
+    )),
+    VEHICLE(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.vehicle",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f),
+            VehicleEntity.class::isInstance
+    )),
+    ITEM(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.item",
+            new POIGroup.Sound(SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, 2f),
+            entity -> {
+                boolean itemOnGround = entity instanceof ItemEntity itemEntity && itemEntity.onGround();
+                boolean pickupAllowedProjectile = entity instanceof AbstractArrow projectile && projectile.pickup.equals(AbstractArrow.Pickup.ALLOWED);
+                return itemOnGround || pickupAllowedProjectile;
             }
     ));
 
