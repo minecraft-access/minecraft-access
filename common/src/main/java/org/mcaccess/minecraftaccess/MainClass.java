@@ -115,7 +115,7 @@ public class MainClass {
         PositionNarrator.getInstance().update();
 
         if (WorldUtils.getClientPlayer() != null) {
-            if (playerStatus != null && config.features.isPlayerStatusEnabled) {
+            if (playerStatus != null && config.features.playerStatusEnabled) {
                 playerStatus.update();
             }
 

@@ -231,6 +231,7 @@ public class Config implements ConfigData {
         public boolean speakSide = true;
         public boolean disableSpeakingConsecutiveBlocks = false;
         public long repeatSpeakingInterval = 0;
+        public boolean speakAdditionalEntityPoses = true;
 
         @ConfigEntry.Gui.CollapsibleObject
         public RelativePositionSoundCue relativePositionSoundCue = new RelativePositionSoundCue();

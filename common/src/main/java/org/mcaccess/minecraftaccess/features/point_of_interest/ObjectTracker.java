@@ -9,8 +9,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.POIConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
@@ -54,8 +54,6 @@ public class ObjectTracker {
     @Getter
     private POIGroup<?> currentGroup = null;
 
-    private boolean speakDistance;
-
     public void update() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
@@ -64,7 +62,6 @@ public class ObjectTracker {
         if (minecraftClient.screen != null) return;
 
         updateGroups();
-        loadConfigurations();
 
         if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
@@ -86,13 +83,9 @@ public class ObjectTracker {
         if (groups.isEmpty() && currentGroupIndex != -1) currentGroup = null;
     }
 
-    private void loadConfigurations() {
-        POIConfigMap map = POIConfigMap.getInstance();
-        speakDistance = map.isSpeakTargetPosition();
-    }
-
     private void narrateCurrentObject(boolean interrupt) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
+        boolean speakDistance = Config.getInstance().poi.locking.speakDistance;
 
         if (currentObject instanceof Entity entity) {
             String message = NarrationUtils.narrateEntity(entity);

@@ -17,8 +17,6 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.POIConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
@@ -53,8 +51,6 @@ public class LockingHandler {
     // -1 = null, 1 = starting, 2 = half drawn, 3 = fully drawn
     private int lastBowState = -1;
 
-    private boolean onPOIMarkingNow = false;
-
     static {
         instance = new LockingHandler();
     }
@@ -63,7 +59,6 @@ public class LockingHandler {
     }
 
     public void update() {
-        this.onPOIMarkingNow = onMarking;
         loadConfig();
         if (!config.enabled) return;
         if (!interval.isReady()) return;

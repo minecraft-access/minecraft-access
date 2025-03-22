@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
@@ -48,7 +48,7 @@ public enum BuiltinBlockPOIGroups {
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
             pos -> {
                 Level world = WorldUtils.getClientWorld();
-                boolean configEnabled = POIBlocksConfigMap.getInstance().isDetectFluidBlocks();
+                boolean configEnabled = Config.getInstance().poi.blocks.detectFluidBlocks;
                 boolean isSource = world.getFluidState(pos).getAmount() == 8;
                 boolean isLiquid = world.getBlockState(pos).getBlock() instanceof LiquidBlock;
                 return configEnabled && isLiquid && PlayerUtils.isNotInFluid() && isSource;

@@ -349,6 +349,7 @@
   "text.autoconfig.minecraft-access.option.readCrosshair.relativePositionSoundCue.maxSoundVolume": "Maximum volume",
   "text.autoconfig.minecraft-access.option.readCrosshair.relativePositionSoundCue.minSoundVolume": "Minimum volume",
   "text.autoconfig.minecraft-access.option.readCrosshair.repeatSpeakingInterval": "Repeat interval",
+  "text.autoconfig.minecraft-access.option.readCrosshair.speakAdditionalEntityPoses": "Speak Additional Entity Poses",
   "text.autoconfig.minecraft-access.option.readCrosshair.speakSide": "Speak side",
   "text.autoconfig.minecraft-access.option.readCrosshair.useJade": "Use Jade",
   "text.autoconfig.minecraft-access.option.speechSettings.speechRate": "Speech rate (MacOS)",

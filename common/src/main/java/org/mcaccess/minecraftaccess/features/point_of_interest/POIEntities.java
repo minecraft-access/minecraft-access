@@ -9,9 +9,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -20,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -82,7 +78,7 @@ public class POIEntities {
         }
 
         LocalPlayer player = WorldUtils.getClientPlayer();
-        AABB scanBox = player.getBoundingBox().inflate(range, range, range);
+        AABB scanBox = player.getBoundingBox().inflate(config.range, config.range, config.range);
         List<Entity> entities = WorldUtils.getClientWorld().getEntities(player, scanBox);
 
         for (Entity entity : entities) {
@@ -98,13 +94,13 @@ public class POIEntities {
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (volume == 0f) return;
+        if (config.volume == 0f) return;
         Function<Entity, Vec3> mapper = e -> e.blockPosition().getCenter();
-        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
-            markedGroup.playSoundForGroupItems(mapper, volume);
-        } else if (playSound) {
+        if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
+            markedGroup.playSoundForGroupItems(mapper, config.volume);
+        } else if (config.playSound) {
             for (POIGroup<Entity> group : groups) {
-                group.playSoundForGroupItems(mapper, volume);
+                group.playSoundForGroupItems(mapper, config.volume);
             }
         }
     }
