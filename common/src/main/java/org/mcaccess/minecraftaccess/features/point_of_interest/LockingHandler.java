@@ -25,6 +25,7 @@ import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +136,7 @@ public class LockingHandler {
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears)
                 PlayerUtils.lookAt(lockedOnBlock);
             else {
-                // Unlock if (the state of) locked block is changed
+                // Unlock if the state of locked block is changed
                 unlock(true);
             }
         }
@@ -206,11 +207,8 @@ public class LockingHandler {
         Object target = ObjectTracker.getInstance().getCurrentObject();
         switch (target) {
             case Entity entity -> lockOnEntity(entity);
-            case BlockPos blockPos -> {
-                if (this.lockOnBlocks) lockOnBlock(blockPos);
-            }
-            default -> {
-            }
+            case BlockPos blockPos when this.lockOnBlocks -> lockOnBlock(blockPos);
+            default -> throw new IllegalStateException("Unexpected locking target type: " + target);
         }
     }
 
