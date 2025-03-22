@@ -267,6 +267,10 @@ that's because the messages are partially updated but the mod will speak the who
 try enabling the `Only Speak Action Bar Updates` config in the [configuration]({{% relref "/config#other-configurations" %}})
 and find what you like the most.
 
+### Speak Titles and Toasts
+
+This mod will speak titles, subtitles and toasts (advancement, recipe unlock, system, and tutorial messages).
+
 ### I18N Fallback Mechanism
 
 Minecraft has support for many languages, when referring to languages that this mod supports, we mean text that is introduced by this mod and doesn't exist in the original game.
