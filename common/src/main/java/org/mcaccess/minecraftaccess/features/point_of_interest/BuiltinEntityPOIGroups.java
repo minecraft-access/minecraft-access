@@ -74,5 +74,4 @@ public enum BuiltinEntityPOIGroups {
     BuiltinEntityPOIGroups(POIGroup<Entity> group) {
         this.group = group;
     }
-
 }

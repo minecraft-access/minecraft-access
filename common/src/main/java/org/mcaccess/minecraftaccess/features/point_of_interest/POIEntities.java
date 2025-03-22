@@ -3,11 +3,13 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 import java.util.ArrayList;
@@ -51,36 +53,48 @@ public class POIEntities {
         if (!interval.isReady()) return;
 
         Minecraft minecraftClient = Minecraft.getInstance();
-
-        if (minecraftClient == null) return;
         if (minecraftClient.player == null) return;
         if (minecraftClient.level == null) return;
         if (minecraftClient.screen != null) return; //Prevent running if any screen is opened
 
-        for (POIGroup<Entity> group : groups) {
-            group.clear();
-        }
-
-        List<Entity> currentScanResults = new ArrayList<>();
         log.debug("POIEntities started.");
+        scanEntitiesAroundPlayer();
+        playerSoundAtFoundPOI(isMarking);
+        log.debug("POIEntities ended.");
+    }
 
-        AABB scanBox = minecraftClient.player.getBoundingBox().inflate(range, range, range);
-        List<Entity> entities = minecraftClient.level.getEntities(minecraftClient.player, scanBox);
-
-        for (POIGroup<Entity> group : groups) {
-            entities.removeIf(group::addIfQualified);
-        }
-
+    private void playerSoundAtFoundPOI(boolean isMarking) {
         for (POIGroup<Entity> group : groups) {
             for (Entity entity : group.getItems()) {
-                if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled() &&
-                    !(marked == null || marked.isInstance(entity))) {
+                boolean notMarkedTarget = marked != null && !marked.isInstance(entity);
+                if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled() && notMarkedTarget) {
+                    // Suppress non-marked entities when marking is enabled
                     continue;
                 }
                 if (playSound && volume != 0f) {
                     group.playSoundAt(entity.blockPosition().getCenter(), volume);
                 }
-                currentScanResults.add(entity);
+            }
+        }
+    }
+
+    private void scanEntitiesAroundPlayer() {
+        // initialize
+        List<Entity> currentScanResults = new ArrayList<>();
+        for (POIGroup<Entity> group : groups) {
+            group.clear();
+        }
+
+        LocalPlayer player = WorldUtils.getClientPlayer();
+        AABB scanBox = player.getBoundingBox().inflate(range, range, range);
+        List<Entity> entities = WorldUtils.getClientWorld().getEntities(player, scanBox);
+
+        for (Entity entity : entities) {
+            for (POIGroup<Entity> group : groups) {
+                if (group.addIfQualified(entity)) {
+                    currentScanResults.add(entity);
+                    break;
+                }
             }
         }
 
