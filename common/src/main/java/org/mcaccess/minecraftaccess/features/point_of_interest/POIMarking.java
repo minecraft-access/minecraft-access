@@ -44,10 +44,10 @@ public class POIMarking {
     public void update() {
         if (POIMarkingConfigMap.getInstance().isEnabled()) {
             boolean controlPressed = Screen.hasControlDown();
-            boolean AltPressed = Screen.hasAltDown();
+            boolean altPressed = Screen.hasAltDown();
             boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
 
-            if (lockingKeyPressed && AltPressed && controlPressed) {
+            if (lockingKeyPressed && altPressed && controlPressed) {
                 unmark();
             } else if (controlPressed && lockingKeyPressed) {
                 mark();
