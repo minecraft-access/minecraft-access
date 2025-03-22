@@ -28,17 +28,16 @@ public class POIBlocks {
     private int range;
     private boolean playSound;
     private float volume;
-    private boolean playSoundForOtherBlocks;
+    private boolean playSoundForOtherNonOreBlocks;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
-    private boolean isMarking = false;
 
     private static final POIGroup<BlockPos> ORE_GROUP = BuiltinBlockPOIGroups.ORE.group;
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
         "minecraft_access.point_of_interest.group.markedBlock",
         new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
-            pos -> isMarking && WorldUtils.getBlockState(pos).is(markedBlock)
+            pos -> WorldUtils.getBlockState(pos).is(markedBlock)
     );
 
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
@@ -77,7 +76,6 @@ public class POIBlocks {
     private List<BlockPos> lastScanResults = new ArrayList<>();
 
     public void update(boolean isMarking, Block markedBlock) {
-        this.isMarking = isMarking;
         if (isMarking) setMarkedBlock(markedBlock);
         loadConfigurations();
 
@@ -92,7 +90,7 @@ public class POIBlocks {
 
         if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
             markedGroup.playSoundForGroupItems(BlockPos::getCenter, volume);
-        } else if (playSound && !playSoundForOtherBlocks) {
+        } else if (playSound && !playSoundForOtherNonOreBlocks) {
             ORE_GROUP.playSoundForGroupItems(BlockPos::getCenter, volume);
         } else if (playSound) {
             for (POIGroup<BlockPos> group : groups) {
@@ -138,7 +136,7 @@ public class POIBlocks {
         this.range = poiBlocksConfigMap.getRange();
         this.playSound = poiBlocksConfigMap.isPlaySound();
         this.volume = poiBlocksConfigMap.getVolume();
-        this.playSoundForOtherBlocks = poiBlocksConfigMap.isPlaySoundForOtherBlocks();
+        this.playSoundForOtherNonOreBlocks = poiBlocksConfigMap.isPlaySoundForOtherBlocks();
         this.interval.setDelay(poiBlocksConfigMap.getDelay(), Interval.Unit.Millisecond);
     }
 
