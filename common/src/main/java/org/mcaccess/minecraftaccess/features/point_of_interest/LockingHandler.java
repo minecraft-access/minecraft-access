@@ -147,7 +147,7 @@ public class LockingHandler {
     private void bowAimingAssist() {
         LocalPlayer player = WorldUtils.getClientPlayer();
         if (aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getUseItem().getItem() instanceof BowItem) {
-            List<Entity> hostileEntities = POIEntities.getInstance().hostileGroup.getItems();
+            List<Entity> hostileEntities = BuiltinEntityPOIGroups.HOSTILE.group.getItems();
             if (!hostileEntities.isEmpty()) {
                 Entity entity = hostileEntities.stream()
                         .min(Comparator.comparingDouble(e -> WorldUtils.getClientPlayer().distanceTo(e)))
