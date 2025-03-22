@@ -90,11 +90,13 @@ public class POIBlocks {
 
         if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
             markedGroup.playSoundForGroupItems(BlockPos::getCenter, volume);
-        } else if (playSound && !playSoundForOtherNonOreBlocks) {
-            ORE_GROUP.playSoundForGroupItems(BlockPos::getCenter, volume);
         } else if (playSound) {
-            for (POIGroup<BlockPos> group : groups) {
-                group.playSoundForGroupItems(BlockPos::getCenter, volume);
+            if (playSoundForOtherNonOreBlocks) {
+                for (POIGroup<BlockPos> group : groups) {
+                    group.playSoundForGroupItems(BlockPos::getCenter, volume);
+                }
+            } else {
+                ORE_GROUP.playSoundForGroupItems(BlockPos::getCenter, volume);
             }
         }
 
