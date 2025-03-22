@@ -7,6 +7,7 @@ import net.minecraft.client.resources.language.I18n;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
@@ -26,11 +27,15 @@ public class PlayerStatus {
 
     public void update() {
             Minecraft minecraftClient = Minecraft.getInstance();
-            if (minecraftClient == null) return;
             if (minecraftClient.player == null) return;
             if (minecraftClient.screen != null) return;
 
             if (narrationKey.canBeTriggered()) {
+                if (Screen.hasControlDown()) {
+                    PlayerUtils.narrateCurrentPlayerEffects();
+                    return;
+                }
+
                 double health = Math.round((minecraftClient.player.getHealth() / 2.0) * 10.0) / 10.0;
                 double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
                 double absorption = Math.round((minecraftClient.player.getAbsorptionAmount() / 2.0) * 10.0) / 10.0;
@@ -61,11 +66,11 @@ public class PlayerStatus {
                 if ((minecraftClient.player.isInPowderSnow || frostExposurePercent > 0) && minecraftClient.player.canFreeze())
                     toSpeak += I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent));
 
-                if (toSpeak.length() == 0)
+                if (toSpeak.isEmpty())
                     toSpeak += I18n.get("minecraft_access.player_status.no_conditional_status");
 
                 MainClass.speakWithNarrator(toSpeak, true);
             }
-            narrationKey.updateStateForNextTick();
+        narrationKey.updateStateForNextTick();
     }
 }

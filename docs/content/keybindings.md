@@ -123,13 +123,14 @@ See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [
 
 ## Speak Player Status
 
-| Single Key                       | Default Keybinding | Description                                  |
-|----------------------------------|--------------------|----------------------------------------------|
+| Single Key            | Default Keybinding | Description                                                                                |
+|-----------------------|--------------------|--------------------------------------------------------------------------------------------|
 | `Speak Player Status` | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
 
-| Key Combination  | Description               |
-|------------------|---------------------------|
-| `Left Alt` + `R` | Speak only the conditional statuses of the player like air and frost exposure |
+| Key Combination                    | Description                                                                   |
+|------------------------------------|-------------------------------------------------------------------------------|
+| `Left Alt` + `Speak Player Status` | Speak only the conditional statuses of the player like air and frost exposure |
+| `Control` + `Speak Player Status`  | Speak currently active effects                                                |
 
 See also: [Feature Description]({{% relref "/features#player-status" %}}), [Configuration]({{% relref "/config#player-status" %}})
 
@@ -167,9 +168,15 @@ See also: [Feature Description]({{% relref "/features#book-editing" %}})
 
 ### Speak Chat Messages
 
-| Key Combination                                          | Description                                                                                                                                    |
-|----------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Alt` + Number Keys (Upper number keys and key pad keys) | Speak previous chat message (again) corresponding to the number, 1 for the most recent message, 2 for the second most recent message and so on |
+| Key Combination                                                      | Description                                                                                                                                    |
+|----------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Alt` + Number Keys (Upper number keys and key pad keys) (1 threw 0) | Speak previous chat message (again) corresponding to the number, 1 for the most recent message, 2 for the second most recent message and so on |
+| `alt` + - or `alt` + numpad minus                                    | Go back a page in the chat history to the next set of 10 messages                                                                              |
+| `alt` + `control` + - or `alt` + `control` + numpad minus            | Move back in the chat history by 5 pages (if there is less than 5 pages left you will be moved to the last available page)                     |
+| `alt` + = or `alt` + numpad plus                                     | Go forward a page towards the most recent message                                                                                              |
+| `alt` + `control` + = or `alt` + `control` + numpad plus             | Move back in the chat history by 5 pages (if there is less than 5 pages left you will be moved to the last available page)                     |
+| `alt` + \` or `alt` + numpad multiply                                | Go to the most recent page of messages                                                                                                         |
+| `alt` + `control` + \` or `alt` + `control` + numpad multiply        | Go to the oldest page of messages available to your client                                                                                     |
 
 This feature only works while the Chat Screen is open.
 These keys aren’t re-mappable.

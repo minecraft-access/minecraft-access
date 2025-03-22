@@ -114,7 +114,7 @@ public class MainClass {
 
         PositionNarrator.getInstance().update();
 
-        if (Minecraft.getInstance() != null && WorldUtils.getClientPlayer() != null) {
+        if (WorldUtils.getClientPlayer() != null) {
             if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
                 playerStatus.update();
             }
@@ -140,9 +140,10 @@ public class MainClass {
 
         FallDetector.getInstance().update();
 
-        Keystroke.updateInstances();
-
         HUDStatus.getInstance().update();
+
+        // This should always be at the bottom
+        Keystroke.updateInstances();
     }
 
     /**

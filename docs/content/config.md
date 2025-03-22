@@ -167,9 +167,9 @@ See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [
 
 This config is under `Other Configurations` section in the config file and config menu.
 
-| Configuration          | Default Value | Description                    |
-|------------------------|---------------|--------------------------------|
-| Enable PlayerStatus | true          | Whether to enable this feature |
+| Configuration       | Default Value | Description                                                                          |
+|---------------------|---------------|--------------------------------------------------------------------------------------|
+| Enable PlayerStatus | true          | Whether to enable this feature and automatically effect gaining and losing narration |
 
 See also: [Feature Description]({{% relref "/features#player-status" %}}), [keybindings]({{% relref "/keybindings#player-status" %}})
 

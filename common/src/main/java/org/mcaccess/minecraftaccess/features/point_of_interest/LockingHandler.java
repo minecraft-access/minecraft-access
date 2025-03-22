@@ -58,7 +58,6 @@ public class LockingHandler {
     private boolean aimAssistEnabled;
     private boolean aimAssistAudioCuesEnabled;
     private float aimAssistAudioCuesVolume;
-    private boolean onPOIMarkingNow = false;
 
     static {
         instance = new LockingHandler();
@@ -67,16 +66,11 @@ public class LockingHandler {
     private LockingHandler() {
     }
 
-    public void update(boolean onMarking) {
-        this.onPOIMarkingNow = onMarking;
+    public void update() {
         loadConfigurations();
         if (!enabled) return;
         if (!interval.isReady()) return;
-        try {
-            mainLogic();
-        } catch (Exception e) {
-            log.error("An error while updating LockingHandler", e);
-        }
+        mainLogic();
     }
 
     /**
@@ -98,7 +92,6 @@ public class LockingHandler {
     private void mainLogic() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
-        if (minecraftClient == null) return;
         if (minecraftClient.player == null) return;
         if (minecraftClient.level == null) return;
         if (minecraftClient.screen != null) return;
@@ -109,7 +102,7 @@ public class LockingHandler {
     }
 
     private void handleLockingKeyPressing() {
-        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().lockingHandlerKey);
+        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
         if (isLockingKeyPressed && Screen.hasAltDown()) {
             if (lockedOnEntity != null || lockedOnBlock != null) {
                 unlock(true);
@@ -143,7 +136,7 @@ public class LockingHandler {
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears)
                 PlayerUtils.lookAt(lockedOnBlock);
             else {
-                // Unlock if (the state of) locked block is changed
+                // Unlock if the state of locked block is changed
                 unlock(true);
             }
         }
@@ -155,7 +148,7 @@ public class LockingHandler {
     private void bowAimingAssist() {
         LocalPlayer player = WorldUtils.getClientPlayer();
         if (aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getUseItem().getItem() instanceof BowItem) {
-            List<Entity> hostileEntities = POIEntities.getInstance().hostileGroup.getItems();
+            List<Entity> hostileEntities = BuiltinEntityPOIGroups.HOSTILE.group.getItems();
             if (!hostileEntities.isEmpty()) {
                 Entity entity = hostileEntities.stream()
                         .min(Comparator.comparingDouble(e -> WorldUtils.getClientPlayer().distanceTo(e)))
@@ -212,14 +205,11 @@ public class LockingHandler {
 
     private void relock() {
         Object target = ObjectTracker.getInstance().getCurrentObject();
-
-        if (target instanceof Entity) {
-            lockOnEntity((Entity)target);
-        }
-
-        if (target instanceof BlockPos) {
-            BlockPos targetPos = (BlockPos)target;
-            lockOnBlock(targetPos);
+        if (target == null) return;
+        switch (target) {
+            case Entity entity -> lockOnEntity(entity);
+            case BlockPos blockPos when this.lockOnBlocks -> lockOnBlock(blockPos);
+            default -> throw new IllegalStateException("Unexpected locking target type: " + target);
         }
     }
 

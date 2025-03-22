@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,6 +11,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.level.ClipContext;
@@ -21,9 +23,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.features.point_of_interest.BlockPos3d;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * This class provides delegate calls to {@link LocalPlayer}.
@@ -218,5 +223,16 @@ public class PlayerUtils {
         LocalPlayer player = WorldUtils.getClientPlayer();
         double air = player.getAirSupply();
         return Math.round((air / 30) * 10) / 10;
+    }
+
+    public static void narrateCurrentPlayerEffects() {
+        Collection<MobEffectInstance> effects = WorldUtils.getClientPlayer().getActiveEffects();
+        if (effects.isEmpty()) {
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.effect_narration.no_effects"), true);
+            return;
+        }
+        String toSpeak = effects.stream().map(NarrationUtils::narrateEffect)
+                .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection")));
+        MainClass.speakWithNarrator(toSpeak, true);
     }
 }

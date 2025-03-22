@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -26,10 +27,10 @@ public class ObjectTracker {
     @Getter
     private static ObjectTracker instance = new ObjectTracker();
 
-    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNextItem), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerPreviousItem), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().objectTrackerNarrateCurrentObject), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().targetNearestObject), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerNextItem), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerPreviousItem), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerNarrateCurrentObject), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.targetNearestObject), Keystroke.TriggeredAt.PRESSED);
 
     private List<POIGroup<?>> groups = new ArrayList<>();
 
@@ -58,7 +59,6 @@ public class ObjectTracker {
     public void update() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
-        if (minecraftClient == null) return;
         if (minecraftClient.player == null) return;
         if (minecraftClient.level == null) return;
         if (minecraftClient.screen != null) return;
@@ -75,11 +75,6 @@ public class ObjectTracker {
         if (previousItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(-1);
 
         if (targetNearestObjectKeyPressed.canBeTriggered()) targetNearestObject();
-
-        nextItemKeyPressed.updateStateForNextTick();
-        previousItemKeyPressed.updateStateForNextTick();
-        narrateCurrentObjectKeyPressed.updateStateForNextTick();
-        targetNearestObjectKeyPressed.updateStateForNextTick();
     }
 
     private void updateGroups() {
@@ -87,7 +82,7 @@ public class ObjectTracker {
 
         int currentGroupIndex = groups.indexOf(currentGroup);
 
-        if (!groups.isEmpty() && currentGroupIndex == -1) currentGroup = groups.get(0);
+        if (!groups.isEmpty() && currentGroupIndex == -1) currentGroup = groups.getFirst();
         if (groups.isEmpty() && currentGroupIndex != -1) currentGroup = null;
     }
 
@@ -96,25 +91,21 @@ public class ObjectTracker {
         speakDistance = map.isSpeakTargetPosition();
     }
 
-    private void narrateCurrentObject(boolean interupt) {
+    private void narrateCurrentObject(boolean interrupt) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
-        if (currentObject instanceof Entity) {
-            Entity entity = (Entity)currentObject;
-
+        if (currentObject instanceof Entity entity) {
             String message = NarrationUtils.narrateEntity(entity);
             if (speakDistance) message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
-            MainClass.speakWithNarrator(message, interupt);
+            MainClass.speakWithNarrator(message, interrupt);
             WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, entity.position());
         }
 
-        if (currentObject instanceof BlockPos) {
-            BlockPos block = (BlockPos)currentObject;
-
-            String message = NarrationUtils.narrateBlock(block, null);
-            if (speakDistance) message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(block);
-            MainClass.speakWithNarrator(message, interupt);
-            WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, block.getCenter());
+        if (currentObject instanceof BlockPos blockPos) {
+            String message = NarrationUtils.narrateBlock(blockPos, null);
+            if (speakDistance) message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
+            MainClass.speakWithNarrator(message, interrupt);
+            WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, blockPos.getCenter());
         }
     }
 
@@ -125,27 +116,27 @@ public class ObjectTracker {
 
         if ((currentGroupIndex + step) > (groups.size() - 1)) {
             MainClass.speakWithNarrator(I18n.get("minecraft_access.other.end_of_list"), true);
-            MainClass.speakWithNarrator(currentGroup.getName(), false);
+            MainClass.speakWithNarrator(currentGroup.getTranslatedName(), false);
             return;
         }
 
         if ((currentGroupIndex + step) < 0) {
             MainClass.speakWithNarrator(I18n.get("minecraft_access.other.start_of_list"), true);
-            MainClass.speakWithNarrator(currentGroup.getName(), false);
+            MainClass.speakWithNarrator(currentGroup.getTranslatedName(), false);
             return;
         }
 
         currentGroup = groups.get(currentGroupIndex + step);
-        currentObject = currentGroup.getItems(true).get(0);
-        MainClass.speakWithNarrator(currentGroup.getName(), true);
+        currentObject = currentGroup.sortByDistance().getFirst();
+        MainClass.speakWithNarrator(currentGroup.getTranslatedName(), true);
         narrateCurrentObject(false);
     }
 
     private void moveObject(int step) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
-        List<?> objects = currentGroup.getItems(true);
-            int currentObjectIndex = objects.indexOf(currentObject);
+        List<?> objects = currentGroup.sortByDistance();
+        int currentObjectIndex = objects.indexOf(currentObject);
 
         if (currentObjectIndex == -1) {
             MainClass.speakWithNarrator(I18n.get("minecraft_access.other.start_of_list"), true);
@@ -185,8 +176,9 @@ public class ObjectTracker {
         if (!entities.isEmpty() && blocks.isEmpty()) currentObject = entities.getFirst();
         if (!blocks.isEmpty() && entities.isEmpty()) currentObject = blocks.getFirst();
         if (!entities.isEmpty() && !blocks.isEmpty()) {
-            double distanceToEntity = Minecraft.getInstance().player.distanceTo(entities.getFirst());
-            double distanceToBlock = Minecraft.getInstance().player.getEyePosition().distanceTo(blocks.getFirst().getCenter());
+            LocalPlayer player = WorldUtils.getClientPlayer();
+            double distanceToEntity = player.distanceTo(entities.getFirst());
+            double distanceToBlock = player.getEyePosition().distanceTo(blocks.getFirst().getCenter());
 
             if (distanceToEntity <= distanceToBlock) currentObject = entities.getFirst();
             if (distanceToBlock < distanceToEntity) currentObject = blocks.getFirst();
