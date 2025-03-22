@@ -51,7 +51,7 @@ public class MainClass {
     public static void init() {
         Config.getInstance().loadConfig();
 
-        String msg = "Initializing Minecraft Access";
+        String msg = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
         log.info(msg);
 
         new AutoLibrarySetup().initialize();
