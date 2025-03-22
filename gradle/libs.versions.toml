@@ -7,7 +7,7 @@ architecturyApi = "15.0.3"
 jmh = "1.37"
 junitJupiter = "5.12.1"
 log4j = "2.24.3"
-mockito = "5.16.0"
+mockito = "5.16.1"
 clothConfig = "17.0.144"
 
 [libraries]
@@ -22,8 +22,8 @@ fabricLoader = "net.fabricmc:fabric-loader:0.16.10"
 jadeFabric = "maven.modrinth:jade:17.2.2+fabric"
 jadeNeoForge = "maven.modrinth:jade:17.3.0+neoforge"
 minecraft = "com.mojang:minecraft:1.21.4"
-neoForge = "net.neoforged:neoforge:21.4.111-beta"
-parchment = "org.parchmentmc.data:parchment-1.21.4:2025.02.16"
+neoForge = "net.neoforged:neoforge:21.4.114-beta"
+parchment = "org.parchmentmc.data:parchment-1.21.4:2025.03.16"
 
 assertjCore = "org.assertj:assertj-core:3.27.3"
 jmhCore = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }

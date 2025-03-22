@@ -46,7 +46,7 @@ public class MainClass {
     public static void init() {
         Config.init();
 
-        String msg = "Initializing Minecraft Access";
+        String msg = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
         log.info(msg);
 
         new AutoLibrarySetup().initialize();
@@ -115,7 +115,7 @@ public class MainClass {
         PositionNarrator.getInstance().update();
 
         if (WorldUtils.getClientPlayer() != null) {
-            if (playerStatus != null && config.features.playerStatusEnabled) {
+            if (playerStatus != null && config.features.isPlayerStatusEnabled) {
                 playerStatus.update();
             }
 
@@ -140,9 +140,10 @@ public class MainClass {
 
         FallDetector.getInstance().update();
 
-        Keystroke.updateInstances();
-
         HUDStatus.getInstance().update();
+
+        // This should always be at the bottom
+        Keystroke.updateInstances();
     }
 
     /**
