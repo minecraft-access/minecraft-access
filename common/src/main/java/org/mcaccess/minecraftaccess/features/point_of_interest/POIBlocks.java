@@ -14,7 +14,9 @@ import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Scans the area to find exposed ore blocks, doors, buttons, ladders, etc., groups them and plays a sound only at ore blocks.
@@ -57,15 +59,8 @@ public class POIBlocks {
     }
 
     @SuppressWarnings("unchecked")
-    public final POIGroup<BlockPos>[] groups = new POIGroup[] {
-            markedGroup,
-            BuiltinBlockPOIGroups.ORE.group,
-            BuiltinBlockPOIGroups.DOOR.group,
-            BuiltinBlockPOIGroups.FLUID.group,
-            BuiltinBlockPOIGroups.FUNCTIONAL.group,
-            BuiltinBlockPOIGroups.HAVE_INTERFACE.group,
-            otherBlocksGroup, // This group should always be at the end of this list
-    };
+    public final POIGroup<BlockPos>[] groups = Stream.of(List.of(markedGroup), BuiltinBlockPOIGroups.ALL, List.of(otherBlocksGroup))
+            .flatMap(Collection::stream).toArray(POIGroup[]::new);
 
     private POIBlocks() {
         loadConfigurations();
@@ -119,6 +114,7 @@ public class POIBlocks {
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
+        if (volume == 0f) return;
         if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
             markedGroup.playSoundForGroupItems(BlockPos::getCenter, volume);
         } else if (playSound) {

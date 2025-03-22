@@ -12,6 +12,7 @@ import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -66,6 +67,7 @@ public enum BuiltinBlockPOIGroups {
             }
     ));
 
+    public static final List<POIGroup<BlockPos>> ALL = Arrays.stream(values()).map(bg -> bg.group).toList();
     public static final Function<Block[], Predicate<Block>> BLOCK_PREDICATE_BUILDER =
         blocks -> b -> Arrays.stream(blocks).anyMatch(valid -> valid == b);
 
