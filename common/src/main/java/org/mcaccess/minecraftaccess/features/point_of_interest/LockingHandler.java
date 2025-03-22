@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.config.config_maps.POIConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -28,7 +29,6 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Locks on to the nearest entity or block.<br><br>
@@ -58,7 +58,6 @@ public class LockingHandler {
     private boolean aimAssistEnabled;
     private boolean aimAssistAudioCuesEnabled;
     private float aimAssistAudioCuesVolume;
-    private boolean onPOIMarkingNow = false;
 
     static {
         instance = new LockingHandler();
@@ -67,16 +66,11 @@ public class LockingHandler {
     private LockingHandler() {
     }
 
-    public void update(boolean onMarking) {
-        this.onPOIMarkingNow = onMarking;
+    public void update() {
         loadConfigurations();
         if (!enabled) return;
         if (!interval.isReady()) return;
-        try {
-            mainLogic();
-        } catch (Exception e) {
-            log.error("An error while updating LockingHandler", e);
-        }
+        mainLogic();
     }
 
     /**
@@ -84,9 +78,10 @@ public class LockingHandler {
      */
     private void loadConfigurations() {
         POILockingConfigMap map = POILockingConfigMap.getInstance();
+        POIConfigMap poiConfigMap = POIConfigMap.getInstance();
         this.enabled = map.isEnabled();
         this.lockOnBlocks = map.isLockOnBlocks();
-        this.speakDistance = map.isSpeakDistance();
+        this.speakDistance = poiConfigMap.isSpeakTargetPosition();
         this.unlockingSound = map.isUnlockingSound();
         this.interval.setDelay(map.getDelay(), Interval.Unit.Millisecond);
         this.aimAssistEnabled = map.isAimAssistEnabled();
@@ -97,7 +92,6 @@ public class LockingHandler {
     private void mainLogic() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
-        if (minecraftClient == null) return;
         if (minecraftClient.player == null) return;
         if (minecraftClient.level == null) return;
         if (minecraftClient.screen != null) return;
@@ -108,7 +102,7 @@ public class LockingHandler {
     }
 
     private void handleLockingKeyPressing() {
-        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().lockingHandlerKey);
+        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
         if (isLockingKeyPressed && Screen.hasAltDown()) {
             if (lockedOnEntity != null || lockedOnBlock != null) {
                 unlock(true);
@@ -142,7 +136,7 @@ public class LockingHandler {
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears)
                 PlayerUtils.lookAt(lockedOnBlock);
             else {
-                // Unlock if (the state of) locked block is changed
+                // Unlock if the state of locked block is changed
                 unlock(true);
             }
         }
@@ -154,7 +148,7 @@ public class LockingHandler {
     private void bowAimingAssist() {
         LocalPlayer player = WorldUtils.getClientPlayer();
         if (aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getUseItem().getItem() instanceof BowItem) {
-            List<Entity> hostileEntities = POIEntities.getInstance().hostileGroup.getItems();
+            List<Entity> hostileEntities = BuiltinEntityPOIGroups.HOSTILE.group.getItems();
             if (!hostileEntities.isEmpty()) {
                 Entity entity = hostileEntities.stream()
                         .min(Comparator.comparingDouble(e -> WorldUtils.getClientPlayer().distanceTo(e)))
@@ -210,16 +204,12 @@ public class LockingHandler {
     }
 
     private void relock() {
-        for (POIGroup<Entity> group : POIEntities.getInstance().groups) {
-            Optional<Entity> nearest = group.getItems().stream()
-                    .min(Comparator.comparingDouble(entity -> WorldUtils.getClientPlayer().distanceTo(entity)));
-            if (nearest.map(this::lockOnEntity).orElse(false)) {
-                return;
-            }
-        }
-
-        if (this.lockOnBlocks || onPOIMarkingNow) {
-            findAndLockOnNearestBlock();
+        Object target = ObjectTracker.getInstance().getCurrentObject();
+        if (target == null) return;
+        switch (target) {
+            case Entity entity -> lockOnEntity(entity);
+            case BlockPos blockPos when this.lockOnBlocks -> lockOnBlock(blockPos);
+            default -> throw new IllegalStateException("Unexpected locking target type: " + target);
         }
     }
 
@@ -281,12 +271,6 @@ public class LockingHandler {
         }
         MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.locked", toSpeak), true);
         return true;
-    }
-
-    private void findAndLockOnNearestBlock() {
-        POIBlocks.getINSTANCE().getLockingCandidates().stream()
-                .min(Comparator.comparingDouble(a -> WorldUtils.getClientPlayer().getEyePosition().distanceTo(a.getCenter())))
-                .ifPresent(this::lockOnBlock);
     }
 
     private void lockOnBlock(BlockPos position) {

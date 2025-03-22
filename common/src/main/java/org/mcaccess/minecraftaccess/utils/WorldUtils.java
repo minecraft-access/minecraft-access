@@ -20,7 +20,13 @@ public class WorldUtils {
     public static BlockPos blockPosOf(Vec3 accuratePos) {
         return BlockPos.containing(accuratePos);
     }
+
     public record BlockInfo(BlockPos pos, BlockState state, Block type, BlockEntity entity) {
+    }
+
+    public static BlockState getBlockState(BlockPos pos) {
+        ClientLevel world = getClientWorld();
+        return world.getBlockState(pos);
     }
 
     public static BlockInfo getBlockInfo(BlockPos pos) {

@@ -4,10 +4,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.mcaccess.minecraftaccess.config.Config;
-import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.POILockingConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
+import org.mcaccess.minecraftaccess.config.config_maps.*;
 import org.mcaccess.minecraftaccess.utils.BaseScreen;
 
 import java.util.function.Function;
@@ -17,6 +14,8 @@ public class POIConfigMenu extends BaseScreen {
     public POIConfigMenu(String title, BaseScreen previousScreen) {
         super(title, previousScreen);
     }
+
+    private POIConfigMap initMap = POIConfigMap.getInstance();
 
     @Override
     protected void init() {
@@ -37,6 +36,21 @@ public class POIConfigMenu extends BaseScreen {
         Button poiMarkingButton = this.buildButtonWidget("minecraft_access.gui.poi_config_menu.button.poi_marking_button",
                 (button) -> this.minecraft.setScreen(new POIMarkingConfigMenu("poi_marking_config_menu", this)));
         this.addRenderableWidget(poiMarkingButton);
+
+        Button speakDistanceButton = this.buildButtonWidget(
+                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isSpeakTargetPosition() ? "enabled" : "disabled"),
+                        I18n.get("minecraft_access.gui.poi_locking_config_menu.button.speak_distance_button")
+                ),
+                (button) -> {
+                    POIConfigMap map = POIConfigMap.getInstance();
+                    map.setSpeakTargetPosition(!map.isSpeakTargetPosition());
+                    Config.getInstance().writeJSON();
+                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isSpeakTargetPosition() ? "enabled" : "disabled"),
+                            I18n.get("minecraft_access.gui.poi_locking_config_menu.button.speak_distance_button")
+                    )));
+                },
+                true);
+        this.addRenderableWidget(speakDistanceButton);
     }
 }
 
@@ -192,6 +206,7 @@ class POILockingConfigMenu extends BaseScreen {
         super.init();
 
         POILockingConfigMap initMap = POILockingConfigMap.getInstance();
+        POIConfigMap configMap = POIConfigMap.getInstance();
 
         Button featureToggleButton = this.buildButtonWidget("minecraft_access.gui.common.button.feature_toggle_button." + (initMap.isEnabled() ? "enabled" : "disabled"),
                 (button) -> {
@@ -215,21 +230,6 @@ class POILockingConfigMenu extends BaseScreen {
                     )));
                 });
         this.addRenderableWidget(lockOnBlocksButton);
-
-        Button speakDistanceButton = this.buildButtonWidget(
-                I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isSpeakDistance() ? "enabled" : "disabled"),
-                        I18n.get("minecraft_access.gui.poi_locking_config_menu.button.speak_distance_button")
-                ),
-                (button) -> {
-                    POILockingConfigMap map = POILockingConfigMap.getInstance();
-                    map.setSpeakDistance(!map.isSpeakDistance());
-                    Config.getInstance().writeJSON();
-                    button.setMessage(Component.nullToEmpty(I18n.get("minecraft_access.gui.common.button.toggle_button." + (map.isSpeakDistance() ? "enabled" : "disabled"),
-                            I18n.get("minecraft_access.gui.poi_locking_config_menu.button.speak_distance_button")
-                    )));
-                },
-                true);
-        this.addRenderableWidget(speakDistanceButton);
 
         Button autoLockEyeOfEnderButton = this.buildButtonWidget(
                 I18n.get("minecraft_access.gui.common.button.toggle_button." + (initMap.isAutoLockEyeOfEnderEntity() ? "enabled" : "disabled"),

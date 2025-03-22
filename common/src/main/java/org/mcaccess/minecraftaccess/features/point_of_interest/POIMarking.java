@@ -23,15 +23,17 @@ public class POIMarking {
     private static final POIBlocks poiBlocks;
     private static final POIEntities poiEntities;
     private static final LockingHandler lockingHandler;
+    private static final ObjectTracker objectTracker;
     private boolean onMarking = false;
     private Entity markedEntity = null;
     private Block markedBlock = null;
 
     static {
         instance = new POIMarking();
-        poiBlocks = POIBlocks.getINSTANCE();
+        poiBlocks = POIBlocks.getInstance();
         poiEntities = POIEntities.getInstance();
         lockingHandler = LockingHandler.getInstance();
+        objectTracker = ObjectTracker.getInstance();
     }
 
     /**
@@ -42,10 +44,10 @@ public class POIMarking {
     public void update() {
         if (POIMarkingConfigMap.getInstance().isEnabled()) {
             boolean controlPressed = Screen.hasControlDown();
-            boolean AltPressed = Screen.hasAltDown();
-            boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().lockingHandlerKey);
+            boolean altPressed = Screen.hasAltDown();
+            boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
 
-            if (lockingKeyPressed && AltPressed && controlPressed) {
+            if (lockingKeyPressed && altPressed && controlPressed) {
                 unmark();
             } else if (controlPressed && lockingKeyPressed) {
                 mark();
@@ -59,14 +61,14 @@ public class POIMarking {
         poiBlocks.update(onMarking, markedBlock);
         poiEntities.update(onMarking, markedEntity);
         // Locking Handler (POI Locking) should be after POI Scan features
-        lockingHandler.update(onMarking);
+        lockingHandler.update();
+        objectTracker.update();
     }
 
     private void mark() {
         if (onMarking) return;
 
         Minecraft client = Minecraft.getInstance();
-        if (client == null) return;
         HitResult hit = client.hitResult;
         if (hit == null) return;
 

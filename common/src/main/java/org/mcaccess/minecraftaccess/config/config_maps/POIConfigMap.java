@@ -1,10 +1,14 @@
 package org.mcaccess.minecraftaccess.config.config_maps;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
+import lombok.Setter;
 import org.mcaccess.minecraftaccess.config.Config;
 
 import java.util.Objects;
 
+@Getter
+@Setter
 public class POIConfigMap {
 
     private static POIConfigMap instance;
@@ -18,6 +22,9 @@ public class POIConfigMap {
     @SerializedName("Entities/Blocks Marking")
     private POIMarkingConfigMap poiMarkingConfigMap;
 
+    @SerializedName("Speak relative position of targets")
+    private boolean speakTargetPosition = false;
+
     private POIConfigMap() {
     }
 
@@ -26,7 +33,8 @@ public class POIConfigMap {
         m.poiBlocksConfigMap = POIBlocksConfigMap.buildDefault();
         m.poiEntitiesConfigMap = POIEntitiesConfigMap.buildDefault();
         m.poiLockingConfigMap = POILockingConfigMap.buildDefault();
-        m.poiMarkingConfigMap = POIMarkingConfigMap.buildDefault();
+        m.poiMarkingConfigMap = POIMarkingConfigMap.buildDefault();        
+        m.speakTargetPosition = false;
 
         setInstance(m);
         return m;
