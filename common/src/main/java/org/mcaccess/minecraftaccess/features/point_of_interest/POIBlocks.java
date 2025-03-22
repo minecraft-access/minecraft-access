@@ -7,16 +7,14 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
 import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
+
 import java.util.*;
 
 /**
@@ -31,7 +29,6 @@ public class POIBlocks {
 
     private Set<BlockPos> checkedBlocks = Set.of();
     private boolean enabled;
-    private boolean detectFluidBlocks;
     private int range;
     private boolean playSound;
     private float volume;
@@ -66,39 +63,13 @@ public class POIBlocks {
 
     @SuppressWarnings("unchecked")
     public final POIGroup<BlockPos>[] groups = new POIGroup[] {
-        markedGroup,
-        oreGroup,
-        new POIGroup<BlockPos>(// Doors
-            "minecraft_access.point_of_interest.group.door",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
-            pos -> {
-                if (world.getBlockState(pos).getBlock() instanceof DoorBlock) {
-                    return world.getBlockState(pos).getValue(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER);
-                } else if (world.getBlockState(pos).getBlock() instanceof TrapDoorBlock) return true;
-
-                return false;
-            }
-        ),
-        new POIGroup<BlockPos>(// Fluids
-            "minecraft_access.point_of_interest.group.fluid",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
-            pos -> this.detectFluidBlocks && world.getBlockState(pos).getBlock() instanceof LiquidBlock &&
-                PlayerUtils.isNotInFluid() && world.getFluidState(pos).getAmount() == 8
-        ),
-        BuiltinBlockPOIGroups.FUNCTIONAL.group,
-        new POIGroup<BlockPos>(// Blocks with interface
-            "minecraft_access.point_of_interest.group.gui",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BANJO.value(), 0f),
-            pos -> {
-                if (world.getBlockState(pos).getBlock() instanceof ChestBlock) {
-                    return world.getBlockState(pos).getValue(ChestBlock.TYPE).equals(ChestType.SINGLE) ||
-                        world.getBlockState(pos).getValue(ChestBlock.TYPE).equals(ChestType.RIGHT);
-                } else {
-                    return world.getBlockState(pos).getMenuProvider(world, pos) != null;
-                }
-            }
-        ),
-        otherBlocksGroup, // This group should always be at the end of this list
+            markedGroup,
+            oreGroup,
+            BuiltinBlockPOIGroups.DOOR.group,
+            BuiltinBlockPOIGroups.FLUID.group,
+            BuiltinBlockPOIGroups.FUNCTIONAL.group,
+            BuiltinBlockPOIGroups.HAVE_INTERFACE.group,
+            otherBlocksGroup, // This group should always be at the end of this list
     };
 
     private POIBlocks() {
@@ -159,7 +130,6 @@ public class POIBlocks {
     private void loadConfigurations() {
         POIBlocksConfigMap poiBlocksConfigMap = POIBlocksConfigMap.getInstance();
         this.enabled = poiBlocksConfigMap.isEnabled();
-        this.detectFluidBlocks = poiBlocksConfigMap.isDetectFluidBlocks();
         this.range = poiBlocksConfigMap.getRange();
         this.playSound = poiBlocksConfigMap.isPlaySound();
         this.volume = poiBlocksConfigMap.getVolume();

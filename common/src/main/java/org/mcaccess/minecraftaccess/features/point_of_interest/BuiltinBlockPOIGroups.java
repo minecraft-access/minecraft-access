@@ -2,11 +2,15 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ButtonBlock;
-import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
+
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -17,15 +21,49 @@ public enum BuiltinBlockPOIGroups {
         new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
         pos -> Ore.PREDICATE.test(WorldUtils.getBlockState(pos).getBlock())
     )),
-    FUNCTIONAL(new POIGroup<>(// Functional blocks
+    FUNCTIONAL(new POIGroup<>(
         "minecraft_access.point_of_interest.group.functional",
         new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
         pos -> {
             Block block = WorldUtils.getBlockState(pos).getBlock();
-            return block instanceof ButtonBlock
-                || block instanceof LeverBlock
-                || Functional.PREDICATE.test(block);
+            return block instanceof ButtonBlock || block instanceof LeverBlock || Functional.PREDICATE.test(block);
         }
+    )),
+    DOOR(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.door",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
+            pos -> {
+                WorldUtils.BlockInfo block = WorldUtils.getBlockInfo(pos);
+                if (block.type() instanceof DoorBlock) {
+                    // Only match upper part of doors
+                    return block.state().getValue(DoorBlock.HALF).equals(DoubleBlockHalf.UPPER);
+                } else {
+                    return block.type() instanceof TrapDoorBlock;
+                }
+            }
+    )),
+    FLUID(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.fluid",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
+            pos -> {
+                Level world = WorldUtils.getClientWorld();
+                boolean configEnabled = POIBlocksConfigMap.getInstance().isDetectFluidBlocks();
+                boolean isSource = world.getFluidState(pos).getAmount() == 8;
+                boolean isLiquid = world.getBlockState(pos).getBlock() instanceof LiquidBlock;
+                return configEnabled && isLiquid && PlayerUtils.isNotInFluid() && isSource;
+            }
+    )),
+    HAVE_INTERFACE(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.gui",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BANJO.value(), 0f),
+            pos -> {
+                BlockState state = WorldUtils.getBlockState(pos);
+                if (state.getBlock() instanceof ChestBlock) {
+                    return Arrays.stream(ChestType.values()).anyMatch(t -> t.equals(state.getValue(ChestBlock.TYPE)));
+                } else {
+                    return state.getMenuProvider(WorldUtils.getClientWorld(), pos) != null;
+                }
+            }
     ));
 
     public static final Function<Block[], Predicate<Block>> BLOCK_PREDICATE_BUILDER =
@@ -37,8 +75,8 @@ public enum BuiltinBlockPOIGroups {
         this.group = group;
     }
 
-    public static class Ore {
-        public static final Block[] ORE_BLOCKS = new Block[] {
+    private static class Ore {
+        protected static final Block[] ORE_BLOCKS = new Block[]{
             Blocks.DEEPSLATE_COAL_ORE,
             Blocks.COAL_ORE,
             Blocks.COPPER_ORE,
@@ -64,8 +102,8 @@ public enum BuiltinBlockPOIGroups {
             BuiltinBlockPOIGroups.BLOCK_PREDICATE_BUILDER.apply(ORE_BLOCKS);
     }
 
-    public static class Functional {
-        public static final Block[] FUNCTION_BLOCKS = new Block[] {
+    private static class Functional {
+        protected static final Block[] FUNCTION_BLOCKS = new Block[]{
             Blocks.PISTON,
             Blocks.STICKY_PISTON,
             Blocks.RESPAWN_ANCHOR,
