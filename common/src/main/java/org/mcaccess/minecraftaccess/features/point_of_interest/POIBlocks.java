@@ -40,20 +40,22 @@ public class POIBlocks {
             pos -> WorldUtils.getBlockState(pos).is(markedBlock)
     );
 
+    /**
+     * This group contains the closest of every type of block
+     * that wasn't picked up by any other POI group around the player.
+     * This is useful when trying to find something that is not considered a POI,
+     * for example until we make a proper trees category, this is a decent way to find trees.
+     */
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
         "minecraft_access.point_of_interest.group.otherBlocks",
-            this::otherBlocksFilter
+            this::blockIsNotAirAndNotContainedInGroupYet
     );
 
-    private boolean otherBlocksFilter(BlockPos pos) {
-        boolean blockAlreadyInGroup = false;
-
+    private boolean blockIsNotAirAndNotContainedInGroupYet(BlockPos pos) {
         BlockState state = WorldUtils.getBlockState(pos);
-        for (BlockPos posInGroup : otherBlocksGroup.getItems()) {
-            blockAlreadyInGroup = state.getBlock() == WorldUtils.getBlockState(posInGroup).getBlock();
-            if (blockAlreadyInGroup) break;
-        }
-
+        boolean blockAlreadyInGroup = otherBlocksGroup.getItems().stream()
+                .map(p -> WorldUtils.getBlockState(p).getBlock())
+                .anyMatch(t -> t.equals(state.getBlock()));
         return !state.isAir() && !blockAlreadyInGroup;
     }
 
@@ -106,9 +108,6 @@ public class POIBlocks {
     private void scanBlocksAround(LocalPlayer player) {
         log.debug("POIBlock started.");
 
-        // Player position is where player's leg be
-        BlockPos pos = player.blockPosition();
-
         // initialize
         List<BlockPos> currentScanResults = new ArrayList<>();
         for (POIGroup<BlockPos> group : groups) {
@@ -124,6 +123,9 @@ public class POIBlocks {
                 }
             }
         });
+
+        // where player's leg be
+        BlockPos pos = player.blockPosition();
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.below(), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos, this.range);

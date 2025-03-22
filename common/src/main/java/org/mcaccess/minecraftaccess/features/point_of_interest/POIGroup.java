@@ -11,6 +11,7 @@ import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -37,6 +38,9 @@ public class POIGroup<T> {
         return I18n.get(nameTranslateKey);
     }
 
+    /**
+     * @return true if item was added
+     */
     public boolean addIfQualified(T item) {
         if (predicate.test(item)) {
             items.add(item);
