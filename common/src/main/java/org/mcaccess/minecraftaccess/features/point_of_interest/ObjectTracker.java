@@ -24,6 +24,8 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class ObjectTracker {
+    public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
+    public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
     @Getter
     private static ObjectTracker instance = new ObjectTracker();
 
@@ -108,13 +110,13 @@ public class ObjectTracker {
         int currentGroupIndex = groups.indexOf(currentGroup);
 
         if ((currentGroupIndex + step) > (groups.size() - 1)) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.end_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(END_OF_LIST), true);
             MainClass.speakWithNarrator(currentGroup.getTranslatedName(), false);
             return;
         }
 
         if ((currentGroupIndex + step) < 0) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.start_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
             MainClass.speakWithNarrator(currentGroup.getTranslatedName(), false);
             return;
         }
@@ -132,20 +134,20 @@ public class ObjectTracker {
         int currentObjectIndex = objects.indexOf(currentObject);
 
         if (currentObjectIndex == -1) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.start_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
             currentObject = objects.get(0);
             narrateCurrentObject(false);
             return;
         }
 
         if ((currentObjectIndex + step) > (objects.size() - 1)) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.end_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(END_OF_LIST), true);
             narrateCurrentObject(false);
             return;
         }
 
         if ((currentObjectIndex + step) < 0) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.start_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
             narrateCurrentObject(false);
             return;
         }
