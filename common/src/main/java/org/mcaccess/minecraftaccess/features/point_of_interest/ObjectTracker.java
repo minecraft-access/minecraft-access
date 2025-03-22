@@ -75,11 +75,6 @@ public class ObjectTracker {
         if (previousItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(-1);
 
         if (targetNearestObjectKeyPressed.canBeTriggered()) targetNearestObject();
-
-        nextItemKeyPressed.updateStateForNextTick();
-        previousItemKeyPressed.updateStateForNextTick();
-        narrateCurrentObjectKeyPressed.updateStateForNextTick();
-        targetNearestObjectKeyPressed.updateStateForNextTick();
     }
 
     private void updateGroups() {
