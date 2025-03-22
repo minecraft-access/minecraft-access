@@ -1,11 +1,12 @@
 package org.mcaccess.minecraftaccess.features.access_menu;
 
+import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.ConfigMenu;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.utils.BaseScreen;
 
@@ -18,7 +19,7 @@ public class AccessMenuGUI extends BaseScreen {
     }
 
     /**
-     * The order of buttons initialization should be the same as {@link AccessMenu#MENU_FUNCTIONS}
+     * The order of buttons initialization should be the same as {@link AccessMenu#FUNCTIONS}
      */
     @Override
     public void init() {
@@ -61,7 +62,7 @@ public class AccessMenuGUI extends BaseScreen {
         this.addRenderableWidget(refreshScreenReaderButton);
 
         Button openConfigMenuButton = this.buildButtonWidget("0", "minecraft_access.access_menu.gui.button.open_config_menu",
-                (button) -> Minecraft.getInstance().setScreen(new ConfigMenu("config_menu")));
+                (button) -> Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, this).get()));
         this.addRenderableWidget(openConfigMenuButton);
     }
 

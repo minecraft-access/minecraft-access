@@ -9,8 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.mcaccess.minecraftaccess.config.config_maps.POIEntitiesConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
@@ -26,11 +25,8 @@ import java.util.stream.Stream;
  */
 @Slf4j
 public class POIEntities {
-    private int range;
-    private boolean playSound;
-    private float volume;
+    private Config.POI.Entities config;
     private final Interval interval = Interval.defaultDelay();
-    private boolean enabled;
 
     private static final POIEntities INSTANCE = new POIEntities();
     private @Nullable Class<? extends Entity> marked = null;
@@ -53,14 +49,14 @@ public class POIEntities {
     private List<Entity> lastScanResults = new ArrayList<>();
 
     private POIEntities() {
-        loadConfigurations();
+        loadConfig();
     }
 
     public void update(boolean isMarking, Entity markedEntity) {
         if (isMarking) setMarked(markedEntity);
-        loadConfigurations();
+        loadConfig();
 
-        if (!enabled) return;
+        if (!config.enabled) return;
         if (!interval.isReady()) return;
 
         Minecraft minecraftClient = Minecraft.getInstance();
@@ -82,7 +78,7 @@ public class POIEntities {
         }
 
         LocalPlayer player = WorldUtils.getClientPlayer();
-        AABB scanBox = player.getBoundingBox().inflate(range, range, range);
+        AABB scanBox = player.getBoundingBox().inflate(config.range, config.range, config.range);
         List<Entity> entities = WorldUtils.getClientWorld().getEntities(player, scanBox);
 
         for (Entity entity : entities) {
@@ -98,13 +94,13 @@ public class POIEntities {
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (volume == 0f) return;
+        if (config.volume == 0f) return;
         Function<Entity, Vec3> mapper = e -> e.blockPosition().getCenter();
-        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
-            markedGroup.playSoundForGroupItems(mapper, volume);
-        } else if (playSound) {
+        if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
+            markedGroup.playSoundForGroupItems(mapper, config.volume);
+        } else if (config.playSound) {
             for (POIGroup<Entity> group : groups) {
-                group.playSoundForGroupItems(mapper, volume);
+                group.playSoundForGroupItems(mapper, config.volume);
             }
         }
     }
@@ -112,13 +108,9 @@ public class POIEntities {
     /**
      * Loads the configs from config.json
      */
-    private void loadConfigurations() {
-        POIEntitiesConfigMap map = POIEntitiesConfigMap.getInstance();
-        this.enabled = map.isEnabled();
-        this.range = map.getRange();
-        this.playSound = map.isPlaySound();
-        this.volume = map.getVolume();
-        this.interval.setDelay(map.getDelay(), Interval.Unit.Millisecond);
+    private void loadConfig() {
+        config = Config.getInstance().poi.entities;
+        interval.setDelay(config.delay, Interval.Unit.Millisecond);
     }
 
     private void setMarked(@Nullable Entity entity) {

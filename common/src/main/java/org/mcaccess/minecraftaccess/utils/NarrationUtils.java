@@ -36,7 +36,7 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
-import org.mcaccess.minecraftaccess.config.config_maps.ReadCrosshairConfigMap;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
@@ -78,7 +78,7 @@ public class NarrationUtils {
 
         List<String> equipments = new ArrayList<>();
 
-        if (ReadCrosshairConfigMap.getInstance().isSpeakAdditionalEntityPoses()) {
+        if (Config.getInstance().readCrosshair.speakAdditionalEntityPoses) {
             switch (entity.getPose()) {
                 case SLEEPING -> text = I18n.get("minecraft_access.read_crosshair.sleeping", text);
                 case DYING -> text = I18n.get("minecraft_access.read_crosshair.dying", text);

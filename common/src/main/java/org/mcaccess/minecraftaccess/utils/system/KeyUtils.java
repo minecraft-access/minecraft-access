@@ -80,4 +80,8 @@ public class KeyUtils {
     public static boolean isSpacePressed() {
         return isAnyPressed(GLFW.GLFW_KEY_SPACE);
     }
+
+    public static boolean isSpaceOrEnterPressed() {
+        return isEnterPressed() || isSpacePressed();
+    }
 }

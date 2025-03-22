@@ -1,8 +1,14 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen;
+import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * to simulate screen reader's text speaking behavior when editing text in input fields.
  */
 @Mixin(EditBox.class)
-public abstract class EditBoxMixin {
+abstract class EditBoxMixin extends AbstractWidget {
     @Shadow
     private String value;
     @Shadow
@@ -38,6 +44,49 @@ public abstract class EditBoxMixin {
 
     @Shadow
     public abstract String getHighlighted();
+
+    @Shadow
+    @Nullable
+    private String suggestion;
+
+    @Unique
+    private boolean mca$previousFocused = false;
+
+    public EditBoxMixin(int x, int y, int width, int height, Component message) {
+        super(x, y, width, height, message);
+    }
+
+    /**
+     * The original logic will repeat whole text input in {@link EditBox} on every text modifying operation.
+     * For example, when editing command in {@link CommandBlockEditScreen}, the game will say:
+     * "Console Command edit box: input text......"
+     * It's quite annoying, so we want to suppress these narrations.
+     * But we still need to speak the whole text once when first focused
+     */
+    @Inject(method = "createNarrationMessage", at = @At("HEAD"), cancellable = true)
+    private void suppressWholeContentNarration(CallbackInfoReturnable<Component> cir) {
+        if (!this.mca$previousFocused && this.isFocused()) {
+            this.mca$previousFocused = true;
+            return;
+        }
+
+        cir.setReturnValue(Component.empty());
+        cir.cancel();
+    }
+
+    @Inject(method = "updateWidgetNarration", at = @At("TAIL"))
+    private void speakSuggestionWhenContentIsEmpty(NarrationElementOutput output, CallbackInfo ci) {
+        // I'm surprised that this is not originally accessible
+        if (this.value.isBlank() && this.suggestion != null) {
+            output.add(NarratedElementType.HINT, this.suggestion);
+        }
+    }
+
+
+    @Inject(at = @At("HEAD"), method = "setFocused")
+    private void setFocused(boolean focused, CallbackInfo ci) {
+        if (!focused) this.mca$previousFocused = false;
+    }
 
     /**
      * Prevents any character input if alt is held down.
@@ -64,20 +113,20 @@ public abstract class EditBoxMixin {
         switch (keyCode) {
             case GLFW.GLFW_KEY_LEFT: {
                 if (Screen.hasControlDown()) {
-                    String hoveredText = this.getCursorHoverOverText(this.getWordPosition(-1));
+                    String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(-1));
                     MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
                 } else {
-                    String hoveredText = this.getCursorHoverOverText(this.getCursorPos(-1));
+                    String hoveredText = this.mca$getCursorHoverOverText(this.getCursorPos(-1));
                     MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
                 }
                 return;
             }
             case GLFW.GLFW_KEY_RIGHT: {
                 if (Screen.hasControlDown()) {
-                    String hoveredText = this.getCursorHoverOverText(this.getWordPosition(1));
+                    String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(1));
                     MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
                 } else {
-                    String hoveredText = this.getCursorHoverOverText(this.getCursorPos(1));
+                    String hoveredText = this.mca$getCursorHoverOverText(this.getCursorPos(1));
                     MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
                 }
                 return;
@@ -113,13 +162,13 @@ public abstract class EditBoxMixin {
         // don't speak under this condition
         boolean allTextAreSelected = this.highlightPos == 0;
         if (!allTextAreSelected) {
-            String erasedText = getCursorHoverOverText(cursorPos);
+            String erasedText = mca$getCursorHoverOverText(cursorPos);
             MainClass.speakWithNarratorIfNotEmpty(erasedText, true);
         }
     }
 
     @Unique
-    private String getCursorHoverOverText(int changedCursorPos) {
+    private String mca$getCursorHoverOverText(int changedCursorPos) {
         int currentCursorPos = this.cursorPos;
         int startPos = Math.min(changedCursorPos, currentCursorPos);
         int endPos = Math.max(changedCursorPos, currentCursorPos);

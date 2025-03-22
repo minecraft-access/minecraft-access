@@ -62,6 +62,9 @@ subprojects {
             name = 'Neoforged'
             url = 'https://maven.neoforged.net/releases/'
         }
+        maven {
+            url 'https://maven.terraformersmc.com/'
+        }
     }
 }
 

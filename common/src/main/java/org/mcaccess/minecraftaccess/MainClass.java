@@ -10,11 +10,6 @@ import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
-import org.mcaccess.minecraftaccess.config.Config;
-import org.mcaccess.minecraftaccess.config.config_maps.AccessMenuConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
-import org.mcaccess.minecraftaccess.config.config_maps.PlayerWarningConfigMap;
 import org.mcaccess.minecraftaccess.features.*;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
@@ -49,7 +44,7 @@ public class MainClass {
      * Initializes the mod
      */
     public static void init() {
-        Config.getInstance().loadConfig();
+        Config.init();
 
         String msg = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
         log.info(msg);
@@ -83,31 +78,36 @@ public class MainClass {
         }, "Shutdown-thread"));
     }
 
+    /**
+     * This method gets called at the end of every tick
+     *
+     * @param minecraftClient The current minecraft client object
+     */
     public static void clientTickEventsMethod(Minecraft minecraftClient) {
-        OtherConfigsMap otherConfigsMap = OtherConfigsMap.getInstance();
+        Config config = Config.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
 
-        if (!MainClass.alreadyDisabledAdvancementKey && minecraftClient.options != null) {
+        if (!MainClass.alreadyDisabledAdvancementKey) {
             minecraftClient.options.keyAdvancements.setKey(InputConstants.getKey("key.keyboard.unknown"));
             MainClass.alreadyDisabledAdvancementKey = true;
             log.info("Unbound advancements key");
         }
 
-        if (otherConfigsMap.isMenuFixEnabled()) {
+        if (config.menuFixEnabled) {
             MenuFix.update(minecraftClient);
         }
 
         // TODO Update these to singleton design pattern
-        if (inventoryControls != null && InventoryControlsConfigMap.getInstance().isEnabled())
+        if (inventoryControls != null && config.inventoryControls.enabled)
             inventoryControls.update();
 
         ReadCrosshair.getInstance().tick();
 
-        if (xpIndicator != null && otherConfigsMap.isXpIndicatorEnabled())
+        if (xpIndicator != null && config.features.xpIndicatorEnabled)
             xpIndicator.update();
 
-        if (biomeIndicator != null && otherConfigsMap.isBiomeIndicatorEnabled())
+        if (biomeIndicator != null && config.features.biomeIndicatorEnabled)
             biomeIndicator.update();
 
         facingDirection.update();
@@ -115,7 +115,7 @@ public class MainClass {
         PositionNarrator.getInstance().update();
 
         if (WorldUtils.getClientPlayer() != null) {
-            if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
+            if (playerStatus != null && config.features.playerStatusEnabled) {
                 playerStatus.update();
             }
 
@@ -127,10 +127,10 @@ public class MainClass {
             }
         }
 
-        if (playerWarnings != null && PlayerWarningConfigMap.getInstance().isEnabled())
+        if (playerWarnings != null && config.playerWarnings.enabled)
             playerWarnings.update();
 
-        if (accessMenu != null && AccessMenuConfigMap.getInstance().isEnabled())
+        if (accessMenu != null && config.accessMenu.enabled)
             accessMenu.update();
 
         speakHeldItem.speakHeldItem();
@@ -150,7 +150,7 @@ public class MainClass {
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = OtherConfigsMap.getInstance().isDebugMode() || Platform.isDevelopmentEnvironment();
+        boolean debugMode = Config.getInstance().debugMode || Platform.isDevelopmentEnvironment();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);
@@ -162,7 +162,7 @@ public class MainClass {
 
     public static ScreenReaderInterface getScreenReader() {
         return MainClass.screenReader;
-    } //TODO remove this
+    }
 
     public static void setScreenReader(ScreenReaderInterface screenReader) {
         MainClass.screenReader = screenReader;
@@ -171,7 +171,6 @@ public class MainClass {
     public static void speakWithNarrator(String text, boolean interrupt) {
         MainClass.interrupt = interrupt;
         Minecraft.getInstance().getNarrator().sayNow(text);
-        return;
     }
 
     public static void speakWithNarratorIfNotEmpty(String text, boolean interrupt) {

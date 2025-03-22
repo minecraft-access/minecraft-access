@@ -9,8 +9,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.POIConfigMap;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
@@ -24,6 +24,8 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class ObjectTracker {
+    public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
+    public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
     @Getter
     private static ObjectTracker instance = new ObjectTracker();
 
@@ -54,8 +56,6 @@ public class ObjectTracker {
     @Getter
     private POIGroup<?> currentGroup = null;
 
-    private boolean speakDistance;
-
     public void update() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
@@ -64,7 +64,6 @@ public class ObjectTracker {
         if (minecraftClient.screen != null) return;
 
         updateGroups();
-        loadConfigurations();
 
         if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
@@ -86,13 +85,9 @@ public class ObjectTracker {
         if (groups.isEmpty() && currentGroupIndex != -1) currentGroup = null;
     }
 
-    private void loadConfigurations() {
-        POIConfigMap map = POIConfigMap.getInstance();
-        speakDistance = map.isSpeakTargetPosition();
-    }
-
     private void narrateCurrentObject(boolean interrupt) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
+        boolean speakDistance = Config.getInstance().poi.locking.speakDistance;
 
         if (currentObject instanceof Entity entity) {
             String message = NarrationUtils.narrateEntity(entity);
@@ -115,13 +110,13 @@ public class ObjectTracker {
         int currentGroupIndex = groups.indexOf(currentGroup);
 
         if ((currentGroupIndex + step) > (groups.size() - 1)) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.end_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(END_OF_LIST), true);
             MainClass.speakWithNarrator(currentGroup.getTranslatedName(), false);
             return;
         }
 
         if ((currentGroupIndex + step) < 0) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.start_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
             MainClass.speakWithNarrator(currentGroup.getTranslatedName(), false);
             return;
         }
@@ -139,20 +134,20 @@ public class ObjectTracker {
         int currentObjectIndex = objects.indexOf(currentObject);
 
         if (currentObjectIndex == -1) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.start_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
             currentObject = objects.get(0);
             narrateCurrentObject(false);
             return;
         }
 
         if ((currentObjectIndex + step) > (objects.size() - 1)) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.end_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(END_OF_LIST), true);
             narrateCurrentObject(false);
             return;
         }
 
         if ((currentObjectIndex + step) < 0) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.start_of_list"), true);
+            MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
             narrateCurrentObject(false);
             return;
         }

@@ -8,8 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import org.mcaccess.minecraftaccess.config.config_maps.POIBlocksConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.POIMarkingConfigMap;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
@@ -25,17 +24,13 @@ import java.util.stream.Stream;
 public class POIBlocks {
     @Getter
     private static final POIBlocks instance = new POIBlocks();
-    private boolean enabled;
-    private int range;
-    private boolean playSound;
-    private float volume;
-    private boolean playSoundForOtherNonOreBlocks;
+    private Config.POI.Blocks config;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
-        "minecraft_access.point_of_interest.group.markedBlock",
-        new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
+            "minecraft_access.point_of_interest.group.markedBlock",
+            new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
             pos -> WorldUtils.getBlockState(pos).is(markedBlock)
     );
 
@@ -46,7 +41,7 @@ public class POIBlocks {
      * for example until we make a proper trees category, this is a decent way to find trees.
      */
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
-        "minecraft_access.point_of_interest.group.otherBlocks",
+            "minecraft_access.point_of_interest.group.otherBlocks",
             this::blockIsNotAirAndNotContainedInGroupYet
     );
 
@@ -63,7 +58,7 @@ public class POIBlocks {
             .flatMap(Collection::stream).toArray(POIGroup[]::new);
 
     private POIBlocks() {
-        loadConfigurations();
+        loadConfig();
     }
 
     @Getter
@@ -71,9 +66,9 @@ public class POIBlocks {
 
     public void update(boolean isMarking, Block markedBlock) {
         if (isMarking) setMarkedBlock(markedBlock);
-        loadConfigurations();
+        loadConfig();
 
-        if (!enabled) return;
+        if (!config.enabled) return;
         if (!interval.isReady()) return;
 
         Minecraft client = Minecraft.getInstance();
@@ -107,35 +102,30 @@ public class POIBlocks {
         BlockPos pos = WorldUtils.getClientPlayer().blockPosition();
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.below(), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
-        scanner.scanAndQualifyBlocksExposedInAirAround(pos, this.range);
-        scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(), this.range);
+        scanner.scanAndQualifyBlocksExposedInAirAround(pos, config.range);
+        scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(), config.range);
 
         lastScanResults = currentScanResults;
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (volume == 0f) return;
-        if (isMarking && POIMarkingConfigMap.getInstance().isSuppressOtherWhenEnabled()) {
-            markedGroup.playSoundForGroupItems(BlockPos::getCenter, volume);
-        } else if (playSound) {
-            if (playSoundForOtherNonOreBlocks) {
+        if (config.volume == 0f) return;
+        if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
+            markedGroup.playSoundForGroupItems(BlockPos::getCenter, config.volume);
+        } else if (config.playSound) {
+            if (config.playSoundForOtherBlocks) {
                 for (POIGroup<BlockPos> group : groups) {
-                    group.playSoundForGroupItems(BlockPos::getCenter, volume);
+                    group.playSoundForGroupItems(BlockPos::getCenter, config.volume);
                 }
             } else {
-                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(BlockPos::getCenter, volume);
+                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(BlockPos::getCenter, config.volume);
             }
         }
     }
 
-    private void loadConfigurations() {
-        POIBlocksConfigMap poiBlocksConfigMap = POIBlocksConfigMap.getInstance();
-        this.enabled = poiBlocksConfigMap.isEnabled();
-        this.range = poiBlocksConfigMap.getRange();
-        this.playSound = poiBlocksConfigMap.isPlaySound();
-        this.volume = poiBlocksConfigMap.getVolume();
-        this.playSoundForOtherNonOreBlocks = poiBlocksConfigMap.isPlaySoundForOtherBlocks();
-        this.interval.setDelay(poiBlocksConfigMap.getDelay(), Interval.Unit.Millisecond);
+    private void loadConfig() {
+        config = Config.getInstance().poi.blocks;
+        interval.setDelay(config.delay, Interval.Unit.Millisecond);
     }
 
     private void setMarkedBlock(@Nullable Block block) {
