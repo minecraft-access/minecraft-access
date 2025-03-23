@@ -29,7 +29,13 @@ abstract class ClothConfigTabButtonMixin extends AbstractButton {
         super(x, y, width, height, message);
     }
 
-    @Inject(at = @At("HEAD"), method = "updateWidgetNarration")
+    /**
+     * This {@link net.minecraft.client.gui.components.AbstractWidget#updateWidgetNarration} method is a vanilla method (from vanilla source code),
+     * and override in {@link me.shedaniel.clothconfig2.gui.ClothConfigTabButton},
+     * but it's still a vanilla method.
+     * So we need to re-enable remap=true for this method, or it will fail finding target on production.
+     */
+    @Inject(at = @At("HEAD"), method = "updateWidgetNarration", remap = true)
     public void updateWidgetNarration(NarrationElementOutput builder, CallbackInfo ci) {
         builder.add(NarratedElementType.TITLE, this.createNarrationMessage());
         builder.add(NarratedElementType.USAGE, Component.translatable("narration.tab_navigation.usage"));
