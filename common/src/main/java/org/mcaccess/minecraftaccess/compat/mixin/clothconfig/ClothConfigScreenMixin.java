@@ -56,10 +56,12 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
         super(parent, title, backgroundLocation);
     }
 
-    @Inject(at = @At("TAIL"), method = "init")
+    @Inject(at = @At("TAIL"), method = "<init>")
     void addComponentsAsNarratables(CallbackInfo ci) {
         List<NarratableEntry> narratables = ((ScreenAccessor) this).getNarratables();
-        narratables.addAll(this.listWidget.children());
+        if (this.listWidget != null) {
+            narratables.addAll(this.listWidget.children());
+        }
         narratables.addAll(this.tabButtons);
     }
 
