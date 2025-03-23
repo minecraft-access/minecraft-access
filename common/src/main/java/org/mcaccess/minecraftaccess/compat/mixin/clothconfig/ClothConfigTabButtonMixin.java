@@ -30,7 +30,7 @@ abstract class ClothConfigTabButtonMixin extends AbstractButton {
     }
 
     /**
-     * This {@link net.minecraft.client.gui.components.AbstractWidget#updateWidgetNarration} method is a vanilla method (from vanilla source code),
+     * @implNote This method is a vanilla method from {@link net.minecraft.client.gui.components.AbstractWidget#updateWidgetNarration},
      * and override in {@link me.shedaniel.clothconfig2.gui.ClothConfigTabButton},
      * but it's still a vanilla method.
      * So we need to re-enable remap=true for this method, or it will fail finding target on production.
