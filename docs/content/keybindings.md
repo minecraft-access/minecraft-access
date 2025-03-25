@@ -166,7 +166,7 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [Config
 
 See also: [Feature Description]({{% relref "/features#book-editing" %}})
 
-### Speak Chat Messages
+## Speak Chat Messages
 
 | Key Combination                                                      | Description                                                                                                                                    |
 |----------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -185,7 +185,7 @@ These keys are used to repeat previous chat messages.
 
 See also: [Feature Description]({{% relref "/features#speak-chat-messages" %}})
 
-### Cloth Config Menu Controls
+## Cloth Config Menu Controls
 
 These controls work on any config menu that uses the Cloth Config.
 
