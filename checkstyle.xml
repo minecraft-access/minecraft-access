@@ -2,22 +2,33 @@
 <!DOCTYPE module PUBLIC
         "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<!-- my plugin config:
+Scan scope: All sources (including tests)
+Only enable this config file
+-->
 <module name="Checker">
     <property name="severity" value="error"/>
-    <module name="FileLength"/>
+    <module name="FileLength">
+        <!-- changelog doc will continue growing -->
+        <property name="fileExtensions" value="java"/>
+    </module>
     <module name="FileTabCharacter"/>
+    <!-- Java is known as a boilerplate language, and by experience I think a bit more than 120 is good -->
     <module name="LineLength">
+        <!-- I personally don't want Markdown format doc to be restricted -->
+        <property name="fileExtensions" value="java"/>
         <property name="severity" value="error"/>
         <property name="max" value="160"/>
     </module>
-    <module name="LineLength">
-        <property name="severity" value="warning"/>
-        <property name="max" value="140"/>
-    </module>
-    <module name="LineLength">
-        <property name="severity" value="info"/>
-        <property name="max" value="120"/>
-    </module>
+    <!-- No additional level rule for line length, just fix on the final limit -->
+    <!--    <module name="LineLength">-->
+    <!--        <property name="severity" value="warning"/>-->
+    <!--        <property name="max" value="140"/>-->
+    <!--    </module>-->
+    <!--    <module name="LineLength">-->
+    <!--        <property name="severity" value="info"/>-->
+    <!--        <property name="max" value="120"/>-->
+    <!--    </module>-->
     <module name="NewlineAtEndOfFile"/>
     <module name="UniqueProperties"/>
     <module name="TreeWalker">
@@ -37,10 +48,19 @@
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="FallThrough"/>
-        <module name="HiddenField">
-            <property name="ignoreConstructorParameter" value="true"/>
-            <property name="ignoreSetter" value="true"/>
-        </module>
+        <!-- GuiMixin.java
+         @Inject(method = "setTitle", at = @At("TAIL"))
+    public void setTitleMixin(Component title, CallbackInfo ci) {
+        MainClass.speakWithNarrator(title.getString(), true);        <======= Here
+        if (subtitle != null) MainClass.speakWithNarrator(subtitle.getString(), false);
+    }
+     "title.getString()" triggers this rule, and this rule doesn't provide a property for suppressing non-first-party package
+     ref: https://checkstyle.sourceforge.io/checks/coding/hiddenfield.html
+         -->
+        <!--        <module name="HiddenField">-->
+        <!--            <property name="ignoreConstructorParameter" value="true"/>-->
+        <!--            <property name="ignoreSetter" value="true"/>-->
+        <!--        </module>-->
         <module name="IllegalCatch"/>
         <module name="IllegalIdentifierName"/>
         <module name="IllegalType"/>
@@ -115,7 +135,13 @@
         <module name="GenericWhitespace"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="IllegalThrows"/>
-        <module name="ImportOrder"/>
+        <!--
+         import java.util.Arrays;
+         import java.util.List;
+         this will trigger the rule, well, this is alphabetically ordered by IDEA
+         ref: https://checkstyle.sourceforge.io/checks/imports/importorder.html
+         -->
+        <!--        <module name="ImportOrder"/>-->
         <module name="InnerAssignment"/>
         <module name="InnerTypeLast"/>
         <module name="InterfaceIsType"/>
@@ -128,7 +154,8 @@
         </module>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
-        <module name="MemberName"/>
+        <!-- there are @Unique class field like "mca$foo" against this rule -->
+        <!--        <module name="MemberName"/>-->
         <module name="MethodCount"/>
         <module name="MethodName"/>
         <module name="MethodParamPad"/>
