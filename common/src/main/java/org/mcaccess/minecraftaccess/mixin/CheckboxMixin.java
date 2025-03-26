@@ -11,7 +11,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Checkbox.class)
 public abstract class CheckboxMixin extends AbstractWidget {
-    @Shadow private boolean selected;
+    @Shadow
+    private boolean selected;
 
     @Overwrite
     public void updateWidgetNarration(NarrationElementOutput builder) {
