@@ -336,7 +336,7 @@
   "text.autoconfig.minecraft-access.option.poi.marking.enabled": "Enabled",
   "text.autoconfig.minecraft-access.option.poi.marking.suppressOtherWhenEnabled": "Suppress other POI whilst marking",
   "text.autoconfig.minecraft-access.option.readCrosshair.disableSpeakingConsecutiveBlocks": "Disable speaking consecutive same blocks",
-  "text.autoconfig.minecraft-access.option.readCrosshair.enabled": "Read Crosshair",
+  "text.autoconfig.minecraft-access.option.readCrosshair.enabled": "Enabled",
   "text.autoconfig.minecraft-access.option.readCrosshair.partialSpeaking": "Partial Speaking",
   "text.autoconfig.minecraft-access.option.readCrosshair.partialSpeaking.enabled": "Enabled",
   "text.autoconfig.minecraft-access.option.readCrosshair.partialSpeaking.fuzzy": "Fuzzy matching",
