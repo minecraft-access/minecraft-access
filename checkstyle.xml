@@ -64,6 +64,10 @@ Only enable this config file
         <module name="IllegalCatch"/>
         <module name="IllegalIdentifierName"/>
         <module name="IllegalType"/>
+        <!-- My IDEA's setting, "Code Style-Java-Continuation Indent" value is 8,
+         which against this rule, set to 4 resolves the warning.
+        The default value of IDEA is 8.
+          -->
         <module name="Indentation"/>
         <module name="InvalidJavadocPosition"/>
         <module name="JavadocBlockTagLocation"/>
@@ -143,6 +147,13 @@ Only enable this config file
          -->
         <!--        <module name="ImportOrder"/>-->
         <module name="InnerAssignment"/>
+        <!--
+        The corresponding IDEA settings is ... "Code Style-Java-Arrangement",
+        The default rule set doesn't emphasize this rule,
+        but it's possible to make it auto-formatted via adding new rules.
+        My personal coding style is first writing spaghetti code and extract private methods with hotkey,
+        so my personal habit can't guarantee this rule.
+         -->
         <module name="InnerTypeLast"/>
         <module name="InterfaceIsType"/>
         <module name="InterfaceTypeParameterName"/>
@@ -179,6 +190,12 @@ Only enable this config file
         <module name="RequireEmptyLineBeforeBlockTagGroup"/>
         <module name="RightCurly"/>
         <module name="SealedShouldHavePermitsList"/>
+        <!--
+        Haven't found corresponding IDEA Code Style settings
+        I've seen you (TSG) modified "+" position when concatenating Strings, to make the "+" at previous lines
+        Unfortunately my stream API and mul String concatenating habit against this rule.
+        My opinion is, We'd better not add formatting rules that can't be auto-fixed by IDE.
+         -->
         <module name="SeparatorWrap"/>
         <module name="SingleLineJavadoc">
             <property name="ignoreInlineTags" value="false"/>
@@ -193,7 +210,27 @@ Only enable this config file
     </module>
     <module name="TreeWalker">
         <property name="severity" value="info"/>
-        <module name="JavadocMethod"/>
+        <!--
+         /**
+         ....
+     */
+    @Inject(method = "renderLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
+    protected void speakCost(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
+
+        Method above triggers this, but I really don't want to write doc for every method param,
+        not because this example is mixin method, but good param names should self-explained
+
+        ref: https://checkstyle.org/checks/javadoc/javadocmethod.html#JavadocMethod
+         -->
+        <module name="JavadocMethod">
+            <property name="allowMissingParamTags" value="true"/>
+            <property name="allowMissingReturnTag" value="true"/>
+            <!--
+            the above two, or below one, better above two according to my opinion above
+            or just delete this rule
+             -->
+            <property name="allowedAnnotations" value="Inject,and other mixin annotations for method"/>
+        </module>
         <module name="JavadocParagraph"/>
         <module name="JavadocStyle"/>
         <module name="NeedBraces">
