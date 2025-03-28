@@ -76,7 +76,24 @@ Only enable this config file
         <module name="JavadocMissingLeadingAsterisk"/>
         <module name="JavadocMissingWhitespaceAfterAsterisk"/>
         <module name="JavadocTagContinuationIndentation"/>
-        <module name="JavadocType"/>
+        <!--
+         /**
+         * "{TYPE} %s out of %s" narration
+         */
+        public record Position(int position, int totalSize, Type type)
+
+        code above triggers this "JavadocType" and I don't know why:
+        "missing @param <param> tag"
+        same as similar, I don't like rules force people to
+         -->
+        <module name="JavadocType">
+            <!--
+             It reports "@implNote" as unknown tag, these tags (@implNote @apiNote @implSpec) are used since Java8
+             ref: https://stackoverflow.com/questions/22673421/new-javadoc-annotation-apinote
+             ref: https://checkstyle.org/checks/javadoc/javadoctype.html#JavadocType
+             -->
+            <property name="allowUnknownTags" value="true"/>
+        </module>
         <module name="MissingOverride"/>
         <module name="ModifiedControlVariable"/>
         <module name="ModifierOrder"/>
@@ -101,7 +118,18 @@ Only enable this config file
         </module>
         <module name="TypeName"/>
         <module name="UncommentedMain"/>
+        <!--
+         boolean rightTarget = (fluidState.is(FluidTags.LAVA) && !water) || (fluidState.is(FluidTags.WATER) && water);
+         code above triggers this, though I think more parentheses makes code more readable.
+
+        There is an example in the website, and I think this is more readable:
+         // 3 violations below
+        if ((a >= 0 && b <= 9) || (c >= 5 && b <= 5) || (c >= 3 && a <= 7))
+
+        ref: https://checkstyle.org/checks/coding/unnecessaryparentheses.html#UnnecessaryParentheses
+         -->
         <module name="UnnecessaryParentheses">
+            <!-- Maybe remove the EXPR? -->
             <property name="tokens"
                       value="EXPR, IDENT, NUM_DOUBLE, NUM_FLOAT, NUM_INT, NUM_LONG, STRING_LITERAL, LITERAL_NULL, LITERAL_FALSE, LITERAL_TRUE, ASSIGN, BAND_ASSIGN, BOR_ASSIGN, BSR_ASSIGN, BXOR_ASSIGN, DIV_ASSIGN, MINUS_ASSIGN, MOD_ASSIGN, PLUS_ASSIGN, SL_ASSIGN, SR_ASSIGN, STAR_ASSIGN, TEXT_BLOCK_LITERAL_BEGIN, LAND, LOR, LITERAL_INSTANCEOF, GT, LT, GE, LE, EQUAL, NOT_EQUAL, UNARY_MINUS, UNARY_PLUS, INC, DEC, LNOT, BNOT, POST_INC, POST_DEC"/>
         </module>
@@ -113,16 +141,69 @@ Only enable this config file
         <module name="WhenShouldBeUsed"/>
     </module>
     <module name="TreeWalker">
+        <property name="severity" value="info"/>
+        <!--
+         /**
+         ....
+     */
+    @Inject(method = "renderLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
+    protected void speakCost(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
+
+        Method above triggers this, but I really don't want to write doc for every method param,
+        not because this example is mixin method, but good param names should self-explained
+
+        ref: https://checkstyle.org/checks/javadoc/javadocmethod.html#JavadocMethod
+         -->
+        <module name="JavadocMethod">
+            <property name="allowMissingParamTags" value="true"/>
+            <property name="allowMissingReturnTag" value="true"/>
+            <!--
+            the above two, or below one, better above two according to my opinion above
+            or just delete this rule
+             -->
+            <property name="allowedAnnotations" value="Inject,and other mixin annotations for method"/>
+        </module>
+        <module name="JavadocParagraph"/>
+        <module name="JavadocStyle"/>
+        <module name="NeedBraces">
+            <property name="allowSingleLineStatement" value="true"/>
+        </module>
+        <module name="VariableDeclarationUsageDistance"/>
+    </module>
+    <module name="TreeWalker">
         <property name="severity" value="warning"/>
         <module name="AnnotationUseStyle"/>
         <module name="AnonInnerLength"/>
+        <!--
+         there are both "ArrayTrailingComma" and "NoArrayTrailingComma" rules in checkstyle,
+         so I see your choice. But... how about don't restrict on it?
+         -->
         <module name="ArrayTrailingComma"/>
-        <module name="AvoidNestedBlocks"/>
+        <module name="AvoidNestedBlocks">
+            <!-- BookEditScreenMixin:
+             switch (keyCode) {
+            case GLFW.GLFW_KEY_ENTER:
+            case GLFW.GLFW_KEY_KP_ENTER: {
+                this.pageEdit.insertText("\n");
+                cir.setReturnValue(true);
+                return;
+            }
+            ...
+             -->
+            <property name="allowInSwitchCase" value="true"/>
+        </module>
         <module name="AvoidNoArgumentSuperConstructorCall"/>
         <module name="BooleanExpressionComplexity"/>
         <module name="CatchParameterName"/>
         <module name="ClassTypeParameterName"/>
-        <module name="ConstantName"/>
+        <!--
+         @Unique
+        private static final Keystroke minecraft_access$tabKey =...
+
+        triggers this, and this rule doesn't provide "skip on given annotations" option
+        ref: https://checkstyle.org/checks/naming/constantname.html#ConstantName
+         -->
+        <!--        <module name="ConstantName"/>-->
         <module name="ConstructorsDeclarationGrouping"/>
         <module name="DeclarationOrder">
             <property name="ignoreModifiers" value="true"/>
@@ -157,6 +238,13 @@ Only enable this config file
         <module name="InnerTypeLast"/>
         <module name="InterfaceIsType"/>
         <module name="InterfaceTypeParameterName"/>
+        <!--
+         the default "methodMaximum" value is 50,
+         which means methods over 50 lines will trigger this rule
+         I feel like 50 is small, but I really can't come up with a proper value,
+         there always be some exceptions (but yes, we can annotate ignore-checking on exceptions),
+         ref: https://checkstyle.org/checks/metrics/javancss.html#JavaNCSS
+         -->
         <module name="JavaNCSS"/>
         <module name="LambdaBodyLength"/>
         <module name="LambdaParameterName"/>
@@ -168,10 +256,37 @@ Only enable this config file
         <!-- there are @Unique class field like "mca$foo" against this rule -->
         <!--        <module name="MemberName"/>-->
         <module name="MethodCount"/>
-        <module name="MethodName"/>
+        <!-- @Unique methods -->
+        <!--        <module name="MethodName"/>-->
         <module name="MethodParamPad"/>
         <module name="MethodTypeParameterName"/>
-        <module name="NestedIfDepth"/>
+        <module name="NestedIfDepth">
+            <!-- BookEditScreenMixin:
+             if (minecraft_access$spaceKey.isPressed()) {
+            if (this.isSigning) {
+                if (this.cancelButton.isHovered()) {
+                    this.cancelButton.onPress();
+                    return;
+                }
+                if (this.finalizeButton.isHovered()) {
+                    this.finalizeButton.onPress();
+                }
+            } else {
+                if (this.doneButton.isHovered()) {
+                    this.doneButton.onPress();
+                    return;
+                }
+                if (this.signButton.isHovered()) {
+                    this.signButton.onPress();
+                }
+            }
+        }
+             default max=1, so triple if like above will trigger this
+             I can't come up with a elegant way to refactor this snippet because there is a "return" inside.
+             Maybe it is suitable to annotate skip-checking on this example
+              -->
+            <property name="max" value="2"/>
+        </module>
         <module name="NestedTryDepth"/>
         <module name="NoLineWrap"/>
         <module name="NoWhitespaceAfter"/>
@@ -194,48 +309,43 @@ Only enable this config file
         Haven't found corresponding IDEA Code Style settings
         I've seen you (TSG) modified "+" position when concatenating Strings, to make the "+" at previous lines
         Unfortunately my stream API and mul String concatenating habit against this rule.
-        My opinion is, We'd better not add formatting rules that can't be auto-fixed by IDE.
+        My opinion is, We'd better not add formatting rules that differ between peoples habits and can't be auto-fixed by IDE.
          -->
         <module name="SeparatorWrap"/>
         <module name="SingleLineJavadoc">
             <property name="ignoreInlineTags" value="false"/>
         </module>
         <module name="SingleSpaceSeparator"/>
-        <module name="StaticVariableName"/>
-        <module name="SummaryJavadoc"/>
+        <module name="StaticVariableName">
+            <!--
+             @Unique fields again,
+             or we can config these naming rules to ignore private fields.
+             this suggestion applies to similar rules like "ConstantName"...
+             just search "@Unique" in this file to find all related rules
+             -->
+            <property name="applyToPrivate" value="false"/>
+        </module>
+        <!--
+          /**
+         * @implNote uses DFS algorithm
+         */
+        public class BlockScanner {
+
+        the code above triggers this: "Lack of @summary tag"
+        Similar to my comment on "JavadocMethod" rule,
+        I don't want to write some zero-information words for just to fulfill the team rules
+        (Unfortunately, I do this in work thanks to our department of tech-management)
+          -->
+        <!--        <module name="SummaryJavadoc"/>-->
         <module name="TypecastParenPad"/>
         <module name="UnnecessarySemicolonInEnumeration"/>
         <module name="WhitespaceAfter"/>
-        <module name="WhitespaceAround"/>
-    </module>
-    <module name="TreeWalker">
-        <property name="severity" value="info"/>
         <!--
-         /**
-         ....
-     */
-    @Inject(method = "renderLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
-    protected void speakCost(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
-
-        Method above triggers this, but I really don't want to write doc for every method param,
-        not because this example is mixin method, but good param names should self-explained
-
-        ref: https://checkstyle.org/checks/javadoc/javadocmethod.html#JavadocMethod
+         private Jade() {}
+         your (TSG) habit against this rule, while IDEA default formatting will fix this to:
+         private Jade() {
+         }
          -->
-        <module name="JavadocMethod">
-            <property name="allowMissingParamTags" value="true"/>
-            <property name="allowMissingReturnTag" value="true"/>
-            <!--
-            the above two, or below one, better above two according to my opinion above
-            or just delete this rule
-             -->
-            <property name="allowedAnnotations" value="Inject,and other mixin annotations for method"/>
-        </module>
-        <module name="JavadocParagraph"/>
-        <module name="JavadocStyle"/>
-        <module name="NeedBraces">
-            <property name="allowSingleLineStatement" value="true"/>
-        </module>
-        <module name="VariableDeclarationUsageDistance"/>
+        <module name="WhitespaceAround"/>
     </module>
 </module>
