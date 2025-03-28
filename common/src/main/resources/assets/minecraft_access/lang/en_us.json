@@ -61,6 +61,7 @@
     "minecraft_access.effect_narration.lost": "Lost",
     "minecraft_access.effect_narration.no_effects": "No status effects",
     "minecraft_access.gui.chat_screen.showing_message_range": "Showing messages %d through %d",
+    "minecraft_access.gui.screen.access_menu": "Access Menu",
     "minecraft_access.hud_status.announce_hidden": "HUD hidden",
     "minecraft_access.hud_status.announce_shown": "HUD shown",
     "minecraft_access.inventory_controls.Unknown": "Unknown",
