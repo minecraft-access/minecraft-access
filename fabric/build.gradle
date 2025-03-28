@@ -32,11 +32,11 @@ dependencies {
     modRuntimeOnly libs.architecturyApiFabric
     include libs.architecturyApiFabric
 
-    modImplementation include(libs.clothConfigFabric.get()) {
-        exclude group: 'net.fabricmc.fabric-api'
-    }
-    modImplementation libs.terraformersmcModMenu
-    include libs.terraformersmcModMenu
+    modRuntimeOnly libs.clothConfigFabric
+    include libs.clothConfigFabric
+
+    modImplementation libs.modMenu
+    include libs.modMenu
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

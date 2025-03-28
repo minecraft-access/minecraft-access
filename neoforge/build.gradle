@@ -28,7 +28,9 @@ dependencies {
 
     modRuntimeOnly libs.architecturyApiNeoForge
     include libs.architecturyApiNeoForge
-    modImplementation libs.clothConfigNeoForge
+
+    modRuntimeOnly( libs.clothConfigNeoForge)
+    include libs.clothConfigNeoForge
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
