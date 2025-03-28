@@ -57,6 +57,8 @@
   "minecraft_access.direction.straight": "Straight",
   "minecraft_access.direction.up": "Up",
   "minecraft_access.direction.west": "West",
+  "minecraft_access.gui.checkbox_checked": "%s checkbox checked",
+  "minecraft_access.gui.checkbox_unchecked": "%s checkbox unchecked",
   "minecraft_access.inventory_controls.Unknown": "Unknown",
   "minecraft_access.inventory_controls.direction_left": "Left",
   "minecraft_access.inventory_controls.direction_right": "Right",
