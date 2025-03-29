@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
@@ -15,6 +17,7 @@ import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +27,7 @@ import java.util.function.Supplier;
 @Mixin(value = SubCategoryListEntry.class, remap = false)
 abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractConfigListEntry>> {
     @SuppressWarnings({"deprecation", "UnstableApiUsage"})
-    public SubCategoryListEntryMixin(Component fieldName, @Nullable Supplier<Optional<Component[]>> tooltipSupplier) {
+    SubCategoryListEntryMixin(Component fieldName, @Nullable Supplier<Optional<Component[]>> tooltipSupplier) {
         super(fieldName, tooltipSupplier);
     }
 
@@ -68,6 +71,10 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         @Final
         private Rectangle rectangle;
 
+        @Shadow
+        @Final
+        SubCategoryListEntry this$0;
+
         /**
          * Make the label widget expandable through keyboard.
          * Although this widget is treated as one of {@link SubCategoryListEntry#children()},
@@ -80,6 +87,17 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
                 return true;
             }
             return false;
+        }
+
+        @WrapOperation(
+                method = "updateNarration",
+                at = @At(value = "INVOKE",
+                        target = "Lme/shedaniel/clothconfig2/gui/entries/SubCategoryListEntry;getFieldName()Lnet/minecraft/network/chat/Component;"),
+                remap = true
+        )
+        public Component updateNarration(SubCategoryListEntry instance, Operation<Component> original) {
+            String translationKey = this$0.isExpanded() ? "minecraft_access.gui.subcategory_expanded" : "minecraft_access.gui.subcategory_unexpanded";
+            return Component.translatable(translationKey, this$0.getFieldName());
         }
     }
 }
