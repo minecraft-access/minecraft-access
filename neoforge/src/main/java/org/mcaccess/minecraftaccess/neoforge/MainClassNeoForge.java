@@ -22,7 +22,6 @@ public class MainClassNeoForge {
         }
 
         MainClass.init();
-        MainClass.isNeoForge = true;
         container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> AutoConfig.getConfigScreen(Config.class, parent).get());
     }
 }
