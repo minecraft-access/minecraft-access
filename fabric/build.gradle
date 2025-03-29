@@ -32,7 +32,7 @@ dependencies {
     modRuntimeOnly libs.architecturyApiFabric
     include libs.architecturyApiFabric
 
-    modRuntimeOnly libs.clothConfigFabric
+    modImplementation libs.clothConfigFabric
     include libs.clothConfigFabric
 
     modImplementation libs.modMenu

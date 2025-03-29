@@ -29,7 +29,7 @@ dependencies {
     modRuntimeOnly libs.architecturyApiNeoForge
     include libs.architecturyApiNeoForge
 
-    modRuntimeOnly( libs.clothConfigNeoForge)
+    modImplementation libs.clothConfigNeoForge
     include libs.clothConfigNeoForge
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
