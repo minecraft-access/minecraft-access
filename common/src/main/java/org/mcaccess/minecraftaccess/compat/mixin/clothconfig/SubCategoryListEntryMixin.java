@@ -11,6 +11,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
@@ -43,13 +44,7 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
 
     @Override
     public ComponentPath nextFocusPath(FocusNavigationEvent event) {
-        // The condition below can't be replaced with "this.isFocused()".
-        // Once the subcategory is navigated through and remain unexpanded, the subcategory can't be focused again.
-        // Because "subcategory.isFocused()" always returns false, then run the "super.nextFocusPath(event)", and it always returns null.
-        // So we use another way to check if current subcategory is focused instead to avoid this problem.
-        boolean isNotFocusedByParent = this.getParent().getFocused() != this;
-
-        if (isNotFocusedByParent && isDisplayed()) {
+        if (!isFocused() && isDisplayed()) {
             if (isExpanded()) {
                 List<? extends GuiEventListener> children = this.filteredEntries();
                 GuiEventListener target = NavigationUtils.isDirectionBackward(event) ? children.getLast() : children.getFirst();
@@ -60,6 +55,16 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         } else {
             return super.nextFocusPath(event);
         }
+    }
+
+    @Override
+    public @NotNull NarratableEntry.NarrationPriority narrationPriority() {
+        return this.getParent().isFocused() && isFocused() ? NarrationPriority.FOCUSED : NarrationPriority.NONE;
+    }
+
+    @Override
+    public boolean isFocused() {
+        return this.getParent().getFocused() == this;
     }
 
     @Mixin(value = SubCategoryListEntry.CategoryLabelWidget.class, remap = false)

@@ -137,12 +137,16 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
         @Override
         public ComponentPath nextFocusPath(FocusNavigationEvent event) {
             List<GuiEventListener> children = children();
-            boolean isNotFocused = this.screen.getFocused() != this;
-            if (isNotFocused && !children.isEmpty() && NavigationUtils.isDirectionBackward(event)) {
+            if (!isFocused() && !children.isEmpty() && NavigationUtils.isDirectionBackward(event)) {
                 this.setFocused(null);
                 return ComponentPath.path(this, NavigationUtils.getFocusPathStartFrom(children.getLast(), event));
             }
             return super.nextFocusPath(event);
+        }
+
+        @Override
+        public boolean isFocused() {
+            return this.screen.getFocused() == this;
         }
     }
 }
