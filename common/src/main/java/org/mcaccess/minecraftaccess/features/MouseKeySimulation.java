@@ -2,7 +2,7 @@ package org.mcaccess.minecraftaccess.features;
 
 import net.minecraft.util.Tuple;
 import org.apache.commons.lang3.tuple.Triple;
-import org.mcaccess.minecraftaccess.config.config_maps.MouseSimulationConfigMap;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
@@ -21,7 +21,6 @@ import java.util.Set;
  * 5) mouse wheel scroll down
  */
 public class MouseKeySimulation {
-    private static boolean enabled;
     private static final Keystroke[] mouseClicks = new Keystroke[3];
     public static final Set<Triple<Keystroke, Runnable, Runnable>> MOUSE_CLICK_ACTIONS;
     private static final IntervalKeystroke[] mouseScrolls = new IntervalKeystroke[2];
@@ -48,16 +47,17 @@ public class MouseKeySimulation {
     }
 
     public static void runOnTick() {
-        loadConfigurations();
-        if (!enabled) return;
+        loadConfig();
+        if (!Config.getInstance().mouseSimulation.enabled) {
+            return;
+        }
         execute();
     }
 
-    private static void loadConfigurations() {
-        MouseSimulationConfigMap map = MouseSimulationConfigMap.getInstance();
-        enabled = map.isEnabled();
-        mouseScrolls[0].interval.setDelay(map.getScrollDelayInMilliseconds(), Interval.Unit.Millisecond);
-        mouseScrolls[1].interval.setDelay(map.getScrollDelayInMilliseconds(), Interval.Unit.Millisecond);
+    private static void loadConfig() {
+        Config.MouseSimulation config = Config.getInstance().mouseSimulation;
+        mouseScrolls[0].interval.setDelay(config.scrollDelayMilliseconds, Interval.Unit.Millisecond);
+        mouseScrolls[1].interval.setDelay(config.scrollDelayMilliseconds, Interval.Unit.Millisecond);
     }
 
     private static void execute() {

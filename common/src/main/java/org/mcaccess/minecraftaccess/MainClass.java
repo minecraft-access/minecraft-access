@@ -10,11 +10,6 @@ import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
-import org.mcaccess.minecraftaccess.config.Config;
-import org.mcaccess.minecraftaccess.config.config_maps.AccessMenuConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
-import org.mcaccess.minecraftaccess.config.config_maps.OtherConfigsMap;
-import org.mcaccess.minecraftaccess.config.config_maps.PlayerWarningConfigMap;
 import org.mcaccess.minecraftaccess.features.*;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
@@ -38,6 +33,7 @@ public class MainClass {
     public static PlayerWarnings playerWarnings = null;
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
+    public static SpeakHeldItem speakHeldItem = null;
 
     public static boolean interrupt = true;
     private static boolean alreadyDisabledAdvancementKey = false;
@@ -46,9 +42,9 @@ public class MainClass {
      * Initializes the mod
      */
     public static void init() {
-        Config.getInstance().loadConfig();
+        Config.init();
 
-        String msg = "Initializing Minecraft Access";
+        String msg = "Initializing Minecraft Access: version " + Platform.getMod("minecraft_access").getVersion();
         log.info(msg);
 
         new AutoLibrarySetup().initialize();
@@ -65,6 +61,7 @@ public class MainClass {
         MainClass.playerWarnings = new PlayerWarnings();
         MainClass.accessMenu = new AccessMenu();
         MainClass.fluidDetector = new FluidDetector();
+        speakHeldItem = new SpeakHeldItem();
 
         for (KeyMapping km : KeyBindingsHandler.getInstance().getKeys()) {
             KeyMappingRegistry.register(km);
@@ -79,8 +76,13 @@ public class MainClass {
         }, "Shutdown-thread"));
     }
 
+    /**
+     * This method gets called at the end of every tick
+     *
+     * @param minecraftClient The current minecraft client object
+     */
     public static void clientTickEventsMethod(Minecraft minecraftClient) {
-        OtherConfigsMap otherConfigsMap = OtherConfigsMap.getInstance();
+        Config config = Config.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
 
@@ -90,20 +92,20 @@ public class MainClass {
             log.info("Unbound advancements key");
         }
 
-        if (otherConfigsMap.isMenuFixEnabled()) {
+        if (config.menuFixEnabled) {
             MenuFix.update(minecraftClient);
         }
 
         // TODO Update these to singleton design pattern
-        if (inventoryControls != null && InventoryControlsConfigMap.getInstance().isEnabled())
+        if (inventoryControls != null && config.inventoryControls.enabled)
             inventoryControls.update();
 
         ReadCrosshair.getInstance().tick();
 
-        if (xpIndicator != null && otherConfigsMap.isXpIndicatorEnabled())
+        if (xpIndicator != null && config.features.xpIndicatorEnabled)
             xpIndicator.update();
 
-        if (biomeIndicator != null && otherConfigsMap.isBiomeIndicatorEnabled())
+        if (biomeIndicator != null && config.features.biomeIndicatorEnabled)
             biomeIndicator.update();
 
         facingDirection.update();
@@ -111,7 +113,7 @@ public class MainClass {
         PositionNarrator.getInstance().update();
 
         if (WorldUtils.getClientPlayer() != null) {
-            if (playerStatus != null && otherConfigsMap.isPlayerStatusEnabled()) {
+            if (playerStatus != null && config.features.playerStatusEnabled) {
                 playerStatus.update();
             }
 
@@ -123,27 +125,30 @@ public class MainClass {
             }
         }
 
-        if (playerWarnings != null && PlayerWarningConfigMap.getInstance().isEnabled())
+        if (playerWarnings != null && config.playerWarnings.enabled)
             playerWarnings.update();
 
-        if (accessMenu != null && AccessMenuConfigMap.getInstance().isEnabled())
+        if (accessMenu != null && config.accessMenu.enabled)
             accessMenu.update();
+
+        speakHeldItem.speakHeldItem();
 
         // POI Marking will handle POI Scan and POI Locking features inside it
         POIMarking.getInstance().update();
 
         FallDetector.getInstance().update();
 
-        Keystroke.updateInstances();
-
         HUDStatus.getInstance().update();
+
+        // This should always be at the bottom
+        Keystroke.updateInstances();
     }
 
     /**
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = OtherConfigsMap.getInstance().isDebugMode() || Platform.isDevelopmentEnvironment();
+        boolean debugMode = Config.getInstance().debugMode || Platform.isDevelopmentEnvironment();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);
@@ -155,7 +160,7 @@ public class MainClass {
 
     public static ScreenReaderInterface getScreenReader() {
         return MainClass.screenReader;
-    } //TODO remove this
+    }
 
     public static void setScreenReader(ScreenReaderInterface screenReader) {
         MainClass.screenReader = screenReader;

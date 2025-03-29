@@ -6,8 +6,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.config.config_maps.InventoryControlsConfigMap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,33 +30,33 @@ public class GuiGraphicsMixin {
 
     @Inject(at = @At("HEAD"), method = "renderTooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;II)V")
     private void speakHoveredTooltip(Font font, Component text, int mouseX, int mouseY, CallbackInfo ci) {
-        if (InventoryControlsConfigMap.getInstance().isEnabled()) return;
+        if (Config.getInstance().inventoryControls.enabled) return;
         minecraft_access$checkAndSpeak(text.getString());
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Inject(at = @At("HEAD"), method = "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V")
     private void speakHoveredTooltip2(Font font, List<Component> tooltipLines, Optional<TooltipComponent> visualTooltipComponent, int mouseX, int mouseY, CallbackInfo ci) {
-        if (InventoryControlsConfigMap.getInstance().isEnabled()) return;
+        if (Config.getInstance().inventoryControls.enabled) return;
         minecraft_access$speakTextList(tooltipLines);
     }
 
     @Inject(at = @At("HEAD"), method = "renderComponentTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;II)V")
     private void speakHoveredTooltip3(Font font, List<Component> tooltipLines, int mouseX, int mouseY, CallbackInfo ci) {
-        if (InventoryControlsConfigMap.getInstance().isEnabled()) return;
+        if (Config.getInstance().inventoryControls.enabled) return;
         minecraft_access$speakTextList(tooltipLines);
     }
 
     @Inject(method = "renderComponentHoverEffect", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;II)V"))
     private void speakHoveredTooltip4(Font font, Style style, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
-        if (InventoryControlsConfigMap.getInstance().isEnabled()) return;
+        if (Config.getInstance().inventoryControls.enabled) return;
         minecraft_access$checkAndSpeak(text.getString());
     }
 
     @Unique
     private static void minecraft_access$speakTextList(List<Component> text) {
-        if (InventoryControlsConfigMap.getInstance().isEnabled()) return;
+        if (Config.getInstance().inventoryControls.enabled) return;
 
         StringBuilder toSpeak = new StringBuilder();
         for (Component t : text) {

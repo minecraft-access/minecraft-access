@@ -9,7 +9,7 @@ You can change these keybindings in the settings (open `Options...` then `Contro
 You may find that some features have duplicate keys, such as I, J, K, L as the arrow keys in various features.
 It's ok since the same key takes effect in different interfaces for different functions.
 
-You may want to take a look at [all the original controls](https://minecraft.wiki/w/Controls#Java_Edition) as well.
+You may want to take a look at [all the original game controls](https://minecraft.wiki/w/Controls#Java_Edition) as well.
 
 ## Camera Controls
 
@@ -88,15 +88,21 @@ See also: [Feature Description]({{% relref "/features#inventory-controls" %}}), 
 
 ## Point of Interest
 
-| Single Key    | Default Keybinding | Description                               |
-|---------------|--------------------|-------------------------------------------|
-| `Locking Key` | Y                  | Lock onto the closest POI block or entity |
+| Single Key               | Default Keybinding | Description                                               |
+|--------------------------|--------------------|-----------------------------------------------------------|
+| `Next Item`              | Page Down          | Select next object in current group                       |
+| `Previous Item`          | Page Up            | Select previous object in current group                   |
+| `Narrate current object` | Home               | Narrate current object tracker object                     |
+| `Target nearest object`  | End                | Target the nearest object relative to your current position, regardless of its group |
+| `Locking Key`            | Y                  | Lock onto the block or entity that's currently being targetted by the object tracker |
 
 | Key Combination                   | Description                                                |
 |-----------------------------------|------------------------------------------------------------|
-| `Alt` + `Locking Key`             | Unlock from the currently locked entity or block           |
-| `Control` + `Locking Key`         | Mark the block or entity currently targeted with crosshair |
-| `Control` + `Alt` + `Locking Key` | Unmark from the target                                     |
+| `Control` + `Next item`          | Select next object tracker group                           |
+| `Control` + `Previous item`      | Select previous object tracker group                       |
+| `Alt` + `Locking Key`            | Unlock from the currently locked entity or block           |
+| `Control` + `Locking Key`        | Mark the block or entity currently targeted with crosshair |
+| `Control` + `Alt` + `Locking Key`| Unmark from the target                                     |
 
 See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 [Configuration]({{% relref "/config#point-of-interest" %}})
@@ -117,13 +123,14 @@ See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [
 
 ## Speak Player Status
 
-| Single Key                       | Default Keybinding | Description                                  |
-|----------------------------------|--------------------|----------------------------------------------|
+| Single Key            | Default Keybinding | Description                                                                                |
+|-----------------------|--------------------|--------------------------------------------------------------------------------------------|
 | `Speak Player Status` | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
 
-| Key Combination  | Description               |
-|------------------|---------------------------|
-| `Left Alt` + `R` | Speak only the conditional statuses of the player like air and frost exposure |
+| Key Combination                    | Description                                                                   |
+|------------------------------------|-------------------------------------------------------------------------------|
+| `Left Alt` + `Speak Player Status` | Speak only the conditional statuses of the player like air and frost exposure |
+| `Control` + `Speak Player Status`  | Speak currently active effects                                                |
 
 See also: [Feature Description]({{% relref "/features#player-status" %}}), [Configuration]({{% relref "/config#player-status" %}})
 
@@ -159,11 +166,17 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [Config
 
 See also: [Feature Description]({{% relref "/features#book-editing" %}})
 
-### Speak Chat Messages
+## Speak Chat Messages
 
-| Key Combination                                          | Description                                                                                                                                    |
-|----------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Alt` + Number Keys (Upper number keys and key pad keys) | Speak previous chat message (again) corresponding to the number, 1 for the most recent message, 2 for the second most recent message and so on |
+| Key Combination                                                      | Description                                                                                                                                    |
+|----------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Alt` + Number Keys (Upper number keys and key pad keys) (1 threw 0) | Speak previous chat message (again) corresponding to the number, 1 for the most recent message, 2 for the second most recent message and so on |
+| `alt` + - or `alt` + numpad minus                                    | Go back a page in the chat history to the next set of 10 messages                                                                              |
+| `alt` + `control` + - or `alt` + `control` + numpad minus            | Move back in the chat history by 5 pages (if there is less than 5 pages left you will be moved to the last available page)                     |
+| `alt` + = or `alt` + numpad plus                                     | Go forward a page towards the most recent message                                                                                              |
+| `alt` + `control` + = or `alt` + `control` + numpad plus             | Move back in the chat history by 5 pages (if there is less than 5 pages left you will be moved to the last available page)                     |
+| `alt` + \` or `alt` + numpad multiply                                | Go to the most recent page of messages                                                                                                         |
+| `alt` + `control` + \` or `alt` + `control` + numpad multiply        | Go to the oldest page of messages available to your client                                                                                     |
 
 This feature only works while the Chat Screen is open.
 These keys aren’t re-mappable.
@@ -171,3 +184,18 @@ The chat message will be spoken when that message shows up, whether the sender i
 These keys are used to repeat previous chat messages.
 
 See also: [Feature Description]({{% relref "/features#speak-chat-messages" %}})
+
+## Cloth Config Menu Controls
+
+These controls work on any config menu that uses the Cloth Config.
+
+| Single Key         | Default Keybinding | Description          |
+|--------------------|--------------------|----------------------|
+| `Tab`              | not re-mappable    | Focus on next option |
+| `Enter` or `Space` | not re-mappable    | Interact             |
+
+| Key Combination          | Description                        |
+|--------------------------|------------------------------------|
+| `Tab` + `Shift`          | Focus on previous option           |
+| `Tab` + `Ctrl`           | Switch to next config category     |
+| `Tab` + `Ctrl` + `Shift` | Switch to previous config category |

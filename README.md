@@ -42,3 +42,11 @@ Any type of contribution is welcome:
 * Create more text or video tutorials about how to play the game with this mod ([examples](https://docs.mcaccess.org/good-resources#gameplay-with-this-mod)).
 * Make sound effects for this mod.
 * For development contributions, please read [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+
+## License
+
+This mod as well as other relative things like documentation are distributed under the [GPL-3.0 license](./LICENSE).
+Here are licenses of modules that this mod packages into its jar file for distribution convenience:
+
+- **cloth-config**: [GNU Lesser General Public License 3.0](https://github.com/shedaniel/cloth-config/blob/v8/LICENSE.md)
+- **ModMenu**: [MIT License](https://github.com/TerraformersMC/ModMenu/blob/1.21.4/LICENSE)
