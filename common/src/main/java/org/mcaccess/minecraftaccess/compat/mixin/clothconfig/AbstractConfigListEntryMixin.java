@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
+import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -22,7 +23,10 @@ abstract class AbstractConfigListEntryMixin<T> extends AbstractConfigEntry<T> {
 
     @Override
     public void updateNarration(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, this.fieldName);
+        //noinspection ConstantValue
+        if (!SubCategoryListEntry.class.isInstance(this)) {
+            builder.add(NarratedElementType.TITLE, this.fieldName);
+        }
         super.updateNarration(builder);
     }
 

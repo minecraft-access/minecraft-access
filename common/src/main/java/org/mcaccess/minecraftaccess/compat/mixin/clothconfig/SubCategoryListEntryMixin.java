@@ -1,7 +1,5 @@
 package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
@@ -9,6 +7,8 @@ import me.shedaniel.math.Rectangle;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +69,13 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         return this.getParent().getFocused() == this;
     }
 
+    @Override
+    public void updateNarration(NarrationElementOutput builder) {
+        String translationKey = isExpanded() ? "minecraft_access.gui.subcategory_expanded" : "minecraft_access.gui.subcategory_unexpanded";
+        builder.add(NarratedElementType.TITLE, Component.translatable(translationKey, super.getFieldName()));
+        super.updateNarration(builder);
+    }
+
     @Mixin(value = SubCategoryListEntry.CategoryLabelWidget.class, remap = false)
     abstract static class CategoryLabelWidgetMixin implements GuiEventListener, NarratableEntry {
         @Shadow
@@ -76,10 +85,6 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         @Shadow
         @Final
         private Rectangle rectangle;
-
-        @Shadow
-        @Final
-        SubCategoryListEntry this$0;
 
         /**
          * Make the label widget expandable through keyboard.
@@ -95,15 +100,9 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
             return false;
         }
 
-        @WrapOperation(
-                method = "updateNarration",
-                at = @At(value = "INVOKE",
-                        target = "Lme/shedaniel/clothconfig2/gui/entries/SubCategoryListEntry;getFieldName()Lnet/minecraft/network/chat/Component;"),
-                remap = true
-        )
-        public Component narrateWhetherExpanded(SubCategoryListEntry instance, Operation<Component> original) {
-            String translationKey = this$0.isExpanded() ? "minecraft_access.gui.subcategory_expanded" : "minecraft_access.gui.subcategory_unexpanded";
-            return Component.translatable(translationKey, this$0.getFieldName());
+        @Inject(method = "narrationPriority", at = @At("TAIL"), remap = true, cancellable = true)
+        public void neverNarrateLabel(CallbackInfoReturnable<NarrationPriority> cir) {
+            cir.setReturnValue(NarrationPriority.NONE);
         }
     }
 }
