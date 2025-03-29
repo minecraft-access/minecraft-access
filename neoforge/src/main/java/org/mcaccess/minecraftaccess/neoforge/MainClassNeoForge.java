@@ -11,18 +11,10 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Mod(value = "minecraft_access", dist = Dist.CLIENT)
+@Mod(value = MainClass.MOD_ID, dist = Dist.CLIENT)
 public class MainClassNeoForge {
-    private static final Logger logger = LoggerFactory.getLogger(MainClass.MOD_ID);
-
     public MainClassNeoForge(ModContainer container) {
-        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
-            logger.error("Minecraft Access can only be run client-side");
-            return;
-        }
-
         MainClass.init();
-        MainClass.isNeoForge = true;
         container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> AutoConfig.getConfigScreen(Config.class, parent).get());
     }
 }

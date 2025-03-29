@@ -16,7 +16,7 @@
   "contact": {
     "homepage": "https://mcaccess.org",
     "sources": "https://github.com/minecraft-access/minecraft-access",
-    "issues": "https://github.com/khanshoaib3/minecraft-access/issues"
+    "issues": "https://github.com/minecraft-access/minecraft-access/issues"
   },
   "environment": "client",
   "entrypoints": {
