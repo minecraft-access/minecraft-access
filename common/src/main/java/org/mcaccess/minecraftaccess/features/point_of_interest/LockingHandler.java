@@ -250,7 +250,7 @@ public class LockingHandler {
 
         String toSpeak = NarrationUtils.narrateEntity(entity);
 
-        if (config.speakDistance) {
+        if (Config.getInstance().poi.speakDistance) {
             toSpeak += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
         }
         MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.locked", toSpeak), true);
@@ -275,7 +275,7 @@ public class LockingHandler {
         lockedOnBlock = new BlockPos3d(position, absolutePosition);
 
         String blockDescription = NarrationUtils.narrateBlock(lockedOnBlock, "");
-        if (config.speakDistance) {
+        if (Config.getInstance().poi.speakDistance) {
             blockDescription += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlock);
         }
         MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.locked", blockDescription), true);

@@ -148,6 +148,7 @@ public class Config implements ConfigData {
     public static final class POI {
         private POI() {}
 
+        public boolean speakDistance = false;
         @ConfigEntry.Gui.CollapsibleObject
         public Blocks blocks = new Blocks();
         @ConfigEntry.Gui.CollapsibleObject
@@ -184,7 +185,6 @@ public class Config implements ConfigData {
 
             public boolean enabled = true;
             public boolean lockOnBlocks = true;
-            public boolean speakDistance = false;
             public boolean unlockingSound = false;
             public boolean autoLockEyeOfEnderEntity = true;
             public int delay = 100;
