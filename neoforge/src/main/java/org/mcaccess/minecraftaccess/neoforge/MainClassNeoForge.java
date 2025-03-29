@@ -4,12 +4,9 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Mod(value = MainClass.MOD_ID, dist = Dist.CLIENT)
 public class MainClassNeoForge {
