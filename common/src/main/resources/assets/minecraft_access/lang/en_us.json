@@ -335,7 +335,7 @@
     "text.autoconfig.minecraft-access.option.poi.locking.delay": "Delay (milliseconds)",
     "text.autoconfig.minecraft-access.option.poi.locking.enabled": "Enabled",
     "text.autoconfig.minecraft-access.option.poi.locking.lockOnBlocks": "Lock onto blocks",
-    "text.autoconfig.minecraft-access.option.poi.locking.speakDistance": "Speak relative distance to target",
+    "text.autoconfig.minecraft-access.option.poi.speakDistance": "Speak relative distance to target",
     "text.autoconfig.minecraft-access.option.poi.locking.unlockingSound": "Play sound",
     "text.autoconfig.minecraft-access.option.poi.marking": "Marking",
     "text.autoconfig.minecraft-access.option.poi.marking.enabled": "Enabled",
