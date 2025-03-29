@@ -141,6 +141,12 @@ public class NarrationUtils {
             }
         }
 
+        if (!equipments.isEmpty()) {
+            String wordConnection = I18n.get("minecraft_access.other.words_connection");
+            var values = Map.of("entity", text, "equipments", String.join(wordConnection, equipments));
+            text = I18n.get("minecraft_access.other.entity_with_equipments", values);
+        }
+
         return text;
     }
 
