@@ -15,7 +15,6 @@ abstract class AbstractConfigListEntryMixin<T> extends AbstractConfigEntry<T> {
     @Final
     private Component fieldName;
 
-
     @Override
     public boolean isActive() {
         return true;
