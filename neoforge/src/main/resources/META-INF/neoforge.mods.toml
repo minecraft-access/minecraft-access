@@ -1,13 +1,13 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
 issueTrackerURL = "https://github.com/minecraft-access/minecraft-access/issues"
-license = "GNU GPLv3"
+license = "GPL-3.0-only"
 
 [[mods]]
 modId = "minecraft_access"
 version = "${version}"
 displayName = "Minecraft Access"
-authors = "Shoaib, Boholder, TheSuperGamer20578, BrailleBennett, Molitvan"
+authors = "Shoaib, Boholder, TheSuperGamer20578, BrailleBennett"
 description = '''
 A mod that helps visually impaired players to play Minecraft.
 '''
@@ -42,6 +42,7 @@ versionRange = "[${jade_neoforge_version},)"
 modId = "cloth_config"
 reason = "For this mod's config menu"
 type = "required"
+versionRange = "[${cloth_config_version},)"
 
 [[mixins]]
 config = "minecraft_access.mixins.json"

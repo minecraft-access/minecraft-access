@@ -46,12 +46,13 @@ processResources {
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-        expand Map.of("version", project.version,
-                "fabric_loader_version", libs.fabricLoader.get().version,
-                "fabric_api_version", libs.fabricApi.get().version,
-                "architectury_api_version", libs.architecturyApiFabric.get().version,
-                "jade_fabric_version", libs.jadeFabric.get().version,
-                "minecraft_version", libs.minecraft.get().version)
+        expand version: project.version,
+                fabric_loader_version: libs.fabricLoader.get().version,
+                fabric_api_version: libs.fabricApi.get().version,
+                architectury_api_version: libs.architecturyApiFabric.get().version,
+                jade_fabric_version: libs.jadeFabric.get().version,
+                cloth_config_version: libs.clothConfigFabric.get().version,
+                minecraft_version: libs.minecraft.get().version
     }
 }
 
