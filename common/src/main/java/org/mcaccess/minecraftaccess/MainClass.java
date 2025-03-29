@@ -98,7 +98,6 @@ public class MainClass {
             MenuFix.update(minecraftClient);
         }
 
-        // TODO Update these to singleton design pattern
         if (inventoryControls != null && config.inventoryControls.enabled)
             inventoryControls.update();
 
@@ -115,7 +114,7 @@ public class MainClass {
         PositionNarrator.getInstance().update();
 
         if (WorldUtils.getClientPlayer() != null) {
-            if (playerStatus != null && config.features.playerStatusEnabled) {
+            if (playerStatus != null) {
                 playerStatus.update();
             }
 

@@ -105,8 +105,6 @@ public class Config implements ConfigData {
         public boolean biomeIndicatorEnabled = true;
         public boolean xpIndicatorEnabled = true;
         public boolean facingDirectionEnabled = true;
-        public boolean playerStatusEnabled = true;
-        public boolean positionNarratorEnabled = true;
         public boolean fishingHarvestEnabled = true;
         public boolean alwaysSpeakPickedUpItemsEnabled = false;
         public boolean reportHeldItemsCountWhenChanged = true;
@@ -120,8 +118,6 @@ public class Config implements ConfigData {
 
     public static final class CameraControls {
         private CameraControls() {}
-
-        public boolean enabled = true;
         public float normalRotatingAngle = 22.5f;
         public float modifiedRotatingAngle = 11.25f;
         public int delayMilliseconds = 250;
@@ -139,8 +135,6 @@ public class Config implements ConfigData {
 
     public static final class MouseSimulation {
         private MouseSimulation() {}
-
-        public boolean enabled = true;
         public int scrollDelayMilliseconds = 150;
         public boolean macMouseFix = false;
     }
@@ -181,8 +175,6 @@ public class Config implements ConfigData {
 
         public static final class Locking {
             private Locking() {}
-
-            public boolean enabled = true;
             public boolean lockOnBlocks = true;
             public boolean speakDistance = false;
             public boolean unlockingSound = false;

@@ -58,13 +58,6 @@ public class LockingHandler {
     private LockingHandler() {
     }
 
-    public void update() {
-        loadConfig();
-        if (!config.enabled) return;
-        if (!interval.isReady()) return;
-        mainLogic();
-    }
-
     /**
      * Loads the configs from the config.json
      */
@@ -73,9 +66,11 @@ public class LockingHandler {
         interval.setDelay(config.delay, Interval.Unit.Millisecond);
     }
 
-    private void mainLogic() {
+    public void update() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
+        loadConfig();
+        if (!interval.isReady()) return;
         if (minecraftClient.player == null) return;
         if (minecraftClient.level == null) return;
         if (minecraftClient.screen != null) return;
