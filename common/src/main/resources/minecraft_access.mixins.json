@@ -55,7 +55,8 @@
     "TextFieldHelperMixin",
     "ToastManagerMixin",
     "TutorialToastAccessor",
-    "WinScreenMixin"
+    "WinScreenMixin",
+    "WolfAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

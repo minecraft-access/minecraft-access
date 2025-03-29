@@ -137,7 +137,7 @@ public class PlayerUtils {
         LocalPlayer player = WorldUtils.getClientPlayer();
         boolean inFluid = player.isSwimming()
                 || player.isUnderWater()
-                || player.isInWaterOrBubble()
+                || player.isInWater()
                 || player.isInLava();
         return !inFluid;
     }
