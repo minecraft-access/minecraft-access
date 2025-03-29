@@ -281,7 +281,7 @@
     "text.autoconfig.minecraft-access.option.poi.locking": "Menu di configurazione delle funzioni di blocco",
     "text.autoconfig.minecraft-access.option.poi.locking.autoLockEyeOfEnderEntity": "Blocco automatico sull'occhio dell'ender quando utilizzato",
     "text.autoconfig.minecraft-access.option.poi.locking.lockOnBlocks": "Blocca i blocchi",
-    "text.autoconfig.minecraft-access.option.poi.locking.speakDistance": "Pronuncia la distanza relativa all'entità/blocco",
+    "text.autoconfig.minecraft-access.option.poi.speakDistance": "Pronuncia la distanza relativa all'entità/blocco",
     "text.autoconfig.minecraft-access.option.poi.locking.unlockingSound": "Riproduci il suono invece di parlare",
     "text.autoconfig.minecraft-access.option.poi.marking": "Menu Configurazioni funzionalità di contrassegno",
     "text.autoconfig.minecraft-access.option.poi.marking.suppressOtherWhenEnabled": "Sopprime la voce e il blocco di altri PDI durante la marcatura",
