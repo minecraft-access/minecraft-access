@@ -70,7 +70,8 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
     @Mixin(value = SubCategoryListEntry.CategoryLabelWidget.class, remap = false)
     abstract static class CategoryLabelWidgetMixin implements GuiEventListener, NarratableEntry {
         @Shadow
-        public abstract boolean mouseClicked(double mouseX, double mouseY, int int_1);
+        @Override
+        public abstract boolean mouseClicked(double mouseX, double mouseY, int i);
 
         @Shadow
         @Final
@@ -100,7 +101,7 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
                         target = "Lme/shedaniel/clothconfig2/gui/entries/SubCategoryListEntry;getFieldName()Lnet/minecraft/network/chat/Component;"),
                 remap = true
         )
-        public Component updateNarration(SubCategoryListEntry instance, Operation<Component> original) {
+        public Component narrateWhetherExpanded(SubCategoryListEntry instance, Operation<Component> original) {
             String translationKey = this$0.isExpanded() ? "minecraft_access.gui.subcategory_expanded" : "minecraft_access.gui.subcategory_unexpanded";
             return Component.translatable(translationKey, this$0.getFieldName());
         }

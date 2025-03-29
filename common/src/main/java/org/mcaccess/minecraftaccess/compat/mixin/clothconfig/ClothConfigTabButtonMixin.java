@@ -37,10 +37,6 @@ abstract class ClothConfigTabButtonMixin extends AbstractButton {
      */
     @Inject(at = @At("HEAD"), method = "updateWidgetNarration", remap = true)
     public void updateWidgetNarration(NarrationElementOutput builder, CallbackInfo ci) {
-        // Make the tab button narration (when focused onto the tab button components with pressing Tab keys after passing "Cancel" button)
-        // same as the narration of directly tab switching with pressing Ctrl (+ Shift) + Tab
-        // see also: ClothConfigScreenMixin.getNarrationMessage
-        // ref: https://mixin-wiki.readthedocs.io/tricks/#access-new-mixin-functions-from-other-packages
         builder.add(NarratedElementType.TITLE, Component.translatable("minecraft_access.gui.tab", this.getMessage()));
         builder.add(NarratedElementType.USAGE, Component.translatable("narration.tab_navigation.usage"));
 
