@@ -25,4 +25,10 @@ public interface ScreenReaderInterface {
      * Closes the screen reader
      */
     void closeScreenReader();
+
+    default String formatNarration(String text) {
+        // Remove formatting codes
+        // ref: https://minecraft.wiki/w/Formatting_codes
+        return text.replaceAll("§.", "");
+    }
 }
