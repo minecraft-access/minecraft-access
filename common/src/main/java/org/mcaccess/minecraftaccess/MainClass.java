@@ -23,6 +23,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 @Slf4j
 public class MainClass {
+    public static final String MOD_ID = "minecraft_access";
     private static ScreenReaderInterface screenReader = null;
 
     public static InventoryControls inventoryControls = null;
@@ -44,7 +45,7 @@ public class MainClass {
     public static void init() {
         Config.init();
 
-        String msg = "Initializing Minecraft Access: version " + Platform.getMod("minecraft_access").getVersion();
+        String msg = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
         log.info(msg);
 
         new AutoLibrarySetup().initialize();
