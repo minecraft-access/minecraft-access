@@ -36,7 +36,6 @@ public class MainClass {
     public static FluidDetector fluidDetector = null;
     public static SpeakHeldItem speakHeldItem = null;
 
-    public static boolean isNeoForge = Platform.isNeoForge();
     public static boolean interrupt = true;
     private static boolean alreadyDisabledAdvancementKey = false;
 
