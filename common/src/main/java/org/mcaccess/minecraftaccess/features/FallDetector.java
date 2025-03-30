@@ -59,9 +59,9 @@ public class FallDetector {
             if (currentTimeInMillis - previousTimeInMillis < config.delay) return;
             previousTimeInMillis = currentTimeInMillis;
 
-            log.debug("Searching for fall in nearby area...");
+            log.trace("Searching for fall in nearby area...");
             SearchNearbyPositions();
-            log.debug("Searching ended.");
+            log.trace("Searching ended");
         } catch (Exception e) {
             log.error("An error occurred in fall detector.", e);
         }
