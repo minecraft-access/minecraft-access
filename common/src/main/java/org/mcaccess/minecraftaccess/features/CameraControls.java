@@ -138,22 +138,22 @@ public class CameraControls {
 
         float rotateAngle = isLeftAltPressed ? config.modifiedRotatingAngle : config.normalRotatingAngle;
 
-        if (isUpKeyPressed) {
+        if (isUpKeyPressed && !isRightAltPressed) {
             anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.UP);
         }
 
-        if (isRightKeyPressed) {
+        if (isRightKeyPressed && !isRightAltPressed) {
             anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.RIGHT);
         }
 
-        if (isDownKeyPressed) {
+        if (isDownKeyPressed && !isRightAltPressed) {
             anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.DOWN);
         }
 
-        if (isLeftKeyPressed) {
+        if (isLeftKeyPressed && !isRightAltPressed) {
             anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.LEFT);
         }
