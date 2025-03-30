@@ -48,3 +48,5 @@ Here are licenses of modules that this mod packages into its jar file for distri
 - **tolk**: [GNU Lesser General Public License v3.0](https://github.com/dkager/tolk/blob/master/LICENSE.txt)
 - **libspeechdwrapper**: [No license specified](https://github.com/khanshoaib3/libspeechdwrapper)
 - **nvdaControllerClient64.dll**: [GNU LESSER GENERAL PUBLIC LICENSE](https://github.com/nvaccess/nvda/blob/master/extras/controllerClient/license.txt)
+- **cloth-config**: [GNU Lesser General Public License 3.0](https://github.com/shedaniel/cloth-config/blob/v8/LICENSE.md)
+- **ModMenu**: [MIT License](https://github.com/TerraformersMC/ModMenu/blob/1.21.4/LICENSE)

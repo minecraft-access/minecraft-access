@@ -4,3 +4,29 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      gh-actions:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      gradle-dependencies:
+        patterns:
+          # Use wildcard to bundle plugins and libs into one PR
+          - "*"
+        update-types:
+          - minor
+          - patch
+    ignore:
+        # Ignore Jade since Dependabot can't tell Fabric and Neo builds apart
+        - dependency-name: "maven.modrinth:jade"
