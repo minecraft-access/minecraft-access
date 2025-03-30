@@ -8,11 +8,7 @@ architectury {
 }
 
 loom {
-    // Loom sets the log4j config while in development (in prod the log4j config might be dictated by the launcher or just the game itself).
-    // This loom gradle config specifies that loom uses our customized log4j config file.
-    // ref: https://fabricmc.net/wiki/documentation:fabric_loom
-    // (although we're using the architectury fork of fabric loom, this config remains unchanged)
-    log4jConfigs.from(file("../common/src/main/resources/log4j.xml"))
+    log4jConfigs.from(file("../log4j.xml"))
 }
 
 configurations {

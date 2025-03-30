@@ -13,10 +13,6 @@ dependencies {
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
 
-    // dependent on log4j for dynamic changing
-    implementation libs.log4jApi
-    implementation libs.log4jCore
-
     // Unit test dependencies
     testImplementation libs.junitJupiter
     testImplementation libs.junitJupiterParams
