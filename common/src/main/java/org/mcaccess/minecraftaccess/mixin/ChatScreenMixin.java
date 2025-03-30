@@ -4,8 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.narration.NarratedElementType;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -17,6 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -38,19 +37,9 @@ public class ChatScreenMixin {
         minecraft_access$currentChatMessagePage = 0;
     }
 
-    /**
-     * Removes `message to send` from the spoken text when entering a chat message.
-     */
-    @Inject(at = @At("HEAD"), method = "updateNarrationState", cancellable = true)
-    private void addScreenNarrations(NarrationElementOutput builder, CallbackInfo callbackInfo) {
-        if (Minecraft.getInstance().screen == null) return;
-        builder.add(NarratedElementType.TITLE, Minecraft.getInstance().screen.getTitle());
-        builder.add(NarratedElementType.USAGE, USAGE_TEXT);
-        String string = this.input.getValue();
-        if (!string.isEmpty()) {
-            builder.nest().add(NarratedElementType.TITLE, string);
-        }
-        callbackInfo.cancel();
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;getValue()Ljava/lang/String;"), method = "updateNarrationState")
+    private String suppressContent(EditBox instance) {
+        return "";
     }
 
     /**

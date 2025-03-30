@@ -5,17 +5,13 @@ architectury {
 dependencies {
     modImplementation libs.jadeFabric
     modImplementation libs.architecturyApi
-    modApi libs.clothConfigFabric
+    modImplementation libs.clothConfig
 
     // https://projectlombok.org/setup/gradle
     compileOnly libs.lombok
     annotationProcessor libs.lombok
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
-
-    // dependent on log4j for dynamic changing
-    implementation libs.log4jApi
-    implementation libs.log4jCore
 
     // Unit test dependencies
     testImplementation libs.junitJupiter
