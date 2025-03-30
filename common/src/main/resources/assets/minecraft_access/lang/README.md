@@ -4,13 +4,15 @@ This directory containers all the translation files from [Weblate].
 
 ## Developers must know
 
-When your code involves changes to language files, please note that:
+When your code involves changes to language files, please note that if what you're trying to do isn't one of those things below (for example, you want to change the value of existing keys), you need to make changes via Weblate.
 
 - **Add new keys**: Only add to [en_us.json]
 - **Remove existing keys**: Only remove from [en_us.json]
 - **Rename existing keys**: Rename in all translation files
 
-If what you're trying to do isn't one of those things above, you need to make changes via [Weblate].
+Operations other than above might cause an auto pulling conflict on Weblate git repo and affect the documentation contribution work since Weblate would stop work until the conflict is resolved.
+
+There is an **exception** though: introducing Weblate makes the code and translation not in sync, so if your code makes the meaning of existing keys changed and keep the value unchanged will affect the review or snapshot test, change the value of existing keys in [en_us.json] directly.
 
 [![Weblate panel showing translation progress]][Weblate]
 
