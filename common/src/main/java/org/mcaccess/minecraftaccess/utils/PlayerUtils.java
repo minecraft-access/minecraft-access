@@ -18,6 +18,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -242,5 +243,29 @@ public class PlayerUtils {
     public static boolean isPlayerTyping() {
         Screen currentScreen = Minecraft.getInstance().screen;
         return currentScreen != null && (currentScreen.getFocused() instanceof EditBox || currentScreen instanceof KeyBindsScreen);
+    }
+
+    public static boolean isCreative() {
+        GameType currentGameMode = Minecraft.getInstance().gameMode.getPlayerMode();
+        return currentGameMode.equals(GameType.CREATIVE);
+    }
+
+    public static boolean isSpectator() {
+        GameType currentGameMode = Minecraft.getInstance().gameMode.getPlayerMode();
+        return currentGameMode.equals(GameType.SPECTATOR);
+    }
+
+    public static boolean isAdventure() {
+        GameType currentGameMode = Minecraft.getInstance().gameMode.getPlayerMode();
+        return currentGameMode.equals(GameType.ADVENTURE);
+    }
+
+    public static boolean isSurvival() {
+        GameType currentGameMode = Minecraft.getInstance().gameMode.getPlayerMode();
+        return currentGameMode.equals(GameType.SURVIVAL);
+    }
+
+    public static boolean isHardCore() {
+        return Minecraft.getInstance().level.getLevelData().isHardcore();
     }
 }
