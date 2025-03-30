@@ -500,11 +500,9 @@ public class InventoryControls {
             toolTipString.append(line.getString()).append(" ");
         }
 
-        // issue #311 after 1.21: Can't get Music Discs' name from Tooltip, use this instead
-        Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE)).ifPresent((jukeboxPlayableComponent) -> {
-            String discNumber = jukeboxPlayableComponent.song().key().location().getPath();
-            toolTipString.append(" ").append(I18n.get("jukebox_song.minecraft." + discNumber));
-        });
+        Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
+                .flatMap(jukeboxPlayable -> jukeboxPlayable.song().key())
+                .ifPresent(discNumber -> toolTipString.append(" ").append(I18n.get("jukebox_song.minecraft." + discNumber.location().getPath())));
 
         // <slot row col prefix> <count> <name> <description>
         return "%s %s".formatted(info, toolTipString.toString());

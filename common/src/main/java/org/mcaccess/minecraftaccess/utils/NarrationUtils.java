@@ -17,6 +17,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.camel.Camel;
+import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -38,6 +40,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
+import org.mcaccess.minecraftaccess.mixin.WolfAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
 import java.text.DecimalFormat;
@@ -134,7 +137,8 @@ public class NarrationUtils {
         }
 
         if (entity instanceof LivingEntity livingEntity) {
-            for (ItemStack equipment : livingEntity.getAllSlots()) {
+            for (EquipmentSlot slot : EquipmentSlot.values()) {
+                ItemStack equipment = livingEntity.getItemBySlot(slot);
                 if (equipment.isEmpty()) continue;
                 String equipmentName = equipment.getHoverName().getString();
                 equipments.add(equipmentName);
@@ -158,7 +162,7 @@ public class NarrationUtils {
             case Cat cat ->
                     I18n.get(String.format("minecraft_access.cat_variant.%s", cat.getVariant().unwrapKey().map(ResourceKey::location).map(ResourceLocation::toShortLanguageKey).orElse("other")));
             case Wolf wolf ->
-                    I18n.get(String.format("minecraft_access.wolf_variant.%s", wolf.getVariant().unwrapKey().map(ResourceKey::location).map(ResourceLocation::toShortLanguageKey).orElse("other")));
+                    I18n.get(String.format("minecraft_access.wolf_variant.%s", ((WolfAccessor) wolf).callGetVariant().unwrapKey().map(ResourceKey::location).map(ResourceLocation::toShortLanguageKey).orElse("other")));
             case Axolotl axolotl -> I18n.get("minecraft_access.axolotl_variant." + axolotl.getVariant().getName());
             default -> "";
         };
