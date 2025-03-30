@@ -21,7 +21,7 @@ fabricLoader = "net.fabricmc:fabric-loader:0.16.10"
 jadeFabric = "maven.modrinth:jade:17.2.2+fabric"
 jadeNeoForge = "maven.modrinth:jade:17.3.0+neoforge"
 minecraft = "com.mojang:minecraft:1.21.4"
-modMenu = 'com.terraformersmc:modmenu:13.0.0-beta.1'
+modMenu = 'com.terraformersmc:modmenu:14.0.0-rc.2'
 neoForge = "net.neoforged:neoforge:21.4.114-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.4:2025.03.16"
 
