@@ -87,7 +87,7 @@ public class ObjectTracker {
 
     private void narrateCurrentObject(boolean interrupt) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
-        boolean speakDistance = Config.getInstance().poi.locking.speakDistance;
+        boolean speakDistance = Config.getInstance().poi.speakDistance;
 
         if (currentObject instanceof Entity entity) {
             String message = NarrationUtils.narrateEntity(entity);

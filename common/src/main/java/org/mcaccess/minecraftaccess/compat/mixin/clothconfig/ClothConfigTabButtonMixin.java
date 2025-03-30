@@ -37,7 +37,7 @@ abstract class ClothConfigTabButtonMixin extends AbstractButton {
      */
     @Inject(at = @At("HEAD"), method = "updateWidgetNarration", remap = true)
     public void updateWidgetNarration(NarrationElementOutput builder, CallbackInfo ci) {
-        builder.add(NarratedElementType.TITLE, this.createNarrationMessage());
+        builder.add(NarratedElementType.TITLE, Component.translatable("minecraft_access.gui.tab", this.getMessage()));
         builder.add(NarratedElementType.USAGE, Component.translatable("narration.tab_navigation.usage"));
 
         if (this.mca$position == null) {

@@ -266,7 +266,7 @@
     "text.autoconfig.minecraft-access.option.poi.locking": "menu de configurações de Bloqueio",
     "text.autoconfig.minecraft-access.option.poi.locking.autoLockEyeOfEnderEntity": "Auto bloquear no olho do Ender quando usado",
     "text.autoconfig.minecraft-access.option.poi.locking.lockOnBlocks": "Bloquear em blocos",
-    "text.autoconfig.minecraft-access.option.poi.locking.speakDistance": "Dizer a distância relativa entre entidades/Blocos",
+    "text.autoconfig.minecraft-access.option.poi.speakDistance": "Dizer a distância relativa entre entidades/Blocos",
     "text.autoconfig.minecraft-access.option.poi.locking.unlockingSound": "Reproduzir som ao desbloquear",
     "text.autoconfig.minecraft-access.option.poi.marking": "Menú de configurações para o marcador",
     "text.autoconfig.minecraft-access.option.poi.marking.suppressOtherWhenEnabled": "Sobrepor outros pontos de interesse e foco quando o marcador estiver ativo",
