@@ -22,7 +22,7 @@ jadeFabric = "maven.modrinth:jade:18.0.1+fabric"
 jadeNeoForge = "maven.modrinth:jade:18.0.1+neoforge"
 minecraft = "com.mojang:minecraft:1.21.5"
 modMenu = "com.terraformersmc:modmenu:14.0.0-rc.2"
-neoForge = "net.neoforged:neoforge:21.5.6-beta"
+neoForge = "net.neoforged:neoforge:21.5.8-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.4:2025.03.23"
 
 assertjCore = "org.assertj:assertj-core:3.27.3"
@@ -38,5 +38,5 @@ mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.re
 [plugins]
 architecturyLoom = { id = "dev.architectury.loom", version = "1.10.430" }
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.161" }
-gitVersion = { id = "com.palantir.git-version", version = "3.1.0" }
+gitVersion = { id = "com.palantir.git-version", version = "3.2.0" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.6" }
