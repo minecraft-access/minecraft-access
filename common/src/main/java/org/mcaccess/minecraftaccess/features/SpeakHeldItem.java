@@ -2,13 +2,13 @@ package org.mcaccess.minecraftaccess.features;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import org.mcaccess.minecraftaccess.Config;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.mixin.GuiAccessor;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 import java.util.function.Function;
 
@@ -28,14 +28,15 @@ public class SpeakHeldItem {
         int heldItemTooltipFade = ((GuiAccessor) Minecraft.getInstance().gui).getToolHighlightTimer();
         boolean currentStackIsEmpty = currentStack.isEmpty();
         LocalPlayer player = Minecraft.getInstance().player;
+
         if (heldItemTooltipFade == 0 && currentStackIsEmpty && player != null) {
             // Speak "empty slot" when the selected slot is empty
-            speakIfHeldChanged("", 0, player.getInventory().selected, SpeakHeldItem.EMPTY_SLOT_I18N);
+            speakIfHeldChanged("", 0, player.getInventory().getSelectedSlot(), SpeakHeldItem.EMPTY_SLOT_I18N);
         }
 
         if (!currentStackIsEmpty && player != null) {
             // Speak held item's name and count
-            speakIfHeldChanged(currentStack.getHoverName().getString(), currentStack.getCount(), player.getInventory().selected, SpeakHeldItem.HOTBAR_I18N);
+            speakIfHeldChanged(currentStack.getHoverName().getString(), currentStack.getCount(), player.getInventory().getSelectedSlot(), SpeakHeldItem.HOTBAR_I18N);
         }
     }
 
