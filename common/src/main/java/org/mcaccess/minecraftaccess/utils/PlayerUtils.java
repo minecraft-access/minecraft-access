@@ -1,6 +1,9 @@
 package org.mcaccess.minecraftaccess.utils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
@@ -234,5 +237,10 @@ public class PlayerUtils {
         String toSpeak = effects.stream().map(NarrationUtils::narrateEffect)
                 .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection")));
         MainClass.speakWithNarrator(toSpeak, true);
+    }
+
+    public static boolean isPlayerTyping() {
+        Screen currentScreen = Minecraft.getInstance().screen;
+        return currentScreen != null && (currentScreen.getFocused() instanceof EditBox || currentScreen instanceof KeyBindsScreen);
     }
 }

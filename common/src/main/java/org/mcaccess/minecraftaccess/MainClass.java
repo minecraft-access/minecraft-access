@@ -18,6 +18,7 @@ import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
@@ -117,7 +118,8 @@ public class MainClass {
                 playerStatus.update();
             }
 
-            MouseKeySimulation.runOnTick();
+            if (!PlayerUtils.isPlayerTyping())
+                MouseKeySimulation.runOnTick();
 
             if (Minecraft.getInstance().screen == null) {
                 // These features are suppressed when there is any screen opening
