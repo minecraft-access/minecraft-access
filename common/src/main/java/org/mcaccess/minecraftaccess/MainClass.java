@@ -127,7 +127,7 @@ public class MainClass {
             }
         }
 
-        if (playerWarnings != null && config.playerWarnings.enabled)
+        if (playerWarnings != null && config.playerWarnings.enabled && (PlayerUtils.isSurvival()|| PlayerUtils.isAdventure()))
             playerWarnings.update();
 
         if (accessMenu != null && config.accessMenu.enabled)
