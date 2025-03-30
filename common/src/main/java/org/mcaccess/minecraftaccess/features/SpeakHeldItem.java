@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.features;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import org.mcaccess.minecraftaccess.Config;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +19,7 @@ import java.util.function.Function;
 public class SpeakHeldItem {
     private String previousItemName = "";
     private int previousItemCount = 0;
+    private int previousHotbarSlot = 0;
     public static final Function<String, String> HOTBAR_I18N = toSpeak -> I18n.get("minecraft_access.other.selected", toSpeak);
     public static final Function<String, String> EMPTY_SLOT_I18N = toSpeak -> I18n.get("minecraft_access.inventory_controls.empty_slot", toSpeak);
 
@@ -25,22 +27,24 @@ public class SpeakHeldItem {
         ItemStack currentStack = ((GuiAccessor) Minecraft.getInstance().gui).getLastToolHighlight();
         int heldItemTooltipFade = ((GuiAccessor) Minecraft.getInstance().gui).getToolHighlightTimer();
         boolean currentStackIsEmpty = currentStack.isEmpty();
-        if (heldItemTooltipFade == 0 && currentStackIsEmpty) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (heldItemTooltipFade == 0 && currentStackIsEmpty && player != null) {
             // Speak "empty slot" when the selected slot is empty
-            speakIfHeldChanged("", 0, SpeakHeldItem.EMPTY_SLOT_I18N);
+            speakIfHeldChanged("", 0, player.getInventory().selected, SpeakHeldItem.EMPTY_SLOT_I18N);
         }
 
-        if (!currentStackIsEmpty) {
+        if (!currentStackIsEmpty && player != null) {
             // Speak held item's name and count
-            speakIfHeldChanged(currentStack.getHoverName().getString(), currentStack.getCount(), SpeakHeldItem.HOTBAR_I18N);
+            speakIfHeldChanged(currentStack.getHoverName().getString(), currentStack.getCount(), player.getInventory().selected, SpeakHeldItem.HOTBAR_I18N);
         }
     }
 
-    private void speakIfHeldChanged(String itemName, int itemCount, Function<String, String> i18n) {
+    private void speakIfHeldChanged(String itemName, int itemCount, int hotbarSlot, Function<String, String> i18n) {
         boolean nameChanged = !previousItemName.equals(itemName);
         boolean countChanged = previousItemCount != itemCount;
+        boolean slotChanged = previousHotbarSlot != hotbarSlot;
 
-        if (nameChanged) {
+        if (nameChanged || slotChanged) {
             String itemCountText = itemCount == 0 ? "" : NarrationUtils.narrateNumber(itemCount) + " ";
             MainClass.speakWithNarrator(i18n.apply(itemCountText + itemName), true);
         } else if (countChanged && Config.getInstance().features.reportHeldItemsCountWhenChanged) {
@@ -48,5 +52,6 @@ public class SpeakHeldItem {
         }
         previousItemName = itemName;
         previousItemCount = itemCount;
+        previousHotbarSlot = hotbarSlot;
     }
 }

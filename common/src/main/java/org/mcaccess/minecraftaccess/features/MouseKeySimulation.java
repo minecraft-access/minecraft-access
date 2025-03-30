@@ -46,21 +46,14 @@ public class MouseKeySimulation {
         );
     }
 
-    public static void runOnTick() {
-        loadConfig();
-        if (!Config.getInstance().mouseSimulation.enabled) {
-            return;
-        }
-        execute();
-    }
-
     private static void loadConfig() {
         Config.MouseSimulation config = Config.getInstance().mouseSimulation;
         mouseScrolls[0].interval.setDelay(config.scrollDelayMilliseconds, Interval.Unit.Millisecond);
         mouseScrolls[1].interval.setDelay(config.scrollDelayMilliseconds, Interval.Unit.Millisecond);
     }
 
-    private static void execute() {
+public static void runOnTick() {
+        loadConfig();
         MOUSE_SCROLL_ACTIONS.forEach(t -> {
             if (t.getA().canBeTriggered()) {
                 t.getB().run();

@@ -23,9 +23,17 @@ dependencyResolutionManagement {
             url = 'https://maven.architectury.dev'
         }
         mavenCentral()
+        maven{
+            name = 'Cloth Config'
+            url = 'https://maven.shedaniel.me/'
+        }
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'Mod Menu'
+            url = 'https://maven.terraformersmc.com/'
         }
         maven {
             name = 'Neoforged'

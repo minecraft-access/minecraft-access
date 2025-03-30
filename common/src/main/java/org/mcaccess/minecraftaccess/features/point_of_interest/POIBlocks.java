@@ -75,10 +75,10 @@ public class POIBlocks {
         if (client.player == null) return;
         if (client.screen != null) return; //Prevent running if any screen is opened
 
-        log.debug("POIBlock started.");
+        log.trace("POIBlock started");
         scanBlocksAroundPlayer();
         playerSoundAtFoundPOI(isMarking);
-        log.debug("POIBlock ended.");
+        log.trace("POIBlock ended");
     }
 
     private void scanBlocksAroundPlayer() {

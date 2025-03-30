@@ -50,12 +50,11 @@ public class CameraControls {
         straightDownDoubleClick = new DoubleClick(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().cameraControlsDown));
     }
 
-    record CameraConfig(boolean enabled, float normalRotatingAngle, float modifiedRotatingAngle) {
+    record CameraConfig(float normalRotatingAngle, float modifiedRotatingAngle) {
         static final float DELTA_90_DEGREES = 600f; // 90 / 0.15
 
         public CameraConfig(Config.CameraControls config) {
-            this(config.enabled,
-                    DELTA_90_DEGREES / (90 / config.normalRotatingAngle),
+            this(DELTA_90_DEGREES / (90 / config.normalRotatingAngle),
                     DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle));
         }
     }
@@ -63,7 +62,6 @@ public class CameraControls {
     public static void update() {
         if (!interval.isReady()) return;
         loadConfigurations();
-        if (!config.enabled) return;
         keyListener();
     }
 
@@ -140,22 +138,22 @@ public class CameraControls {
 
         float rotateAngle = isLeftAltPressed ? config.modifiedRotatingAngle : config.normalRotatingAngle;
 
-        if (isUpKeyPressed) {
+        if (isUpKeyPressed && !isRightAltPressed) {
             anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.UP);
         }
 
-        if (isRightKeyPressed) {
+        if (isRightKeyPressed && !isRightAltPressed) {
             anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.RIGHT);
         }
 
-        if (isDownKeyPressed) {
+        if (isDownKeyPressed && !isRightAltPressed) {
             anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.DOWN);
         }
 
-        if (isLeftKeyPressed) {
+        if (isLeftKeyPressed && !isRightAltPressed) {
             anyFunctionTriggered = true;
             rotateCameraBy(rotateAngle, RotatingDirection.LEFT);
         }

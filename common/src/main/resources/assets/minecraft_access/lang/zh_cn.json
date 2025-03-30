@@ -277,7 +277,7 @@
     "text.autoconfig.minecraft-access.option.poi.locking.aimAssistEnabled": "拉弓辅助标准",
     "text.autoconfig.minecraft-access.option.poi.locking.autoLockEyeOfEnderEntity": "自动锁定使用的末影之眼",
     "text.autoconfig.minecraft-access.option.poi.locking.lockOnBlocks": "锁定方块",
-    "text.autoconfig.minecraft-access.option.poi.locking.speakDistance": "朗读与方块/实体间的相对位置",
+    "text.autoconfig.minecraft-access.option.poi.speakDistance": "朗读与方块/实体间的相对位置",
     "text.autoconfig.minecraft-access.option.poi.locking.unlockingSound": "播放解锁音效代替朗读",
     "text.autoconfig.minecraft-access.option.poi.marking": "标记功能 配置菜单",
     "text.autoconfig.minecraft-access.option.poi.marking.suppressOtherWhenEnabled": "标记生效过程中，关闭其他兴趣点朗读与锁定",

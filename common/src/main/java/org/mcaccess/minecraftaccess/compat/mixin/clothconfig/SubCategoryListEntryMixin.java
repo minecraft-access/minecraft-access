@@ -7,14 +7,20 @@ import me.shedaniel.math.Rectangle;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +30,7 @@ import java.util.function.Supplier;
 @Mixin(value = SubCategoryListEntry.class, remap = false)
 abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractConfigListEntry>> {
     @SuppressWarnings({"deprecation", "UnstableApiUsage"})
-    public SubCategoryListEntryMixin(Component fieldName, @Nullable Supplier<Optional<Component[]>> tooltipSupplier) {
+    SubCategoryListEntryMixin(Component fieldName, @Nullable Supplier<Optional<Component[]>> tooltipSupplier) {
         super(fieldName, tooltipSupplier);
     }
 
@@ -40,13 +46,7 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
 
     @Override
     public ComponentPath nextFocusPath(FocusNavigationEvent event) {
-        // The condition below can't be replaced with "this.isFocused()".
-        // Once the subcategory is navigated through and remain unexpanded, the subcategory can't be focused again.
-        // Because "subcategory.isFocused()" always returns false, then run the "super.nextFocusPath(event)", and it always returns null.
-        // So we use another way to check if current subcategory is focused instead to avoid this problem.
-        boolean isNotFocusedByParent = this.getParent().getFocused() != this;
-
-        if (isNotFocusedByParent && isDisplayed()) {
+        if (!isFocused() && isDisplayed()) {
             if (isExpanded()) {
                 List<? extends GuiEventListener> children = this.filteredEntries();
                 GuiEventListener target = NavigationUtils.isDirectionBackward(event) ? children.getLast() : children.getFirst();
@@ -59,10 +59,28 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         }
     }
 
+    @Override
+    public @NotNull NarratableEntry.NarrationPriority narrationPriority() {
+        return this.getParent().isFocused() && isFocused() ? NarrationPriority.FOCUSED : NarrationPriority.NONE;
+    }
+
+    @Override
+    public boolean isFocused() {
+        return this.getParent().getFocused() == this;
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput builder) {
+        String translationKey = isExpanded() ? "minecraft_access.gui.subcategory_expanded" : "minecraft_access.gui.subcategory_unexpanded";
+        builder.add(NarratedElementType.TITLE, Component.translatable(translationKey, super.getFieldName()));
+        super.updateNarration(builder);
+    }
+
     @Mixin(value = SubCategoryListEntry.CategoryLabelWidget.class, remap = false)
     abstract static class CategoryLabelWidgetMixin implements GuiEventListener, NarratableEntry {
         @Shadow
-        public abstract boolean mouseClicked(double mouseX, double mouseY, int int_1);
+        @Override
+        public abstract boolean mouseClicked(double mouseX, double mouseY, int i);
 
         @Shadow
         @Final
@@ -80,6 +98,11 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
                 return true;
             }
             return false;
+        }
+
+        @Inject(method = "narrationPriority", at = @At("TAIL"), remap = true, cancellable = true)
+        public void neverNarrateLabel(CallbackInfoReturnable<NarrationPriority> cir) {
+            cir.setReturnValue(NarrationPriority.NONE);
         }
     }
 }

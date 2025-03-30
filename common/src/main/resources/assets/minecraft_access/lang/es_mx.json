@@ -255,7 +255,7 @@
     "text.autoconfig.minecraft-access.option.poi.locking.aimAssistEnabled": "Asistencia para apuntar con arco",
     "text.autoconfig.minecraft-access.option.poi.locking.autoLockEyeOfEnderEntity": "Bloqueo automático en el Ojo de Ender cuando se usa",
     "text.autoconfig.minecraft-access.option.poi.locking.lockOnBlocks": "Bloqueo de bloques",
-    "text.autoconfig.minecraft-access.option.poi.locking.speakDistance": "Anunciar distancia a bloque",
+    "text.autoconfig.minecraft-access.option.poi.speakDistance": "Anunciar distancia a bloque",
     "text.autoconfig.minecraft-access.option.poi.locking.unlockingSound": "Reproducir sonido en lugar de hablar",
     "text.autoconfig.minecraft-access.option.poi.marking": "Menú de configuraciones de funciones de marcado",
     "text.autoconfig.minecraft-access.option.poi.marking.suppressOtherWhenEnabled": "Suprimir otros puntos de interés que hablan y bloquean al marcar",
