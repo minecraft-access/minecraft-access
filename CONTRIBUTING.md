@@ -7,6 +7,7 @@ Thank you for helping make this mod accessible to more people around the world.
 To manage translations we use [Weblate], an open source web-based translation platform.
 If you're interested in contributing to translations, please visit our [Weblate] project where you will find all the languages we are currently translating to and any untranslated strings.
 If you would like to help translate into a language which isn't there, please reach out to us via [Discord].
+For developers whose contributions involve changes to translation files, please be sure to read the [README of I18N files](https://github.com/minecraft-access/minecraft-access/blob/dev/common/src/main/resources/assets/minecraft_access/lang/README.md).
 
 ## Required knowledge
 
