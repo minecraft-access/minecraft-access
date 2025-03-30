@@ -9,6 +9,10 @@ If you're interested in contributing to translations, please visit our [Weblate]
 If you would like to help translate into a language which isn't there, please reach out to us via [Discord].
 For developers whose contributions involve changes to translation files, please be sure to read the [README of I18N files](https://github.com/minecraft-access/minecraft-access/blob/dev/common/src/main/resources/assets/minecraft_access/lang/README.md).
 
+## Documentation
+
+Please read the [README of documentation files](https://github.com/minecraft-access/minecraft-access/tree/dev/docs/README.md).
+
 ## Required knowledge
 
 First, general Java project development knowledge is required: Java programming, concepts of writing clean code, git operations, basic knowledge of Linux shell commands, collaboration with GitHub...
@@ -33,6 +37,12 @@ Well, to be precise, 95% of the code is platform-independent, and if we really n
 We heavily depend on [SpongePowered Mixin](https://github.com/SpongePowered/Mixin/wiki) and [LlamaLad7 MixinExtras](https://github.com/LlamaLad7/MixinExtras/wiki), `Mixin` in short, a framework for modifying Java bytecode.
 Mixin is a complex but handy framework, for learning it, I recommend reading [the tutorial by Fabric](https://fabricmc.net/wiki/tutorial:mixin_introduction), [`Mixin`'s official wiki](https://github.com/SpongePowered/Mixin/wiki) and [wiki of `MixinExtras` library](https://github.com/LlamaLad7/MixinExtras/wiki). Please note that the SpongePowered Mixin wiki is very technical and detailed and is not suitable for usage as a user manual, use it as the final choice. Use Fabric wiki and MixinExtras wiki as reference when developing.
 For questions about Mixin, you can ask in `mod-dev` channels of [the Fabric Discord server](https://discord.com/invite/v6v4pMv) or the `mixin` channel of the [NeoForge Discord server](https://discord.com/invite/neoforged), they are a friendly bunch and willing to answer any questions you may have.
+
+I find out these mixin related resources help me a lot as quick references:
+
+- https://wiki.fabricmc.net/tutorial:mixin_examples
+- https://github.com/2xsaiko/mixin-cheatsheet
+- https://mixin-wiki.readthedocs.io/tricks/
 
 Finally, to search for a suitable injection point, we need to [read the original code](https://fabricmc.net/wiki/tutorial:reading_mc_code).
 Thanks to the [MojMap mappings](https://minecraft.wiki/w/Obfuscation_map) tool and [ParchmentMC](https://parchmentmc.org/) we can read the source code that de-obfuscated from the game's bytecode.
@@ -62,7 +72,7 @@ Now you can explore the project.
 - When running the game with IDE, the main directory is `{platform directory}/run` (`.minecraft` in production environment), you can see familiar directories like `config`, `mods`, `saves` under it.
 - You can run `gradlew {platform}:build` to build mod for a specific platform (when root Gradle `build` task fails for some reason), built mod jars are under `{platform directory}/build/libs`, the one without a suffix.
 
-For more developing tips, see [this section of Fabric wiki](https://docs.fabricmc.net/develop/ide-tips-and-tricks).
+For more developing tips, see [the relative page of Fabric wiki](https://docs.fabricmc.net/develop/ide-tips-and-tricks).
 
 ## Project Structure
 
@@ -132,18 +142,13 @@ Applying less mock and embracing programming strategies like [`Functional Core, 
 
 ## CI
 
-This project has an automatic test-build-release pipeline thanks to [@TheSuperGamer20578](https://github.com/TheSuperGamer20578).
+This project has an automatic test-build-release [pipeline](https://github.com/minecraft-access/minecraft-access/tree/dev/.github/workflows) thanks to [@TheSuperGamer20578](https://github.com/TheSuperGamer20578).
 Since this project is hosted on GitHub, it's natural for us to choose GitHub Action as the CI system.
 
 - For every PR commit and building, `push` workflow will be triggered for building and running the test suite against changes.
 - The `publish-pr-build` workflow is responsible for building snapshot versions and uploading them to Discord. Snapshot versions are built when PR is merged to main branch or a PR is tagged with `bedrock-breakers` label.
-- When a new version is ready, we'll manually run the `release` workflow to automatically tag the version, collect changelog, publish mod to the GitHub release, [CurseForge](https://www.curseforge.com/minecraft/mc-mods/minecraft-access) and [Modrinth](https://modrinth.com/mod/minecraft-access).
+- When a new version is ready, we'll manually run the `release` workflow to automatically tag the version, retrieve translation changes from [Weblate], collect changelog, publish mod to the GitHub release, [CurseForge](https://www.curseforge.com/minecraft/mc-mods/minecraft-access) and [Modrinth](https://modrinth.com/mod/minecraft-access).
 - The `docs` workflow is for building the documentation and uploading them to GitHub pages.
-
-## Documentation
-
-This project has a [Hugo](https://gohugo.io/) based static website serves as wiki and gate for contact ways and distribution channels - [mcaccess.org](https://mcaccess.org/).
-The website theme has its [independent repository](https://github.com/minecraft-access/hugo-themes), it's because we'd like to reuse same theme across other possible websites like a blog.
 
 ## Recommended Approaches
 

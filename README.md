@@ -32,8 +32,8 @@ Whenever the mod's code is updated, or whenever we need an upcoming feature some
 Any type of contribution is welcome:
 
 * Be one of the first to try out new versions and help us find bugs and issues.
-* Improve this mod's documentation for better readability and accessibility.
-* Help us translate this mod into other languages via [Weblate](https://hosted.weblate.org/engage/minecraft-access/).
+* Improve this mod's documentation for better readability and accessibility, please read [related documentation](https://github.com/minecraft-access/minecraft-access/tree/dev/docs/README.md).
+* Help us translate this mod into other languages via [Weblate](https://hosted.weblate.org/engage/minecraft-access/), please read [related documentation](https://github.com/minecraft-access/minecraft-access/blob/dev/CONTRIBUTING.md#translations).
 * Create more text or video tutorials about how to play the game with this mod ([examples](https://docs.mcaccess.org/good-resources#gameplay-with-this-mod)).
 * Make sound effects for this mod.
 * For development contributions, please read [CONTRIBUTING.md](https://github.com/minecraft-access/minecraft-access/blob/dev/CONTRIBUTING.md) for more details.
