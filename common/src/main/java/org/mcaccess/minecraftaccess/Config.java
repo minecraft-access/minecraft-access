@@ -29,12 +29,12 @@ public class Config implements ConfigData {
 
     @Contract(pure = true)
     @VisibleForTesting
-    public static @NotNull ConfigSerializer.Factory<@NotNull Config> getSerializer() {
+    public static @NotNull ConfigSerializer.Factory<@NotNull Config> getSerialiser() {
         return GsonConfigSerializer::new;
     }
 
     static void init() {
-        AutoConfig.register(Config.class, getSerializer());
+        AutoConfig.register(Config.class, getSerialiser());
         instance = AutoConfig.getConfigHolder(Config.class).get();
     }
 
