@@ -13,12 +13,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 import java.util.Set;
 
 /**
- * Bind four mouse operations with customizable keys:<br><br>
- * 1) left mouse key pressing<br>
- * 2) right mouse key pressing<br>
- * 3) middle mouse key pressing<br>
- * 4) mouse wheel scroll up<br>
- * 5) mouse wheel scroll down
+ * Simulate mouse key operations by programmatically invoking vanilla mouse key operation handlers.
  */
 public class MouseKeySimulation {
     private static final Keystroke[] mouseClicks = new Keystroke[3];
@@ -28,15 +23,15 @@ public class MouseKeySimulation {
 
     static {
         // config keystroke conditions
-        mouseClicks[0] = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().mouseSimulationLeftMouseKey));
-        mouseClicks[1] = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().mouseSimulationMiddleMouseKey));
-        mouseClicks[2] = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().mouseSimulationRightMouseKey));
-        mouseScrolls[0] = new IntervalKeystroke(KeyBindingsHandler.getInstance().mouseSimulationScrollUpKey);
-        mouseScrolls[1] = new IntervalKeystroke(KeyBindingsHandler.getInstance().mouseSimulationScrollDownKey);
+        mouseClicks[0] = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.mouseSimulationLeftMouseKey));
+        mouseClicks[1] = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.mouseSimulationMiddleMouseKey));
+        mouseClicks[2] = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.mouseSimulationRightMouseKey));
+        mouseScrolls[0] = new IntervalKeystroke(KeyBindingsHandler.mouseSimulationScrollUpKey);
+        mouseScrolls[1] = new IntervalKeystroke(KeyBindingsHandler.mouseSimulationScrollDownKey);
 
         MOUSE_SCROLL_ACTIONS = Set.of(
-                new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[0], MouseUtils::scrollUp),
-                new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[1], MouseUtils::scrollDown)
+            new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[0], MouseUtils::scrollUp),
+            new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[1], MouseUtils::scrollDown)
         );
 
         MOUSE_CLICK_ACTIONS = Set.of(
@@ -58,7 +53,7 @@ public class MouseKeySimulation {
         mouseScrolls[1].interval.setDelay(config.scrollDelayMilliseconds, Interval.Unit.Millisecond);
     }
 
-public static void runOnTick() {
+    public static void runOnTick() {
         loadConfig();
         MOUSE_SCROLL_ACTIONS.forEach(t -> {
             if (t.getA().canBeTriggered()) {
