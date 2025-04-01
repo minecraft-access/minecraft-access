@@ -12,7 +12,6 @@ import net.minecraft.client.resources.language.I18n;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
@@ -29,6 +28,11 @@ public class MouseUtils {
     private static CGWrapper cgWrapper = null;
     private static CoreFoundationInterface coreFoundationInstance = null;
     private static ApplicationServicesInterface applicationServicesInstance = null;
+    /**
+     * The {@link Minecraft} is singleton and {@link Minecraft#window} only be initialized once in constructor,
+     * so this is safe to cache it.
+     */
+    private static long windowPointer = 0;
 
     /**
      * Move the mouse to the given pixel location and then perform left click.
@@ -489,7 +493,10 @@ public class MouseUtils {
     }
 
     private static long getWindowPointer() {
-        return Minecraft.getInstance().getWindow().getWindow();
+        if (windowPointer == 0) {
+            windowPointer = Minecraft.getInstance().getWindow().getWindow();
+        }
+        return windowPointer;
     }
 
 
