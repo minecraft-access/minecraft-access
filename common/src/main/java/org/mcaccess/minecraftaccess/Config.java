@@ -97,8 +97,7 @@ public class Config implements ConfigData {
     public SpeechSettings speechSettings = new SpeechSettings();
 
     public static final class Features {
-        private Features() {
-        }
+        private Features() {}
 
         public boolean actionBarEnabled = true;
         public boolean onlySpeakActionBarUpdates = false;
@@ -176,6 +175,7 @@ public class Config implements ConfigData {
 
         public static final class Locking {
             private Locking() {}
+
             public boolean lockOnBlocks = true;
             public boolean unlockingSound = false;
             public boolean autoLockEyeOfEnderEntity = true;

@@ -98,7 +98,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
     @Unique
     private void mca$switchCategory(boolean forward) {
         int nextIndex = this.selectedCategoryIndex + (forward ? 1 : -1);
-        if (Math.clamp(nextIndex, 0, this.tabButtons.size() - 1) != nextIndex) {
+        if (nextIndex < 0 || nextIndex >= tabButtons.size()) {
             MainClass.speakWithNarrator(I18n.get("minecraft_access.other.reached_the_border"), true);
             return;
         }
@@ -110,7 +110,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
             tabButton.mouseClicked(tabButton.getX() + 1, tabButton.getY() + 1, 0);
         } else {
             // the tab button is invisible, scroll tab menu
-            var arrowButton = forward ? this.buttonRightTab : this.buttonLeftTab;
+            AbstractWidget arrowButton = forward ? this.buttonRightTab : this.buttonLeftTab;
             arrowButton.mouseClicked(arrowButton.getX() + 1, arrowButton.getY() + 1, 0);
             // but the scroll needs ticking to be finished, so directly trigger the tab button by calling onPress
             tabButton.onPress();
