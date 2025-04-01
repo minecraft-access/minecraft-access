@@ -3,11 +3,9 @@ package org.mcaccess.minecraftaccess;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.autoconfig.serializer.ConfigSerializer;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -27,14 +25,8 @@ public class Config implements ConfigData {
         return instance;
     }
 
-    @Contract(pure = true)
-    @VisibleForTesting
-    public static @NotNull ConfigSerializer.Factory<@NotNull Config> getSerialiser() {
-        return GsonConfigSerializer::new;
-    }
-
     static void init() {
-        AutoConfig.register(Config.class, getSerialiser());
+        AutoConfig.register(Config.class, GsonConfigSerializer::new);
         instance = AutoConfig.getConfigHolder(Config.class).get();
     }
 
