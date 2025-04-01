@@ -103,7 +103,7 @@ public class MainClass {
 
         ReadCrosshair.getInstance().tick();
 
-        if (xpIndicator != null && config.features.xpIndicatorEnabled)
+        if (xpIndicator != null && config.features.xpIndicatorEnabled && !PlayerUtils.isSpectator())
             xpIndicator.update();
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled)
@@ -133,12 +133,14 @@ public class MainClass {
         if (accessMenu != null && config.accessMenu.enabled)
             accessMenu.update();
 
-        speakHeldItem.speakHeldItem();
+        if (!PlayerUtils.isSpectator())
+            speakHeldItem.speakHeldItem();
 
         // POI Marking will handle POI Scan and POI Locking features inside it
         POIMarking.getInstance().update();
 
-        FallDetector.getInstance().update();
+        if (!PlayerUtils.isSpectator())
+            FallDetector.getInstance().update();
 
         HUDStatus.getInstance().update();
 

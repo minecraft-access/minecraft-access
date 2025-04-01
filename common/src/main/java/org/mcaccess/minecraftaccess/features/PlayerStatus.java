@@ -71,7 +71,8 @@ public class PlayerStatus {
             if (toSpeak.isEmpty() && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()))
                 toSpeak += I18n.get("minecraft_access.player_status.no_conditional_status");
 
-            toSpeak = addGameMode(toSpeak);
+            if (!toSpeak.equals(I18n.get("minecraft_access.player_status.no_conditional_status")))
+                toSpeak = addGameMode(toSpeak);
 
             MainClass.speakWithNarrator(toSpeak, true);
         }
