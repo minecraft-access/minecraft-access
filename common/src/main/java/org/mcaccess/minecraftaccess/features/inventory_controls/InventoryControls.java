@@ -247,7 +247,7 @@ public class InventoryControls {
                 if (recipeBookIsOpening()) {
                     clickPreviousRecipeBookPage();
                 } else {
-                    MouseUtils.scroll(MouseUtils.WheelDirection.UP);
+                    MouseUtils.Wheel.UP.scroll();
                 }
             } else {
                 focusSlotItemAt(FocusDirection.UP);
@@ -267,7 +267,7 @@ public class InventoryControls {
                 if (recipeBookIsOpening()) {
                     clickNextRecipeBookPage();
                 } else {
-                    MouseUtils.scroll(MouseUtils.WheelDirection.DOWN);
+                    MouseUtils.Wheel.DOWN.scroll();
                 }
             } else {
                 focusSlotItemAt(FocusDirection.DOWN);

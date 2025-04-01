@@ -51,7 +51,7 @@ public class MouseUtils {
             } catch (Exception ignored) {
             }
         }
-        click(Key.LEFT);
+        Key.LEFT.click();
     }
 
     /**
@@ -72,7 +72,7 @@ public class MouseUtils {
             } catch (Exception ignored) {
             }
         }
-        click(Key.RIGHT);
+        Key.RIGHT.click();
     }
 
     /**
@@ -124,25 +124,6 @@ public class MouseUtils {
         } catch (Exception e) {
             log.error("Error encountered on moving mouse.", e);
         }
-    }
-
-    public static void click(Key key) {
-        press(key);
-        release(key);
-    }
-
-    public static void press(Key key) {
-        operate(key, Action.PRESS);
-    }
-
-    public static void release(Key key) {
-        operate(key, Action.RELEASE);
-    }
-
-    public static void scroll(WheelDirection direction) {
-        // captured real mouse scrolling always results in x=0, y=1/-1
-        int offset = direction == WheelDirection.UP ? 1 : -1;
-        getMouseHandler().scroll(getWindowPointer(), 0, offset);
     }
 
     private static void doNativeMouseAction(String name, boolean logCoordinates, String linuxXdotCommand, Consumer<CGWrapper> macOSAction, Consumer<user32dllInterface> windowsAction) {
@@ -447,14 +428,6 @@ public class MouseUtils {
         }
     }
 
-    private static void operate(Key key, Action action) {
-        // basing on MouseHandler.onPress():
-        // if (Minecraft.ON_OSX && button == 0)
-        // run macOS related logic
-        int modifiers = Minecraft.ON_OSX ? 0 : 1;
-        getMouseHandler().press(getWindowPointer(), key.id, action.id, modifiers);
-    }
-
     private static MouseHandlerAccessor getMouseHandler() {
         return (MouseHandlerAccessor) Minecraft.getInstance().mouseHandler;
     }
@@ -476,21 +449,37 @@ public class MouseUtils {
         Key(int buttonId) {
             id = buttonId;
         }
-    }
 
-    public enum Action {
-        PRESS(InputConstants.PRESS),
-        RELEASE(InputConstants.RELEASE);
+        public void click() {
+            press();
+            release();
+        }
 
-        public final int id;
+        public void press() {
+            operate(this, InputConstants.PRESS);
+        }
 
-        Action(int buttonId) {
-            id = buttonId;
+        public void release() {
+            operate(this, InputConstants.RELEASE);
+        }
+
+        private static void operate(Key key, int action) {
+            // basing on MouseHandler.onPress():
+            // if (Minecraft.ON_OSX && button == 0)
+            // run macOS related logic
+            int modifiers = Minecraft.ON_OSX ? 0 : 1;
+            getMouseHandler().press(getWindowPointer(), key.id, action, modifiers);
         }
     }
 
-    public enum WheelDirection {
+    public enum Wheel {
         UP,
         DOWN;
+
+        public void scroll() {
+            // captured real mouse scrolling always results in x=0, y=1/-1
+            int offset = this == Wheel.UP ? 1 : -1;
+            getMouseHandler().scroll(getWindowPointer(), 0, offset);
+        }
     }
 }
