@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.utils.system;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -10,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +47,7 @@ public class MouseUtils {
             } catch (Exception ignored) {
             }
         }
-        leftClick();
+        click(Key.LEFT);
     }
 
     /**
@@ -66,7 +68,7 @@ public class MouseUtils {
             } catch (Exception ignored) {
             }
         }
-        rightClick();
+        click(Key.RIGHT);
     }
 
     /**
@@ -120,200 +122,17 @@ public class MouseUtils {
         }
     }
 
-    /**
-     * Perform left click at the current pixel location.
-     */
-    public static void leftClick() {
-        doNativeMouseAction("left click", true,
-                "xdotool click 1",
-                (i) -> {
-                    leftDown();
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(15);
-                    } catch (Exception ignored) {
-                    }
-                    leftUp();
-                },
-                (i) -> {
-                    i.mouse_event(WindowsMouseEventFlags.LEFTDOWN.getValue(), 0, 0, 0, 0);
-                    i.mouse_event(WindowsMouseEventFlags.LEFTUP.getValue(), 0, 0, 0, 0);
-                }
-        );
+    public static void click(Key key) {
+        press(key);
+        release(key);
     }
 
-    /**
-     * Press left mouse key down at the current pixel location.
-     */
-    public static void leftDown() {
-        doNativeMouseAction("left down", true,
-                "xdotool mousedown 1",
-                (i) -> {
-                    var position = i.getNativeMousePosition();
-
-                    // Create the event
-                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.leftMouseDown.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
-
-                    // Send the event
-                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-                },
-                (i) -> i.mouse_event(WindowsMouseEventFlags.LEFTDOWN.getValue(), 0, 0, 0, 0)
-        );
+    public static void press(Key key) {
+        operate(key, Action.PRESS);
     }
 
-    /**
-     * Press left mouse key up at the current pixel location.
-     */
-    public static void leftUp() {
-        doNativeMouseAction("left up", true,
-                "xdotool mouseup 1",
-                (i) -> {
-                    var position = i.getNativeMousePosition();
-
-                    // Create the event
-                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.leftMouseUp.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
-
-                    // Send the event
-                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-                },
-                (i) -> i.mouse_event(WindowsMouseEventFlags.LEFTUP.getValue(), 0, 0, 0, 0)
-        );
-    }
-
-    /**
-     * Perform middle click at the current pixel location.
-     */
-    @SuppressWarnings("unused")
-    public static void middleClick() {
-        doNativeMouseAction("middle click", true,
-                "xdotool click 2",
-                (i) -> {
-                    middleDown();
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(15);
-                    } catch (Exception ignored) {
-                    }
-                    middleUp();
-                },
-                (i) -> {
-                    i.mouse_event(WindowsMouseEventFlags.MIDDLEDOWN.getValue(), 0, 0, 0, 0);
-                    i.mouse_event(WindowsMouseEventFlags.MIDDLEUP.getValue(), 0, 0, 0, 0);
-                }
-        );
-    }
-
-    /**
-     * Press middle mouse key down at the current pixel location.
-     */
-    public static void middleDown() {
-        doNativeMouseAction("middle down", true,
-                "xdotool mousedown 2",
-                (i) -> {
-                    var position = i.getNativeMousePosition();
-
-                    // Create the event
-                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.otherMouseDown.getValue(), position, CoreGraphicsMouseButtons.center.getValue());
-
-                    // Send the event
-                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-                },
-                (i) -> i.mouse_event(WindowsMouseEventFlags.MIDDLEDOWN.getValue(), 0, 0, 0, 0)
-        );
-    }
-
-    /**
-     * Press middle mouse key up at the current pixel location.
-     */
-    public static void middleUp() {
-        doNativeMouseAction("middle up", true,
-                "xdotool mouseup 2",
-                (i) -> {
-                    var position = i.getNativeMousePosition();
-
-                    // Create the event
-                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.otherMouseUp.getValue(), position, CoreGraphicsMouseButtons.center.getValue());
-
-                    // Send the event
-                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-                },
-                (i) -> i.mouse_event(WindowsMouseEventFlags.MIDDLEUP.getValue(), 0, 0, 0, 0)
-        );
-    }
-
-    /**
-     * Perform right click at the current pixel location.
-     */
-    public static void rightClick() {
-        doNativeMouseAction("right click", true,
-                "xdotool click 3",
-                (i) -> {
-                    rightDown();
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(15);
-                    } catch (Exception ignored) {
-                    }
-                    rightUp();
-                },
-                (i) -> {
-                    i.mouse_event(WindowsMouseEventFlags.RIGHTDOWN.getValue(), 0, 0, 0, 0);
-                    i.mouse_event(WindowsMouseEventFlags.RIGHTUP.getValue(), 0, 0, 0, 0);
-                }
-        );
-    }
-
-    /**
-     * Press right mouse key down at the current pixel location.
-     */
-    public static void rightDown() {
-        doNativeMouseAction("right down", true,
-                "xdotool mousedown 3",
-                (i) -> {
-                    var position = i.getNativeMousePosition();
-
-                    // Create the event
-                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.rightMouseDown.getValue(), position, CoreGraphicsMouseButtons.right.getValue());
-
-                    // Send the event
-                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-                },
-                (i) -> i.mouse_event(WindowsMouseEventFlags.RIGHTDOWN.getValue(), 0, 0, 0, 0)
-        );
-    }
-
-    /**
-     * Press right mouse key up at the current pixel location.
-     */
-    public static void rightUp() {
-        doNativeMouseAction("right up", true,
-                "xdotool mouseup 3",
-                (i) -> {
-                    var position = i.getNativeMousePosition();
-
-                    // Create the event
-                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.rightMouseUp.getValue(), position, CoreGraphicsMouseButtons.right.getValue());
-
-                    // Send the event
-                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-                },
-                (i) -> i.mouse_event(WindowsMouseEventFlags.RIGHTUP.getValue(), 0, 0, 0, 0)
-        );
+    public static void release(Key key) {
+        operate(key, Action.RELEASE);
     }
 
     /**
@@ -654,6 +473,46 @@ public class MouseUtils {
             var position = cgInstance.CGEventGetLocation(dummyEvent);
             coreFoundationInstance.CFRelease(dummyEvent);
             return position;
+        }
+    }
+
+    private static void operate(Key key, Action action) {
+        // basing on MouseHandler.onPress():
+        // if (Minecraft.ON_OSX && button == 0)
+        // run macOS related logic
+        int modifiers = Minecraft.ON_OSX ? 0 : 1;
+        getMouseHandler().press(getWindowPointer(), key.id, action.id, modifiers);
+    }
+
+    private static MouseHandlerAccessor getMouseHandler() {
+        return (MouseHandlerAccessor) Minecraft.getInstance().mouseHandler;
+    }
+
+    private static long getWindowPointer() {
+        return Minecraft.getInstance().getWindow().getWindow();
+    }
+
+
+    public enum Key {
+        LEFT(InputConstants.MOUSE_BUTTON_LEFT),
+        RIGHT(InputConstants.MOUSE_BUTTON_RIGHT),
+        MIDDLE(InputConstants.MOUSE_BUTTON_MIDDLE);
+
+        public final int id;
+
+        Key(int buttonId) {
+            id = buttonId;
+        }
+    }
+
+    public enum Action {
+        PRESS(InputConstants.PRESS),
+        RELEASE(InputConstants.RELEASE);
+
+        public final int id;
+
+        Action(int buttonId) {
+            id = buttonId;
         }
     }
 }

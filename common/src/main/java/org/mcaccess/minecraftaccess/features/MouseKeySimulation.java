@@ -40,9 +40,15 @@ public class MouseKeySimulation {
         );
 
         MOUSE_CLICK_ACTIONS = Set.of(
-                Triple.of(mouseClicks[0], MouseUtils::leftDown, MouseUtils::leftUp),
-                Triple.of(mouseClicks[1], MouseUtils::middleDown, MouseUtils::middleUp),
-                Triple.of(mouseClicks[2], MouseUtils::rightDown, MouseUtils::rightUp)
+            Triple.of(mouseClicks[0],
+                () -> MouseUtils.press(MouseUtils.Key.LEFT),
+                () -> MouseUtils.release(MouseUtils.Key.LEFT)),
+            Triple.of(mouseClicks[1],
+                () -> MouseUtils.press(MouseUtils.Key.MIDDLE),
+                () -> MouseUtils.release(MouseUtils.Key.MIDDLE)),
+            Triple.of(mouseClicks[2],
+                () -> MouseUtils.press(MouseUtils.Key.RIGHT),
+                () -> MouseUtils.release(MouseUtils.Key.RIGHT))
         );
     }
 
