@@ -22,14 +22,13 @@ import net.minecraft.world.item.crafting.ExtendedRecipeBookCategory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.*;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
-
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
@@ -248,7 +247,7 @@ public class InventoryControls {
                 if (recipeBookIsOpening()) {
                     clickPreviousRecipeBookPage();
                 } else {
-                    MouseUtils.scrollUp();
+                    MouseUtils.scroll(MouseUtils.WheelDirection.UP);
                 }
             } else {
                 focusSlotItemAt(FocusDirection.UP);
@@ -268,7 +267,7 @@ public class InventoryControls {
                 if (recipeBookIsOpening()) {
                     clickNextRecipeBookPage();
                 } else {
-                    MouseUtils.scrollDown();
+                    MouseUtils.scroll(MouseUtils.WheelDirection.DOWN);
                 }
             } else {
                 focusSlotItemAt(FocusDirection.DOWN);

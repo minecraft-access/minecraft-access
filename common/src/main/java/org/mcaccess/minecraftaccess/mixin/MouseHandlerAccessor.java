@@ -8,4 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MouseHandlerAccessor {
     @Invoker("onPress")
     void press(long windowPointer, int button, int action, int modifiers);
+
+    @Invoker("onScroll")
+    void scroll(long windowPointer, double xOffset, double yOffset);
 }

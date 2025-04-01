@@ -30,8 +30,8 @@ public class MouseKeySimulation {
         mouseScrolls[1] = new IntervalKeystroke(KeyBindingsHandler.mouseSimulationScrollDownKey);
 
         MOUSE_SCROLL_ACTIONS = Set.of(
-            new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[0], MouseUtils::scrollUp),
-            new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[1], MouseUtils::scrollDown)
+            new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[0], () -> MouseUtils.scroll(MouseUtils.WheelDirection.UP)),
+            new Tuple<IntervalKeystroke, Runnable>(mouseScrolls[1], () -> MouseUtils.scroll(MouseUtils.WheelDirection.DOWN))
         );
 
         MOUSE_CLICK_ACTIONS = Set.of(

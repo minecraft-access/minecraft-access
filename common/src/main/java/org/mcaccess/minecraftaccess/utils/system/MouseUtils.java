@@ -139,43 +139,10 @@ public class MouseUtils {
         operate(key, Action.RELEASE);
     }
 
-    /**
-     * Performs mouse scroll up
-     */
-    public static void scrollUp() {
-        doNativeMouseAction("scroll up", false,
-                "xdotool click 4",
-                (i) -> {
-                    // Create an event that scrolls the wheel up by 1 line
-                    Pointer event = i.cgInstance.CGEventCreateScrollWheelEvent(new Pointer(0), CoreGraphicsScrollEventUnits.line.getValue(), 1, 1);
-
-                    // Send the event
-                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-                },
-                (i) -> i.mouse_event(WindowsMouseEventFlags.WHEEL.getValue(), 0, 0, 120, 0)
-        );
-    }
-
-    /**
-     * Performs mouse scroll down
-     */
-    public static void scrollDown() {
-        doNativeMouseAction("scroll down", false,
-                "xdotool click 5",
-                (i) -> {
-                    // Create an event that scrolls the wheel down by 1 line
-                    Pointer event = i.cgInstance.CGEventCreateScrollWheelEvent(new Pointer(0), CoreGraphicsScrollEventUnits.line.getValue(), 1, -1);
-
-                    // Send the event
-                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-                },
-                (i) -> i.mouse_event(WindowsMouseEventFlags.WHEEL.getValue(), 0, 0, -120, 0));
+    public static void scroll(WheelDirection direction) {
+        // captured real mouse scrolling always results in x=0, y=1/-1
+        int offset = direction == WheelDirection.UP ? 1 : -1;
+        getMouseHandler().scroll(getWindowPointer(), 0, offset);
     }
 
     private static void doNativeMouseAction(String name, boolean logCoordinates, String linuxXdotCommand, Consumer<CGWrapper> macOSAction, Consumer<user32dllInterface> windowsAction) {
@@ -499,7 +466,6 @@ public class MouseUtils {
         return windowPointer;
     }
 
-
     public enum Key {
         LEFT(InputConstants.MOUSE_BUTTON_LEFT),
         RIGHT(InputConstants.MOUSE_BUTTON_RIGHT),
@@ -521,5 +487,10 @@ public class MouseUtils {
         Action(int buttonId) {
             id = buttonId;
         }
+    }
+
+    public enum WheelDirection {
+        UP,
+        DOWN;
     }
 }
