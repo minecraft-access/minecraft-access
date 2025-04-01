@@ -55,35 +55,14 @@ public class MouseUtils {
     }
 
     /**
-     * Move the mouse to the given pixel location and then perform right click.
-     *
-     * @param x the x position of the pixel location
-     * @param y the y position of the pixel location
-     */
-    @SuppressWarnings("unused")
-    public static void moveAndRightClick(int x, int y) {
-        move(x, y);
-        // fix the https://github.com/khanshoaib3/minecraft-access/issues/65
-        if (OsUtils.isWindows()) {
-            try {
-                // with a little bit of waiting, everything is ok now.
-                // I've tried to set the value to 10, and it doesn't always work, 20 is fine.
-                TimeUnit.MILLISECONDS.sleep(20);
-            } catch (Exception ignored) {
-            }
-        }
-        Key.RIGHT.click();
-    }
-
-    /**
      * Move the mouse to the given pixel location.
      *
      * @param x the x position of the pixel location
      * @param y the y position of the pixel location
      */
     public static void move(int x, int y) {
-        doNativeMouseAction("mouse moving", true,
-                "xdotool mousemove %d %d".formatted(x, y),
+        doNativeMouseAction(
+            "xdotool mousemove %d %d".formatted(x, y),
                 (i) -> {
                     // Create a CGPoint containing the destination position
                     CoreGraphicsInterface.CGPoint.ByValue position = new CoreGraphicsInterface.CGPoint.ByValue((double) x, (double) y);
@@ -126,20 +105,14 @@ public class MouseUtils {
         }
     }
 
-    private static void doNativeMouseAction(String name, boolean logCoordinates, String linuxXdotCommand, Consumer<CGWrapper> macOSAction, Consumer<user32dllInterface> windowsAction) {
+    private static void doNativeMouseAction(String linuxXdotCommand, Consumer<CGWrapper> macOSAction,
+                                            Consumer<user32dllInterface> windowsAction) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient == null)
-            return;
-
 
         try {
-            String coordinates = "";
-            if (logCoordinates) {
-                int x = (int) minecraftClient.mouseHandler.xpos(), y = (int) minecraftClient.mouseHandler.ypos();
-                coordinates = " at minecraft x:%d y:%d".formatted(x, y);
-            }
-            log.debug("Performing {}{}", name, coordinates);
-
+            int x = (int) minecraftClient.mouseHandler.xpos();
+            int y = (int) minecraftClient.mouseHandler.ypos();
+            log.debug("Performing mouse moving at minecraft x:{} y:{}", x, y);
 
             if (OsUtils.isLinux()) {
                 Runtime.getRuntime().exec(linuxXdotCommand);
@@ -154,18 +127,16 @@ public class MouseUtils {
                     return;
                 }
 
-                if (logCoordinates) {
-                    var p = cgWrapper.getNativeMousePosition();
-                    String nativeCoordinates = " at native x:%f y:%f".formatted(p.x, p.y);
-                    log.debug("\nPerforming " + name + nativeCoordinates);
-                }
+                var p = cgWrapper.getNativeMousePosition();
+                String nativeCoordinates = " at native x:%f y:%f".formatted(p.x, p.y);
+                log.debug("\nPerforming mouse moving {}", nativeCoordinates);
                 macOSAction.accept(cgWrapper);
             } else if (OsUtils.isWindows()) {
                 if (user32dllInstance == null) initializeUser32dll();
                 windowsAction.accept(user32dllInstance);
             }
         } catch (Exception e) {
-            log.error("Error encountered on performing " + name + ".", e);
+            log.error("Error encountered on performing " + "mouse moving" + ".", e);
         }
     }
 
@@ -174,9 +145,7 @@ public class MouseUtils {
 
     public static Coordinates calcRealPositionOfWidget(int x, int y) {
         Minecraft client = Minecraft.getInstance();
-        if (client == null) return new Coordinates(x, y);
         Window window = client.getWindow();
-        if (window == null) return new Coordinates(x, y);
 
         int realX, realY;
         if (Config.getInstance().mouseSimulation.macMouseFix) {
@@ -240,36 +209,6 @@ public class MouseUtils {
     private interface user32dllInterface extends Library {
         // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos
         boolean SetCursorPos(int x, int y);
-
-        // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mouse_event?source=recommendations
-        // https://stackoverflow.com/questions/8739523/directing-mouse-events-dllimportuser32-dll-click-double-click
-        // https://stackoverflow.com/questions/37262822/c-sharp-simulate-mouse-wheel-down
-        void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
-    }
-
-    /**
-     * Flags used in the mouse_event function of User32.dll
-     */
-    private enum WindowsMouseEventFlags {
-        LEFTDOWN(0x00000002),
-        LEFTUP(0x00000004),
-        MIDDLEDOWN(0x00000020),
-        MIDDLEUP(0x00000040),
-        MOVE(0x00000001),
-        ABSOLUTE(0x00008000),
-        RIGHTDOWN(0x00000008),
-        RIGHTUP(0x00000010),
-        WHEEL(0x00000800);
-
-        private final int value;
-
-        WindowsMouseEventFlags(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() {
-            return value;
-        }
     }
 
     /**
@@ -278,10 +217,6 @@ public class MouseUtils {
     private interface CoreGraphicsInterface extends Library {
         class CGPoint extends Structure {
             public static class ByValue extends CGPoint implements Structure.ByValue {
-                public ByValue() {
-                    super();
-                }
-
                 public ByValue(double x, double y) {
                     super(x, y);
                 }
@@ -309,9 +244,6 @@ public class MouseUtils {
         // https://developer.apple.com/documentation/coregraphics/1454356-cgeventcreatemouseevent
         Pointer CGEventCreateMouseEvent(Pointer source, int mouseType, CGPoint.ByValue mouseCursorPosition, int mouseButton);
 
-        // https://developer.apple.com/documentation/coregraphics/1541327-cgeventcreatescrollwheelevent
-        Pointer CGEventCreateScrollWheelEvent(Pointer source, int units, int wheelCount, int wheel1);
-
         // https://developer.apple.com/documentation/coregraphics/1456527-cgeventpost
         Pointer CGEventPost(int tap, Pointer event);
 
@@ -333,7 +265,6 @@ public class MouseUtils {
     /**
      * CoreGraphics mouse event types
      */
-    @SuppressWarnings("unused")
     private enum CoreGraphicsMouseEventTypes {
         none(0),
         leftMouseDown(1),
@@ -363,21 +294,6 @@ public class MouseUtils {
         private final int value;
 
         CoreGraphicsMouseButtons(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    private enum CoreGraphicsScrollEventUnits {
-        pixel(0),
-        line(1);
-
-        private final int value;
-
-        CoreGraphicsScrollEventUnits(final int newValue) {
             value = newValue;
         }
 
