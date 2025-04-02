@@ -139,8 +139,7 @@ public class MainClass {
         // POI Marking will handle POI Scan and POI Locking features inside it
         POIMarking.getInstance().update();
 
-        if (!PlayerUtils.isSpectator())
-            FallDetector.getInstance().update();
+        FallDetector.getInstance().update();
 
         HUDStatus.getInstance().update();
 
