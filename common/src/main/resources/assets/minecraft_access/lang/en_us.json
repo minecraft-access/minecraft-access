@@ -156,6 +156,7 @@
     "minecraft_access.point_of_interest.group.gui": "Blocks with interface",
     "minecraft_access.point_of_interest.group.hostile": "Hostile mobs",
     "minecraft_access.point_of_interest.group.item": "Items",
+    "minecraft_access.point_of_interest.group.ladder": "Ladders",
     "minecraft_access.point_of_interest.group.markedBlock": "Marked blocks",
     "minecraft_access.point_of_interest.group.markedEntity": "Marked Entities",
     "minecraft_access.point_of_interest.group.ore": "Ores",

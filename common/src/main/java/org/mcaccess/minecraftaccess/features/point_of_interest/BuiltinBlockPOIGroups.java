@@ -43,6 +43,11 @@ public enum BuiltinBlockPOIGroups {
                 }
             }
     )),
+    LADDER(new POIGroup<>(
+        "minecraft_access.point_of_interest.group.ladder",
+        new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
+        pos -> WorldUtils.getBlockInfo(pos).type() instanceof LadderBlock
+    )),
     FLUID(new POIGroup<>(
             "minecraft_access.point_of_interest.group.fluid",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
