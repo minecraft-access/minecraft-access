@@ -164,6 +164,7 @@
     "minecraft_access.point_of_interest.group.other_pet": "Other pets",
     "minecraft_access.point_of_interest.group.passive": "Passive mobs",
     "minecraft_access.point_of_interest.group.player": "Players",
+    "minecraft_access.point_of_interest.group.portal": "Portals",
     "minecraft_access.point_of_interest.group.vehicle": "Vehicles",
     "minecraft_access.point_of_interest.group.your_pet": "Your pets",
     "minecraft_access.point_of_interest.locking.dropped_item": "Dropped %s Item",
