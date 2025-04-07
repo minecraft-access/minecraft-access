@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
@@ -98,6 +99,7 @@ public class LockingHandler {
     private void lookAtLockedTarget() {
         if (lockedOnEntity != null) {
             if (unlockFromDeadEntity()) return;
+            if (unlockFromPickedUpItem()) return;
             PlayerUtils.lookAt(lockedOnEntity);
         }
 
@@ -119,6 +121,16 @@ public class LockingHandler {
                 unlock(true);
             }
         }
+    }
+
+    private boolean unlockFromPickedUpItem() {
+        if (NarrationUtils.isDroppedItem(lockedOnEntity)
+            && lockedOnEntity.getName().getContents() instanceof TranslatableContents trans
+            && trans.getKey().equals("block.minecraft.air")) {
+            unlock(true);
+            return true;
+        }
+        return false;
     }
 
     /**
