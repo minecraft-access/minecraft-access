@@ -10,6 +10,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
@@ -34,7 +35,8 @@ public class POIEntities {
     private final POIGroup<Entity> markedGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.markedEntity",
             new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
-            e -> marked != null && marked.isInstance(e)
+            e -> marked != null && marked.isInstance(e),
+            PlayerUtils::distanceTo
     );
 
     @SuppressWarnings("unchecked")

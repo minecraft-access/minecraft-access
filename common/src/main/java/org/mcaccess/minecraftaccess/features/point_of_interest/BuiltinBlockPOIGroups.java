@@ -20,7 +20,8 @@ public enum BuiltinBlockPOIGroups {
     ORE(new POIGroup<>(
         "minecraft_access.point_of_interest.group.ore",
         new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
-        pos -> Ore.PREDICATE.test(WorldUtils.getBlockState(pos).getBlock())
+        pos -> Ore.PREDICATE.test(WorldUtils.getBlockState(pos).getBlock()),
+        PlayerUtils::distanceTo
     )),
     FUNCTIONAL(new POIGroup<>(
         "minecraft_access.point_of_interest.group.functional",
@@ -28,7 +29,8 @@ public enum BuiltinBlockPOIGroups {
         pos -> {
             Block block = WorldUtils.getBlockState(pos).getBlock();
             return block instanceof ButtonBlock || block instanceof LeverBlock || Functional.PREDICATE.test(block);
-        }
+        },
+        PlayerUtils::distanceTo
     )),
     DOOR(new POIGroup<>(
             "minecraft_access.point_of_interest.group.door",
@@ -41,7 +43,8 @@ public enum BuiltinBlockPOIGroups {
                 } else {
                     return block.type() instanceof TrapDoorBlock;
                 }
-            }
+            },
+            PlayerUtils::distanceTo
     )),
     FLUID(new POIGroup<>(
             "minecraft_access.point_of_interest.group.fluid",
@@ -52,7 +55,8 @@ public enum BuiltinBlockPOIGroups {
                 boolean isSource = world.getFluidState(pos).getAmount() == 8;
                 boolean isLiquid = world.getBlockState(pos).getBlock() instanceof LiquidBlock;
                 return configEnabled && isLiquid && PlayerUtils.isNotInFluid() && isSource;
-            }
+            },
+            PlayerUtils::distanceTo
     )),
     HAVE_INTERFACE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.gui",
@@ -64,7 +68,8 @@ public enum BuiltinBlockPOIGroups {
                 } else {
                     return state.getMenuProvider(WorldUtils.getClientWorld(), pos) != null;
                 }
-            }
+            },
+            PlayerUtils::distanceTo
     ));
 
     public static final List<POIGroup<BlockPos>> ALL = Arrays.stream(values()).map(bg -> bg.group).toList();

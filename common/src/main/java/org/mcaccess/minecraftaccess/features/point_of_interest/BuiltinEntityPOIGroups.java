@@ -14,6 +14,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 import java.util.Arrays;
@@ -32,37 +33,44 @@ public enum BuiltinEntityPOIGroups {
                     return mobAttackedPlayer || mobAngryAtPlayer;
                 }
                 return false;
-            }
+            },
+            PlayerUtils::distanceTo
     )),
     YOUR_PETS(new POIGroup<>(
             "minecraft_access.point_of_interest.group.your_pets",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_FLUTE.value(), 1f),
-            entity -> entity instanceof TamableAnimal pet && pet.isOwnedBy(WorldUtils.getClientPlayer())
+            entity -> entity instanceof TamableAnimal pet && pet.isOwnedBy(WorldUtils.getClientPlayer()),
+            PlayerUtils::distanceTo
     )),
     OTHER_PETS(new POIGroup<>(
             "minecraft_access.point_of_interest.group.other_pet",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_COW_BELL.value(), 1f),
-            entity -> entity instanceof TamableAnimal pet && pet.isTame()
+            entity -> entity instanceof TamableAnimal pet && pet.isTame(),
+            PlayerUtils::distanceTo
     )),
     BOSS(new POIGroup<>(
             "minecraft_access.point_of_interest.group.boss",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_PLING.value(), 2f),
-            entity -> entity instanceof EnderDragon || entity instanceof WitherBoss
+            entity -> entity instanceof EnderDragon || entity instanceof WitherBoss,
+            PlayerUtils::distanceTo
     )),
     PASSIVE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.passive",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0f),
-            e -> e instanceof AgeableMob || e instanceof WaterAnimal || e instanceof NeutralMob
+            e -> e instanceof AgeableMob || e instanceof WaterAnimal || e instanceof NeutralMob,
+            PlayerUtils::distanceTo
     )),
     PLAYER(new POIGroup<>(// Players
             "minecraft_access.point_of_interest.group.player",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_CHIME.value(), 1f),
-            Player.class::isInstance
+            Player.class::isInstance,
+            PlayerUtils::distanceTo
     )),
     VEHICLE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.vehicle",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f),
-            VehicleEntity.class::isInstance
+            VehicleEntity.class::isInstance,
+            PlayerUtils::distanceTo
     )),
     ITEM(new POIGroup<>(
             "minecraft_access.point_of_interest.group.item",
@@ -71,7 +79,8 @@ public enum BuiltinEntityPOIGroups {
                 boolean itemOnGround = entity instanceof ItemEntity itemEntity && itemEntity.onGround();
                 boolean pickupAllowedProjectile = entity instanceof AbstractArrow projectile && projectile.pickup.equals(AbstractArrow.Pickup.ALLOWED);
                 return itemOnGround || pickupAllowedProjectile;
-            }
+            },
+            PlayerUtils::distanceTo
     ));
 
     public static final List<POIGroup<Entity>> ALL = Arrays.stream(values()).map(bg -> bg.group).toList();

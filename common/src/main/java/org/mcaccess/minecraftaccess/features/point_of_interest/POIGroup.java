@@ -1,36 +1,36 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.function.ToDoubleFunction;
 
 public class POIGroup<T> {
     private static final Logger log = LoggerFactory.getLogger(POIGroup.class);
     private final String nameTranslateKey;
     private final Sound sound;
     private final Predicate<T> whetherFitThisGroup;
-    private final List<T> items = new ArrayList<>();
+    private final PriorityQueue<T> items;
 
-    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitThisGroup) {
+    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitThisGroup, ToDoubleFunction<T> priorityCalculator) {
         this.nameTranslateKey = nameTranslateKey;
         this.sound = sound;
         this.whetherFitThisGroup = whetherFitThisGroup;
+        this.items = new PriorityQueue<>(Comparator.comparingDouble(priorityCalculator));
     }
 
-    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitThisGroup) {
-        this(nameTranslateKey, new Sound(null, 0), whetherFitThisGroup);
+    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitThisGroup, ToDoubleFunction<T> priorityCalculator) {
+        this(nameTranslateKey, new Sound(null, 0), whetherFitThisGroup, priorityCalculator);
     }
 
     public String getTranslatedName() {
@@ -59,23 +59,11 @@ public class POIGroup<T> {
 
     @Contract(pure = true)
     public @UnmodifiableView List<T> getItems() {
-        return Collections.unmodifiableList(items);
+        return items.stream().toList();
     }
 
-    public @UnmodifiableView List<T> sortByDistance() {
-        List<T> result = new ArrayList<>(items);
-        Map<T, Double> cache = result.stream().collect(Collectors.toMap(k -> k, this::distanceBetweenPlayerAnd));
-        result.sort(Comparator.comparing(cache::get));
-        return Collections.unmodifiableList(result);
-    }
-
-    private double distanceBetweenPlayerAnd(T item) {
-        LocalPlayer player = WorldUtils.getClientPlayer();
-        return switch (item) {
-            case Entity entity -> player.distanceTo(entity);
-            case BlockPos blockPos -> player.getEyePosition().distanceTo(blockPos.getCenter());
-            default -> Double.MAX_VALUE;
-        };
+    public T getFirst() {
+        return items.peek();
     }
 
     public void playSoundForGroupItems(Function<T, Vec3> mapper, float volume) {

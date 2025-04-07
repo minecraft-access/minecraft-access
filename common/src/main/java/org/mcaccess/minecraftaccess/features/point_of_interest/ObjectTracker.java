@@ -122,7 +122,7 @@ public class ObjectTracker {
         }
 
         currentGroup = groups.get(currentGroupIndex + step);
-        currentObject = currentGroup.sortByDistance().getFirst();
+        currentObject = currentGroup.getFirst();
         MainClass.speakWithNarrator(currentGroup.getTranslatedName(), true);
         narrateCurrentObject(false);
     }
@@ -130,7 +130,7 @@ public class ObjectTracker {
     private void moveObject(int step) {
         if (checkAndSpeakIfAllGroupsEmpty()) return;
 
-        List<?> objects = currentGroup.sortByDistance();
+        List<?> objects = currentGroup.getItems();
         int currentObjectIndex = objects.indexOf(currentObject);
 
         if (currentObjectIndex == -1) {

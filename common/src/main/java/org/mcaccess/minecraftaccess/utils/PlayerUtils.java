@@ -280,4 +280,12 @@ public class PlayerUtils {
         LevelData levelData = client.level.getLevelData();
         return levelData != null && levelData.isHardcore();
     }
+
+    public static double distanceTo(BlockPos blockPos) {
+        return WorldUtils.getClientPlayer().getEyePosition().distanceTo(blockPos.getCenter());
+    }
+
+    public static double distanceTo(Entity entity) {
+        return WorldUtils.getClientPlayer().distanceTo(entity);
+    }
 }

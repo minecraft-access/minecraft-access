@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
@@ -31,7 +32,8 @@ public class POIBlocks {
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.markedBlock",
             new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
-            pos -> WorldUtils.getBlockState(pos).is(markedBlock)
+            pos -> WorldUtils.getBlockState(pos).is(markedBlock),
+            PlayerUtils::distanceTo
     );
 
     /**
@@ -42,7 +44,8 @@ public class POIBlocks {
      */
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.otherBlocks",
-            this::blockIsNotAirAndNotContainedInGroupYet
+            this::blockIsNotAirAndNotContainedInGroupYet,
+            PlayerUtils::distanceTo
     );
 
     private boolean blockIsNotAirAndNotContainedInGroupYet(BlockPos pos) {
