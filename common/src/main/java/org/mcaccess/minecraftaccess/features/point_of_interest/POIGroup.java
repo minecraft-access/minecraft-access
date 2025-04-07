@@ -21,16 +21,26 @@ public class POIGroup<T> {
     private final Sound sound;
     private final Predicate<T> whetherFitsThisGroup;
     private final PriorityQueue<T> items;
+    /**
+     * Smaller number means higher priority when comparing between multiple groups.
+     * Default is 0.
+     */
+    public final int priorityAmongGroups;
 
-    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
+    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator, int priorityAmongGroups) {
         this.nameTranslateKey = nameTranslateKey;
         this.sound = sound;
         this.whetherFitsThisGroup = whetherFitsThisGroup;
         this.items = new PriorityQueue<>(Comparator.comparingDouble(priorityCalculator));
+        this.priorityAmongGroups = priorityAmongGroups;
+    }
+
+    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
+        this(nameTranslateKey, sound, whetherFitsThisGroup, priorityCalculator, 0);
     }
 
     public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
-        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator);
+        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator, 0);
     }
 
     public String getTranslatedName() {

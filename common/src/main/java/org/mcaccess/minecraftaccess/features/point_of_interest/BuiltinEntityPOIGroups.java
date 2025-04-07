@@ -34,7 +34,9 @@ public enum BuiltinEntityPOIGroups {
                 }
                 return false;
             },
-            PlayerUtils::distanceTo
+            PlayerUtils::distanceTo,
+            // hostile mobs have the highest priority to be notified
+            Integer.MIN_VALUE
     )),
     YOUR_PETS(new POIGroup<>(
             "minecraft_access.point_of_interest.group.your_pets",
