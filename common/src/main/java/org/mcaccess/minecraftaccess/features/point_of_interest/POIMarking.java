@@ -61,8 +61,8 @@ public class POIMarking {
         poiBlocks.update(onMarking, markedBlock);
         poiEntities.update(onMarking, markedEntity);
         // Locking Handler (POI Locking) should be after POI Scan features
-        lockingHandler.update();
         objectTracker.update();
+        lockingHandler.update();
     }
 
     private void mark() {
