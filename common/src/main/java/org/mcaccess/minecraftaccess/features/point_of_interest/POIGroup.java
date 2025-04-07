@@ -19,18 +19,18 @@ public class POIGroup<T> {
     private static final Logger log = LoggerFactory.getLogger(POIGroup.class);
     private final String nameTranslateKey;
     private final Sound sound;
-    private final Predicate<T> whetherFitThisGroup;
+    private final Predicate<T> whetherFitsThisGroup;
     private final PriorityQueue<T> items;
 
-    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitThisGroup, ToDoubleFunction<T> priorityCalculator) {
+    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
         this.nameTranslateKey = nameTranslateKey;
         this.sound = sound;
-        this.whetherFitThisGroup = whetherFitThisGroup;
+        this.whetherFitsThisGroup = whetherFitsThisGroup;
         this.items = new PriorityQueue<>(Comparator.comparingDouble(priorityCalculator));
     }
 
-    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitThisGroup, ToDoubleFunction<T> priorityCalculator) {
-        this(nameTranslateKey, new Sound(null, 0), whetherFitThisGroup, priorityCalculator);
+    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
+        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator);
     }
 
     public String getTranslatedName() {
@@ -41,7 +41,7 @@ public class POIGroup<T> {
      * @return true if item was added
      */
     public boolean addIfQualified(T item) {
-        if (whetherFitThisGroup.test(item)) {
+        if (whetherFitsThisGroup.test(item)) {
             log.debug("[{}] Add POI item [{}]", getTranslatedName(), item);
             items.add(item);
             return true;
