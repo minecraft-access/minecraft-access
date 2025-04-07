@@ -65,7 +65,6 @@ public class NarrationUtils {
         String nameOrType = entity.getName().getString();
         boolean entityIsSitting = false;
         String type = entity.hasCustomName() ? I18n.get(entity.getType().getDescriptionId()) : nameOrType;
-        boolean isDroppedItem = entity instanceof ItemEntity itemEntity && itemEntity.onGround() || entity instanceof AbstractArrow abstractArrow && abstractArrow.pickup.equals(AbstractArrow.Pickup.ALLOWED);
 
         String variant = getVariantInfo(entity);
         if (!Strings.isBlank(variant)) {
@@ -132,7 +131,7 @@ public class NarrationUtils {
             text = getSheepInfo(sheep, text);
         } else if (entity instanceof ZombieVillager zombieVillager && zombieVillager.isConverting()) {
             text = I18n.get("minecraft_access.read_crosshair.zombie_villager_is_curing", text);
-        } else if (isDroppedItem) {
+        } else if (isDroppedItem(entity)) {
             text = I18n.get("minecraft_access.point_of_interest.locking.dropped_item", text);
         }
 
@@ -597,5 +596,11 @@ public class NarrationUtils {
         }
 
         return result.toString();
+    }
+
+    public static boolean isDroppedItem(Entity entity) {
+        boolean itemOnGround = entity instanceof ItemEntity itemEntity && itemEntity.onGround();
+        boolean pickupAllowedProjectile = entity instanceof AbstractArrow projectile && projectile.pickup.equals(AbstractArrow.Pickup.ALLOWED);
+        return itemOnGround || pickupAllowedProjectile;
     }
 }

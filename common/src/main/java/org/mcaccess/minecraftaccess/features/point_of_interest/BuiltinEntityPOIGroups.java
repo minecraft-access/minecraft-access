@@ -9,11 +9,10 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 import java.util.Arrays;
@@ -67,11 +66,7 @@ public enum BuiltinEntityPOIGroups {
     ITEM(new POIGroup<>(
             "minecraft_access.point_of_interest.group.item",
             new POIGroup.Sound(SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, 2f),
-            entity -> {
-                boolean itemOnGround = entity instanceof ItemEntity itemEntity && itemEntity.onGround();
-                boolean pickupAllowedProjectile = entity instanceof AbstractArrow projectile && projectile.pickup.equals(AbstractArrow.Pickup.ALLOWED);
-                return itemOnGround || pickupAllowedProjectile;
-            }
+            NarrationUtils::isDroppedItem
     ));
 
     public static final List<POIGroup<Entity>> ALL = Arrays.stream(values()).map(bg -> bg.group).toList();
