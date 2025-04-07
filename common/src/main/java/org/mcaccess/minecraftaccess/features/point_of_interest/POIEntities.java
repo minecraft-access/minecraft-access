@@ -14,10 +14,7 @@ import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -73,8 +70,6 @@ public class POIEntities {
     }
 
     private void scanEntitiesAroundPlayer() {
-        // initialize
-        List<Entity> currentScanResults = new ArrayList<>();
         for (POIGroup<Entity> group : groups) {
             group.clear();
         }
@@ -86,13 +81,12 @@ public class POIEntities {
         for (Entity entity : entities) {
             for (POIGroup<Entity> group : groups) {
                 if (group.addIfQualified(entity)) {
-                    currentScanResults.add(entity);
                     break;
                 }
             }
         }
 
-        lastScanResults = currentScanResults;
+        lastScanResults = POIGroup.sortByPriority(groups);
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {

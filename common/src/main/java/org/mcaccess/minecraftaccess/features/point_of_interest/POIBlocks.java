@@ -13,9 +13,7 @@ import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -85,8 +83,6 @@ public class POIBlocks {
     }
 
     private void scanBlocksAroundPlayer() {
-        // initialize
-        List<BlockPos> currentScanResults = new ArrayList<>();
         for (POIGroup<BlockPos> group : groups) {
             group.clear();
         }
@@ -95,7 +91,6 @@ public class POIBlocks {
         BlockScanner scanner = new BlockScanner(blockPos -> {
             for (POIGroup<BlockPos> group : groups) {
                 if (group.addIfQualified(blockPos) && group != otherBlocksGroup) {
-                    currentScanResults.add(blockPos);
                     break;
                 }
             }
@@ -108,7 +103,7 @@ public class POIBlocks {
         scanner.scanAndQualifyBlocksExposedInAirAround(pos, config.range);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(), config.range);
 
-        lastScanResults = currentScanResults;
+        lastScanResults = POIGroup.sortByPriority(groups);
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
