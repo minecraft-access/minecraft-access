@@ -100,9 +100,7 @@ public class NarrationUtils {
                 case USING_TONGUE -> text = I18n.get("minecraft_access.read_crosshair.using_tongue", text);
                 case STANDING -> {
                 }
-                default -> {
-                    log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", entity.getPose().name());
-                }
+                default -> log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", entity.getPose().name());
             }
         }
 
@@ -167,10 +165,6 @@ public class NarrationUtils {
         };
     }
 
-    private static String addSittingInfo(String currentQuery) {
-        return I18n.get("minecraft_access.read_crosshair.is_sitting", currentQuery);
-    }
-
     private static String getSheepInfo(Sheep sheep, String currentQuery) {
         String dyedColor = sheep.getColor().getName();
         String translatedColor = I18n.get("color.minecraft." + dyedColor);
@@ -190,7 +184,6 @@ public class NarrationUtils {
 
     public static String narrateRelativePositionOfPlayerAnd(BlockPos blockPos) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient == null) return "up";
         if (minecraftClient.player == null) return "up";
 
         Direction dir = minecraftClient.player.getDirection();
@@ -256,7 +249,6 @@ public class NarrationUtils {
      */
     public static Tuple<String, String> narrateBlockForContentChecking(BlockPos pos, String side) {
         Minecraft client = Minecraft.getInstance();
-        if (Objects.isNull(client)) return new Tuple<>("", "");
         ClientLevel clientWorld = client.level;
         if (clientWorld == null) return new Tuple<>("", "");
 
@@ -311,7 +303,7 @@ public class NarrationUtils {
         } else if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
             toSpeak = I18n.get("minecraft_access.crop.wet_farmland", toSpeak);
             currentQuery = "wet" + currentQuery;
-        } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
+        } else if (block instanceof EndPortalFrameBlock) {
             if (blockState.getValue(EndPortalFrameBlock.HAS_EYE)) {
                 toSpeak = I18n.get("minecraft_access.read_crosshair.end_portal_frame_with_eye", toSpeak);
             } else {
