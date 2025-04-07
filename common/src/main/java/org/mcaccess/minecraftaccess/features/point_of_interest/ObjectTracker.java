@@ -36,21 +36,6 @@ public class ObjectTracker {
 
     private List<POIGroup<?>> groups = new ArrayList<>();
 
-    private List<POIGroup<?>> getPOIGroups() {
-        List<POIGroup<?>> groupList = Stream.concat(
-            Arrays.stream(POIEntities.getInstance().groups),
-            Arrays.stream(POIBlocks.getInstance().groups)
-        ).toList();
-
-        List<POIGroup<?>> result = new ArrayList<>();
-
-        for (POIGroup<?> group : groupList) {
-            if (!group.isEmpty()) result.add(group);
-        }
-
-        return result;
-    }
-
     @Getter
     private Object currentObject = null;
     @Getter
@@ -63,7 +48,7 @@ public class ObjectTracker {
         if (minecraftClient.level == null) return;
         if (minecraftClient.screen != null) return;
 
-        updateGroups();
+        updateSelectableGroups();
 
         if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
@@ -76,8 +61,12 @@ public class ObjectTracker {
         if (targetNearestObjectKeyPressed.canBeTriggered()) targetNearestObject();
     }
 
-    private void updateGroups() {
-        groups = getPOIGroups();
+    private void updateSelectableGroups() {
+        // filter out empty groups
+        groups = Stream.concat(
+            Arrays.stream(POIEntities.getInstance().groups),
+            Arrays.stream(POIBlocks.getInstance().groups)
+        ).filter(g -> !g.isEmpty()).toList();
 
         int currentGroupIndex = groups.indexOf(currentGroup);
 
