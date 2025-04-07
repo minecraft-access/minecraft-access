@@ -11,29 +11,26 @@ import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class POIGroup<T> {
-    Logger log = LoggerFactory.getLogger(POIGroup.class);
-
+    private static final Logger log = LoggerFactory.getLogger(POIGroup.class);
     private final String nameTranslateKey;
     private final Sound sound;
-
-    private final Predicate<T> predicate;
+    private final Predicate<T> whetherFitThisGroup;
     private final List<T> items = new ArrayList<>();
 
-    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> predicate) {
+    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitThisGroup) {
         this.nameTranslateKey = nameTranslateKey;
         this.sound = sound;
-        this.predicate = predicate;
+        this.whetherFitThisGroup = whetherFitThisGroup;
     }
 
-    public POIGroup(String nameTranslateKey, Predicate<T> predicate) {
-        this(nameTranslateKey, new Sound(null, 0), predicate);
+    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitThisGroup) {
+        this(nameTranslateKey, new Sound(null, 0), whetherFitThisGroup);
     }
 
     public String getTranslatedName() {
@@ -44,7 +41,7 @@ public class POIGroup<T> {
      * @return true if item was added
      */
     public boolean addIfQualified(T item) {
-        if (predicate.test(item)) {
+        if (whetherFitThisGroup.test(item)) {
             log.debug("[{}] Add POI item [{}]", getTranslatedName(), item);
             items.add(item);
             return true;
