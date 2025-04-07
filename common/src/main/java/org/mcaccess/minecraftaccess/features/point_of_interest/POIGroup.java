@@ -41,8 +41,8 @@ public class POIGroup<T> {
         this(nameTranslateKey, sound, whetherFitsThisGroup, priorityCalculator, 0);
     }
 
-    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
-        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator, 0);
+    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator, int priorityAmongGroups) {
+        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator, priorityAmongGroups);
     }
 
     public static <T> List<T> sortByPriority(POIGroup<T>[] groups) {

@@ -43,7 +43,9 @@ public class POIBlocks {
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.otherBlocks",
             this::blockIsNotAirAndNotContainedInGroupYet,
-            PlayerUtils::distanceTo
+            PlayerUtils::distanceTo,
+            // other block group has the lowest priority
+            Integer.MAX_VALUE
     );
 
     private boolean blockIsNotAirAndNotContainedInGroupYet(BlockPos pos) {
