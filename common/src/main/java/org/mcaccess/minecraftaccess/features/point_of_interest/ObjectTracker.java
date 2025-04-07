@@ -19,6 +19,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -63,10 +64,11 @@ public class ObjectTracker {
 
     private void updateSelectableGroups() {
         // filter out empty groups
-        groups = Stream.concat(
-            Arrays.stream(POIEntities.getInstance().groups),
-            Arrays.stream(POIBlocks.getInstance().groups)
-        ).filter(g -> !g.isEmpty()).toList();
+        groups = Stream.of(POIEntities.getInstance().groups, POIBlocks.getInstance().groups)
+                .flatMap(Arrays::stream)
+                .filter(g -> !g.isEmpty())
+                .sorted(Comparator.comparing(g -> g.priorityAmongGroups))
+                .toList();
 
         int currentGroupIndex = groups.indexOf(currentGroup);
 
