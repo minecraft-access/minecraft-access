@@ -27,7 +27,7 @@ public class ObjectTracker {
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
     @Getter
-    private static ObjectTracker instance = new ObjectTracker();
+    private static final ObjectTracker instance = new ObjectTracker();
 
     private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerNextItem), Keystroke.TriggeredAt.PRESSED);
     private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerPreviousItem), Keystroke.TriggeredAt.PRESSED);
@@ -135,7 +135,7 @@ public class ObjectTracker {
 
         if (currentObjectIndex == -1) {
             MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
-            currentObject = objects.get(0);
+            currentObject = objects.getFirst();
             narrateCurrentObject(false);
             return;
         }
@@ -167,10 +167,12 @@ public class ObjectTracker {
     private void targetNearestObject() {
         List<Entity> entities = POIEntities.getInstance().getLastScanResults();
         List<BlockPos> blocks = POIBlocks.getInstance().getLastScanResults();
+        boolean entitiesEmpty = entities.isEmpty();
+        boolean blocksEmpty = blocks.isEmpty();
 
-        if (!entities.isEmpty() && blocks.isEmpty()) currentObject = entities.getFirst();
-        if (!blocks.isEmpty() && entities.isEmpty()) currentObject = blocks.getFirst();
-        if (!entities.isEmpty() && !blocks.isEmpty()) {
+        if (!entitiesEmpty && blocksEmpty) currentObject = entities.getFirst();
+        if (!blocksEmpty && entitiesEmpty) currentObject = blocks.getFirst();
+        if (!entitiesEmpty && !blocksEmpty) {
             LocalPlayer player = WorldUtils.getClientPlayer();
             double distanceToEntity = player.distanceTo(entities.getFirst());
             double distanceToBlock = player.getEyePosition().distanceTo(blocks.getFirst().getCenter());
@@ -179,7 +181,7 @@ public class ObjectTracker {
             if (distanceToBlock < distanceToEntity) currentObject = blocks.getFirst();
         }
 
-        if (!entities.isEmpty() || !blocks.isEmpty()) {
+        if (!entitiesEmpty || !blocksEmpty) {
             MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
             narrateCurrentObject(false);
         } else MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found"), true);
