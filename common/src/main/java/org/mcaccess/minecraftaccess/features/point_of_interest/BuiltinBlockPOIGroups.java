@@ -43,6 +43,15 @@ public enum BuiltinBlockPOIGroups {
                 }
             }
     )),
+    PORTAL(new POIGroup<>(
+        "minecraft_access.point_of_interest.group.portal",
+        pos -> WorldUtils.getBlockInfo(pos).type() instanceof Portal || WorldUtils.getBlockInfo(pos).type() instanceof EndPortalFrameBlock
+    )),
+    LADDER(new POIGroup<>(
+        "minecraft_access.point_of_interest.group.ladder",
+        new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
+        pos -> WorldUtils.getBlockInfo(pos).type() instanceof LadderBlock
+    )),
     FLUID(new POIGroup<>(
             "minecraft_access.point_of_interest.group.fluid",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2f),
