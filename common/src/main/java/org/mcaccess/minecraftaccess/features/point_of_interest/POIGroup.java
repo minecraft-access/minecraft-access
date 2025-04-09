@@ -15,7 +15,6 @@ import java.util.PriorityQueue;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToDoubleFunction;
-import java.util.stream.Collectors;
 
 public class POIGroup<T> {
     private static final Logger log = LoggerFactory.getLogger(POIGroup.class);
@@ -45,11 +44,15 @@ public class POIGroup<T> {
         this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator, priorityAmongGroups);
     }
 
+    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
+        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator, 0);
+    }
+
     public static <T> List<T> sortByPriority(POIGroup<T>[] groups) {
         return Arrays.stream(groups)
             .sorted(Comparator.comparingInt(g -> g.priorityAmongGroups))
             .flatMap(group -> group.getItems().stream())
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public String getTranslatedName() {
