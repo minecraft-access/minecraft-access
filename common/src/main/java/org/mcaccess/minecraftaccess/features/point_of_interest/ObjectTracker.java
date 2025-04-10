@@ -8,7 +8,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -66,18 +65,16 @@ public class ObjectTracker {
     }
 
     private void updateSelectableGroups() {
-        groups = sortGroupsByPriority().toList();
+        groups = Stream.of(POIEntities.getInstance().groups, POIBlocks.getInstance().groups)
+                .flatMap(Arrays::stream)
+                // filter out empty groups
+                .filter(g -> !g.isEmpty())
+                .sorted(Comparator.comparing(g -> g.priorityAmongGroups))
+                .toList();
+
         int currentGroupIndex = groups.indexOf(currentGroup);
         if (!groups.isEmpty() && currentGroupIndex == -1) currentGroup = groups.getFirst();
         if (groups.isEmpty() && currentGroupIndex != -1) currentGroup = null;
-    }
-
-    private static @NotNull Stream<POIGroup<?>> sortGroupsByPriority() {
-        return Stream.of(POIEntities.getInstance().groups, POIBlocks.getInstance().groups)
-            .flatMap(Arrays::stream)
-            // filter out empty groups
-            .filter(g -> !g.isEmpty())
-            .sorted(Comparator.comparing(g -> g.priorityAmongGroups));
     }
 
     private void narrateCurrentObject(boolean interrupt) {
@@ -160,7 +157,7 @@ public class ObjectTracker {
     }
 
     private Object getNearestObject() {
-        return sortGroupsByPriority()
+        return groups.stream()
             .flatMap(group -> group.getItems().stream())
             .findFirst().orElse(null);
     }
