@@ -4,6 +4,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class POIGroup<T> {
         this.nameTranslateKey = nameTranslateKey;
         this.sound = sound;
         this.whetherFitsThisGroup = whetherFitsThisGroup;
-        this.items = new PriorityQueue<>(Comparator.comparingDouble(Item::priority));
+        this.items = new PriorityQueue<>(Comparator.comparingDouble(Item::distanceToPlayer));
         this.itemDistanceToPlayer = itemDistanceToPlayer;
         this.priorityAmongGroups = priorityAmongGroups;
     }
@@ -60,7 +61,7 @@ public class POIGroup<T> {
     public boolean addIfQualified(T item) {
         if (whetherFitsThisGroup.test(item)) {
             log.debug("[{}] Add POI item [{}]", getTranslatedName(), item);
-            items.add(new Item<>(item, itemDistanceToPlayer.applyAsDouble(item)));
+            items.add(new Item<>(item, priorityAmongGroups, itemDistanceToPlayer.applyAsDouble(item)));
             return true;
         }
         return false;
@@ -77,6 +78,11 @@ public class POIGroup<T> {
     @Contract(pure = true)
     public @UnmodifiableView List<T> getItems() {
         return items.stream().map(Item::item).toList();
+    }
+
+    @Contract(pure = true)
+    public @UnmodifiableView List<Item<T>> getItemWithPriorities() {
+        return items.stream().toList();
     }
 
     public T getNearest() {
@@ -100,6 +106,12 @@ public class POIGroup<T> {
         }
     }
 
-    public record Item<T>(T item, double priority) {
+    public record Item<T>(T item, int groupPriority, double distanceToPlayer) implements Comparable<Item<T>> {
+        @Override
+        public int compareTo(@NotNull POIGroup.Item<T> o) {
+            int groupLevel = Integer.compare(groupPriority, o.groupPriority);
+            if (groupLevel != 0) return groupLevel;
+            return Double.compare(distanceToPlayer, o.distanceToPlayer);
+        }
     }
 }

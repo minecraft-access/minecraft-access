@@ -157,9 +157,7 @@ public class ObjectTracker {
     }
 
     private Object getNearestObject() {
-        return groups.stream()
-            .flatMap(group -> group.getItems().stream())
-            .findFirst().orElse(null);
+        return groups.stream().flatMap(group -> group.getItemWithPriorities().stream()).min(Comparator.naturalOrder()).orElse(null);
     }
 
     private void targetNearestObject() {
