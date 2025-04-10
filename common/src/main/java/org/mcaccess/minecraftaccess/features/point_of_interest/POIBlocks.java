@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -12,8 +11,8 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -21,8 +20,7 @@ import java.util.stream.Stream;
  */
 @Slf4j
 public class POIBlocks {
-    @Getter
-    private static final POIBlocks instance = new POIBlocks();
+    private static final POIBlocks INSTANCE = new POIBlocks();
     private Config.POI.Blocks config;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
@@ -62,6 +60,10 @@ public class POIBlocks {
 
     private POIBlocks() {
         loadConfig();
+    }
+
+    public static POIBlocks getInstance() {
+        return INSTANCE;
     }
 
     public void update(boolean isMarking, Block markedBlock) {
