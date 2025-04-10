@@ -60,7 +60,6 @@ public class POIMarking {
         // Trigger other POI features
         poiBlocks.update(onMarking, markedBlock);
         poiEntities.update(onMarking, markedEntity);
-        // Locking Handler (POI Locking) should be after POI Scan features
         objectTracker.update();
         lockingHandler.update();
     }
