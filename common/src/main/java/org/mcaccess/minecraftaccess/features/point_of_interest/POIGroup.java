@@ -8,6 +8,7 @@ import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -20,31 +21,33 @@ public class POIGroup<T> {
     private final String nameTranslateKey;
     private final Sound sound;
     private final Predicate<T> whetherFitsThisGroup;
-    private final PriorityQueue<T> items;
+    private final PriorityQueue<Item<T>> items;
+    private final ToDoubleFunction<T> itemDistanceToPlayer;
     /**
      * Smaller number means higher priority when comparing between multiple groups.
      * Default is 0.
      */
     public final int priorityAmongGroups;
 
-    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator, int priorityAmongGroups) {
+    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> itemDistanceToPlayer, int priorityAmongGroups) {
         this.nameTranslateKey = nameTranslateKey;
         this.sound = sound;
         this.whetherFitsThisGroup = whetherFitsThisGroup;
-        this.items = new PriorityQueue<>(Comparator.comparingDouble(priorityCalculator));
+        this.items = new PriorityQueue<>(Comparator.comparingDouble(Item::priority));
+        this.itemDistanceToPlayer = itemDistanceToPlayer;
         this.priorityAmongGroups = priorityAmongGroups;
     }
 
-    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
-        this(nameTranslateKey, sound, whetherFitsThisGroup, priorityCalculator, 0);
+    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> itemDistanceToPlayer) {
+        this(nameTranslateKey, sound, whetherFitsThisGroup, itemDistanceToPlayer, 0);
     }
 
-    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator, int priorityAmongGroups) {
-        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator, priorityAmongGroups);
+    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> itemDistanceToPlayer, int priorityAmongGroups) {
+        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, itemDistanceToPlayer, priorityAmongGroups);
     }
 
-    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
-        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator, 0);
+    public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> itemDistanceToPlayer) {
+        this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, itemDistanceToPlayer, 0);
     }
 
     public String getTranslatedName() {
@@ -57,7 +60,7 @@ public class POIGroup<T> {
     public boolean addIfQualified(T item) {
         if (whetherFitsThisGroup.test(item)) {
             log.debug("[{}] Add POI item [{}]", getTranslatedName(), item);
-            items.add(item);
+            items.add(new Item<>(item, itemDistanceToPlayer.applyAsDouble(item)));
             return true;
         }
         return false;
@@ -73,16 +76,16 @@ public class POIGroup<T> {
 
     @Contract(pure = true)
     public @UnmodifiableView List<T> getItems() {
-        return items.stream().toList();
+        return items.stream().map(Item::item).toList();
     }
 
-    public T getFirst() {
-        return items.peek();
+    public T getNearest() {
+        return items.isEmpty() ? null : items.peek().item;
     }
 
     public void playSoundForGroupItems(Function<T, Vec3> mapper, float volume) {
-        for (T item : items) {
-            Vec3 pos = mapper.apply(item);
+        for (Item<T> item : items) {
+            Vec3 pos = mapper.apply(item.item);
             sound.play(pos, volume);
         }
     }
@@ -95,5 +98,8 @@ public class POIGroup<T> {
             log.debug("Play POI sound [{}] at [x:{} y:{} z{}]", tone, pos.x, pos.y, pos.z);
             WorldUtils.playSoundAtPosition(tone, volume, pitch, pos);
         }
+    }
+
+    public record Item<T>(T item, double priority) {
     }
 }

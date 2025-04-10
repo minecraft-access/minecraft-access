@@ -114,7 +114,7 @@ public class ObjectTracker {
         }
 
         currentGroup = groups.get(currentGroupIndex + step);
-        currentObject = currentGroup.getFirst();
+        currentObject = currentGroup.getNearest();
         MainClass.speakWithNarrator(currentGroup.getTranslatedName(), true);
         narrateCurrentObject(false);
     }

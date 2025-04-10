@@ -25,8 +25,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -127,12 +125,10 @@ public class LockingHandler {
     private void bowAimingAssist() {
         LocalPlayer player = WorldUtils.getClientPlayer();
         if (config.aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getUseItem().getItem() instanceof BowItem) {
-            List<Entity> hostileEntities = BuiltinEntityPOIGroups.HOSTILE.group.getItems();
-            if (!hostileEntities.isEmpty()) {
-                Entity entity = hostileEntities.stream()
-                        .min(Comparator.comparingDouble(e -> WorldUtils.getClientPlayer().distanceTo(e)))
-                        .get();
-                if (lockOnEntity(entity)) {
+            POIGroup<Entity> hostileGroup = BuiltinEntityPOIGroups.HOSTILE.group;
+            if (!hostileGroup.isEmpty()) {
+                Entity nearest = hostileGroup.getNearest();
+                if (lockOnEntity(nearest)) {
                     aimAssistActive = true;
                 }
             }
