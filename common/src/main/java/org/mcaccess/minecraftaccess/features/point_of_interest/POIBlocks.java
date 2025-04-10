@@ -64,9 +64,6 @@ public class POIBlocks {
         loadConfig();
     }
 
-    @Getter
-    private List<BlockPos> lastScanResults = new ArrayList<>();
-
     public void update(boolean isMarking, Block markedBlock) {
         if (isMarking) setMarkedBlock(markedBlock);
         loadConfig();
@@ -104,8 +101,6 @@ public class POIBlocks {
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos, config.range);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(), config.range);
-
-        lastScanResults = POIGroup.sortByPriority(groups);
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {

@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -44,9 +43,6 @@ public class POIEntities {
         return INSTANCE;
     }
 
-    @Getter
-    private List<Entity> lastScanResults = new ArrayList<>();
-
     private POIEntities() {
         loadConfig();
     }
@@ -85,8 +81,6 @@ public class POIEntities {
                 }
             }
         }
-
-        lastScanResults = POIGroup.sortByPriority(groups);
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {

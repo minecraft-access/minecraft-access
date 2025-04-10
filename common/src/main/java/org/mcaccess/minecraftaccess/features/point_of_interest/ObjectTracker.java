@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -159,25 +158,13 @@ public class ObjectTracker {
     }
 
     private Object getNearestObject() {
-        List<Entity> entities = POIEntities.getInstance().getLastScanResults();
-        List<BlockPos> blocks = POIBlocks.getInstance().getLastScanResults();
-
-        boolean noEntity = entities.isEmpty();
-        boolean noBlock = blocks.isEmpty();
-        if (noEntity && noBlock) return null;
-
-        Entity firstEntity = entities.getFirst();
-        BlockPos firstBlock = blocks.getFirst();
-        if (noBlock) {
-            return firstEntity;
-        } else if (noEntity) {
-            return firstBlock;
-        }
-
-        LocalPlayer player = WorldUtils.getClientPlayer();
-        double distanceToEntity = player.distanceTo(firstEntity);
-        double distanceToBlock = player.getEyePosition().distanceTo(firstBlock.getCenter());
-        return distanceToEntity <= distanceToBlock ? firstEntity : firstBlock;
+        return Stream.concat(
+                Arrays.stream(POIEntities.getInstance().groups),
+                Arrays.stream(POIBlocks.getInstance().groups)
+            )
+            .sorted(Comparator.comparingInt(g -> g.priorityAmongGroups))
+            .flatMap(group -> group.getItems().stream())
+            .findFirst().orElse(null);
     }
 
     private void targetNearestObject() {

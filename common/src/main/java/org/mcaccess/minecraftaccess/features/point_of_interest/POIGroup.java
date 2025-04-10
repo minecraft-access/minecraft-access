@@ -8,7 +8,6 @@ import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -46,13 +45,6 @@ public class POIGroup<T> {
 
     public POIGroup(String nameTranslateKey, Predicate<T> whetherFitsThisGroup, ToDoubleFunction<T> priorityCalculator) {
         this(nameTranslateKey, new Sound(null, 0), whetherFitsThisGroup, priorityCalculator, 0);
-    }
-
-    public static <T> List<T> sortByPriority(POIGroup<T>[] groups) {
-        return Arrays.stream(groups)
-            .sorted(Comparator.comparingInt(g -> g.priorityAmongGroups))
-            .flatMap(group -> group.getItems().stream())
-            .toList();
     }
 
     public String getTranslatedName() {
