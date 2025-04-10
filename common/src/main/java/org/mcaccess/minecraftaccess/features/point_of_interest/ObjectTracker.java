@@ -37,10 +37,13 @@ public class ObjectTracker {
 
     private List<POIGroup<?>> groups = new ArrayList<>();
 
-    @Getter
     private Object currentObject = null;
     @Getter
     private POIGroup<?> currentGroup = null;
+
+    public Object getCurrentObject() {
+        return currentObject == null ? getNearestObject() : currentObject;
+    }
 
     public void update() {
         Minecraft minecraftClient = Minecraft.getInstance();
@@ -155,24 +158,32 @@ public class ObjectTracker {
         } else return false;
     }
 
-    private void targetNearestObject() {
+    private Object getNearestObject() {
         List<Entity> entities = POIEntities.getInstance().getLastScanResults();
         List<BlockPos> blocks = POIBlocks.getInstance().getLastScanResults();
-        boolean entitiesEmpty = entities.isEmpty();
-        boolean blocksEmpty = blocks.isEmpty();
 
-        if (!entitiesEmpty && blocksEmpty) currentObject = entities.getFirst();
-        if (!blocksEmpty && entitiesEmpty) currentObject = blocks.getFirst();
-        if (!entitiesEmpty && !blocksEmpty) {
-            LocalPlayer player = WorldUtils.getClientPlayer();
-            double distanceToEntity = player.distanceTo(entities.getFirst());
-            double distanceToBlock = player.getEyePosition().distanceTo(blocks.getFirst().getCenter());
+        boolean noEntity = entities.isEmpty();
+        boolean noBlock = blocks.isEmpty();
+        if (noEntity && noBlock) return null;
 
-            if (distanceToEntity <= distanceToBlock) currentObject = entities.getFirst();
-            if (distanceToBlock < distanceToEntity) currentObject = blocks.getFirst();
+        Entity firstEntity = entities.getFirst();
+        BlockPos firstBlock = blocks.getFirst();
+        if (noBlock) {
+            return firstEntity;
+        } else if (noEntity) {
+            return firstBlock;
         }
 
-        if (!entitiesEmpty || !blocksEmpty) {
+        LocalPlayer player = WorldUtils.getClientPlayer();
+        double distanceToEntity = player.distanceTo(firstEntity);
+        double distanceToBlock = player.getEyePosition().distanceTo(firstBlock.getCenter());
+        return distanceToEntity <= distanceToBlock ? firstEntity : firstBlock;
+    }
+
+    private void targetNearestObject() {
+        Object nearestObject = getNearestObject();
+        if (nearestObject != null) {
+            currentObject = nearestObject;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
             narrateCurrentObject(false);
         } else MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found"), true);
