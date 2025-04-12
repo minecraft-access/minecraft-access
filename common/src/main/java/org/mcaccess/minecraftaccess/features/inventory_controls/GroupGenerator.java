@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -372,10 +373,12 @@ public class GroupGenerator {
                     if (Minecraft.getInstance().player.experienceLevel < requiredLevel) {
                         clueText.append(Component.translatable("container.enchant.level.requirement", requiredLevel).getString());
                     } else {
-                        MutableComponent lapisCostText = cost == 1 ? Component.translatable("container.enchant.lapis.one") : Component.translatable("container.enchant.lapis.many", cost);
-                        clueText.append(lapisCostText.getString());
-                        MutableComponent xpCostText = cost == 1 ? Component.translatable("container.enchant.level.one") : Component.translatable("container.enchant.level.many", cost);
-                        clueText.append(xpCostText.withStyle(ChatFormatting.GRAY).getString());
+                        String lapisCostText = cost == 1 ? Component.translatable("container.enchant.lapis.one").getString() : Component.translatable("container.enchant.lapis.many", cost).getString();
+                        if (enchantmentScreenHandler.getGoldCount() < cost) lapisCostText = "()" + I18n.get("minecraft_access.other.missing") + ") " + lapisCostText;
+                        clueText.append(lapisCostText);
+                        String xpCostText = cost == 1 ? Component.translatable("container.enchant.level.one").getString() : Component.translatable("container.enchant.level.many", cost).getString();
+                        if (PlayerUtils.getExperienceLevel() < cost) xpCostText = "()" + I18n.get("minecraft_access.other.missing") + ") " + xpCostText;
+                        clueText.append(xpCostText);
                     }
                 }
 
