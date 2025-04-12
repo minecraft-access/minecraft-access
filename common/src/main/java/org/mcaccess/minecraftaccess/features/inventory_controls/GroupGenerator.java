@@ -358,32 +358,28 @@ public class GroupGenerator {
         //<editor-fold desc="Group enchantment screen enchant buttons (EnchantScreen.java -->> render())">
         if (Minecraft.getInstance().player != null && Minecraft.getInstance().level != null
                 && screen.getMenu() instanceof EnchantmentMenu enchantmentScreenHandler) {
-            int i = enchantmentScreenHandler.getGoldCount();
-            for (int j = 0; j < 3; ++j) {
-                int k = enchantmentScreenHandler.costs[j];
-                int l = enchantmentScreenHandler.levelClue[j];
-                // copied from 1.21.3 EnchantmentScreen.render() L172
-                Optional<Holder.Reference<Enchantment>> optional = Minecraft.getInstance()
-                        .level
-                        .registryAccess()
-                        .lookupOrThrow(Registries.ENCHANTMENT)
-                        .get(l);
+            for (int i = 0; i < 3; i++) {
+                int enchantmentId = enchantmentScreenHandler.enchantClue[i];
+                int requiredLevel = enchantmentScreenHandler.costs[i];
+                int level = enchantmentScreenHandler.levelClue[i];
+                int cost = i + 1;
 
-                int m = j + 1;
-                if (optional.isEmpty()) break;
-                StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(optional.get(), l)).withStyle(ChatFormatting.WHITE).getString());
+                Optional<Holder.Reference<Enchantment>> enchantment = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(enchantmentId);
+                if (enchantment.isEmpty()) break;
+
+                StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(enchantment.get(), level)).getString());
                 if (!PlayerUtils.isCreative()) {
-                    if (Minecraft.getInstance().player.experienceLevel < k) {
-                        clueText.append(Component.translatable("container.enchant.level.requirement", enchantmentScreenHandler.costs[j]).withStyle(ChatFormatting.RED).getString());
+                    if (Minecraft.getInstance().player.experienceLevel < requiredLevel) {
+                        clueText.append(Component.translatable("container.enchant.level.requirement", requiredLevel).getString());
                     } else {
-                        MutableComponent mutableText = m == 1 ? Component.translatable("container.enchant.lapis.one") : Component.translatable("container.enchant.lapis.many", m);
-                        clueText.append(mutableText.withStyle(i >= m ? ChatFormatting.GRAY : ChatFormatting.RED).getString());
-                        MutableComponent mutableText2 = m == 1 ? Component.translatable("container.enchant.level.one") : Component.translatable("container.enchant.level.many", m);
-                        clueText.append(mutableText2.withStyle(ChatFormatting.GRAY).getString());
+                        MutableComponent lapisCostText = cost == 1 ? Component.translatable("container.enchant.lapis.one") : Component.translatable("container.enchant.lapis.many", cost);
+                        clueText.append(lapisCostText.getString());
+                        MutableComponent xpCostText = cost == 1 ? Component.translatable("container.enchant.level.one") : Component.translatable("container.enchant.level.many", cost);
+                        clueText.append(xpCostText.withStyle(ChatFormatting.GRAY).getString());
                     }
                 }
 
-                enchantsGroup.slotItems.add(new SlotItem(80, 21 + 19 * j, clueText.toString()));
+                enchantsGroup.slotItems.add(new SlotItem(80, 21 + 19 * i, clueText.toString()));
             }
         }
         //</editor-fold>
