@@ -14,15 +14,35 @@ Sounds can be played by pressing the play button.
 
 ## Points of Interest
 
+### Scanner
+
 | Description                                                             | Sound                                                                     |
 |-------------------------------------------------------------------------|---------------------------------------------------------------------------|
 | Position of functional blocks without screens (e.g. [Door], [Ladder])   | {{< wikiSound sound="Note_block_bit" pitch=2 >}} Beeping electronic sound |
 | Position of functional blocks that have screens (e.g. [Crafting Table]) | {{< wikiSound sound="Note_block_banjo" pitch=0.5 >}} String sound         |
-| Position of [ore] blocks                                                | {{< wikiSound sound="Pop" pitch=.5 >}} Bubbling sound                                    |
-| Position of [dropped items]                                             | {{< wikiSound sound="Click" pitch=1.5 >}} Click sound                       |
+| Position of [ore] blocks                                                | {{< wikiSound sound="Pop" pitch=.5 >}} Bubbling sound                     |
+| Position of [dropped items]                                             | {{< wikiSound sound="Click" pitch=1.5 >}} Click sound                     |
 | Position of [passive mobs] (animals)                                    | {{< wikiSound sound="Note_block_bell" pitch=0.5 >}} Low pitch bell sound  |
 | Position of [hostile mobs] (monsters)                                   | {{< wikiSound sound="Note_block_bell" pitch=2 >}} High pitch bell sound   |
-| Unlocking action in POI locking feature                                 | {{< sound sound="Note_block_bass_drum_pitch2" >}} Drum sound              |
+| Position of your pets                                                  | {{< wikiSound "Note_block_flute" >}} Flute sound                          |
+| Position of other player's pets                                        | {{< wikiSound "Note_block_cow_bell" >}} Cow bell sound                    |
+| Position of bosses                                                     | {{< wikiSound sound="Note_block_pling" pitch=2 >}} High pitch electric piano sound |
+| Position of other players                                              | {{< wikiSound "Note_block_icechime" >}} Chime sound                       |
+| Position of vehicles                                                   | {{< wikiSound "Note_block_iron_xylophone" >}} Xylophone sound             |
+
+### Object Tracker and Locking
+
+| Description                                 | Sound                                                       |
+|---------------------------------------------|--------------------------------------------------------------|
+| Unlocking action in POI locking feature     | {{< sound sound="Note_block_bass_drum_pitch2" >}} Drum sound |
+| Position of current object tracker object   | {{< wikiSound "Note_block_bell" >}} Bell sound               |
+
+### Bow Aim Assist
+
+| Description                                                      | Sound                                                    |
+|------------------------------------------------------------------|-----------------------------------------------------------|
+| Plays when target is visible, pitch indicates how much the bow is pulled   | {{< wikiSound "Note_block_pling" >}} Electric piano sound |
+| Plays when target is obscured, pitch indicates how much the bow is pulled  | {{< wikiSound "Note_block_bass" >}} String bass sound     |
 
 ## Fall Detector
 
