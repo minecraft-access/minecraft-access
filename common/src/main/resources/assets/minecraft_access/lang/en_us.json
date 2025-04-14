@@ -332,7 +332,6 @@
     "text.autoconfig.minecraft-access.option.poi.locking.aimAssistEnabled": "Bow aim assist",
     "text.autoconfig.minecraft-access.option.poi.locking.autoLockEyeOfEnderEntity": "Auto lock onto eyes of ender",
     "text.autoconfig.minecraft-access.option.poi.locking.delay": "Delay (milliseconds)",
-    "text.autoconfig.minecraft-access.option.poi.locking.lockOnBlocks": "Lock onto blocks",
     "text.autoconfig.minecraft-access.option.poi.speakDistance": "Speak relative distance to target",
     "text.autoconfig.minecraft-access.option.poi.locking.unlockingSound": "Play sound",
     "text.autoconfig.minecraft-access.option.poi.marking": "Marking",

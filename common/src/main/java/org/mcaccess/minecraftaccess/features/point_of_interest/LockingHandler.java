@@ -187,7 +187,7 @@ public class LockingHandler {
         if (target == null) return;
         switch (target) {
             case Entity entity -> lockOnEntity(entity);
-            case BlockPos blockPos when config.lockOnBlocks -> lockOnBlock(blockPos);
+            case BlockPos blockPos -> lockOnBlock(blockPos);
             default -> throw new IllegalStateException("Unexpected locking target type: " + target);
         }
     }

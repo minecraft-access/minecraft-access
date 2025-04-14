@@ -168,7 +168,6 @@ public class Config implements ConfigData {
         public static final class Locking {
             private Locking() {}
 
-            public boolean lockOnBlocks = true;
             public boolean unlockingSound = false;
             public boolean autoLockEyeOfEnderEntity = true;
             public int delay = 100;
