@@ -368,16 +368,21 @@ public class GroupGenerator {
                 Optional<Holder.Reference<Enchantment>> enchantment = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(enchantmentId);
                 if (enchantment.isEmpty()) break;
 
-                StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(enchantment.get(), level)).getString());
+                StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(enchantment.get(), level)).getString()); // this breaks when using I18n.get() for some reason so Component.translatable() is being used instead
                 if (!PlayerUtils.isCreative()) {
                     if (Minecraft.getInstance().player.experienceLevel < requiredLevel) {
-                        clueText.append(Component.translatable("container.enchant.level.requirement", requiredLevel).getString());
+                        clueText.append(I18n.get("container.enchant.level.requirement", requiredLevel));
                     } else {
-                        String lapisCostText = cost == 1 ? Component.translatable("container.enchant.lapis.one").getString() : Component.translatable("container.enchant.lapis.many", cost).getString();
-                        if (enchantmentScreenHandler.getGoldCount() < cost) lapisCostText = "()" + I18n.get("minecraft_access.other.missing") + ") " + lapisCostText;
+                        String lapisCostText = cost == 1 ? I18n.get("container.enchant.lapis.one") : I18n.get("container.enchant.lapis.many", cost);
+                        if (enchantmentScreenHandler.getGoldCount() < cost) {
+                            lapisCostText = String.format("(%s) %s", I18n.get("minecraft_access.other.missing"), lapisCostText);
+                        }
                         clueText.append(lapisCostText);
-                        String xpCostText = cost == 1 ? Component.translatable("container.enchant.level.one").getString() : Component.translatable("container.enchant.level.many", cost).getString();
-                        if (PlayerUtils.getExperienceLevel() < cost) xpCostText = "()" + I18n.get("minecraft_access.other.missing") + ") " + xpCostText;
+
+                        String xpCostText = cost == 1 ? I18n.get("container.enchant.level.one") : I18n.get("container.enchant.level.many", cost);
+                        if (PlayerUtils.getExperienceLevel() < cost) {
+                            xpCostText = String.format("(%s) %s", I18n.get("minecraft_access.other.missing"), xpCostText);
+                        }
                         clueText.append(xpCostText);
                     }
                 }
