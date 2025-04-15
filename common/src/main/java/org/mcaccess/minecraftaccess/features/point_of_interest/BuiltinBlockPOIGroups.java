@@ -69,7 +69,9 @@ public enum BuiltinBlockPOIGroups {
             pos -> {
                 BlockState state = WorldUtils.getBlockState(pos);
                 if (state.getBlock() instanceof ChestBlock) {
-                    return Arrays.stream(ChestType.values()).anyMatch(t -> t.equals(state.getValue(ChestBlock.TYPE)));
+                    ChestType chestType = state.getValue(ChestBlock.TYPE);
+                    // intentionally ignore LEFT so two-blocks-size big chest can be detected as single chest
+                    return chestType == ChestType.SINGLE || chestType == ChestType.RIGHT;
                 } else {
                     return state.getMenuProvider(WorldUtils.getClientWorld(), pos) != null;
                 }
