@@ -24,6 +24,8 @@
     "EditBoxMixin",
     "EntityAccessor",
     "EyeOfEnderMixin",
+    "GameModeIconAccessor",
+    "GameModeSwitcherScreenMixin",
     "GameNarratorMixin",
     "GuiAccessor",
     "GuiGraphicsMixin",
