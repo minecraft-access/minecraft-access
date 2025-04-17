@@ -38,18 +38,15 @@ public class PlayerWarnings {
         double frostExposurePercent = Math.round((player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
 
         healthWarning(PlayerUtils.getHearts(), maxHealth);
-        if (!player.isCreative()) {
-            hungerWarning(PlayerUtils.getHunger(), maxHunger);
-            airWarning(Math.round((player.getAirSupply() / 20.0) * 10.0) / 10.0, maxAir);
-            frostWarning(frostExposurePercent);
-        }
+        hungerWarning(PlayerUtils.getHunger(), maxHunger);
+        airWarning(Math.round((player.getAirSupply() / 20.0) * 10.0) / 10.0, maxAir);
+        frostWarning(frostExposurePercent);
     }
 
     private void healthWarning(double health, double maxHealth) {
         if (health <= config.firstHealthThreshold && health > config.secondHealthThreshold && !isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowFirstThreshold = true;
             MainClass.speakWithNarrator(I18n.get("minecraft_access.player_warnings.health_low", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth)), true);
-            if (config.playSound) player.playSound(SoundEvents.ANVIL_LAND, 1.0f, 1.0f);
             playWarningSound();
         }
 

@@ -58,13 +58,6 @@ public class LockingHandler {
     private LockingHandler() {
     }
 
-    public void update() {
-        loadConfig();
-        if (!config.enabled) return;
-        if (!interval.isReady()) return;
-        mainLogic();
-    }
-
     /**
      * Loads the configs from the config.json
      */
@@ -73,9 +66,11 @@ public class LockingHandler {
         interval.setDelay(config.delay, Interval.Unit.Millisecond);
     }
 
-    private void mainLogic() {
+    public void update() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
+        loadConfig();
+        if (!interval.isReady()) return;
         if (minecraftClient.player == null) return;
         if (minecraftClient.level == null) return;
         if (minecraftClient.screen != null) return;
@@ -192,7 +187,7 @@ public class LockingHandler {
         if (target == null) return;
         switch (target) {
             case Entity entity -> lockOnEntity(entity);
-            case BlockPos blockPos when config.lockOnBlocks -> lockOnBlock(blockPos);
+            case BlockPos blockPos -> lockOnBlock(blockPos);
             default -> throw new IllegalStateException("Unexpected locking target type: " + target);
         }
     }

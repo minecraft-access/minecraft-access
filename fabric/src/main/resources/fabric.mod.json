@@ -4,19 +4,22 @@
   "version": "${version}",
   "name": "Minecraft Access",
   "description": "A mod that helps visually impaired players to play Minecraft.",
-  "license": "GNU GPLv3",
+  "license": "GPL-3.0-only",
   "icon": "logo-mc-access.png",
   "authors": [
     "Shoaib",
     "Boholder",
     "TheSuperGamer20578",
-    "BrailleBennett",
-    "Molitvan"
+    "BrailleBennett"
+  ],
+  "contributors": [
+    "Molitvan",
+    "emassey0135"
   ],
   "contact": {
     "homepage": "https://mcaccess.org",
     "sources": "https://github.com/minecraft-access/minecraft-access",
-    "issues": "https://github.com/khanshoaib3/minecraft-access/issues"
+    "issues": "https://github.com/minecraft-access/minecraft-access/issues"
   },
   "environment": "client",
   "entrypoints": {
@@ -35,7 +38,7 @@
     "fabricloader": "^${fabric_loader_version}",
     "architectury": "^${architectury_api_version}",
     "minecraft": "${minecraft_version}",
-    "cloth-config": "*"
+    "cloth-config": "^${cloth_config_version}"
   },
   "suggests": {
     "jade": "^${jade_fabric_version}"

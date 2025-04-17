@@ -64,10 +64,10 @@ public class POIEntities {
         if (minecraftClient.level == null) return;
         if (minecraftClient.screen != null) return; //Prevent running if any screen is opened
 
-        log.debug("POIEntities started.");
+        log.trace("POIEntities started");
         scanEntitiesAroundPlayer();
         playerSoundAtFoundPOI(isMarking);
-        log.debug("POIEntities ended.");
+        log.trace("POIEntities ended");
     }
 
     private void scanEntitiesAroundPlayer() {

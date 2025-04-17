@@ -14,17 +14,21 @@ public abstract class CheckboxMixin extends AbstractWidget {
     @Shadow
     private boolean selected;
 
+    /**
+     * @author emassey0135
+     * @reason the patched logic is completely different from the original,
+     * and we want to suppress the execution of original logic
+     */
     @Overwrite
     public void updateWidgetNarration(NarrationElementOutput builder) {
         if (selected) {
             builder.add(NarratedElementType.TITLE, Component.translatable("minecraft_access.gui.checkbox_checked", this.getMessage()));
-        }
-        else {
+        } else {
             builder.add(NarratedElementType.TITLE, Component.translatable("minecraft_access.gui.checkbox_unchecked", this.getMessage()));
         }
     }
 
-    public CheckboxMixin(int x, int y, int width, int height, Component message) {
+    CheckboxMixin(int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
     }
 }

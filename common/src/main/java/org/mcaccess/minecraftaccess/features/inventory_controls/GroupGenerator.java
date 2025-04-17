@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.mixin.*;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
 import java.util.*;
 
@@ -357,7 +358,6 @@ public class GroupGenerator {
         //<editor-fold desc="Group enchantment screen enchant buttons (EnchantScreen.java -->> render())">
         if (Minecraft.getInstance().player != null && Minecraft.getInstance().level != null
                 && screen.getMenu() instanceof EnchantmentMenu enchantmentScreenHandler) {
-            boolean bl = Minecraft.getInstance().player.getAbilities().instabuild;
             int i = enchantmentScreenHandler.getGoldCount();
             for (int j = 0; j < 3; ++j) {
                 int k = enchantmentScreenHandler.costs[j];
@@ -372,7 +372,7 @@ public class GroupGenerator {
                 int m = j + 1;
                 if (optional.isEmpty()) break;
                 StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(optional.get(), l)).withStyle(ChatFormatting.WHITE).getString());
-                if (!bl) {
+                if (!PlayerUtils.isCreative()) {
                     if (Minecraft.getInstance().player.experienceLevel < k) {
                         clueText.append(Component.translatable("container.enchant.level.requirement", enchantmentScreenHandler.costs[j]).withStyle(ChatFormatting.RED).getString());
                     } else {

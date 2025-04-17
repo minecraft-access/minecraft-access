@@ -18,6 +18,7 @@ import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
@@ -97,13 +98,12 @@ public class MainClass {
             MenuFix.update(minecraftClient);
         }
 
-        // TODO Update these to singleton design pattern
         if (inventoryControls != null && config.inventoryControls.enabled)
             inventoryControls.update();
 
         ReadCrosshair.getInstance().tick();
 
-        if (xpIndicator != null && config.features.xpIndicatorEnabled)
+        if (xpIndicator != null && config.features.xpIndicatorEnabled && !PlayerUtils.isSpectator())
             xpIndicator.update();
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled)
@@ -114,11 +114,12 @@ public class MainClass {
         PositionNarrator.getInstance().update();
 
         if (WorldUtils.getClientPlayer() != null) {
-            if (playerStatus != null && config.features.playerStatusEnabled) {
+            if (playerStatus != null) {
                 playerStatus.update();
             }
 
-            MouseKeySimulation.runOnTick();
+            if (!PlayerUtils.isPlayerTyping())
+                MouseKeySimulation.runOnTick();
 
             if (Minecraft.getInstance().screen == null) {
                 // These features are suppressed when there is any screen opening
@@ -126,13 +127,14 @@ public class MainClass {
             }
         }
 
-        if (playerWarnings != null && config.playerWarnings.enabled)
+        if (playerWarnings != null && config.playerWarnings.enabled && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()))
             playerWarnings.update();
 
         if (accessMenu != null && config.accessMenu.enabled)
             accessMenu.update();
 
-        speakHeldItem.speakHeldItem();
+        if (!PlayerUtils.isSpectator())
+            speakHeldItem.speakHeldItem();
 
         // POI Marking will handle POI Scan and POI Locking features inside it
         POIMarking.getInstance().update();

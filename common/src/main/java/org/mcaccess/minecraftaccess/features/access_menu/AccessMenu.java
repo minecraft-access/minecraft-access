@@ -191,6 +191,11 @@ public class AccessMenu {
 
         minecraftClient.player.clientSideCloseContainer();
 
+        if (PlayerUtils.isSpectator()) {
+            MainClass.speakWithNarrator(I18n.get("gameMode.spectator"), true);
+            return;
+        }
+
         MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.xp",
                         NarrationUtils.narrateNumber(PlayerUtils.getExperienceLevel()),
                         NarrationUtils.narrateNumber(PlayerUtils.getExperienceProgress())),

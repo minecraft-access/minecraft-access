@@ -37,8 +37,6 @@ public class PositionNarrator {
     }
 
     public void update() {
-       if (!Config.getInstance().features.positionNarratorEnabled) return;
-
         Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient == null) return;
         if (minecraftClient.player == null) return;
