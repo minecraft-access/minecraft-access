@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -12,7 +13,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.lwjgl.glfw.GLFW;
-import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
@@ -39,6 +39,7 @@ public class AccessMenu {
     public static final double RAY_CAST_DISTANCE = 20.0;
     private static Minecraft minecraftClient;
     private static final MenuKeystroke menuKey = new MenuKeystroke(KeyBindingsHandler.getInstance().accessMenuKey);
+    private boolean gameModeSwitcherActive = false;
     /**
      * Access Menu function direct keys (configured in keybinding settings)
      * and Access Menu shortcuts bar keys (alt + number keys)
@@ -92,8 +93,7 @@ public class AccessMenu {
         minecraftClient = Minecraft.getInstance();
         if (minecraftClient.player == null) return;
 
-        Screen currentScreen = minecraftClient.screen;
-        if (currentScreen == null) {
+        if (minecraftClient.screen == null) {
             if (Screen.hasAltDown()) {
                 handleInMenuActions();
                 return;
@@ -106,18 +106,18 @@ public class AccessMenu {
                 }
             }
 
-            // F3 + F4 triggers game mode changing function in vanilla game,
-            // will not open the menu under this situation.
-            boolean isF3KeyNotPressed = !KeyUtils.isF3Pressed();
-            if (menuKey.canOpenMenu() && isF3KeyNotPressed) {
-                // The F4 is pressed before and released at current tick
-                // To make the access menu open AFTER release the F4 key
+            if (menuKey.canOpenMenu() && !gameModeSwitcherActive) {
                 minecraftClient.setScreen(new AccessMenuGUI("access_menu"));
             }
-
-        } else if (currentScreen instanceof AccessMenuGUI) {
+        } else if (minecraftClient.screen instanceof AccessMenuGUI) {
             if (menuKey.closeMenuIfMenuKeyPressing()) return;
             handleInMenuActions();
+        }
+
+        if (minecraftClient.screen instanceof GameModeSwitcherScreen) {
+            gameModeSwitcherActive = true;
+        } else if (!KeyUtils.isAnyPressed(GLFW.GLFW_KEY_F4)) {
+            gameModeSwitcherActive = false;
         }
     }
 
