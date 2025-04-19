@@ -4,6 +4,7 @@
   "package": "org.mcaccess.minecraftaccess.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "AccessibilityOnboardingScreenMixin",
     "AbstractContainerScreenAccessor",
     "AbstractRecipeBookScreenAccessor",
     "AbstractWidgetAccessor",
