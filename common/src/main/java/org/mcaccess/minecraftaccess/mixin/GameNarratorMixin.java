@@ -8,6 +8,7 @@ import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.network.chat.Component;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.NarratorDummy;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class GameNarratorMixin {
       @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/text2speech/Narrator;getNarrator()Lcom/mojang/text2speech/Narrator;"))
       private Narrator redirectGetNarrator() {
-        return null;
+        return new NarratorDummy();
       }
 
     @Inject(at = @At("HEAD"), method = "sayNow(Ljava/lang/String;)V", cancellable = true)
@@ -65,26 +66,6 @@ public class GameNarratorMixin {
         } else {
             SystemToast.addOrUpdate(toastManager, SystemToast.SystemToastId.NARRATOR_TOGGLE, Component.translatable("narrator.toast.disabled"), Component.translatable("options.narrator.notavailable"));
         }
-        callbackInfo.cancel();
-    }
-
-    @Inject(at = @At("HEAD"), method = "isActive", cancellable = true)
-    private void isActive(CallbackInfoReturnable<Boolean> callbackInfo) {
-        callbackInfo.setReturnValue(true);
-    }
-
-    @Inject(at = @At("HEAD"), method = "clear", cancellable = true)
-    private void clear(CallbackInfo callbackInfo) {
-        callbackInfo.cancel();
-    }
-
-    @Inject(at = @At("HEAD"), method = "destroy", cancellable = true)
-    private void destroy(CallbackInfo callbackInfo) {
-        callbackInfo.cancel();
-    }
-
-    @Inject(at = @At("HEAD"), method = "checkStatus", cancellable = true)
-    private void checkStatus(boolean bl, CallbackInfo callbackInfo) {
         callbackInfo.cancel();
     }
 }
