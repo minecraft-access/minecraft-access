@@ -129,6 +129,7 @@
     "minecraft_access.other.end_of_list": "End of list",
     "minecraft_access.other.entity_with_equipments": "{entity} with {equipments}",
     "minecraft_access.other.facing_direction": "Facing %s",
+    "minecraft_access.other.missing": "Missing",
     "minecraft_access.other.negative": "negative %s",
     "minecraft_access.other.not_craftable": "Not Craftable",
     "minecraft_access.other.not_found": "Not Found",
