@@ -46,14 +46,14 @@ public class MainClass {
     public static void init() {
         Config.init();
 
-        String msg = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
-        log.info(msg);
+        String startupMessage = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
+        log.info(startupMessage);
 
         new AutoLibrarySetup().initialize();
 
         ScreenReaderController.refreshScreenReader();
         if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
-            MainClass.getScreenReader().say(msg, true);
+            MainClass.getScreenReader().say(startupMessage, true);
 
         MainClass.inventoryControls = new InventoryControls();
         MainClass.biomeIndicator = new BiomeIndicator();
@@ -170,13 +170,11 @@ public class MainClass {
     }
 
     public static void speakWithNarrator(String text, boolean interrupt) {
+        if (Strings.isNotEmpty(text) && Minecraft.getInstance().isWindowActive()) {
+            log.warn("The speaking of string %s with interrupt%s was suppressed".formatted(text, interrupt));
+            return;
+        }
         MainClass.interrupt = interrupt;
         Minecraft.getInstance().getNarrator().sayNow(text);
-    }
-
-    public static void speakWithNarratorIfNotEmpty(String text, boolean interrupt) {
-        if (Strings.isNotEmpty(text)) {
-            speakWithNarrator(text, interrupt);
-        }
     }
 }
