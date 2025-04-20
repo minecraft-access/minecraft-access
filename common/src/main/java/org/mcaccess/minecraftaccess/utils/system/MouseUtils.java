@@ -2,13 +2,10 @@ package org.mcaccess.minecraftaccess.utils.system;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
-import com.sun.jna.Library;
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
@@ -24,10 +21,6 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public class MouseUtils {
-    private static user32dllInterface user32dllInstance = null;
-    private static CGWrapper cgWrapper = null;
-    private static CoreFoundationInterface coreFoundationInstance = null;
-    private static ApplicationServicesInterface applicationServicesInstance = null;
     /**
      * The {@link Minecraft} is singleton and {@link Minecraft#window} only be initialized once in constructor,
      * so this is safe to cache it.
@@ -61,26 +54,9 @@ public class MouseUtils {
      * @param y the y position of the pixel location
      */
     public static void move(int x, int y) {
-        doNativeMouseAction(
-            "xdotool mousemove %d %d".formatted(x, y),
-                (i) -> {
-                    // Create a CGPoint containing the destination position
-                    CoreGraphicsInterface.CGPoint.ByValue position = new CoreGraphicsInterface.CGPoint.ByValue((double) x, (double) y);
-
-                    // Create the event
-                    // Mouse button is ignored
-                    Pointer event = i.cgInstance.CGEventCreateMouseEvent(new Pointer(0), CoreGraphicsMouseEventTypes.mouseMoved.getValue(), position, CoreGraphicsMouseButtons.left.getValue());
-
-                    // Send the event
-                    i.cgInstance.CGEventPost(CoreGraphicsEventTapLocations.hid.getValue(), event);
-
-                    // Release the event so CoreFoundation can free it
-                    coreFoundationInstance.CFRelease(event);
-                },
-                (i) -> {
-                    if (!i.SetCursorPos(x, y)) log.error("\nError encountered on moving mouse.");
-                }
-        );
+        log.debug("Moving mouse to x:%d y:%d".formatted(x, y));
+        GLFW.glfwSetCursorPos(getWindowPointer(), x, y);
+        getMouseHandler().move(getWindowPointer(), x, y);
     }
 
     /**
@@ -105,41 +81,6 @@ public class MouseUtils {
         }
     }
 
-    private static void doNativeMouseAction(String linuxXdotCommand, Consumer<CGWrapper> macOSAction,
-                                            Consumer<user32dllInterface> windowsAction) {
-        Minecraft minecraftClient = Minecraft.getInstance();
-
-        try {
-            int x = (int) minecraftClient.mouseHandler.xpos();
-            int y = (int) minecraftClient.mouseHandler.ypos();
-            log.debug("Performing mouse moving at minecraft x:{} y:{}", x, y);
-
-            if (OsUtils.isLinux()) {
-                Runtime.getRuntime().exec(linuxXdotCommand);
-            } else if (OsUtils.isMacOS()) {
-                if (cgWrapper == null) initializeCoreGraphics();
-
-                // Check if the accessibility permission has been granted
-                // If not, mouse simulation will not work, so inform the user
-                // 0 is false, 1 is true
-                if (applicationServicesInstance.AXIsProcessTrusted() == 0) {
-                    MainClass.speakWithNarrator(I18n.get("minecraft_access.messages.accessibility_permission_not_granted"), false);
-                    return;
-                }
-
-                var p = cgWrapper.getNativeMousePosition();
-                String nativeCoordinates = " at native x:%f y:%f".formatted(p.x, p.y);
-                log.debug("\nPerforming mouse moving {}", nativeCoordinates);
-                macOSAction.accept(cgWrapper);
-            } else if (OsUtils.isWindows()) {
-                if (user32dllInstance == null) initializeUser32dll();
-                windowsAction.accept(user32dllInstance);
-            }
-        } catch (Exception e) {
-            log.error("Error encountered on performing " + "mouse moving" + ".", e);
-        }
-    }
-
     public record Coordinates(int x, int y) {
     }
 
@@ -148,13 +89,8 @@ public class MouseUtils {
         Window window = client.getWindow();
 
         int realX, realY;
-        if (Config.getInstance().mouseSimulation.macMouseFix) {
-            realX = (int) ((x * window.getGuiScale()));
-            realY = (int) ((y * window.getGuiScale()));
-        } else {
-            realX = (int) (window.getX() + (x * window.getGuiScale()));
-            realY = (int) (window.getY() + (y * window.getGuiScale()));
-        }
+        realX = (int) ((x * window.getGuiScale()));
+        realY = (int) ((y * window.getGuiScale()));
         return new Coordinates(realX, realY);
     }
 
@@ -171,177 +107,6 @@ public class MouseUtils {
      */
     public static void performAt(int x, int y, Consumer<Coordinates> consumer) {
         consumer.accept(calcRealPositionOfWidget(x, y));
-    }
-
-    /**
-     * Initializes the User32.dll for windows
-     */
-    private static void initializeUser32dll() {
-        if (!OsUtils.isWindows())
-            return;
-
-        try {
-            user32dllInstance = Native.load("User32.dll", user32dllInterface.class);
-        } catch (Exception e) {
-            log.error("Error encountered while initializing User32.dll", e);
-        }
-    }
-
-    /**
-     * Initializes the CoreGraphics and CoreFoundation frameworks for MacOS
-     */
-    private static void initializeCoreGraphics() {
-        if (!OsUtils.isMacOS())
-            return;
-
-        try {
-            cgWrapper = new CGWrapper(Native.load("CoreGraphics", CoreGraphicsInterface.class));
-            coreFoundationInstance = Native.load("CoreFoundation", CoreFoundationInterface.class);
-            applicationServicesInstance = Native.load("ApplicationServices", ApplicationServicesInterface.class);
-        } catch (Exception e) {
-            log.error("Error encountered while initializing CoreGraphics or CoreFoundation", e);
-        }
-    }
-
-    /**
-     * Contains definition for SetCursorPos() and mouse_event() of User32.dll
-     */
-    private interface user32dllInterface extends Library {
-        // https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos
-        boolean SetCursorPos(int x, int y);
-    }
-
-    /**
-     * Contains needed definitions for functions in CoreGraphics to send mouse events
-     */
-    private interface CoreGraphicsInterface extends Library {
-        class CGPoint extends Structure {
-            public static class ByValue extends CGPoint implements Structure.ByValue {
-                public ByValue(double x, double y) {
-                    super(x, y);
-                }
-            }
-
-            public double x;
-            public double y;
-
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            protected List getFieldOrder() {
-                return Arrays.asList("x", "y");
-            }
-
-            public CGPoint() {
-                super();
-            }
-
-            public CGPoint(double X, double Y) {
-                super();
-                x = X;
-                y = Y;
-            }
-        }
-
-        // https://developer.apple.com/documentation/coregraphics/1454356-cgeventcreatemouseevent
-        Pointer CGEventCreateMouseEvent(Pointer source, int mouseType, CGPoint.ByValue mouseCursorPosition, int mouseButton);
-
-        // https://developer.apple.com/documentation/coregraphics/1456527-cgeventpost
-        Pointer CGEventPost(int tap, Pointer event);
-
-        // https://developer.apple.com/documentation/coregraphics/1454913-cgeventcreate
-        Pointer CGEventCreate(Pointer source);
-
-        // https://developer.apple.com/documentation/coregraphics/1455788-location
-        CGPoint.ByValue CGEventGetLocation(Pointer event);
-    }
-
-    /**
-     * Contains definition of the CFRelease function, needed to release mouse events when we are done with them
-     */
-    private interface CoreFoundationInterface extends Library {
-        // https://developer.apple.com/documentation/corefoundation/1521153-cfrelease
-        Pointer CFRelease(Pointer object);
-    }
-
-    /**
-     * CoreGraphics mouse event types
-     */
-    private enum CoreGraphicsMouseEventTypes {
-        none(0),
-        leftMouseDown(1),
-        leftMouseUp(2),
-        rightMouseDown(3),
-        rightMouseUp(4),
-        mouseMoved(5),
-        otherMouseDown(25),
-        otherMouseUp(26);
-
-        private final int value;
-
-        CoreGraphicsMouseEventTypes(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    private enum CoreGraphicsMouseButtons {
-        left(0),
-        right(1),
-        center(2);
-
-        private final int value;
-
-        CoreGraphicsMouseButtons(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    private enum CoreGraphicsEventTapLocations {
-        hid(0),
-        session(1),
-        annotatedSession(2);
-
-        private final int value;
-
-        CoreGraphicsEventTapLocations(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    /**
-     * Contains the AXIsProcessTrusted function, which checks if the accessibility permission has been enabled
-     */
-    private interface ApplicationServicesInterface extends Library {
-        // https://developer.apple.com/documentation/applicationservices/1460720-axisprocesstrusted
-        byte AXIsProcessTrusted();
-    }
-
-    private static class CGWrapper {
-        private CoreGraphicsInterface cgInstance;
-
-        public CGWrapper(CoreGraphicsInterface instance) {
-            cgInstance = instance;
-        }
-
-        /**
-         * Creates a pointer event, extracts the x,y coordinates of its location, frees the event and then returns the coordinates
-         */
-        public CoreGraphicsInterface.CGPoint.ByValue getNativeMousePosition() {
-            Pointer dummyEvent = cgInstance.CGEventCreate(new Pointer(0));
-            var position = cgInstance.CGEventGetLocation(dummyEvent);
-            coreFoundationInstance.CFRelease(dummyEvent);
-            return position;
-        }
     }
 
     private static MouseHandlerAccessor getMouseHandler() {

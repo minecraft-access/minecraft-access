@@ -6,6 +6,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(MouseHandler.class)
 public interface MouseHandlerAccessor {
+    @Invoker("onMove")
+    void move(long windowPointer, double x, double y);
+
     @Invoker("onPress")
     void press(long windowPointer, int button, int action, int modifiers);
 
