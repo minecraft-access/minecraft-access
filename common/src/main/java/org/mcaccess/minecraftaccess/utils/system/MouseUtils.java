@@ -1,11 +1,11 @@
 package org.mcaccess.minecraftaccess.utils.system;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Window;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
+
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -22,12 +22,6 @@ public class MouseUtils {
      */
     private static long windowPointer = 0;
 
-    /**
-     * Move the mouse to the given pixel location and then perform left click.
-     *
-     * @param x the x position of the pixel location
-     * @param y the y position of the pixel location
-     */
     public static void moveAndLeftClick(int x, int y) {
         move(x, y);
         // fix the https://github.com/khanshoaib3/minecraft-access/issues/65
@@ -42,44 +36,28 @@ public class MouseUtils {
         Key.LEFT.click();
     }
 
-    /**
-     * Move the mouse to the given pixel location.
-     *
-     * @param x the x position of the pixel location
-     * @param y the y position of the pixel location
-     */
     public static void move(int x, int y) {
-        log.debug("Move mouse to x:{} y:{}", x, y);
+        log.trace("Move mouse to x:{} y:{}", x, y);
         GLFW.glfwSetCursorPos(getWindowPointer(), x, y);
         getMouseHandler().move(getWindowPointer(), x, y);
     }
 
-    /**
-     * Move the mouse to the given pixel location after a delay.
-     *
-     * @param x     the x position of the pixel location
-     * @param y     the y position of the pixel location
-     * @param delay delay amount in milliseconds
-     */
-    public static void moveAfterDelay(int x, int y, int delay) {
+    public static void moveAfterDelay(int x, int y, int delayInMillSecs) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 move(x, y);
             }
-        }, delay);
+        }, delayInMillSecs);
     }
 
     public record Coordinates(int x, int y) {
     }
 
     public static Coordinates calcRealPositionOfWidget(int x, int y) {
-        Minecraft client = Minecraft.getInstance();
-        Window window = client.getWindow();
-
-        int realX, realY;
-        realX = (int) ((x * window.getGuiScale()));
-        realY = (int) ((y * window.getGuiScale()));
+        double scale = Minecraft.getInstance().getWindow().getGuiScale();
+        int realX = (int) (x * scale);
+        int realY = (int) (y * scale);
         return new Coordinates(realX, realY);
     }
 
@@ -87,13 +65,6 @@ public class MouseUtils {
         move(coordinates.x(), coordinates.y());
     }
 
-    /**
-     * Preform a mouse event at the given location
-     *
-     * @param x        x coordinate
-     * @param y        y coordinate
-     * @param consumer event
-     */
     public static void performAt(int x, int y, Consumer<Coordinates> consumer) {
         consumer.accept(calcRealPositionOfWidget(x, y));
     }
@@ -136,7 +107,7 @@ public class MouseUtils {
 
         private static void operate(Key key, int action) {
             // basing on MouseHandler.onPress():
-            // if (Minecraft.ON_OSX && button == 0)
+            // if Minecraft.ON_OSX && button == 0
             // run macOS related logic
             int modifiers = Minecraft.ON_OSX ? 0 : 1;
             getMouseHandler().press(getWindowPointer(), key.id, action, modifiers);
