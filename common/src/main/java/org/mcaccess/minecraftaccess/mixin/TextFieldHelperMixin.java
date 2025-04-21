@@ -38,7 +38,7 @@ public abstract class TextFieldHelperMixin {
 
     @Inject(at = @At("TAIL"), method = "setCursorToEnd()V")
     public void speakTextOfSwitchedLine(CallbackInfo ci) {
-        MainClass.speakWithNarratorIfNotEmpty(this.getMessageFn.get(), true);
+        MainClass.speakWithNarrator(this.getMessageFn.get(), true);
     }
 
     @Inject(at = @At("HEAD"), method = "keyPressed")
@@ -52,20 +52,20 @@ public abstract class TextFieldHelperMixin {
             case GLFW.GLFW_KEY_LEFT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosByWordsWithOffset(-1));
-                    MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
+                    MainClass.speakWithNarrator(hoveredText, true);
                 } else {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosWithOffset(-1));
-                    MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
+                    MainClass.speakWithNarrator(hoveredText, true);
                 }
                 return;
             }
             case GLFW.GLFW_KEY_RIGHT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosByWordsWithOffset(1));
-                    MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
+                    MainClass.speakWithNarrator(hoveredText, true);
                 } else {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosWithOffset(1));
-                    MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
+                    MainClass.speakWithNarrator(hoveredText, true);
                 }
                 return;
             }
@@ -98,7 +98,7 @@ public abstract class TextFieldHelperMixin {
     @Inject(at = @At("RETURN"), method = "keyPressed")
     private void speakSelectedText(int keyCode, CallbackInfoReturnable<Boolean> cir) {
         String selectedText = this.getSelected(this.getMessageFn.get());
-        MainClass.speakWithNarratorIfNotEmpty(selectedText, true);
+        MainClass.speakWithNarrator(selectedText, true);
     }
 
     @Inject(at = @At("HEAD"), method = "removeCharsFromCursor")
@@ -110,7 +110,7 @@ public abstract class TextFieldHelperMixin {
         boolean allTextAreSelected = this.selectionPos == 0;
         if (!allTextAreSelected) {
             String erasedText = getCursorHoveredOverText(cursorPos);
-            MainClass.speakWithNarratorIfNotEmpty(erasedText, true);
+            MainClass.speakWithNarrator(erasedText, true);
         }
     }
 

@@ -48,14 +48,14 @@ public class MainClass {
     public static void init() {
         Config.init();
 
-        String msg = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
-        log.info(msg);
+        String startupMessage = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
+        log.info(startupMessage);
 
         new AutoLibrarySetup().initialize();
 
         ScreenReaderController.refreshScreenReader();
         if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
-            MainClass.getScreenReader().say(msg, true);
+            MainClass.getScreenReader().say(startupMessage, true);
 
         for (KeyMapping km : KeyBindingsHandler.getInstance().getKeys()) {
             KeyMappingRegistry.register(km);
@@ -178,13 +178,11 @@ public class MainClass {
     }
 
     public static void speakWithNarrator(String text, boolean interrupt) {
+        if (Strings.isEmpty(text) || !Minecraft.getInstance().isWindowActive()) {
+            log.warn("The speaking of string \"{}\" with interrupt={} was suppressed", text, interrupt);
+            return;
+        }
         MainClass.interrupt = interrupt;
         Minecraft.getInstance().getNarrator().sayNow(text);
-    }
-
-    public static void speakWithNarratorIfNotEmpty(String text, boolean interrupt) {
-        if (Strings.isNotEmpty(text)) {
-            speakWithNarrator(text, interrupt);
-        }
     }
 }

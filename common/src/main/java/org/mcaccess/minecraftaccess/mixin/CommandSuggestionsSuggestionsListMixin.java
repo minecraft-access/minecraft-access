@@ -62,12 +62,12 @@ public class CommandSuggestionsSuggestionsListMixin {
     @Inject(at = @At("HEAD"), method = "useSuggestion")
     private void speakCompletion(CallbackInfo ci) {
         String selected = this.suggestionList.get(this.current).getText();
-        MainClass.speakWithNarratorIfNotEmpty(selected, true);
+        MainClass.speakWithNarrator(selected, true);
     }
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void speakFirstSuggestionWhenSuggestionsAreShown(CallbackInfo ci) {
         String first = mca$getSuggestionTextToSpeak();
-        MainClass.speakWithNarratorIfNotEmpty(first, true);
+        MainClass.speakWithNarrator(first, true);
     }
 }
