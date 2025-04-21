@@ -1,12 +1,14 @@
 package org.mcaccess.minecraftaccess;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
@@ -46,30 +48,21 @@ public class MainClass {
     public static void init() {
         Config.init();
 
-        String msg = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
-        log.info(msg);
+        String startupMessage = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
+        log.info(startupMessage);
 
         new AutoLibrarySetup().initialize();
 
         ScreenReaderController.refreshScreenReader();
         if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
-            MainClass.getScreenReader().say(msg, true);
-
-        MainClass.inventoryControls = new InventoryControls();
-        MainClass.biomeIndicator = new BiomeIndicator();
-        MainClass.xpIndicator = new XPIndicator();
-        MainClass.facingDirection = new FacingDirection();
-        MainClass.playerStatus = new PlayerStatus();
-        MainClass.playerWarnings = new PlayerWarnings();
-        MainClass.accessMenu = new AccessMenu();
-        MainClass.fluidDetector = new FluidDetector();
-        speakHeldItem = new SpeakHeldItem();
+            MainClass.getScreenReader().say(startupMessage, true);
 
         for (KeyMapping km : KeyBindingsHandler.getInstance().getKeys()) {
             KeyMappingRegistry.register(km);
         }
 
         ClientTickEvent.CLIENT_POST.register(MainClass::clientTickEventsMethod);
+        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(MainClass::initWorldState);
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -98,12 +91,15 @@ public class MainClass {
             MenuFix.update(minecraftClient);
         }
 
+        if (minecraftClient.level == null)
+            return;
+
         if (inventoryControls != null && config.inventoryControls.enabled)
             inventoryControls.update();
 
         ReadCrosshair.getInstance().tick();
 
-        if (xpIndicator != null && config.features.xpIndicatorEnabled)
+        if (xpIndicator != null && config.features.xpIndicatorEnabled && !PlayerUtils.isSpectator())
             xpIndicator.update();
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled)
@@ -121,19 +117,20 @@ public class MainClass {
             if (!PlayerUtils.isPlayerTyping())
                 MouseKeySimulation.runOnTick();
 
-            if (Minecraft.getInstance().screen == null) {
+            if (minecraftClient.screen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.update();
             }
         }
 
-        if (playerWarnings != null && config.playerWarnings.enabled)
+        if (playerWarnings != null && config.playerWarnings.enabled && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()))
             playerWarnings.update();
 
         if (accessMenu != null && config.accessMenu.enabled)
             accessMenu.update();
 
-        speakHeldItem.speakHeldItem();
+        if (!PlayerUtils.isSpectator())
+            speakHeldItem.speakHeldItem();
 
         // POI Marking will handle POI Scan and POI Locking features inside it
         POIMarking.getInstance().update();
@@ -144,6 +141,18 @@ public class MainClass {
 
         // This should always be at the bottom
         Keystroke.updateInstances();
+    }
+
+    private static void initWorldState(LocalPlayer player) {
+        inventoryControls = new InventoryControls();
+        biomeIndicator = new BiomeIndicator();
+        xpIndicator = new XPIndicator();
+        facingDirection = new FacingDirection();
+        playerStatus = new PlayerStatus();
+        playerWarnings = new PlayerWarnings();
+        accessMenu = new AccessMenu();
+        fluidDetector = new FluidDetector();
+        speakHeldItem = new SpeakHeldItem();
     }
 
     /**
@@ -169,13 +178,11 @@ public class MainClass {
     }
 
     public static void speakWithNarrator(String text, boolean interrupt) {
+        if (Strings.isEmpty(text) || !Minecraft.getInstance().isWindowActive()) {
+            log.warn("The speaking of string \"{}\" with interrupt={} was suppressed", text, interrupt);
+            return;
+        }
         MainClass.interrupt = interrupt;
         Minecraft.getInstance().getNarrator().sayNow(text);
-    }
-
-    public static void speakWithNarratorIfNotEmpty(String text, boolean interrupt) {
-        if (Strings.isNotEmpty(text)) {
-            speakWithNarrator(text, interrupt);
-        }
     }
 }

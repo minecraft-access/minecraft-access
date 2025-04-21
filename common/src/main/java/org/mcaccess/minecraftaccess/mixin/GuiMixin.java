@@ -40,7 +40,7 @@ public class GuiMixin {
                 if (config.features.onlySpeakActionBarUpdates) {
                     minecraft_access$onlySpeakChangedParts(msg);
                 } else {
-                    MainClass.speakWithNarratorIfNotEmpty(msg, true);
+                    MainClass.speakWithNarrator(msg, true);
                 }
                 this.minecraft_access$previousActionBarContent = msg;
             }
@@ -53,7 +53,7 @@ public class GuiMixin {
         List<String> previousParts = Arrays.asList(StringUtils.splitToParts(this.minecraft_access$previousActionBarContent));
         parts.removeAll(previousParts);
         String toSpeak = String.join(", ", parts);
-        MainClass.speakWithNarratorIfNotEmpty(toSpeak, true);
+        MainClass.speakWithNarrator(toSpeak, true);
     }
 
     @Inject(method = "setTitle", at = @At("TAIL"))

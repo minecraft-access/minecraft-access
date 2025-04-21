@@ -127,6 +127,6 @@ public class ChatScreenMixin {
      */
     @Inject(at = @At("TAIL"), method = "moveInHistory")
     private void speakSwitchedChatHistory(int index, CallbackInfo ci) {
-        MainClass.speakWithNarratorIfNotEmpty(this.input.getValue(), true);
+        MainClass.speakWithNarrator(this.input.getValue(), true);
     }
 }

@@ -67,21 +67,17 @@ public class MenuFix {
         if (minecraftClient.screen == null)
             return;
 
-        try {
-            if (menuList.contains(minecraftClient.screen.getClass())) {
-                if (!(prevScreenClass == minecraftClient.screen.getClass())) {
-                   log.debug("%s opened, now moving the mouse cursor.".formatted(minecraftClient.screen.getTitle().getString()));
-                    moveMouseCursor(minecraftClient);
-                    prevScreenClass = minecraftClient.screen.getClass();
-                }
-
-                boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-                boolean isRPressed = KeyUtils.isAnyPressed(GLFW.GLFW_KEY_R);
-                if (isLeftAltPressed && isRPressed)
-                    moveMouseCursor(minecraftClient);
+        if (menuList.contains(minecraftClient.screen.getClass())) {
+            if (!(prevScreenClass == minecraftClient.screen.getClass())) {
+                log.debug("%s opened, now moving the mouse cursor.".formatted(minecraftClient.screen.getTitle().getString()));
+                moveMouseCursor(minecraftClient);
+                prevScreenClass = minecraftClient.screen.getClass();
             }
-        } catch (Exception e) {
-            log.error("Error encountered while running the menu fix feature", e);
+
+            boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
+            boolean isRPressed = KeyUtils.isAnyPressed(GLFW.GLFW_KEY_R);
+            if (isLeftAltPressed && isRPressed)
+                moveMouseCursor(minecraftClient);
         }
     }
 
@@ -91,13 +87,9 @@ public class MenuFix {
      * @param minecraftClient Current MinecraftClient instance
      */
     private static void moveMouseCursor(Minecraft minecraftClient) {
-        try {
-            int movePosX = minecraftClient.getWindow().getX() + 10;
-            int movePosY = minecraftClient.getWindow().getY() + 10;
+        int movePosX = minecraftClient.getWindow().getX() + 10;
+        int movePosY = minecraftClient.getWindow().getY() + 10;
 
-            MouseUtils.moveAndLeftClick(movePosX, movePosY);
-        } catch (Exception e) {
-            log.error("Error encountered while moving the mouse for the menu fix feature", e);
-        }
+        MouseUtils.moveAndLeftClick(movePosX, movePosY);
     }
 }

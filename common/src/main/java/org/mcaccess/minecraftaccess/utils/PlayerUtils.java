@@ -18,10 +18,12 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -242,5 +244,40 @@ public class PlayerUtils {
     public static boolean isPlayerTyping() {
         Screen currentScreen = Minecraft.getInstance().screen;
         return currentScreen != null && (currentScreen.getFocused() instanceof EditBox || currentScreen instanceof KeyBindsScreen);
+    }
+
+    public static boolean isCreative() {
+        Minecraft client = Minecraft.getInstance();
+        if (client == null || client.gameMode == null) return false;
+        GameType currentGameMode = client.gameMode.getPlayerMode();
+        return currentGameMode == GameType.CREATIVE;
+    }
+
+    public static boolean isSpectator() {
+        Minecraft client = Minecraft.getInstance();
+        if (client == null || client.gameMode == null) return false;
+        GameType currentGameMode = client.gameMode.getPlayerMode();
+        return currentGameMode == GameType.SPECTATOR;
+    }
+
+    public static boolean isAdventure() {
+        Minecraft client = Minecraft.getInstance();
+        if (client == null || client.gameMode == null) return false;
+        GameType currentGameMode = client.gameMode.getPlayerMode();
+        return currentGameMode == GameType.ADVENTURE;
+    }
+
+    public static boolean isSurvival() {
+        Minecraft client = Minecraft.getInstance();
+        if (client == null || client.gameMode == null) return false;
+        GameType currentGameMode = client.gameMode.getPlayerMode();
+        return currentGameMode == GameType.SURVIVAL;
+    }
+
+    public static boolean isHardCore() {
+        Minecraft client = Minecraft.getInstance();
+        if (client == null || client.level == null) return false;
+        LevelData levelData = client.level.getLevelData();
+        return levelData != null && levelData.isHardcore();
     }
 }

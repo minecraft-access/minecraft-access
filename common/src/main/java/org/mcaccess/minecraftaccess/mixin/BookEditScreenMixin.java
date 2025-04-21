@@ -221,7 +221,7 @@ public abstract class BookEditScreenMixin {
     @Inject(at = @At("RETURN"), method = "titleKeyPressed")
     private void speakWholeSigningTextWhileSigning(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         String signingText = ((TextFieldHelperAccessor) this.titleEdit).getGetMessageFn().get();
-        MainClass.speakWithNarratorIfNotEmpty(signingText, true);
+        MainClass.speakWithNarrator(signingText, true);
     }
 
     @Unique
@@ -229,7 +229,7 @@ public abstract class BookEditScreenMixin {
         String pageText = minecraft_access$getPageText();
         int cursor = this.pageEdit.getCursorPos();
         String lineText = StringUtils.getLineTextWhereTheCursorIsLocatedIn(pageText, cursor);
-        MainClass.speakWithNarratorIfNotEmpty(lineText, true);
+        MainClass.speakWithNarrator(lineText, true);
     }
 
     @Unique
@@ -242,7 +242,7 @@ public abstract class BookEditScreenMixin {
         String pageText = minecraft_access$getPageText();
         MutableComponent pageIndicatorText = Component.translatable("book.pageIndicator", this.currentPage + 1, this.pages.size());
         pageText = "%s\n\n%s".formatted(pageText, pageIndicatorText.getString());
-        MainClass.speakWithNarratorIfNotEmpty(pageText, true);
+        MainClass.speakWithNarrator(pageText, true);
     }
 
     @Inject(at = @At("RETURN"), method = "<init>")

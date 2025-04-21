@@ -37,8 +37,13 @@ public class POIEntities {
             e -> marked != null && marked.isInstance(e)
     );
 
+    private final POIGroup<Entity> otherEntitiesGroup = new POIGroup<>(
+            "minecraft_access.point_of_interest.group.otherEntities",
+            entity -> true
+    );
+
     @SuppressWarnings("unchecked")
-    final POIGroup<Entity>[] groups = Stream.of(List.of(markedGroup), BuiltinEntityPOIGroups.ALL)
+    final POIGroup<Entity>[] groups = Stream.of(List.of(markedGroup), BuiltinEntityPOIGroups.ALL, List.of(otherEntitiesGroup))
             .flatMap(Collection::stream).toArray(POIGroup[]::new);
 
     public static POIEntities getInstance() {

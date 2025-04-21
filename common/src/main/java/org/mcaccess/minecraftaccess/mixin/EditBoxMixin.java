@@ -114,20 +114,20 @@ abstract class EditBoxMixin extends AbstractWidget {
             case GLFW.GLFW_KEY_LEFT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(-1));
-                    MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
+                    MainClass.speakWithNarrator(hoveredText, true);
                 } else {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getCursorPos(-1));
-                    MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
+                    MainClass.speakWithNarrator(hoveredText, true);
                 }
                 return;
             }
             case GLFW.GLFW_KEY_RIGHT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(1));
-                    MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
+                    MainClass.speakWithNarrator(hoveredText, true);
                 } else {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getCursorPos(1));
-                    MainClass.speakWithNarratorIfNotEmpty(hoveredText, true);
+                    MainClass.speakWithNarrator(hoveredText, true);
                 }
                 return;
             }
@@ -151,7 +151,7 @@ abstract class EditBoxMixin extends AbstractWidget {
             return;
         }
         String selectedText = this.getHighlighted();
-        MainClass.speakWithNarratorIfNotEmpty(selectedText, true);
+        MainClass.speakWithNarrator(selectedText, true);
     }
 
     @Inject(at = @At("HEAD"), method = "deleteChars")
@@ -163,7 +163,7 @@ abstract class EditBoxMixin extends AbstractWidget {
         boolean allTextAreSelected = this.highlightPos == 0;
         if (!allTextAreSelected) {
             String erasedText = mca$getCursorHoverOverText(cursorPos);
-            MainClass.speakWithNarratorIfNotEmpty(erasedText, true);
+            MainClass.speakWithNarrator(erasedText, true);
         }
     }
 

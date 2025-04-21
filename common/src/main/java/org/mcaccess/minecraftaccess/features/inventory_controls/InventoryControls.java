@@ -145,7 +145,7 @@ public class InventoryControls {
                 String slotNarrationText = getCurrentSlotNarrationText();
                 if (!previousSlotText.equals(slotNarrationText)) {
                     previousSlotText = slotNarrationText;
-                    MainClass.speakWithNarratorIfNotEmpty(previousSlotText, true);
+                    MainClass.speakWithNarrator(previousSlotText, true);
                 }
             }
 

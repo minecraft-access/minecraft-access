@@ -41,34 +41,29 @@ public class FallDetector {
     }
 
     public void update() {
-        try {
-            config = Config.getInstance().fallDetector;
+        config = Config.getInstance().fallDetector;
 
-            if (!config.enabled) return;
+        if (!config.enabled) return;
 
-            if (minecraftClient == null) return;
-            if (minecraftClient.player == null) return;
-            if (minecraftClient.level == null) return;
-            if (minecraftClient.screen != null) return;
-            if (minecraftClient.player.isUnderWater()) return;
-            if (minecraftClient.player.isSwimming()) return;
-            if (minecraftClient.player.isVisuallySwimming()) return;
-            if (!minecraftClient.player.onGround()) return;
+        if (minecraftClient == null) return;
+        if (minecraftClient.player == null) return;
+        if (minecraftClient.screen != null) return;
+        if (!minecraftClient.player.onGround()) return;
+        if (minecraftClient.player.isUnderWater()) return;
+        if (minecraftClient.player.isSwimming()) return;
+        if (minecraftClient.player.isVisuallySwimming()) return;
 
-            long currentTimeInMillis = clock.millis();
-            if (currentTimeInMillis - previousTimeInMillis < config.delay) return;
-            previousTimeInMillis = currentTimeInMillis;
+        long currentTimeInMillis = clock.millis();
+        if (currentTimeInMillis - previousTimeInMillis < config.delay) return;
+        previousTimeInMillis = currentTimeInMillis;
 
-            log.trace("Searching for fall in nearby area...");
-            SearchNearbyPositions();
-            log.trace("Searching ended");
-        } catch (Exception e) {
-            log.error("An error occurred in fall detector.", e);
-        }
+        log.trace("Searching for fall in nearby area...");
+        SearchNearbyPositions();
+        log.trace("Searching ended");
     }
 
     private void SearchNearbyPositions() {
-        if (minecraftClient.player == null) return;
+        if (minecraftClient.level == null) return;
         BlockPos center = minecraftClient.player.blockPosition();
 
         Queue<BlockPos> toSearch = new LinkedList<>();
@@ -110,8 +105,6 @@ public class FallDetector {
     }
 
     private void checkForFall(BlockPos toCheck) {
-
-        if (minecraftClient.level == null) return;
         if (!(minecraftClient.level.getBlockState(toCheck).isAir())) return;
 
         if (getDepth(toCheck, config.depth) < config.depth) return;
@@ -124,7 +117,6 @@ public class FallDetector {
         if (maxDepth <= 0)
             return 0;
 
-        if (minecraftClient.level == null) return 0;
         if (!(minecraftClient.level.getBlockState(blockPos).isAir())) return 0;
 
         return 1 + getDepth(blockPos.below(), --maxDepth);
