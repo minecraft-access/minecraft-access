@@ -134,12 +134,12 @@ public class NarrationUtils {
             case Sheep sheep -> getSheepInfo(sheep, text);
             case ZombieVillager zombieVillager when zombieVillager.isConverting() ->
                     I18n.get("minecraft_access.read_crosshair.zombie_villager_is_curing", text);
-            case Display.ItemDisplay itemDisplay -> {
+            case Display.ItemDisplay itemDisplay when itemDisplay.itemRenderState() != null -> {
                 String itemName = itemDisplay.itemRenderState().itemStack().getItemName().getString();
                 yield I18n.get("minecraft_access.point_of_interest.locking.display_item", itemName);
             }
-            case Display.TextDisplay textDisplay -> textDisplay.textRenderState().text().getString();
-            case Display.BlockDisplay blockDisplay -> {
+            case Display.TextDisplay textDisplay when textDisplay.textRenderState() != null -> textDisplay.textRenderState().text().getString();
+            case Display.BlockDisplay blockDisplay when blockDisplay.blockRenderState() != null -> {
                 Block ghostBlock = blockDisplay.blockRenderState().blockState().getBlock();
                 yield I18n.get("minecraft_access.point_of_interest.locking.display_block", ghostBlock.getName().getString());
             }

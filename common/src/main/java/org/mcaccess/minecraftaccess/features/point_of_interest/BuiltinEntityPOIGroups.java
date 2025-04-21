@@ -70,7 +70,7 @@ public enum BuiltinEntityPOIGroups {
                 return itemOnGround || pickupAllowedProjectile;
             }
     )),
-    Display(new POIGroup<>(
+    DISPLAY(new POIGroup<>(
             "minecraft_access.point_of_interest.group.display",
             new POIGroup.Sound(SoundEvents.UI_TOAST_IN, 1f),
             Display.class::isInstance
