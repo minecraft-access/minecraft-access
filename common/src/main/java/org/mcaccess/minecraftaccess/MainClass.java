@@ -1,12 +1,14 @@
 package org.mcaccess.minecraftaccess;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
@@ -55,21 +57,12 @@ public class MainClass {
         if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
             MainClass.getScreenReader().say(msg, true);
 
-        MainClass.inventoryControls = new InventoryControls();
-        MainClass.biomeIndicator = new BiomeIndicator();
-        MainClass.xpIndicator = new XPIndicator();
-        MainClass.facingDirection = new FacingDirection();
-        MainClass.playerStatus = new PlayerStatus();
-        MainClass.playerWarnings = new PlayerWarnings();
-        MainClass.accessMenu = new AccessMenu();
-        MainClass.fluidDetector = new FluidDetector();
-        speakHeldItem = new SpeakHeldItem();
-
         for (KeyMapping km : KeyBindingsHandler.getInstance().getKeys()) {
             KeyMappingRegistry.register(km);
         }
 
         ClientTickEvent.CLIENT_POST.register(MainClass::clientTickEventsMethod);
+        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(MainClass::initWorldState);
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -98,6 +91,9 @@ public class MainClass {
             MenuFix.update(minecraftClient);
         }
 
+        if (minecraftClient.level == null)
+            return;
+
         if (inventoryControls != null && config.inventoryControls.enabled)
             inventoryControls.update();
 
@@ -121,7 +117,7 @@ public class MainClass {
             if (!PlayerUtils.isPlayerTyping())
                 MouseKeySimulation.runOnTick();
 
-            if (Minecraft.getInstance().screen == null) {
+            if (minecraftClient.screen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.update();
             }
@@ -145,6 +141,18 @@ public class MainClass {
 
         // This should always be at the bottom
         Keystroke.updateInstances();
+    }
+
+    private static void initWorldState(LocalPlayer player) {
+        inventoryControls = new InventoryControls();
+        biomeIndicator = new BiomeIndicator();
+        xpIndicator = new XPIndicator();
+        facingDirection = new FacingDirection();
+        playerStatus = new PlayerStatus();
+        playerWarnings = new PlayerWarnings();
+        accessMenu = new AccessMenu();
+        fluidDetector = new FluidDetector();
+        speakHeldItem = new SpeakHeldItem();
     }
 
     /**
