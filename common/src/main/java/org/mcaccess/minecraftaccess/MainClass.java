@@ -170,7 +170,7 @@ public class MainClass {
     }
 
     public static void speakWithNarrator(String text, boolean interrupt) {
-        if (Strings.isNotEmpty(text) && Minecraft.getInstance().isWindowActive()) {
+        if (Strings.isEmpty(text) || !Minecraft.getInstance().isWindowActive()) {
             log.warn("The speaking of string \"{}\" with interrupt={} was suppressed", text, interrupt);
             return;
         }
