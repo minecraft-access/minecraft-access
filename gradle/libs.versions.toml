@@ -16,13 +16,13 @@ architecturyApiNeoForge = { module = "dev.architectury:architectury-neoforge", v
 clothConfig = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-fabricApi = "net.fabricmc.fabric-api:fabric-api:0.120.0+1.21.5"
-fabricLoader = "net.fabricmc:fabric-loader:0.16.13"
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.121.0+"
+fabricLoader = "net.fabricmc:fabric-loader:0.16.14"
 jadeFabric = "maven.modrinth:jade:18.1.0+fabric"
 jadeNeoForge = "maven.modrinth:jade:18.1.0+neoforge"
 minecraft = "com.mojang:minecraft:1.21.5"
 modMenu = "com.terraformersmc:modmenu:14.0.0-rc.2"
-neoForge = "net.neoforged:neoforge:21.5.39-beta"
+neoForge = "net.neoforged:neoforge:21.5.52-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.4:2025.03.23"
 
 assertjCore = "org.assertj:assertj-core:3.27.3"
