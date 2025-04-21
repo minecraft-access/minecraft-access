@@ -4,13 +4,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import org.lwjgl.glfw.GLFW;
-import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +49,7 @@ public class MouseUtils {
      * @param y the y position of the pixel location
      */
     public static void move(int x, int y) {
-        log.debug("Moving mouse to x:%d y:%d".formatted(x, y));
+        log.debug("Move mouse to x:{} y:{}", x, y);
         GLFW.glfwSetCursorPos(getWindowPointer(), x, y);
         getMouseHandler().move(getWindowPointer(), x, y);
     }
@@ -67,18 +62,12 @@ public class MouseUtils {
      * @param delay delay amount in milliseconds
      */
     public static void moveAfterDelay(int x, int y, int delay) {
-        try {
-            log.debug("Moving mouse to x:%d y:%d after %d milliseconds".formatted(x, y, delay));
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    move(x, y);
-                }
-            };
-            new Timer().schedule(timerTask, delay);
-        } catch (Exception e) {
-            log.error("Error encountered on moving mouse.", e);
-        }
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                move(x, y);
+            }
+        }, delay);
     }
 
     public record Coordinates(int x, int y) {
@@ -132,6 +121,7 @@ public class MouseUtils {
         }
 
         public void click() {
+            log.debug("Mouse {} clicked", this);
             press();
             release();
         }
@@ -158,6 +148,7 @@ public class MouseUtils {
         DOWN;
 
         public void scroll() {
+            log.debug("Mouse {} scrolled", this);
             // captured real mouse scrolling always results in x=0, y=1/-1
             int offset = this == Wheel.UP ? 1 : -1;
             getMouseHandler().scroll(getWindowPointer(), 0, offset);
