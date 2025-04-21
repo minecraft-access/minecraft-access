@@ -212,10 +212,6 @@ after installing the mod to make this mod work properly if you’re using Linux.
 
 2. Although the mod overrides the library used for TTS, minecraft still needs the `flite` library to be installed, so you can install it using your distro's package manager itself.
 
-3. We also need to install [xdotool](https://github.com/jordansissel/xdotool),
-   which is used for simulating the mouse actions.
-   Follow the [instructions](https://github.com/jordansissel/xdotool#installation) to install it.
-
 ## Update the Game and Mods
 For [Fabric](#install-fabric),
 run the fabric installer again and change the installed game version in the Fabric installer screen,
