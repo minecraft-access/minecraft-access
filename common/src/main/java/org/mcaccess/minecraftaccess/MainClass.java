@@ -62,7 +62,7 @@ public class MainClass {
         }
 
         ClientTickEvent.CLIENT_POST.register(MainClass::clientTickEventsMethod);
-        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(player -> initWorldState(player));
+        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(MainClass::initWorldState);
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
