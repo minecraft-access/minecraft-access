@@ -14,7 +14,9 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.Panda;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.sheep.Sheep;
@@ -128,13 +130,31 @@ public class NarrationUtils {
         if (entity instanceof Leashable leashable && leashable.isLeashed())
             text = I18n.get("minecraft_access.read_crosshair.leashed", text);
 
-        if (entity instanceof Sheep sheep) {
-            text = getSheepInfo(sheep, text);
-        } else if (entity instanceof ZombieVillager zombieVillager && zombieVillager.isConverting()) {
-            text = I18n.get("minecraft_access.read_crosshair.zombie_villager_is_curing", text);
-        } else if (isDroppedItem) {
-            text = I18n.get("minecraft_access.point_of_interest.locking.dropped_item", text);
-        }
+        text = switch (entity) {
+            case Sheep sheep -> getSheepInfo(sheep, text);
+            case ZombieVillager zombieVillager when zombieVillager.isConverting() ->
+                    I18n.get("minecraft_access.read_crosshair.zombie_villager_is_curing", text);
+            case Display.ItemDisplay itemDisplay when itemDisplay.itemRenderState() != null -> {
+                @SuppressWarnings("DataFlowIssue")
+                String itemName = itemDisplay.itemRenderState().itemStack().getItemName().getString();
+                yield I18n.get("minecraft_access.point_of_interest.locking.display_item", itemName);
+            }
+            case Display.TextDisplay textDisplay when textDisplay.textRenderState() != null -> {
+                //noinspection DataFlowIssue
+                yield textDisplay.textRenderState().text().getString();
+            }
+            case Display.BlockDisplay blockDisplay when blockDisplay.blockRenderState() != null -> {
+                @SuppressWarnings("DataFlowIssue")
+                Block ghostBlock = blockDisplay.blockRenderState().blockState().getBlock();
+                yield I18n.get("minecraft_access.point_of_interest.locking.display_block", ghostBlock.getName().getString());
+            }
+            default -> {
+                if (isDroppedItem) {
+                    yield I18n.get("minecraft_access.point_of_interest.locking.dropped_item", text);
+                }
+                yield text;
+            }
+        };
 
         if (entity instanceof LivingEntity livingEntity) {
             for (EquipmentSlot slot : EquipmentSlot.values()) {
