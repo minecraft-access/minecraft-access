@@ -144,14 +144,14 @@ public class MainClass {
     }
 
     private static void initWorldState(LocalPlayer player) {
-        MainClass.inventoryControls = new InventoryControls();
-        MainClass.biomeIndicator = new BiomeIndicator();
-        MainClass.xpIndicator = new XPIndicator();
-        MainClass.facingDirection = new FacingDirection();
-        MainClass.playerStatus = new PlayerStatus();
-        MainClass.playerWarnings = new PlayerWarnings();
-        MainClass.accessMenu = new AccessMenu();
-        MainClass.fluidDetector = new FluidDetector();
+        inventoryControls = new InventoryControls();
+        biomeIndicator = new BiomeIndicator();
+        xpIndicator = new XPIndicator();
+        facingDirection = new FacingDirection();
+        playerStatus = new PlayerStatus();
+        playerWarnings = new PlayerWarnings();
+        accessMenu = new AccessMenu();
+        fluidDetector = new FluidDetector();
         speakHeldItem = new SpeakHeldItem();
     }
 
