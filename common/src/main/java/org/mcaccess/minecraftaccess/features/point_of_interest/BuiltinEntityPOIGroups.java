@@ -2,10 +2,7 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.NeutralMob;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
@@ -72,6 +69,11 @@ public enum BuiltinEntityPOIGroups {
                 boolean pickupAllowedProjectile = entity instanceof AbstractArrow projectile && projectile.pickup.equals(AbstractArrow.Pickup.ALLOWED);
                 return itemOnGround || pickupAllowedProjectile;
             }
+    )),
+    Display(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.display",
+            new POIGroup.Sound(SoundEvents.UI_TOAST_IN, 1f),
+            Display.class::isInstance
     ));
 
     public static final List<POIGroup<Entity>> ALL = Arrays.stream(values()).map(bg -> bg.group).toList();

@@ -42,16 +42,14 @@ public class POIBlocks {
      */
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.otherBlocks",
-            this::blockIsNotAirAndNotContainedInGroupYet
+            pos -> {
+                BlockState state = WorldUtils.getBlockState(pos);
+                boolean blockAlreadyInGroup = this.otherBlocksGroup.getItems().stream()
+                        .map(p -> WorldUtils.getBlockState(p).getBlock())
+                        .anyMatch(t -> t.equals(state.getBlock()));
+                return !state.isAir() && !blockAlreadyInGroup;
+            }
     );
-
-    private boolean blockIsNotAirAndNotContainedInGroupYet(BlockPos pos) {
-        BlockState state = WorldUtils.getBlockState(pos);
-        boolean blockAlreadyInGroup = otherBlocksGroup.getItems().stream()
-                .map(p -> WorldUtils.getBlockState(p).getBlock())
-                .anyMatch(t -> t.equals(state.getBlock()));
-        return !state.isAir() && !blockAlreadyInGroup;
-    }
 
     @SuppressWarnings("unchecked")
     public final POIGroup<BlockPos>[] groups = Stream.of(List.of(markedGroup), BuiltinBlockPOIGroups.ALL, List.of(otherBlocksGroup))
