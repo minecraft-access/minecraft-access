@@ -202,6 +202,6 @@ These controls work on any config menu that uses the Cloth Config.
 
 ## General
 
-| Key Combination  | Description                                          |
-|------------------|------------------------------------------------------|
-| `Left Alt` + `R` | Perform menu fix (move the cursor aside) if possible |
+| Key Combination  | Description                                                                   |
+|------------------|-------------------------------------------------------------------------------|
+| `Left Alt` + `R` | Perform [`Menu Fix`]({{% relref "/features#menu-fix" %}}) feature if possible |

@@ -227,7 +227,7 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybin
 |----------------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Command Suggestion Narrator Format     | `%dx%d %s`    | The speaking format of the command suggestion, two `%d` represent the order of focused suggestion and total number of suggestions, `%s` represents the suggestion content |
 | Use 12 Hour Time Format                | false         | Whether to use 12 hour time format when speaking the time                                                                                                                 | 
-| Enable Menu Fix                        | true          | Whether to move the cursor position aside when opening certain menus (to prevent narrate unnecessary contents under the cursor)                                           |
+| Enable Menu Fix                        | true          | Whether to enable [`Menu Fix`]({{% relref "/features#menu-fix" %}}) feature                                                                                               |
 | Debug Mode                             | true          | Developer config, whether to print debug messages into log                                                                                                                |
 | Multiple Click Speed (in milliseconds) | 750           | The maximum time interval between two keystrokes in multiple click operations like `double-click`                                                                         |
 
