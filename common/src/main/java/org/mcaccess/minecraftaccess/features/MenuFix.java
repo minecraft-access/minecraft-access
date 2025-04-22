@@ -70,26 +70,21 @@ public class MenuFix {
         if (menuList.contains(minecraftClient.screen.getClass())) {
             if (!(prevScreenClass == minecraftClient.screen.getClass())) {
                 log.debug("%s opened, now moving the mouse cursor.".formatted(minecraftClient.screen.getTitle().getString()));
-                moveMouseCursor(minecraftClient);
+                moveMouseCursor();
                 prevScreenClass = minecraftClient.screen.getClass();
             }
 
             boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
             boolean isRPressed = KeyUtils.isAnyPressed(GLFW.GLFW_KEY_R);
             if (isLeftAltPressed && isRPressed)
-                moveMouseCursor(minecraftClient);
+                moveMouseCursor();
         }
     }
 
     /**
-     * Moves the mouse cursor to x=1 y=1 pixel location relative the Minecraft window location
-     *
-     * @param minecraftClient Current MinecraftClient instance
+     * Moves the mouse cursor to x=10 y=10 relative to the Minecraft window location
      */
-    private static void moveMouseCursor(Minecraft minecraftClient) {
-        int movePosX = minecraftClient.getWindow().getX() + 10;
-        int movePosY = minecraftClient.getWindow().getY() + 10;
-
-        MouseUtils.moveAndLeftClick(movePosX, movePosY);
+    private static void moveMouseCursor() {
+        MouseUtils.moveAndLeftClick(10, 10);
     }
 }
