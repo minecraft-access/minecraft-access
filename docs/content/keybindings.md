@@ -199,3 +199,9 @@ These controls work on any config menu that uses the Cloth Config.
 | `Tab` + `Shift`          | Focus on previous option           |
 | `Tab` + `Ctrl`           | Switch to next config category     |
 | `Tab` + `Ctrl` + `Shift` | Switch to previous config category |
+
+## General
+
+| Key Combination  | Description                                          |
+|------------------|------------------------------------------------------|
+| `Left Alt` + `R` | Perform menu fix (move the cursor aside) if possible |

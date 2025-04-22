@@ -252,7 +252,12 @@ See also: [Configuration]({{% relref "/config#other-configurations" %}})
 
 Some small features that are automatically triggered based on your actions.
 
-See also: [Configuration]({{% relref "/config#other-configurations" %}})
+See also: [Configuration]({{% relref "/config#general" %}}), [Keybindings]({{% relref "/keybindings#general" %}})
+
+### Menu Fix
+
+This mod will automatically move the cursor position aside when opening certain menus to prevent narrate unnecessary contents under the cursor.
+You can close this feature in the configuration if you have some sight and find it annoying.
 
 ### Speak Held Item
 
