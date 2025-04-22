@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DirectJoinServerScreen;
 import net.minecraft.client.gui.screens.EditServerScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.gui.screens.options.*;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.EditWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 import org.lwjgl.glfw.GLFW;
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
@@ -27,16 +29,8 @@ import java.util.List;
  */
 @Slf4j
 public class MenuFix {
-    /**
-     * Prevents executing this fix for the title screen the first time
-     */
-    @SuppressWarnings("rawtypes")
-    static Class prevScreenClass = TitleScreen.class;
-    /**
-     * The list of screens for which this fix will execute when opened
-     */
-    @SuppressWarnings("rawtypes")
-    private static final List<Class> menuList = new ArrayList<>() {{
+    private static Class<?> prevScreenClass = TitleScreen.class;
+    private static final List<Class<?>> menusNeedFix = new ArrayList<>() {{
         add(TitleScreen.class);
         add(OptionsScreen.class);
         add(ControlsScreen.class);
@@ -58,26 +52,24 @@ public class MenuFix {
         add(EditServerScreen.class);
     }};
 
-    /**
-     * This method gets called at the end of every tick.
-     *
-     * @param minecraftClient Current MinecraftClient instance
-     */
     public static void update(Minecraft minecraftClient) {
-        if (minecraftClient.screen == null)
+        if (!Config.getInstance().menuFixEnabled || minecraftClient.screen == null) {
             return;
+        }
 
-        if (menuList.contains(minecraftClient.screen.getClass())) {
-            if (!(prevScreenClass == minecraftClient.screen.getClass())) {
-                log.debug("%s opened, now moving the mouse cursor.".formatted(minecraftClient.screen.getTitle().getString()));
+        Class<? extends Screen> currentScreen = minecraftClient.screen.getClass();
+        if (menusNeedFix.contains(currentScreen)) {
+            if (prevScreenClass != currentScreen) {
+                log.debug("Performing menu fix on {}", minecraftClient.screen.getTitle().getString());
                 moveMouseCursor();
-                prevScreenClass = minecraftClient.screen.getClass();
+                prevScreenClass = currentScreen;
             }
 
             boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
             boolean isRPressed = KeyUtils.isAnyPressed(GLFW.GLFW_KEY_R);
-            if (isLeftAltPressed && isRPressed)
+            if (isLeftAltPressed && isRPressed) {
                 moveMouseCursor();
+            }
         }
     }
 

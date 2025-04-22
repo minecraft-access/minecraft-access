@@ -87,9 +87,7 @@ public class MainClass {
             log.info("Unbound advancements key");
         }
 
-        if (config.menuFixEnabled) {
-            MenuFix.update(minecraftClient);
-        }
+        MenuFix.update(minecraftClient);
 
         if (minecraftClient.level == null)
             return;
