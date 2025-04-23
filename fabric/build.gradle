@@ -32,7 +32,6 @@ dependencies {
     include libs.clothConfigFabric
 
     modImplementation libs.modMenu
-    include libs.modMenu
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
