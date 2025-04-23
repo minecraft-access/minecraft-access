@@ -81,12 +81,6 @@ public class MainClass {
 
         changeLogLevelBaseOnDebugConfig();
 
-        if (!MainClass.alreadyDisabledAdvancementKey) {
-            minecraftClient.options.keyAdvancements.setKey(InputConstants.getKey("key.keyboard.unknown"));
-            MainClass.alreadyDisabledAdvancementKey = true;
-            log.info("Unbound advancements key");
-        }
-
         if (config.menuFixEnabled) {
             MenuFix.update(minecraftClient);
         }
@@ -153,6 +147,14 @@ public class MainClass {
         accessMenu = new AccessMenu();
         fluidDetector = new FluidDetector();
         speakHeldItem = new SpeakHeldItem();
+        if (!alreadyDisabledAdvancementKey) {
+            Minecraft client = Minecraft.getInstance();
+            client.options.keyAdvancements.setKey(InputConstants.UNKNOWN);
+            client.options.save();
+            client.options.load();
+            alreadyDisabledAdvancementKey = true;
+            log.info("Unbound advancements key");
+        }
     }
 
     /**
