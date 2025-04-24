@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.utils;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.Set;
 
@@ -78,224 +77,224 @@ public class KeyBindingsHandler {
         inventoryControlsGroupKey = new KeyMapping(
                 "minecraft_access.keys.inventory_controls.change_group_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_C,
+                InputConstants.KEY_C,
                 INVENTORY_CONTROLS_TRANSLATION_KEY
         );
 
         inventoryControlsUpKey = new KeyMapping(
                 "minecraft_access.keys.inventory_controls.up_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_I,
+                InputConstants.KEY_I,
                 INVENTORY_CONTROLS_TRANSLATION_KEY
         );
 
         inventoryControlsRightKey = new KeyMapping(
                 "minecraft_access.keys.inventory_controls.right_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_L,
+                InputConstants.KEY_L,
                 INVENTORY_CONTROLS_TRANSLATION_KEY
         );
 
         inventoryControlsDownKey = new KeyMapping(
                 "minecraft_access.keys.inventory_controls.down_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_K,
+                InputConstants.KEY_K,
                 INVENTORY_CONTROLS_TRANSLATION_KEY
         );
 
         inventoryControlsLeftKey = new KeyMapping(
                 "minecraft_access.keys.inventory_controls.left_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_J,
+                InputConstants.KEY_J,
                 INVENTORY_CONTROLS_TRANSLATION_KEY
         );
 
         inventoryControlsSwitchTabKey = new KeyMapping(
                 "minecraft_access.keys.inventory_controls.switch_tabs_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_V,
+                InputConstants.KEY_V,
                 INVENTORY_CONTROLS_TRANSLATION_KEY
         );
 
         inventoryControlsToggleCraftableKey = new KeyMapping(
                 "minecraft_access.keys.inventory_controls.toggle_craftable_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_R,
+                InputConstants.KEY_R,
                 INVENTORY_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsUp = new KeyMapping(
                 "minecraft_access.keys.camera_controls.up_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_I,
+                InputConstants.KEY_I,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsRight = new KeyMapping(
                 "minecraft_access.keys.camera_controls.right_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_L,
+                InputConstants.KEY_L,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsDown = new KeyMapping(
                 "minecraft_access.keys.camera_controls.down_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_K,
+                InputConstants.KEY_K,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsLeft = new KeyMapping(
                 "minecraft_access.keys.camera_controls.left_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_J,
+                InputConstants.KEY_J,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsAlternateUp = new KeyMapping(
                 "minecraft_access.keys.camera_controls.alternate_up_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_8,
+                InputConstants.KEY_NUMPAD8,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsAlternateRight = new KeyMapping(
                 "minecraft_access.keys.camera_controls.alternate_right_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_6,
+                InputConstants.KEY_NUMPAD6,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsAlternateDown = new KeyMapping(
                 "minecraft_access.keys.camera_controls.alternate_down_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_2,
+                InputConstants.KEY_NUMPAD2,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsAlternateLeft = new KeyMapping(
                 "minecraft_access.keys.camera_controls.alternate_left_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_4,
+                InputConstants.KEY_NUMPAD4,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsNorth = new KeyMapping(
                 "minecraft_access.keys.camera_controls.north_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_7,
+                InputConstants.KEY_NUMPAD7,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsEast = new KeyMapping(
                 "minecraft_access.keys.camera_controls.east_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_9,
+                InputConstants.KEY_NUMPAD9,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsWest = new KeyMapping(
                 "minecraft_access.keys.camera_controls.west_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_1,
+                InputConstants.KEY_NUMPAD1,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsSouth = new KeyMapping(
                 "minecraft_access.keys.camera_controls.south_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_3,
+                InputConstants.KEY_NUMPAD3,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsStraightUp = new KeyMapping(
                 "minecraft_access.keys.camera_controls.straight_up_camera_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_0,
+                InputConstants.KEY_NUMPAD0,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsStraightDown = new KeyMapping(
                 "minecraft_access.keys.camera_controls.straight_down_camera_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_DECIMAL,
+                InputConstants.KEY_NUMPADCOMMA,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         cameraControlsCenterCamera = new KeyMapping(
                 "minecraft_access.keys.camera_controls.center_camera_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_5,
+                InputConstants.KEY_NUMPAD5,
                 CAMERA_CONTROLS_TRANSLATION_KEY
         );
 
         mouseSimulationLeftMouseKey = new KeyMapping(
                 "minecraft_access.keys.mouse_simulation.left_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_LEFT_BRACKET,
+                InputConstants.KEY_LBRACKET,
                 MOUSE_SIMULATION_KEY
         );
 
         mouseSimulationRightMouseKey = new KeyMapping(
                 "minecraft_access.keys.mouse_simulation.right_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_RIGHT_BRACKET,
+                InputConstants.KEY_RBRACKET,
                 MOUSE_SIMULATION_KEY
         );
 
         mouseSimulationMiddleMouseKey = new KeyMapping(
                 "minecraft_access.keys.mouse_simulation.middle_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_BACKSLASH,
+                InputConstants.KEY_BACKSLASH,
                 MOUSE_SIMULATION_KEY
         );
 
         mouseSimulationScrollUpKey = new KeyMapping(
                 "minecraft_access.keys.mouse_simulation.scroll_up_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_SEMICOLON,
+                InputConstants.KEY_SEMICOLON,
                 MOUSE_SIMULATION_KEY
         );
 
         mouseSimulationScrollDownKey = new KeyMapping(
                 "minecraft_access.keys.mouse_simulation.scroll_down_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_APOSTROPHE,
+                InputConstants.KEY_APOSTROPHE,
                 MOUSE_SIMULATION_KEY
         );
 
         speakPlayerStatusKey = new KeyMapping(
                 "minecraft_access.keys.other.player_status_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_R,
+                InputConstants.KEY_R,
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
         lockingHandlerKey = new KeyMapping(
                 "minecraft_access.keys.other.locking_handler_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_Y,
+                InputConstants.KEY_Y,
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
         positionNarrationKey = new KeyMapping(
                 "minecraft_access.keys.other.player_position_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_G,
+                InputConstants.KEY_G,
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
         accessMenuKey = new KeyMapping(
                 "minecraft_access.keys.other.access_menu_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_F4,
+                InputConstants.KEY_F4,
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
         narrateTarget = new KeyMapping(
                 "minecraft_access.access_menu.gui.button.block_and_fluid_target_info",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_B,
+                InputConstants.KEY_B,
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
@@ -365,35 +364,35 @@ public class KeyBindingsHandler {
         directionNarrationKey = new KeyMapping(
                 "minecraft_access.keys.other.facing_direction_key_name",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_H,
+                InputConstants.KEY_H,
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
         objectTrackerNextItem = new KeyMapping(
                 "minecraft_access.keys.object_tracker.next_item",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_PAGE_DOWN,
+                InputConstants.KEY_PAGEDOWN,
                 OBJECT_TRACKER_KEY
         );
 
         objectTrackerPreviousItem = new KeyMapping(
                 "minecraft_access.keys.object_tracker.previous_item",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_PAGE_UP,
+                InputConstants.KEY_PAGEUP,
                 OBJECT_TRACKER_KEY
         );
 
         objectTrackerNarrateCurrentObject = new KeyMapping(
                 "minecraft_access.keys.object_tracker.narrate_current_object",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_HOME,
+                InputConstants.KEY_HOME,
                 OBJECT_TRACKER_KEY
         );
 
         targetNearestObject = new KeyMapping(
                 "minecraft_access.keys.object_tracker.target_nearest",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_END,
+                InputConstants.KEY_END,
                 OBJECT_TRACKER_KEY
         );
     }

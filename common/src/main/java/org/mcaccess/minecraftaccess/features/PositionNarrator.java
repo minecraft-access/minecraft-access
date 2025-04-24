@@ -1,10 +1,9 @@
 package org.mcaccess.minecraftaccess.features;
 
-import org.mcaccess.minecraftaccess.Config;
+import com.mojang.blaze3d.platform.InputConstants;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
@@ -23,9 +22,9 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 public class PositionNarrator {
     @Getter
     private static final PositionNarrator instance;
-    public static Keystroke KeyX = new Keystroke(() -> KeyUtils.isAnyPressed(GLFW.GLFW_KEY_X));
-    public static Keystroke KeyC = new Keystroke(() -> KeyUtils.isAnyPressed(GLFW.GLFW_KEY_C));
-    public static Keystroke KeyZ = new Keystroke(() -> KeyUtils.isAnyPressed(GLFW.GLFW_KEY_Z));
+    public static Keystroke KeyX = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_X));
+    public static Keystroke KeyC = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_C));
+    public static Keystroke KeyZ = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_Z));
     public static Keystroke positionNarrationKey;
 
     static {

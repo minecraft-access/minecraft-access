@@ -8,7 +8,6 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -71,18 +70,18 @@ public class ChatScreenMixin {
         int numMessages = ((ChatComponentAccessor) Minecraft.getInstance().gui.getChat()).getAllMessages().size();
         int newChatMessagePage = minecraft_access$currentChatMessagePage;
         if (Screen.hasAltDown()) {
-            if (InputConstants.isKeyDown(window, InputConstants.KEY_GRAVE) || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_KP_MULTIPLY)) {
+            if (InputConstants.isKeyDown(window, InputConstants.KEY_GRAVE) || InputConstants.isKeyDown(window, InputConstants.KEY_MULTIPLY)) {
                 if (Screen.hasControlDown()) {
                     newChatMessagePage = numMessages / 10;
                 } else {
                     newChatMessagePage = 0;
                 }
-            } else if (InputConstants.isKeyDown(window, InputConstants.KEY_EQUALS) || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_KP_ADD)) {
+            } else if (InputConstants.isKeyDown(window, InputConstants.KEY_EQUALS) || InputConstants.isKeyDown(window, InputConstants.KEY_ADD)) {
                 newChatMessagePage -= 1;
                 if (Screen.hasControlDown()) {
                     newChatMessagePage -= 4;
                 }
-            } else if (InputConstants.isKeyDown(window, InputConstants.KEY_MINUS) || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_KP_SUBTRACT)) {
+            } else if (InputConstants.isKeyDown(window, InputConstants.KEY_MINUS) || InputConstants.isKeyDown(window, InputConstants.KEY_MINUS)) {
                 newChatMessagePage += 1;
                 if (Screen.hasControlDown()) {
                     newChatMessagePage += 4;
@@ -97,12 +96,12 @@ public class ChatScreenMixin {
             }
 
             for (int i = 1; i <= 9; i++) {
-                if (keyCode == GLFW.GLFW_KEY_0 + i || keyCode == GLFW.GLFW_KEY_KP_0 + i) {
+                if (keyCode == InputConstants.KEY_0 + i || keyCode == InputConstants.KEY_NUMPAD0 + i) {
                     minecraft_access$speakPreviousChatAtIndex(i + minecraft_access$currentChatMessagePage * 10 - 1);
                     return true;
                 }
             }
-            if (InputConstants.isKeyDown(window, GLFW.GLFW_KEY_0) || InputConstants.isKeyDown(window, InputConstants.KEY_NUMPAD0)) {
+            if (InputConstants.isKeyDown(window, InputConstants.KEY_0) || InputConstants.isKeyDown(window, InputConstants.KEY_NUMPAD0)) {
                 minecraft_access$speakPreviousChatAtIndex(10 + minecraft_access$currentChatMessagePage * 10 - 1);
             }
         }

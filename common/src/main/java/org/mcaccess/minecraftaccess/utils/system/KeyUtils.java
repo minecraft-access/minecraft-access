@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.utils.system;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
 
 import java.util.Arrays;
@@ -22,7 +21,7 @@ public class KeyUtils {
     }
 
     /**
-     * Pass any number of key codes (they are registered as constants: GLFW.GLFW_*)
+     * Pass any number of key codes (they are registered as constants: InputConstants.KEY_*)
      */
     public static boolean isAnyPressed(int... keyCodes) {
         Minecraft minecraftClient = Minecraft.getInstance();
@@ -58,27 +57,27 @@ public class KeyUtils {
     }
 
     public static boolean isF3Pressed() {
-        return isAnyPressed(GLFW.GLFW_KEY_F3);
+        return isAnyPressed(InputConstants.KEY_F3);
     }
 
     public static boolean isLeftShiftPressed() {
-        return isAnyPressed(GLFW.GLFW_KEY_LEFT_SHIFT);
+        return isAnyPressed(InputConstants.KEY_LSHIFT);
     }
 
     public static boolean isLeftAltPressed() {
-        return isAnyPressed(GLFW.GLFW_KEY_LEFT_ALT);
+        return isAnyPressed(InputConstants.KEY_LALT);
     }
 
     public static boolean isRightAltPressed() {
-        return isAnyPressed(GLFW.GLFW_KEY_RIGHT_ALT);
+        return isAnyPressed(InputConstants.KEY_RALT);
     }
 
     public static boolean isEnterPressed() {
-        return isAnyPressed(GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_KP_ENTER);
+        return isAnyPressed(InputConstants.KEY_RETURN, InputConstants.KEY_NUMPADENTER);
     }
 
     public static boolean isSpacePressed() {
-        return isAnyPressed(GLFW.GLFW_KEY_SPACE);
+        return isAnyPressed(InputConstants.KEY_SPACE);
     }
 
     public static boolean isSpaceOrEnterPressed() {
