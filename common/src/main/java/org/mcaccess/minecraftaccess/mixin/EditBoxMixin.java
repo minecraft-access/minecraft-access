@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -9,7 +10,6 @@ import net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -111,7 +111,7 @@ abstract class EditBoxMixin extends AbstractWidget {
         }
 
         switch (keyCode) {
-            case GLFW.GLFW_KEY_LEFT: {
+            case InputConstants.KEY_LEFT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(-1));
                     MainClass.speakWithNarrator(hoveredText, true);
@@ -121,7 +121,7 @@ abstract class EditBoxMixin extends AbstractWidget {
                 }
                 return;
             }
-            case GLFW.GLFW_KEY_RIGHT: {
+            case InputConstants.KEY_RIGHT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(1));
                     MainClass.speakWithNarrator(hoveredText, true);
@@ -131,13 +131,13 @@ abstract class EditBoxMixin extends AbstractWidget {
                 }
                 return;
             }
-            case GLFW.GLFW_KEY_HOME: {
+            case InputConstants.KEY_HOME: {
                 if (Strings.isNotEmpty(this.value)) {
                     MainClass.speakWithNarrator(this.value.substring(0, 1), true);
                 }
                 return;
             }
-            case GLFW.GLFW_KEY_END: {
+            case InputConstants.KEY_END: {
                 if (Strings.isNotEmpty(this.value)) {
                     MainClass.speakWithNarrator(this.value.substring(this.value.length() - 1), true);
                 }

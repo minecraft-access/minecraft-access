@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DirectJoinServerScreen;
@@ -13,7 +14,6 @@ import net.minecraft.client.gui.screens.packs.PackSelectionScreen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.EditWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
@@ -75,7 +75,7 @@ public class MenuFix {
             }
 
             boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-            boolean isRPressed = KeyUtils.isAnyPressed(GLFW.GLFW_KEY_R);
+            boolean isRPressed = KeyUtils.isAnyPressed(InputConstants.KEY_R);
             if (isLeftAltPressed && isRPressed)
                 moveMouseCursor(minecraftClient);
         }

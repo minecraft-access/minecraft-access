@@ -40,7 +40,6 @@ public class MainClass {
     public static SpeakHeldItem speakHeldItem = null;
 
     public static boolean interrupt = true;
-    private static boolean alreadyDisabledAdvancementKey = false;
 
     /**
      * Initializes the mod
@@ -80,12 +79,6 @@ public class MainClass {
         Config config = Config.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
-
-        if (!MainClass.alreadyDisabledAdvancementKey) {
-            minecraftClient.options.keyAdvancements.setKey(InputConstants.getKey("key.keyboard.unknown"));
-            MainClass.alreadyDisabledAdvancementKey = true;
-            log.info("Unbound advancements key");
-        }
 
         if (config.menuFixEnabled) {
             MenuFix.update(minecraftClient);
@@ -153,6 +146,14 @@ public class MainClass {
         accessMenu = new AccessMenu();
         fluidDetector = new FluidDetector();
         speakHeldItem = new SpeakHeldItem();
+
+        Minecraft client = Minecraft.getInstance();
+        if (client.options.keyAdvancements.same(KeyBindingsHandler.cameraControlsRight)) {
+            client.options.keyAdvancements.setKey(InputConstants.UNKNOWN);
+            client.options.save();
+            client.options.load();
+            log.info("Unbound advancements key");
+        }
     }
 
     /**

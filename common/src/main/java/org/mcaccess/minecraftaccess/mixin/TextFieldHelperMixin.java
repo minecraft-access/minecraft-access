@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.Util;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.font.TextFieldHelper;
@@ -7,7 +8,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
 import org.apache.logging.log4j.util.Strings;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,7 +49,7 @@ public abstract class TextFieldHelperMixin {
         }
 
         switch (keyCode) {
-            case GLFW.GLFW_KEY_LEFT: {
+            case InputConstants.KEY_LEFT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosByWordsWithOffset(-1));
                     MainClass.speakWithNarrator(hoveredText, true);
@@ -59,7 +59,7 @@ public abstract class TextFieldHelperMixin {
                 }
                 return;
             }
-            case GLFW.GLFW_KEY_RIGHT: {
+            case InputConstants.KEY_RIGHT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosByWordsWithOffset(1));
                     MainClass.speakWithNarrator(hoveredText, true);
@@ -69,14 +69,14 @@ public abstract class TextFieldHelperMixin {
                 }
                 return;
             }
-            case GLFW.GLFW_KEY_HOME: {
+            case InputConstants.KEY_HOME: {
                 String text = this.getMessageFn.get();
                 if (Strings.isNotEmpty(text)) {
                     MainClass.speakWithNarrator(text.substring(0, 1), true);
                 }
                 return;
             }
-            case GLFW.GLFW_KEY_END: {
+            case InputConstants.KEY_END: {
                 String text = this.getMessageFn.get();
                 if (Strings.isNotEmpty(text)) {
                     MainClass.speakWithNarrator(text.substring(text.length() - 1), true);

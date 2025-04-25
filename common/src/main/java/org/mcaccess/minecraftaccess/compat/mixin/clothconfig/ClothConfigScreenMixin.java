@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
 import me.shedaniel.clothconfig2.gui.AbstractTabbedConfigScreen;
@@ -17,7 +18,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.ScreenAccessor;
 import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
@@ -88,7 +88,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
      */
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (Screen.hasControlDown() && keyCode == GLFW.GLFW_KEY_TAB) {
+        if (Screen.hasControlDown() && keyCode == InputConstants.KEY_TAB) {
             mca$switchCategory(!Screen.hasShiftDown());
             return true;
         }
