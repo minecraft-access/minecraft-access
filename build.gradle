@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.architecturyPlugin)
     alias(libs.plugins.architecturyLoom) apply false
     alias(libs.plugins.gitVersion)
+    id 'base'
 }
 
 def git = versionDetails()
@@ -73,8 +74,12 @@ allprojects {
     apply plugin: "java"
     apply plugin: libs.plugins.architecturyPlugin.get().pluginId
     apply plugin: "maven-publish"
+    apply plugin: "base"
 
-    archivesBaseName = "minecraft-access"
+    base {
+        archivesName.set("minecraft-access")
+    }
+
     group = "org.mcaccess.minecraftaccess"
 
     tasks.withType(JavaCompile).configureEach {
