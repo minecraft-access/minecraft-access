@@ -9,6 +9,7 @@ on:
 env:
   JAVA_VERSION: 21
   JAVA_DISTRIBUTION: temurin
+  PULL_REQUEST: ${{ (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.number || null }}
 
 jobs:
   build:
