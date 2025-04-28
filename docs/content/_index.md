@@ -5,7 +5,7 @@ title: "Home"
 Minecraft Access is a [Minecraft](https://www.minecraft.net) mod that specifically helps visually impaired players play Minecraft.
 It is an integration and replacement for [a series of previous mods](https://github.com/accessible-minecraft).
 This mod primarily borrows the help of a screen reader to describe (narrate) the game interface, and incorporates sound cues to provide orientation perception in this 3D world.
-Currently, this mod [has enough features](docs/faq.md#is-the-mod-enough-to-play-the-game-normally) to help visually impaired players play the game normally.
+Currently, this mod [has enough features](https://mcaccess.org/faq#is-the-mod-enough-to-play-the-game-normally) to help visually impaired players play the game normally.
 
 This mod supports:
 
@@ -34,7 +34,7 @@ Any type of contribution is welcome:
 
 * Be one of the first to try out new versions and help us find bugs and issues.
 * Improve this mod's documentation for better readability and accessibility.
-* Help us [translate]({{% relref "/faq#how-can-i-contribute-to-i18n" %}}) this mod into other languages.
+* Help us [translate](https://mcaccess.org/faq#how-can-i-contribute-to-i18n) this mod into other languages.
 * Create more text or video tutorials about how to play the game with this mod ([examples]({{% relref "/good-resources#gameplay-with-this-mod" %}})).
 * Make sound effects for this mod.
 * For development contributions, please read [CONTRIBUTING.md](https://github.com/khanshoaib3/minecraft-access/blob/1.21/CONTRIBUTING.md) for more details.
