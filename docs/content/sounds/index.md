@@ -29,6 +29,7 @@ Sounds can be played by pressing the play button.
 | Position of bosses                                                      | {{< wikiSound sound="Note_block_pling" pitch=2 >}} High pitch electric piano sound |
 | Position of other players                                               | {{< wikiSound "Note_block_icechime" >}} Chime sound                                |
 | Position of vehicles                                                    | {{< wikiSound "Note_block_iron_xylophone" >}} Xylophone sound                      |
+| Position of displays                                                    | {{< wikiSound "In" >}} Toast shown sound                                           |
 
 ### Object Tracker and Locking
 
