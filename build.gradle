@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.architecturyPlugin)
     alias(libs.plugins.architecturyLoom) apply false
     alias(libs.plugins.gitVersion)
-    id 'base'
 }
 
 def git = versionDetails()
