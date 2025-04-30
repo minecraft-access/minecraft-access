@@ -75,9 +75,7 @@ allprojects {
     apply plugin: "maven-publish"
     apply plugin: "base"
 
-    base {
-        archivesName.set("minecraft-access")
-    }
+    base.archivesName = 'minecraft-access'
 
     group = "org.mcaccess.minecraftaccess"
 
