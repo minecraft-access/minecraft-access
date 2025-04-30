@@ -73,7 +73,6 @@ allprojects {
     apply plugin: "java"
     apply plugin: libs.plugins.architecturyPlugin.get().pluginId
     apply plugin: "maven-publish"
-    apply plugin: "base"
 
     base.archivesName = 'minecraft-access'
 
