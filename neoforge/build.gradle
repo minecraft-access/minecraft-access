@@ -28,15 +28,16 @@ dependencies {
     modImplementation libs.clothConfigNeoForge
     include libs.clothConfigNeoForge
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive false }
+    common(project(path: ":common", configuration: "namedElements")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 }
 
 processResources {
-    inputs.property "version", project.version
+    def modVersion = project.version.toString()
+    inputs.property "version", modVersion
 
     filesMatching("META-INF/neoforge.mods.toml") {
-        expand version: project.version,
+        expand version: modVersion,
                 neoforge_version: libs.neoForge.get().version,
                 architectury_api_version: libs.architecturyApiNeoForge.get().version,
                 jade_neoforge_version: libs.jadeNeoForge.get().version,
