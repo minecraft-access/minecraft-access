@@ -197,7 +197,7 @@ If the game crashes and a bunch of error logs pop up,
 the biggest probability is that there is an incompatibility between the mod files and mod loader,
 or between the mod files and game version.
 Please read the [Update the Game and Mods](#update-the-game-and-mods) section.
-And here is a [complex self-help FAQ]({{% relref "/faq#self-help-guide-for-abnormal-situations" %}})
+And here is a [complex self-help FAQ](https://mcaccess.org/faq#self-help-guide-for-abnormal-situations)
 for you to address the problem,
 from not being able to hear the narration to a full game crash.
 

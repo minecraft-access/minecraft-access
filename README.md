@@ -5,7 +5,7 @@
 Minecraft Access is a [Minecraft](https://minecraft.net) mod that specifically helps visually impaired players play Minecraft.
 It is an integration and replacement for [a series of previous mods](https://github.com/accessible-minecraft).
 This mod primarily borrows the help of a screen reader to describe (narrate) the game interface, and incorporates sound cues to provide orientation perception in this 3D world.
-Currently, this mod [has enough features](https://docs.mcaccess.org/faq#is-the-mod-enough-to-play-the-game-normally) to help visually impaired players play the game normally.
+Currently, this mod [has enough features](https://mcaccess.org/faq#is-the-mod-enough-to-play-the-game-normally) to help visually impaired players play the game normally.
 
 This mod has available versions for:
 
@@ -24,7 +24,7 @@ Whenever the mod's code is updated, or whenever we need an upcoming feature some
 * [Keybindings](https://docs.mcaccess.org/keybindings)
 * [Minecraft Access Configuration](https://docs.mcaccess.org/config)
 * [Sound Effects Used in the Mod](https://docs.mcaccess.org/sounds)
-* [FAQ](https://docs.mcaccess.org/faq)
+* [FAQ](https://mcaccess.org/faq)
 * [Good Resources](https://docs.mcaccess.org/good-resources)
 
 ## Useful Links
