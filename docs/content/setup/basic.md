@@ -210,9 +210,7 @@ after installing the mod to make this mod work properly if you’re using Linux.
 1. We need to install the [libspeechdwrapper](https://github.com/khanshoaib3/libspeechdwrapper) for invoking the screen reader's API.
    Download the library from [its GitHub repository](https://github.com/khanshoaib3/libspeechdwrapper/raw/main/lib/libspeechdwrapper.so) and move it into the minecraft directory (default `~/.minecraft`).
 
-2. Although the mod overrides the library used for TTS, minecraft still needs the `flite` library to be installed, so you can install it using your distro's package manager itself.
-
-3. We also need to install [xdotool](https://github.com/jordansissel/xdotool),
+2. We also need to install [xdotool](https://github.com/jordansissel/xdotool),
    which is used for simulating the mouse actions.
    Follow the [instructions](https://github.com/jordansissel/xdotool#installation) to install it.
 
