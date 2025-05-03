@@ -4,7 +4,7 @@ title: "Using the Visually Impaired Access Modpack"
 
 This modpack is an unofficial community project created by [@BrailleBennett](https://github.com/BrailleBennett).
 It was made for the Fabric mod loader for usage on the client side only.
-Here is a link to its [official Modrinth page](https://modrinth.com/modpack/vi-access),
+Here is a link to its [Modrinth page](https://modrinth.com/modpack/vi-access),
 where you can read more about it.
 
 ## Optional Screenreader
@@ -34,7 +34,7 @@ To install the Visually Impaired Access modpack, you're going to want to install
 There are some players who find the Modrinth launcher to not be accessible enough. In this case it is advisable for them to manually install the pack within their base Minecraft installation. If you wish to do this, return to [the basic setup guide]({{% relref "/setup/basic" %}}) and continue following the instructions until you get to the point where you are downloading mods and then come back here.
 1. If you want to use manual installation you can download a compressed zip file of the pack files [from this 3rd party tool](https://fabulously-optimized.github.io/mrpack-to-zip/?project=TAT3EDpw). This tool downloads and compresses all files on your device, and it is all run on your device. It may take a little while to complete due to the amount of files it has to download.
 2. Unzip the downloaded file
-3. Use `control+a` and then `control+C` to copy all of its contents
+3. Use `control+A` and then `control+C` to copy all of its contents
 4. Next, find the Minecraft directory which will be located at `%appdata%\.minecraft` on Windows by default
 5. Delete the existing `options.txt` file as well as the mods, resourcepacks, and Config folders
 6. Paste in the files from the zip file you downloaded in step 1 using `control+V`
