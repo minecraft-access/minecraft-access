@@ -193,6 +193,9 @@ public class AccessMenu {
         if (PlayerUtils.isSpectator()) {
             MainClass.speakWithNarrator(I18n.get("gameMode.spectator"), true);
             return;
+        } else if(PlayerUtils.isCreative()) {
+            MainClass.speakWithNarrator(I18n.get("gameMode.creative"), true);
+            return;
         }
 
         MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.xp",
