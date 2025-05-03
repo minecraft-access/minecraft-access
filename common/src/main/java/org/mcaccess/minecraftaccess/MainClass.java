@@ -92,7 +92,7 @@ public class MainClass {
 
         ReadCrosshair.getInstance().tick();
 
-        if (xpIndicator != null && config.features.xpIndicatorEnabled && !PlayerUtils.isSpectator())
+        if (xpIndicator != null && config.features.xpIndicatorEnabled && (PlayerUtils.isAdventure()|| PlayerUtils.isSurvival()))
             xpIndicator.update();
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled)
