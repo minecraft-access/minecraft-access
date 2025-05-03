@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import com.mojang.text2speech.Narrator;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
@@ -7,13 +8,21 @@ import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.network.chat.Component;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.NarratorDummy;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GameNarrator.class)
 public class GameNarratorMixin {
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/text2speech/Narrator;getNarrator()Lcom/mojang/text2speech/Narrator;"))
+    private Narrator redirectGetNarrator() {
+        return new NarratorDummy();
+    }
+
     @Inject(at = @At("HEAD"), method = "sayNow(Ljava/lang/String;)V", cancellable = true)
     private void sayNow(String text, CallbackInfo callbackInfo) {
         if (MainClass.getScreenReader() == null || !MainClass.getScreenReader().isInitialized()) {

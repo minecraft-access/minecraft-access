@@ -24,9 +24,7 @@ Each version of this mod will be pre-released on [GitHub](https://github.com/kha
 
 ## Known Issues
 
-1. The default narrator speaks even if the narrator is turned off.
-2. (Linux only) xdotool is not recognised even if it is installed.
-3. (Linux only) Minecraft says no narrator is available even if Flite is installed.
+1. (Linux only) xdotool is not recognised even if it is installed.
 
 ## Contributions
 
