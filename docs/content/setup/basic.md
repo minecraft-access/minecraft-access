@@ -70,7 +70,7 @@ This is usually seen as the easiest and most convenient option for new users.
 
 ### Download the Launcher
 
-> you can use the launcher to choose which version of Minecraft you want to run
+> You can use the launcher to choose which version of Minecraft you want to run
 > or to modify the game launch configuration.
 > There are many kinds of launchers,
 > anyone can write their own launcher to provide a customized Minecraft game launching experience.
@@ -80,14 +80,20 @@ At the end of the purchase process there will be a `Download Game` button to dow
 If you've missed it, [here is the launcher installer download page](https://www.minecraft.net/download).
 
 On Windows, the launcher installer is a normal executable file, run it and wait for it to finish.
-On MacOS, the launcher is a DMG file. Open it, then copy the Minecraft application bundle by pressing `command+C` on it, then open the `Applications` folder with `command+shift+A`, then paste the application you copied with `command+V`.
-On Linux, there will be instructions for various distributions linked further down the page.
+On MacOS, the launcher is a DMG file. Open it, then copy the Minecraft application bundle by pressing `command+C` on it, then open the `Applications` folder with `command+shift+A`, then paste the application you just copied with `command+V`.
+On Linux, there will be instructions for various distributions linked further down the downloads page.
 If the installation is successful, you will now have a new application called `Minecraft Launcher`.
 
 The next steps require starting the launcher once first before installing the mod loader to let it generate the game folder, so try [starting the launcher](#start-the-game), then start Minecraft: Java Edition.
 Something may need to be prepared every time the launcher starts, especially the first time you launch it as it has to install the entire game.
 This may take a few minutes, and you can listen to the screen reader's progress bar sound effect to find out the progress.
 The first time you start the launcher, it will require you to sign in with your Microsoft account.
+
+## Dependencies for Speech
+
+On Windows, you must have either [NVDA](https://nvaccess.org/download/) or [JAWS](https://support.freedomscientific.com/Downloads/JAWS) running for the mod to speak. NVDA is free and open source while JAWS is proprietary and costs money. If you use Microsoft Narrator, or don't use a screen reader, you will not hear things like UI controls, inventory items, block and entity names, or chat messages read out.
+
+On Linux, the mod uses [Speech Dispatcher](https://freebsoft.org/speechd) for speech output. You should be able to install it with your distribution's package manager, probably under the name `speech-dispatcher` or `speechd`. You may also have to install [eSpeak NG](https://github.com/espeak-ng/espeak-ng) for speech to work. If you do not hear speech, run the `spd-say test` command before you start the game to make sure Speech Dispatcher has started and is working. If you do not hear anything after running that command, check your Speech Dispatcher configuration in either `~/.config/speech-dispatcher/` or `/etc/speech-dispatcher/`, and kill the `speech-dispatcher` process before testing again. If you use Orca, it will already be installed and set up.
 
 ## Choose and Install Your Chosen Mod Loader
 
@@ -161,7 +167,7 @@ in this case you will have to extract the real mod file from the compressed one.
 
 Neither mod loaders nor the original game provides the ability to manage mod files; you need to manage them manually.
 This guide will describe how to download and install mods manually;
-you can also manage them automatically with an extra application such as [Modrinth](https://modrinth.com/app) or [CurseForge for Windows](https://www.curseforge.com/download/app).
+you can also manage them automatically with an extra application such as [Modrinth](https://modrinth.com/app or [CurseForge](https://www.curseforge.com/download/app).
 
 Now let's download mod files.
 To download this mod and the dependencies of this mod, it is recommended you download them from the Minecraft Access's official [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest), where you can find download links of suitable versions of the required mods, under the `Mod Version Compatibility` section of each release.
@@ -170,7 +176,7 @@ By the way, you may be interested in the mods provided in the [good resources]({
 After all the mods you want are downloaded, you can move on to putting them into the right location for the mod loader to recognize them.
 The default path on Windows is: `%appdata%\.minecraft\mods` (the `%appdata%` is a shortcut for `C:\Users\username\AppData\Roaming`), you can directly paste it into File Explorer then press the enter key to jump to it or paste it into the run box accessed with the Windows+R keys and click enter.
 Note that on Linux, the default game directory is `~/.minecraft` and the mod directory is `~/.minecraft/mods`.
-On MacOS, the default game directory is `~/Library/Application Support/.minecraft` and the mod directory is `~/Library/Application Support/.minecraft/mods`.
+On MacOS, the default game directory is `~/Library/Application Support/minecraft` and the mod directory is `~/Library/Application Support/minecraft/mods`.
 Press `command+shift+G` to open `Go to Folder`, then type or paste this folder path and press enter.
 We'll put downloaded mod files inside it, both Fabric and NeoForge will load mods from this folder by default if installed. You can look up how to use alternate installation locations if you wish to maintain both Fabric and NeoForge installations at the same time.
 You will need to start the game once after installing the mod loader for the `mods` folder to be created.
@@ -234,7 +240,7 @@ To update mods, first recall what is mentioned above:
 1. Mods of Fabric and NeoForge aren’t compatible with each other.
 2. The same loader for a certain game version is almost always not compatible with mod files which support other game versions.
    E.G.: if I install a mod for 1.17, it usually will not work on later or earlier versions of the game like 1.16 or 1.18.
-3. Both Fabric and NeoForge load mods from the folder `%appdata%\.minecraft\mods` by default.
+3. By default, both Fabric and NeoForge load mods from the folder `%appdata%\.minecraft\mods` on Windows, `~/.minecraft/mods` on Linux, and `~/Library/Application Support/minecraft/mods` on MacOS
 
 Here are some examples to help you understand:
 
