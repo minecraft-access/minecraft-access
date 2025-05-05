@@ -37,7 +37,7 @@ public class MouseUtils {
     }
 
     public static void move(int x, int y) {
-        log.trace("Move mouse to x:{} y:{}", x, y);
+        log.debug("Move mouse to x:{} y:{}", x, y);
         GLFW.glfwSetCursorPos(getWindowPointer(), x, y);
         getMouseHandler().move(getWindowPointer(), x, y);
     }
