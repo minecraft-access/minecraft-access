@@ -74,7 +74,8 @@ allprojects {
     apply plugin: libs.plugins.architecturyPlugin.get().pluginId
     apply plugin: "maven-publish"
 
-    archivesBaseName = "minecraft-access"
+    base.archivesName = 'minecraft-access'
+
     group = "org.mcaccess.minecraftaccess"
 
     tasks.withType(JavaCompile).configureEach {

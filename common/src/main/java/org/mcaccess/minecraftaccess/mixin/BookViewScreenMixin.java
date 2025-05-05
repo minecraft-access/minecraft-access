@@ -1,12 +1,12 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,7 +36,7 @@ public class BookViewScreenMixin {
         if (minecraftClient == null) return;
         if (minecraftClient.screen == null) return;
 
-        boolean isRPressed = KeyUtils.isAnyPressed(GLFW.GLFW_KEY_R);
+        boolean isRPressed = KeyUtils.isAnyPressed(InputConstants.KEY_R);
 
         // Repeat current page content and un-focus next and previous page buttons
         if (Screen.hasAltDown() && isRPressed) {

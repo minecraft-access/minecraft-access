@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -10,7 +11,6 @@ import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.StringUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
@@ -68,7 +68,7 @@ public abstract class BookEditScreenMixin {
     @Final
     private TextFieldHelper titleEdit;
     @Unique
-    private static final Keystroke minecraft_access$tabKey = new Keystroke(() -> KeyUtils.isAnyPressed(GLFW.GLFW_KEY_TAB));
+    private static final Keystroke minecraft_access$tabKey = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_TAB));
     @Unique
     private static final Keystroke minecraft_access$spaceKey = new Keystroke(KeyUtils::isSpacePressed);
 
@@ -174,42 +174,42 @@ public abstract class BookEditScreenMixin {
         }
 
         switch (keyCode) {
-            case GLFW.GLFW_KEY_ENTER:
-            case GLFW.GLFW_KEY_KP_ENTER: {
+            case InputConstants.KEY_RETURN:
+            case InputConstants.KEY_NUMPADENTER: {
                 this.pageEdit.insertText("\n");
                 cir.setReturnValue(true);
                 return;
             }
-            case GLFW.GLFW_KEY_UP: {
+            case InputConstants.KEY_UP: {
                 this.keyUp();
                 minecraft_access$speakCurrentLineContent();
                 cir.setReturnValue(true);
                 return;
             }
-            case GLFW.GLFW_KEY_DOWN: {
+            case  InputConstants.KEY_DOWN: {
                 this.keyDown();
                 minecraft_access$speakCurrentLineContent();
                 cir.setReturnValue(true);
                 return;
             }
-            case GLFW.GLFW_KEY_PAGE_UP: {
+            case InputConstants.KEY_PAGEUP: {
                 this.backButton.onPress();
                 minecraft_access$speakCurrentPageContent();
                 cir.setReturnValue(true);
                 return;
             }
-            case GLFW.GLFW_KEY_PAGE_DOWN: {
+            case InputConstants.KEY_PAGEDOWN: {
                 this.forwardButton.onPress();
                 minecraft_access$speakCurrentPageContent();
                 cir.setReturnValue(true);
                 return;
             }
-            case GLFW.GLFW_KEY_HOME: {
+            case InputConstants.KEY_HOME: {
                 this.keyHome();
                 cir.setReturnValue(true);
                 return;
             }
-            case GLFW.GLFW_KEY_END: {
+            case InputConstants.KEY_END: {
                 this.keyEnd();
                 cir.setReturnValue(true);
                 return;

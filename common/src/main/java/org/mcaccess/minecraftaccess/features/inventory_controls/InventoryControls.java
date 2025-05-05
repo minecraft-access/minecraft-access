@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
@@ -21,7 +22,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.ExtendedRecipeBookCategory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.*;
@@ -183,7 +184,7 @@ public class InventoryControls {
         boolean isToggleCraftableKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsToggleCraftableKey);
         boolean isLeftShiftPressed = KeyUtils.isLeftShiftPressed();
         boolean isEnterPressed = KeyUtils.isEnterPressed();
-        boolean isTPressed = KeyUtils.isAnyPressed(GLFW.GLFW_KEY_T);
+        boolean isTPressed = KeyUtils.isAnyPressed(InputConstants.KEY_T);
         boolean disableInputForSearchBox = false;
 
         //<editor-fold desc="When using a search box">

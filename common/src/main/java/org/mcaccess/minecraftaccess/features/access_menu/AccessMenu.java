@@ -12,7 +12,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import org.lwjgl.glfw.GLFW;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
@@ -116,7 +115,7 @@ public class AccessMenu {
 
         if (minecraftClient.screen instanceof GameModeSwitcherScreen) {
             gameModeSwitcherActive = true;
-        } else if (!KeyUtils.isAnyPressed(GLFW.GLFW_KEY_F4)) {
+        } else if (!KeyUtils.isAnyPressed(InputConstants.KEY_F4)) {
             gameModeSwitcherActive = false;
         }
     }
@@ -127,7 +126,7 @@ public class AccessMenu {
         // for the little performance improvement, will not use KeyUtils here.
         long handle = minecraftClient.getWindow().getWindow();
         Stream.of(FUNCTIONS)
-                .filter(f -> InputConstants.isKeyDown(handle, f.number + GLFW.GLFW_KEY_0))
+                .filter(f -> InputConstants.isKeyDown(handle, f.number + InputConstants.KEY_0))
                 .findFirst()
                 .ifPresent(f -> {
                     if (functionIntervals[f.number].isReady()) {
@@ -193,6 +192,9 @@ public class AccessMenu {
 
         if (PlayerUtils.isSpectator()) {
             MainClass.speakWithNarrator(I18n.get("gameMode.spectator"), true);
+            return;
+        } else if(PlayerUtils.isCreative()) {
+            MainClass.speakWithNarrator(I18n.get("gameMode.creative"), true);
             return;
         }
 

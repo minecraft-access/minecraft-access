@@ -31,7 +31,7 @@ The NeoForge installer supports multiple languages, so if you want to change the
 1. First is a radio box for selecting install client or server, `Install client` is selected by default, don't change this.
 2. Then there is an input field for specifying the installation location, normally the installer will automatically recognize the official loader's folder.
    For example `C:\Users\username\AppData\Roaming\.minecraft`, that's where we want it to install so no need to change this either.
-   Copy this path to somewhere like the Notepad for further usage when installing mod files.
+   Copy this path to somewhere like Notepad, TextEdit, or Pluma for further usage when installing mod files.
 3. Now click the `OK` button to start the installation.
    It will download some files from the Internet, if the network is fast, the installation should take about two to three minutes.
    A pop-up will show up to remind you that the installation is successful

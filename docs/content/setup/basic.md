@@ -2,7 +2,7 @@
 title: "Mod Setup"
 ---
 
-Currently, this mod supports the Windows and Linux operating systems ([help us to port it to macOS](https://github.com/khanshoaib3/minecraft-access/issues/22)).
+Currently, this mod supports the Windows, Linux, and MacOS operating systems (on MacOS you may need to use an external monitor or decrease the GUI scale for inventory controls to work, but this is being worked on).
 The latest version of this mod (as well as other mod dependencies) can be downloaded at the [releases page](https://github.com/khanshoaib3/minecraft-access/releases/latest).
 
 ## Tutorial for Beginners: From Purchasing the Game To Installing This Mod
@@ -25,14 +25,14 @@ Before you purchase the game, make sure you have a computer with a 64-bit proces
 Below are system requirements from [the official website](https://www.minecraft.net/en-us/store/minecraft-java-bedrock-edition-pc):
 
 1. Minimum:
-    * OS: Windows 7 and up
+    * OS: Windows 7 and up OR macOS 10.14.5 Mojave and up
     * Architecture: ARM, x64, x86
     * Memory: 2 GB
     * Processor: Intel Core i3-3210 3.2 GHz | AMD A8-7600 APU 3.1 GHz | Apple M1 or equivalent
     * Graphics: Intel HD Graphics 4000 | AMD Radeon R5
 
 2. Optimum:
-    * OS: Windows 10 and up
+    * OS: Windows 10 and up OR macOS 10.14.5 Mojave and up
     * Architecture: ARM, x64, x86
     * Memory: 4 GB
     * Processor: Intel Core i5-4690 3.5 GHz | AMD A10-7800 APU 3.5 GHz | Apple M1 or equivalent
@@ -79,7 +79,9 @@ This is usually seen as the easiest and most convenient option for new users.
 At the end of the purchase process there will be a `Download Game` button to download the launcher.
 If you've missed it, [here is the launcher installer download page](https://www.minecraft.net/download).
 
-The launcher installer is a normal executable file, run it and wait for it to finish.
+On Windows, the launcher installer is a normal executable file, run it and wait for it to finish.
+On MacOS, the launcher is a DMG file. Open it, then copy the Minecraft application bundle by pressing `command+C` on it, then open the `Applications` folder with `command+shift+A`, then paste the application you copied with `command+V`.
+On Linux, there will be instructions for various distributions linked further down the page.
 If the installation is successful, you will now have a new application called `Minecraft Launcher`.
 
 The next steps require starting the launcher once first before installing the mod loader to let it generate the game folder, so try [starting the launcher](#start-the-game), then start Minecraft: Java Edition.
@@ -114,6 +116,14 @@ if the problem still persists,
 please download the jar form of the installer by clicking the `Download universal jar` button,
 just below the `Download for Windows` button.
 
+If you are on Linux or MacOS, download the jar version of the installer using the "Download universal jar" button, and execute it.
+It will be named the same as the `.exe` file except for the file extention,
+for example, `fabric-installer-0.15.0.jar`.
+You must have Java installed for this to work.
+On MacOS, download Java from the [downloads page](https://adoptium.net/temurin/releases/?os=any&arch=x64&version=21&package=jdk).
+Make sure to choose aarch64 if you are on Apple Silicon and x86_64 if you are on Intel.
+On Linux, google how to install OpenJDK on your distribution.
+
 Start the installer, a window pops up for you to choose the installation configurations:
 
 1. The `Client` tab is selected by default, don't change it.
@@ -124,12 +134,11 @@ Start the installer, a window pops up for you to choose the installation configu
    the installer will recognize the correct folder automatically if you’ve been following this guide correctly,
    for example `C:\Users\username\AppData\Roaming\.minecraft`,
    that's where we want it to install so no need to change this either.
-   Copy this path to somewhere like the Notepad for further usage when installing mod files.
+   Copy this path to somewhere like Notepad, TextEdit, or Pluma for further usage when installing mod files.
 6. And then a checkbox for `Create profile`, checked by default, we want it to create a profile in the official launcher, so there is no need to change this option either.
 7. Finally, click the `Install` button to start the installation.
    It will download some files from the Internet, if the network is fast, the installation takes less than a minute.
    A pop-up will show up to notify you that the installation is successful.
-   We currently do not have a guide written for how to install Fabric on Linux (but it's most certainly easier than choosing to install NeoForge), so you will have to [google it](https://www.google.com/search?q=install+minecraft+fabric+on+linux) by yourself, sorry.
 
 ### Install NeoForge
 
@@ -161,6 +170,8 @@ By the way, you may be interested in the mods provided in the [good resources]({
 After all the mods you want are downloaded, you can move on to putting them into the right location for the mod loader to recognize them.
 The default path on Windows is: `%appdata%\.minecraft\mods` (the `%appdata%` is a shortcut for `C:\Users\username\AppData\Roaming`), you can directly paste it into File Explorer then press the enter key to jump to it or paste it into the run box accessed with the Windows+R keys and click enter.
 Note that on Linux, the default game directory is `~/.minecraft` and the mod directory is `~/.minecraft/mods`.
+On MacOS, the default game directory is `~/Library/Application Support/.minecraft` and the mod directory is `~/Library/Application Support/.minecraft/mods`.
+Press `command+shift+G` to open `Go to Folder`, then type or paste this folder path and press enter.
 We'll put downloaded mod files inside it, both Fabric and NeoForge will load mods from this folder by default if installed. You can look up how to use alternate installation locations if you wish to maintain both Fabric and NeoForge installations at the same time.
 You will need to start the game once after installing the mod loader for the `mods` folder to be created.
 
@@ -184,33 +195,32 @@ the profile name is `fabric-loader-<game-version>`,
 for NeoForge, the name is simply `NeoForge` but the subtitle contains the game version.
 If everything has worked correctly, you can start exploring the game.
 
-Please note,
-the first time
-you launch a new profile
-that you will need to enable the narrator option from within minecraft after you enter the main screen of the game
-(when you hear the music),
-there will be an accessible popup for this purpose;
-that's a built-in function of the game.
-You can also press `Control+B` to enable the narrator, keep pressing until it switches to `Narrator Narrates All`.
+When you launch the game for the first time, you should hear a message that says `Press enter to enable narrator`.
+If you hear this, press enter before closing the game again.
+If you don't hear this message, or want to make sure the narrator is enabled, you can delete `options.txt` from the game directory (the `mods` folder without `\mods` or `/mods`).
+In that case, the narrator should be enabled by default when you first launch the game with Minecraft Access.
+If you do not hear speech, press `Control+B` to enable the narrator, keep pressing until it switches to `Narrator Narrates All`.
 
 If the game crashes and a bunch of error logs pop up,
 the biggest probability is that there is an incompatibility between the mod files and mod loader,
 or between the mod files and game version.
 Please read the [Update the Game and Mods](#update-the-game-and-mods) section.
-And here is a [complex self-help FAQ]({{% relref "/faq#self-help-guide-for-abnormal-situations" %}})
+And here is a [complex self-help FAQ](https://mcaccess.org/faq#self-help-guide-for-abnormal-situations)
 for you to address the problem,
 from not being able to hear the narration to a full game crash.
 
-### Additional Installation for Linux
+## Changing Speech Settings
 
-We need
-to install a few extra things that this mod depends on
-after installing the mod to make this mod work properly if you’re using Linux.
+On Windows, Minecraft Access will use the same speech settings as your screen reader (JAWS or NVDA). On Linux, it will use your default Speech Dispatcher settings (usually found in ~/.config/speech-dispatcher/speechd.conf or /etc/speech-dispatcher/speechd.conf). You must restart Speech Dispatcher for changes to take effect.
 
-1. We need to install the [libspeechdwrapper](https://github.com/khanshoaib3/libspeechdwrapper) for invoking the screen reader's API.
-   Download the library from [its GitHub repository](https://github.com/khanshoaib3/libspeechdwrapper/raw/main/lib/libspeechdwrapper.so) and move it into the minecraft directory (default `~/.minecraft`).
+On MacOS, to change the voice, pitch, and volume the mod uses, open System Settings > Accessibility > Spoken Content, and change the settings there. Changing your default speech rate will not affect Minecraft Access, so you must change that from the configuration menu.
 
-2. Although the mod overrides the library used for TTS, minecraft still needs the `flite` library to be installed, so you can install it using your distro's package manager itself.
+1. Open Minecraft and enter a world
+2. Press F4 followed by 0 to open the config menu
+3. Press Control+Tab until you hear "Speech Tab"
+4. Press tab until you hear "Speech Rate (MacOS)"
+5. Type in a new percentage and press tab
+6. Exit the config menu by pressing escape 
 
 ## Update the Game and Mods
 For [Fabric](#install-fabric),
