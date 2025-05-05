@@ -6,6 +6,7 @@ This modpack is an unofficial community project created by [@BrailleBennett](htt
 It was made for the Fabric mod loader for usage on the client side only.
 Here is a link to its [Modrinth page](https://modrinth.com/modpack/vi-access),
 where you can read more about it.
+It runs on Windows, MacOS, and Linux.
 
 ## Optional Screenreader
 
@@ -15,7 +16,9 @@ You may want to make use of a screenreader, such as one of these:
 3. [VoiceOver](https://support.apple.com/guide/voiceover/welcome/mac) (for MacOS, built-in)
 4. [ORCA](https://orca.gnome.org) (for Linux, free and open source)
 
-   The modpack will work fine without a screenreader if you don't need one, but on Windows, some words on the screen won't be read out to you, such as the names of blocks you are looking at. Using a screenreader is recommended for those with very limited vision who cannot read words on the screen easily. On Linux, you do not need Orca for this but you do need [Speech Dispatcher](https://freebsoft.org/speechd) installed to read out words on the screen.
+The modpack will work fine without a screenreader if you don't need one, but on Windows, some words on the screen won't be read out to you, such as the names of blocks you are looking at. Using a screenreader is recommended for those with very limited vision who cannot read words on the screen easily.
+
+On Linux, you do not need Orca for this but you do need [Speech Dispatcher](https://freebsoft.org/speechd) installed to read out words on the screen. You should be able to install it with your distribution's package manager, probably under the name `speech-dispatcher` or `speechd`. You may also have to install [eSpeak NG](https://github.com/espeak-ng/espeak-ng) for speech to work. If you do not hear speech, run the `spd-say test` command before you start the game to make sure Speech Dispatcher has started and is working. If you do not hear anything after running that command, check your Speech Dispatcher configuration in either `~/.config/speech-dispatcher/` or `/etc/speech-dispatcher/`, and kill the `speech-dispatcher` process before testing again. If you use Orca, it will already be installed and set up, so you do not have to worry about this.
 
 ## Installing the Modpack
 
@@ -23,7 +26,7 @@ You may want to make use of a screenreader, such as one of these:
 To install the Visually Impaired Access modpack, you're going to want to install the [Modrinth launcher app](https://modrinth.com/app)
 
 1. Install the Modrinth Launcher: After downloading the launcher from the provided link, follow the installation prompts.
-2. Once opening the launcher or pulling it into your screen reader's focus, to get your screen reader to recognize buttons on the screen you will need to click anywhere with your mouse. If you have no mouse, simply use `NVDA+numpad multiply` to jump the mouse cursor to the window after using `alt+tab` to put the window in focus. Then use `NVDA+numpad divide`, this should force NVDA to recognize buttons on the screen and read them to you. This workaround will need to be done when bringing Modrinth into focus after it has been alt-tabbed away from.
+2. Once opening the launcher or pulling it into your screen reader's focus, to get your screen reader to recognize buttons on the screen you will need to click anywhere with your mouse. If you have no mouse and use the NVDA screen reader, simply use `NVDA+numpad multiply` to jump the mouse cursor to the window after using `alt+tab` to put the window in focus. Then use `NVDA+numpad divide`, this should force NVDA to recognize buttons on the screen and read them to you. This workaround will need to be done when bringing Modrinth into focus after it has been alt-tabbed away from.
 3. Sign in to Minecraft: Once the launcher is installed, sign in to your Microsoft account. This step is necessary to verify that you own the game and to allow the launcher to download game files for you.
 4. Find the modpacks Tab: After signing in, navigate to the `Modpacks` tab in the launcher.
 5. Search for the Pack: Use the search function to look for `vi-access` or a similar term. You should see `Visually Impaired Access Mods - Fabric` by `BrailleBennett` as the top result.
