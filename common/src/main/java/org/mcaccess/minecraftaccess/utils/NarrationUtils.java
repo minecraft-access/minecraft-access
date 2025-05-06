@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ComparatorMode;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -325,11 +326,11 @@ public class NarrationUtils {
                 }
         }
 
-        if (block instanceof BushBlock || block instanceof CocoaBlock) {
-            Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
-            toSpeak = cropsInfo.getA();
-            currentQuery = cropsInfo.getB();
-        } else if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
+        Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
+        toSpeak = cropsInfo.getA();
+        currentQuery = cropsInfo.getB();
+
+        if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
             toSpeak = I18n.get("minecraft_access.crop.wet_farmland", toSpeak);
             currentQuery = "wet" + currentQuery;
         } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
@@ -523,36 +524,39 @@ public class NarrationUtils {
     private static @NotNull Tuple<String, String> getCropsInfo(Block block, BlockState blockState, String toSpeak, String currentQuery) {
         int currentAge, maxAge;
 
-        switch (block) {
-            case CropBlock ignored -> {
-                if (block instanceof BeetrootBlock) {
-                    // Beetroot have a different max_age of 3
-                    currentAge = blockState.getValue(BeetrootBlock.AGE);
-                    maxAge = BeetrootBlock.MAX_AGE;
-                } else if (block instanceof TorchflowerCropBlock) {
-                    currentAge = blockState.getValue(TorchflowerCropBlock.AGE);
-                    maxAge = TorchflowerCropBlock.MAX_AGE;
-                } else {
-                    // While wheat, carrots, and potatoes have max_age of 7
-                    currentAge = blockState.getValue(CropBlock.AGE);
-                    maxAge = CropBlock.MAX_AGE;
-                }
+        if (block instanceof CropBlock crop) {
+            currentAge = crop.getAge(blockState);
+            maxAge = crop.getMaxAge();
+        } else if (block instanceof BushBlock || block instanceof BonemealableBlock || block instanceof VegetationBlock) { // Not all crops extend the CropBlock class so we have to check with this alternative way
+            if (blockState.hasProperty(BlockStateProperties.AGE_1)) {
+                currentAge = blockState.getValue(BlockStateProperties.AGE_1);
+                maxAge = 1;
+            } else if (blockState.hasProperty(BlockStateProperties.AGE_2)) {
+                currentAge = blockState.getValue(BlockStateProperties.AGE_2);
+                maxAge = 2;
+            } else if (blockState.hasProperty(BlockStateProperties.AGE_3)) {
+                currentAge = blockState.getValue(BlockStateProperties.AGE_3);
+                maxAge = 3;
+            } else if (blockState.hasProperty(BlockStateProperties.AGE_4)) {
+                currentAge = blockState.getValue(BlockStateProperties.AGE_4);
+                maxAge = 4;
+            } else if (blockState.hasProperty(BlockStateProperties.AGE_5)) {
+                currentAge = blockState.getValue(BlockStateProperties.AGE_5);
+                maxAge = 5;
+            } else if (blockState.hasProperty(BlockStateProperties.AGE_7)) {
+                currentAge = blockState.getValue(BlockStateProperties.AGE_7);
+                maxAge = 7;
+            } else if (blockState.hasProperty(BlockStateProperties.AGE_15)) {
+                currentAge = blockState.getValue(BlockStateProperties.AGE_15);
+                maxAge = 15;
+            } else if (blockState.hasProperty(BlockStateProperties.AGE_25)) {
+                currentAge = blockState.getValue(BlockStateProperties.AGE_25);
+                maxAge = 25;
+            } else { // This also covers things like flowers that may not have the age property
+                return new Tuple<String, String>(toSpeak, currentQuery);
             }
-            case CocoaBlock ignored -> {
-                currentAge = blockState.getValue(CocoaBlock.AGE);
-                maxAge = CocoaBlock.MAX_AGE;
-            }
-            case NetherWartBlock ignored -> {
-                currentAge = blockState.getValue(NetherWartBlock.AGE);
-                maxAge = NetherWartBlock.MAX_AGE;
-            }
-            case PitcherCropBlock ignored -> {
-                currentAge = blockState.getValue(PitcherCropBlock.AGE);
-                maxAge = PitcherCropBlock.MAX_AGE;
-            }
-            case null, default -> {
-                return new Tuple<>(toSpeak, currentQuery);
-            }
+        } else {
+            return new Tuple<String, String>(toSpeak, currentQuery);
         }
 
         String configKey = checkCropRipeLevel(currentAge, maxAge);
