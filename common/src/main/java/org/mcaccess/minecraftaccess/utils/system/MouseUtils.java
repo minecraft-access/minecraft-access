@@ -39,7 +39,7 @@ public class MouseUtils {
     public static void move(int x, int y) {
         log.debug("Move mouse to x:{} y:{}", x, y);
         GLFW.glfwSetCursorPos(getWindowPointer(), x, y);
-        getMouseHandler().move(getWindowPointer(), x, y);
+        getMouseHandler().invokeOnMove(getWindowPointer(), x, y);
     }
 
     public static void moveAfterDelay(int x, int y, int delayInMillSecs) {
@@ -110,7 +110,7 @@ public class MouseUtils {
             // if Minecraft.ON_OSX && button == 0
             // run macOS related logic
             int modifiers = Minecraft.ON_OSX ? 0 : 1;
-            getMouseHandler().press(getWindowPointer(), key.id, action, modifiers);
+            getMouseHandler().invokeOnPress(getWindowPointer(), key.id, action, modifiers);
         }
     }
 
@@ -122,7 +122,7 @@ public class MouseUtils {
             log.debug("Mouse {} scrolled", this);
             // captured real mouse scrolling always results in x=0, y=1/-1
             int offset = this == Wheel.UP ? 1 : -1;
-            getMouseHandler().scroll(getWindowPointer(), 0, offset);
+            getMouseHandler().invokeOnScroll(getWindowPointer(), 0, offset);
         }
     }
 }
