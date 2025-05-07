@@ -133,7 +133,7 @@ public class Config implements ConfigData {
     public static final class POI {
         private POI() {}
 
-        public boolean speakDistance = false;
+        public boolean speakDistance = true;
         @ConfigEntry.Gui.CollapsibleObject
         public Blocks blocks = new Blocks();
         @ConfigEntry.Gui.CollapsibleObject
@@ -148,7 +148,7 @@ public class Config implements ConfigData {
 
             public boolean enabled = true;
             public boolean detectFluidBlocks = true;
-            public int range = 6;
+            public int range = 24;
             public boolean playSound = true;
             public float volume = 0.25f;
             public boolean playSoundForOtherBlocks = true;
@@ -159,7 +159,7 @@ public class Config implements ConfigData {
             private Entities() {}
 
             public boolean enabled = true;
-            public int range = 6;
+            public int range = 24;
             public boolean playSound = true;
             public float volume = 0.25f;
             public int delay = 3000;
