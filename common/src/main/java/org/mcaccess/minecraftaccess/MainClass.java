@@ -7,7 +7,6 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.player.LocalPlayer;

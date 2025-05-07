@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.mixin;
 
 import com.mojang.text2speech.Narrator;
 import net.minecraft.client.GameNarrator;
-import net.minecraft.client.Minecraft;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarratorDummy;
 import org.spongepowered.asm.mixin.Mixin;
