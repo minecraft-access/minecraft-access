@@ -8,6 +8,7 @@ import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.player.LocalPlayer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -17,6 +18,7 @@ import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import org.mcaccess.minecraftaccess.features.point_of_interest.POIMarking;
 import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
+import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -38,8 +40,6 @@ public class MainClass {
     public static AccessMenu accessMenu = null;
     public static FluidDetector fluidDetector = null;
     public static SpeakHeldItem speakHeldItem = null;
-
-    public static boolean interrupt = true;
 
     /**
      * Initializes the mod
@@ -183,7 +183,8 @@ public class MainClass {
             log.warn("The speaking of string \"{}\" with interrupt={} was suppressed", text, interrupt);
             return;
         }
-        MainClass.interrupt = interrupt;
-        Minecraft.getInstance().getNarrator().sayNow(text);
+        if (Minecraft.getInstance().options.narrator().get() != NarratorStatus.OFF) {
+            ((GameNarratorAccessor) Minecraft.getInstance().getNarrator()).invokeNarrateMessage(text, interrupt);
+        }
     }
 }

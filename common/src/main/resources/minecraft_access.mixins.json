@@ -27,6 +27,7 @@
     "EyeOfEnderMixin",
     "GameModeIconAccessor",
     "GameModeSwitcherScreenMixin",
+    "GameNarratorAccessor",
     "GameNarratorMixin",
     "GuiAccessor",
     "GuiGraphicsMixin",
