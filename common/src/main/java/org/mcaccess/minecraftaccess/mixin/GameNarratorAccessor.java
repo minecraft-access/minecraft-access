@@ -6,6 +6,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(GameNarrator.class)
 public interface GameNarratorAccessor {
-    @Invoker("narrateMessage")
+    @Invoker
     void invokeNarrateMessage(String text, boolean interrupt);
 }
