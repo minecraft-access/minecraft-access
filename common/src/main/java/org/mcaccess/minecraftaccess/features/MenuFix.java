@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.features;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DirectJoinServerScreen;
@@ -19,9 +20,6 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Moves the mouse to the top left of the screen and then performs left click.
  * This fixes the bug in which the mouse cursor interrupts when navigating through the screen elements
@@ -29,28 +27,28 @@ import java.util.List;
  */
 @Slf4j
 public class MenuFix {
-    private static Class<?> prevScreenClass = TitleScreen.class;
-    private static final List<Class<?>> menusNeedFix = new ArrayList<>() {{
-        add(TitleScreen.class);
-        add(OptionsScreen.class);
-        add(ControlsScreen.class);
-        add(OnlineOptionsScreen.class);
-        add(SkinCustomizationScreen.class);
-        add(SoundOptionsScreen.class);
-        add(VideoSettingsScreen.class);
-        add(LanguageSelectScreen.class);
-        add(ChatOptionsScreen.class);
-        add(PackSelectionScreen.class);
-        add(AccessibilityOptionsScreen.class);
-        add(MouseSettingsScreen.class);
-        add(KeyBindsScreen.class);
-        add(SelectWorldScreen.class);
-        add(CreateWorldScreen.class);
-        add(EditWorldScreen.class);
-        add(JoinMultiplayerScreen.class);
-        add(DirectJoinServerScreen.class);
-        add(EditServerScreen.class);
-    }};
+    private static Class<? extends Screen> prevScreenClass = TitleScreen.class;
+    private static final List<Class<? extends Screen>> menusNeedFix = List.of(
+        TitleScreen.class,
+        OptionsScreen.class,
+        ControlsScreen.class,
+        OnlineOptionsScreen.class,
+        SkinCustomizationScreen.class,
+        SoundOptionsScreen.class,
+        VideoSettingsScreen.class,
+        LanguageSelectScreen.class,
+        ChatOptionsScreen.class,
+        PackSelectionScreen.class,
+        AccessibilityOptionsScreen.class,
+        MouseSettingsScreen.class,
+        KeyBindsScreen.class,
+        SelectWorldScreen.class,
+        CreateWorldScreen.class,
+        EditWorldScreen.class,
+        JoinMultiplayerScreen.class,
+        DirectJoinServerScreen.class,
+        EditServerScreen.class
+    );
 
     public static void update(Minecraft minecraftClient) {
         if (!Config.getInstance().menuFixEnabled || minecraftClient.screen == null) {
