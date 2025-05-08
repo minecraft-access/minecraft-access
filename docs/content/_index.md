@@ -11,7 +11,8 @@ This mod supports:
 
 * Game version `1.21`, `1.20.6`, `1.20.4`, `1.20.1`, `1.19.3`
 * On [Fabric](https://fabricmc.net/use/installer/) and [NeoForge](https://neoforged.net) mod loaders
-* On Windows and Linux operating systems ([Help us port the mod to macOS](https://github.com/khanshoaib3/minecraft-access/issues/22))
+* On Windows, Linux, and MacOS operating systems (on MacOS you may need to use an external monitor or decrease the GUI scale for inventory controls to work, but this is being worked on)
+* On [Pojav Launcher](https://pojavlauncher.app) on iOS (Android is not supported yet)
 * Works despite the language setting of the game (though the mod-specific narration will [fall back to English]({{% relref "/features#i18n-fallback-mechanism" %}}) if the mod does not support the language yet)
 
 Each version of this mod will be pre-released on [GitHub](https://github.com/khanshoaib3/minecraft-access/releases) and announced in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first as a beta testing stage, after one week of feedback collection, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions) and [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files).
@@ -24,7 +25,7 @@ Each version of this mod will be pre-released on [GitHub](https://github.com/kha
 
 ## Known Issues
 
-1. (Linux only) xdotool is not recognised even if it is installed.
+Check [GitHub issues](https://github.com/minecraft-access/minecraft-access/issues) for known issues. If you are having problems with the mod, it is probably best to ask in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) before creating an issue, unless you know for sure that it is a bug in the mod.
 
 ## Contributions
 

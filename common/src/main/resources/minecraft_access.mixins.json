@@ -41,6 +41,7 @@
     "LoomScreenAccessor",
     "MerchantScreenAccessor",
     "MinecraftMixin",
+    "MouseHandlerAccessor",
     "NarrationElementOutputMixin",
     "NarrationThunkAccessor",
     "OptionsMixin",

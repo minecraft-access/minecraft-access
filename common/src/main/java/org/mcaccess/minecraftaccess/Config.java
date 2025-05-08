@@ -127,7 +127,6 @@ public class Config implements ConfigData {
     public static final class MouseSimulation {
         private MouseSimulation() {}
         public int scrollDelayMilliseconds = 150;
-        public boolean macMouseFix = false;
     }
 
     public static final class POI {
