@@ -523,19 +523,9 @@ public class NarrationUtils {
         int currentAge, maxAge;
 
         switch (block) {
-            case CropBlock ignored -> {
-                if (block instanceof BeetrootBlock) {
-                    // Beetroot have a different max_age of 3
-                    currentAge = blockState.getValue(BeetrootBlock.AGE);
-                    maxAge = BeetrootBlock.MAX_AGE;
-                } else if (block instanceof TorchflowerCropBlock) {
-                    currentAge = blockState.getValue(TorchflowerCropBlock.AGE);
-                    maxAge = TorchflowerCropBlock.MAX_AGE;
-                } else {
-                    // While wheat, carrots, and potatoes have max_age of 7
-                    currentAge = blockState.getValue(CropBlock.AGE);
-                    maxAge = CropBlock.MAX_AGE;
-                }
+            case CropBlock crop -> {
+                currentAge = crop.getAge(blockState);
+                maxAge = crop.getMaxAge();
             }
             case CocoaBlock ignored -> {
                 currentAge = blockState.getValue(CocoaBlock.AGE);
