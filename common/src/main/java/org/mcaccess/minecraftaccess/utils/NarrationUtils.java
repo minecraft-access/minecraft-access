@@ -506,52 +506,22 @@ public class NarrationUtils {
         return new Tuple<>(toSpeak, currentQuery);
     }
 
-    /**
-     * Blocks that can be planted and have growing stages (age) and harvestable.<br>
-     * Including wheat, carrot, potato, beetroot, nether wart, cocoa bean,
-     * torch flower, pitcher crop.<br>
-     * Watermelon vein and pumpkin vein are not harvestable so not be included here.
-     */
     private static @NotNull Tuple<String, String> getCropsInfo(Block block, BlockState blockState, String toSpeak, String currentQuery) {
-        int currentAge, maxAge;
-
-        switch (block) {
-            case CropBlock crop -> {
-                currentAge = crop.getAge(blockState);
-                maxAge = crop.getMaxAge();
-            }
-            case CocoaBlock ignored -> {
-                currentAge = blockState.getValue(CocoaBlock.AGE);
-                maxAge = CocoaBlock.MAX_AGE;
-            }
-            case NetherWartBlock ignored -> {
-                currentAge = blockState.getValue(NetherWartBlock.AGE);
-                maxAge = NetherWartBlock.MAX_AGE;
-            }
-            case PitcherCropBlock ignored -> {
-                currentAge = blockState.getValue(PitcherCropBlock.AGE);
-                maxAge = PitcherCropBlock.MAX_AGE;
-            }
-            case null, default -> {
-                return new Tuple<>(toSpeak, currentQuery);
-            }
-        }
-
-        String configKey = checkCropRipeLevel(currentAge, maxAge);
-        return new Tuple<>(I18n.get(configKey, toSpeak), I18n.get(configKey, currentQuery));
+        return switch (block) {
+            case CropBlock crop -> addCropGrowth(toSpeak, currentQuery, crop.getAge(blockState), crop.getMaxAge());
+            case CocoaBlock ignored -> addCropGrowth(toSpeak, currentQuery, blockState.getValue(CocoaBlock.AGE), CocoaBlock.MAX_AGE);
+            case NetherWartBlock ignored -> addCropGrowth(toSpeak, currentQuery, blockState.getValue(NetherWartBlock.AGE), NetherWartBlock.MAX_AGE);
+            case PitcherCropBlock ignored -> addCropGrowth(toSpeak, currentQuery, blockState.getValue(PitcherCropBlock.AGE), PitcherCropBlock.MAX_AGE);
+            case null, default -> new Tuple<>(toSpeak, currentQuery);
+        };
     }
 
-    /**
-     * @return corresponding ripe level text config key
-     */
-    private static String checkCropRipeLevel(Integer current, int max) {
-        if (current >= max) {
-            return "minecraft_access.crop.ripe";
-        } else if (current < max / 2) {
-            return "minecraft_access.crop.seedling";
-        } else {
-            return "minecraft_access.crop.half_ripe";
+    private static @NotNull Tuple<String, String> addCropGrowth(String toSpeak, String currentQuery, int age, int maxAge) {
+        if (age == maxAge) {
+            return new Tuple<>(I18n.get("minecraft_access.crop.mature", toSpeak), I18n.get("minecraft_access.crop.mature", currentQuery));
         }
+        float growth = (float) age / maxAge;
+        return new Tuple<>(I18n.get("minecraft_access.crop.percent", (int) (growth*100), toSpeak), I18n.get("minecraft_access.crop.percent", (int) (growth*100), currentQuery));
     }
 
     /**
