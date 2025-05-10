@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.level.GameType;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -83,18 +84,18 @@ public class PlayerStatus {
         if (!toSpeak.isEmpty())
             toSpeak += I18n.get("minecraft_access.other.words_connection");
 
-        if (PlayerUtils.isHardCore()) {
-            return toSpeak += I18n.get("gameMode.hardcore");
-        } else if (PlayerUtils.isSurvival()) {
-            return toSpeak += I18n.get("gameMode.survival");
-        } else if (PlayerUtils.isCreative()) {
-            return toSpeak += I18n.get("gameMode.creative");
-        } else if (PlayerUtils.isAdventure()) {
-            return toSpeak += I18n.get("gameMode.adventure");
-        } else if (PlayerUtils.isSpectator()) {
-            return toSpeak += I18n.get("gameMode.spectator");
-        } else {
-            return toSpeak;
+        toSpeak += switch (Minecraft.getInstance().gameMode.getPlayerMode()) {
+            case SURVIVAL -> PlayerUtils.isHardCore() ? I18n.get("gameMode.hardcore") : I18n.get("gameMode.survival");
+            case CREATIVE -> I18n.get("gameMode.creative");
+            case SPECTATOR -> I18n.get("gameMode.spectator");
+            case ADVENTURE -> I18n.get("gameMode.adventure");
+        };
+
+        //  If the player is in a hard core world but a different game mode
+        if (PlayerUtils.isHardCore() && !PlayerUtils.isSurvival()) {
+            toSpeak += " " + I18n.get("options.difficulty.hardcore");
         }
+
+        return toSpeak;
     }
 }
