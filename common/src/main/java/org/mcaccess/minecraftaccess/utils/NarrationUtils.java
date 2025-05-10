@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -59,8 +58,6 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class NarrationUtils {
-    public static final Predicate<BlockState> IS_REDSTONE_WIRE = (BlockState state) -> state.getBlock() instanceof RedStoneWireBlock;
-
     public static String narrateEntity(Entity entity) {
         // When the entity is named, this value is its custom name,
         // otherwise it is its type.
@@ -474,7 +471,7 @@ public class NarrationUtils {
             // If two redstone wires are connected, they're at one of three relative positions: [side, side down, side up].
             // Take one sample relative position (x+1) then check if any block at [-1,0,1] height is also redstone wire.
             Iterable<BlockPos> threePosAtSide = BlockPos.betweenClosed(pos.offset(1, -1, 0), pos.offset(1, 1, 0));
-            boolean result = WorldUtils.checkAnyOfBlocks(threePosAtSide, IS_REDSTONE_WIRE);
+            boolean result = WorldUtils.checkAnyOfBlocks(threePosAtSide, state -> state.getBlock() instanceof RedStoneWireBlock);
             // If there's no redstone wire on x+1 side,
             // then current wire is not connected to that side,
             // so it's not connected to all directions.
