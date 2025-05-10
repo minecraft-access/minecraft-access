@@ -188,10 +188,6 @@ public class NarrationUtils {
         };
     }
 
-    private static String addSittingInfo(String currentQuery) {
-        return I18n.get("minecraft_access.read_crosshair.is_sitting", currentQuery);
-    }
-
     private static String getSheepInfo(Sheep sheep, String currentQuery) {
         String dyedColor = sheep.getColor().getName();
         String translatedColor = I18n.get("color.minecraft." + dyedColor);
