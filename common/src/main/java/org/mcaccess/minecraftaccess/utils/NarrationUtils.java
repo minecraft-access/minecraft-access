@@ -325,11 +325,10 @@ public class NarrationUtils {
                 }
         }
 
-        if (block instanceof BushBlock || block instanceof CocoaBlock) {
-            Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
-            toSpeak = cropsInfo.getA();
-            currentQuery = cropsInfo.getB();
-        } else if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
+        Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
+        toSpeak = cropsInfo.getA();
+        currentQuery = cropsInfo.getB();
+        if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
             toSpeak = I18n.get("minecraft_access.crop.wet_farmland", toSpeak);
             currentQuery = "wet" + currentQuery;
         } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
