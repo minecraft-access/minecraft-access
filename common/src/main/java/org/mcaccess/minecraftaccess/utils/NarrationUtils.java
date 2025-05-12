@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class NarrationUtils {
-    final static Map<IntegerProperty, Integer> cropAgeProperties = Map.of(
+    private static final Map<IntegerProperty, Integer> cropAgeProperties = Map.of(
             BlockStateProperties.AGE_1, 1,
             BlockStateProperties.AGE_2, 2,
             BlockStateProperties.AGE_3, 3,
