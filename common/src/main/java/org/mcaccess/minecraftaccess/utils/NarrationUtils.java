@@ -196,10 +196,9 @@ public class NarrationUtils {
     }
 
     private static String getSheepInfo(Sheep sheep, String currentQuery) {
-        String dyedColor = sheep.getColor().getName();
-        String translatedColor = I18n.get("color.minecraft." + dyedColor);
+        String color = I18n.get("color.minecraft." + sheep.getColor().getName());
         String shearable = sheep.readyForShearing() ? I18n.get("minecraft_access.read_crosshair.shearable", currentQuery) : I18n.get("minecraft_access.read_crosshair.not_shearable", currentQuery);
-        return translatedColor + " " + shearable;
+        return color + " " + shearable;
     }
 
     public static String narrateNumber(double num) {
