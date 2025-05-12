@@ -32,7 +32,9 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ComparatorMode;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -47,10 +49,7 @@ import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -58,6 +57,17 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class NarrationUtils {
+    final static Map<IntegerProperty, Integer> cropAgeProperties = Map.of(
+            BlockStateProperties.AGE_1, 1,
+            BlockStateProperties.AGE_2, 2,
+            BlockStateProperties.AGE_3, 3,
+            BlockStateProperties.AGE_4, 4,
+            BlockStateProperties.AGE_5, 5,
+            BlockStateProperties.AGE_7, 7,
+            BlockStateProperties.AGE_15, 15,
+            BlockStateProperties.AGE_25, 25
+    );
+
     public static String narrateEntity(Entity entity) {
         // When the entity is named, this value is its custom name,
         // otherwise it is its type.
@@ -507,13 +517,23 @@ public class NarrationUtils {
     }
 
     private static @NotNull Tuple<String, String> getCropsInfo(Block block, BlockState blockState, String toSpeak, String currentQuery) {
-        return switch (block) {
-            case CropBlock crop -> addCropGrowth(toSpeak, currentQuery, crop.getAge(blockState), crop.getMaxAge());
-            case CocoaBlock ignored -> addCropGrowth(toSpeak, currentQuery, blockState.getValue(CocoaBlock.AGE), CocoaBlock.MAX_AGE);
-            case NetherWartBlock ignored -> addCropGrowth(toSpeak, currentQuery, blockState.getValue(NetherWartBlock.AGE), NetherWartBlock.MAX_AGE);
-            case PitcherCropBlock ignored -> addCropGrowth(toSpeak, currentQuery, blockState.getValue(PitcherCropBlock.AGE), PitcherCropBlock.MAX_AGE);
-            case null, default -> new Tuple<>(toSpeak, currentQuery);
-        };
+        if (block instanceof CropBlock crop) {
+            return addCropGrowth(toSpeak, currentQuery, crop.getAge(blockState), crop.getMaxAge());
+        }
+
+        // There are some growable blocks that are not crop blocks like the Torch Flower crop
+        if (block instanceof BushBlock || block instanceof BonemealableBlock || block instanceof VegetationBlock) {
+            Optional<Map.Entry<IntegerProperty, Integer>> ageProperty = cropAgeProperties.entrySet().stream()
+                    .filter(entry -> blockState.hasProperty(entry.getKey()))
+                    .findFirst();
+
+            if (ageProperty.isPresent()) {
+                return addCropGrowth(toSpeak, currentQuery, blockState.getValue(ageProperty.get().getKey()), ageProperty.get().getValue());
+            }
+        }
+
+        // No growth information found
+        return new Tuple<>(toSpeak, currentQuery);
     }
 
     private static @NotNull Tuple<String, String> addCropGrowth(String toSpeak, String currentQuery, int age, int maxAge) {
@@ -521,7 +541,7 @@ public class NarrationUtils {
             return new Tuple<>(I18n.get("minecraft_access.crop.mature", toSpeak), I18n.get("minecraft_access.crop.mature", currentQuery));
         }
         float growth = (float) age / maxAge;
-        return new Tuple<>(I18n.get("minecraft_access.crop.percent", (int) (growth*100), toSpeak), I18n.get("minecraft_access.crop.percent", (int) (growth*100), currentQuery));
+        return new Tuple<>(I18n.get("minecraft_access.crop.percent", (int) (growth * 100), toSpeak), I18n.get("minecraft_access.crop.percent", (int) (growth * 100), currentQuery));
     }
 
     /**
