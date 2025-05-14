@@ -521,7 +521,7 @@ public class NarrationUtils {
         }
 
         // There are some growable blocks that are not crop blocks like the Torch Flower crop
-        if (block instanceof BushBlock || block instanceof BonemealableBlock || block instanceof VegetationBlock) {
+        if (block instanceof BonemealableBlock || block instanceof VegetationBlock) {
             Optional<Map.Entry<IntegerProperty, Integer>> ageProperty = cropAgeProperties.entrySet().stream()
                     .filter(entry -> blockState.hasProperty(entry.getKey()))
                     .findFirst();
