@@ -32,7 +32,9 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ComparatorMode;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -47,11 +49,7 @@ import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Predicate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +57,16 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class NarrationUtils {
-    public static final Predicate<BlockState> IS_REDSTONE_WIRE = (BlockState state) -> state.getBlock() instanceof RedStoneWireBlock;
+    private static final Map<IntegerProperty, Integer> cropAgeProperties = Map.of(
+            BlockStateProperties.AGE_1, 1,
+            BlockStateProperties.AGE_2, 2,
+            BlockStateProperties.AGE_3, 3,
+            BlockStateProperties.AGE_4, 4,
+            BlockStateProperties.AGE_5, 5,
+            BlockStateProperties.AGE_7, 7,
+            BlockStateProperties.AGE_15, 15,
+            BlockStateProperties.AGE_25, 25
+    );
 
     public static String narrateEntity(Entity entity) {
         // When the entity is named, this value is its custom name,
@@ -188,15 +195,10 @@ public class NarrationUtils {
         };
     }
 
-    private static String addSittingInfo(String currentQuery) {
-        return I18n.get("minecraft_access.read_crosshair.is_sitting", currentQuery);
-    }
-
     private static String getSheepInfo(Sheep sheep, String currentQuery) {
-        String dyedColor = sheep.getColor().getName();
-        String translatedColor = I18n.get("color.minecraft." + dyedColor);
+        String color = I18n.get("color.minecraft." + sheep.getColor().getName());
         String shearable = sheep.readyForShearing() ? I18n.get("minecraft_access.read_crosshair.shearable", currentQuery) : I18n.get("minecraft_access.read_crosshair.not_shearable", currentQuery);
-        return translatedColor + " " + shearable;
+        return color + " " + shearable;
     }
 
     public static String narrateNumber(double num) {
@@ -325,11 +327,10 @@ public class NarrationUtils {
                 }
         }
 
-        if (block instanceof BushBlock || block instanceof CocoaBlock) {
-            Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
-            toSpeak = cropsInfo.getA();
-            currentQuery = cropsInfo.getB();
-        } else if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
+        Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
+        toSpeak = cropsInfo.getA();
+        currentQuery = cropsInfo.getB();
+        if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
             toSpeak = I18n.get("minecraft_access.crop.wet_farmland", toSpeak);
             currentQuery = "wet" + currentQuery;
         } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
@@ -479,7 +480,7 @@ public class NarrationUtils {
             // If two redstone wires are connected, they're at one of three relative positions: [side, side down, side up].
             // Take one sample relative position (x+1) then check if any block at [-1,0,1] height is also redstone wire.
             Iterable<BlockPos> threePosAtSide = BlockPos.betweenClosed(pos.offset(1, -1, 0), pos.offset(1, 1, 0));
-            boolean result = WorldUtils.checkAnyOfBlocks(threePosAtSide, IS_REDSTONE_WIRE);
+            boolean result = WorldUtils.checkAnyOfBlocks(threePosAtSide, state -> state.getBlock() instanceof RedStoneWireBlock);
             // If there's no redstone wire on x+1 side,
             // then current wire is not connected to that side,
             // so it's not connected to all directions.
@@ -514,62 +515,32 @@ public class NarrationUtils {
         return new Tuple<>(toSpeak, currentQuery);
     }
 
-    /**
-     * Blocks that can be planted and have growing stages (age) and harvestable.<br>
-     * Including wheat, carrot, potato, beetroot, nether wart, cocoa bean,
-     * torch flower, pitcher crop.<br>
-     * Watermelon vein and pumpkin vein are not harvestable so not be included here.
-     */
     private static @NotNull Tuple<String, String> getCropsInfo(Block block, BlockState blockState, String toSpeak, String currentQuery) {
-        int currentAge, maxAge;
+        if (block instanceof CropBlock crop) {
+            return addCropGrowth(toSpeak, currentQuery, crop.getAge(blockState), crop.getMaxAge());
+        }
 
-        switch (block) {
-            case CropBlock ignored -> {
-                if (block instanceof BeetrootBlock) {
-                    // Beetroot have a different max_age of 3
-                    currentAge = blockState.getValue(BeetrootBlock.AGE);
-                    maxAge = BeetrootBlock.MAX_AGE;
-                } else if (block instanceof TorchflowerCropBlock) {
-                    currentAge = blockState.getValue(TorchflowerCropBlock.AGE);
-                    maxAge = TorchflowerCropBlock.MAX_AGE;
-                } else {
-                    // While wheat, carrots, and potatoes have max_age of 7
-                    currentAge = blockState.getValue(CropBlock.AGE);
-                    maxAge = CropBlock.MAX_AGE;
-                }
-            }
-            case CocoaBlock ignored -> {
-                currentAge = blockState.getValue(CocoaBlock.AGE);
-                maxAge = CocoaBlock.MAX_AGE;
-            }
-            case NetherWartBlock ignored -> {
-                currentAge = blockState.getValue(NetherWartBlock.AGE);
-                maxAge = NetherWartBlock.MAX_AGE;
-            }
-            case PitcherCropBlock ignored -> {
-                currentAge = blockState.getValue(PitcherCropBlock.AGE);
-                maxAge = PitcherCropBlock.MAX_AGE;
-            }
-            case null, default -> {
-                return new Tuple<>(toSpeak, currentQuery);
+        // There are some growable blocks that are not crop blocks like the Torch Flower crop
+        if (block instanceof BonemealableBlock || block instanceof VegetationBlock) {
+            Optional<Map.Entry<IntegerProperty, Integer>> ageProperty = cropAgeProperties.entrySet().stream()
+                    .filter(entry -> blockState.hasProperty(entry.getKey()))
+                    .findFirst();
+
+            if (ageProperty.isPresent()) {
+                return addCropGrowth(toSpeak, currentQuery, blockState.getValue(ageProperty.get().getKey()), ageProperty.get().getValue());
             }
         }
 
-        String configKey = checkCropRipeLevel(currentAge, maxAge);
-        return new Tuple<>(I18n.get(configKey, toSpeak), I18n.get(configKey, currentQuery));
+        // No growth information found
+        return new Tuple<>(toSpeak, currentQuery);
     }
 
-    /**
-     * @return corresponding ripe level text config key
-     */
-    private static String checkCropRipeLevel(Integer current, int max) {
-        if (current >= max) {
-            return "minecraft_access.crop.ripe";
-        } else if (current < max / 2) {
-            return "minecraft_access.crop.seedling";
-        } else {
-            return "minecraft_access.crop.half_ripe";
+    private static @NotNull Tuple<String, String> addCropGrowth(String toSpeak, String currentQuery, int age, int maxAge) {
+        if (age == maxAge) {
+            return new Tuple<>(I18n.get("minecraft_access.crop.mature", toSpeak), I18n.get("minecraft_access.crop.mature", currentQuery));
         }
+        float growth = (float) age / maxAge;
+        return new Tuple<>(I18n.get("minecraft_access.crop.percent", (int) (growth * 100), toSpeak), I18n.get("minecraft_access.crop.percent", (int) (growth * 100), currentQuery));
     }
 
     /**
