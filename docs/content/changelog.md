@@ -4,6 +4,97 @@ title: "Changelog"
 
 <!-- INSERT CHANGELOG HERE -->
 
+## Release v1.10.0 (2025-05)
+### New Features
+- Support navigating and narrating on the config menu of the [Cloth Config](https://shedaniel.gitbook.io/cloth-config) library, this provides support to the config menus of other mods that also use this library. (If you run into a mod's config menu that is built with Cloth that isn't accessible, report it as a bug)
+- Add configuration setting to optionally enable fix for mouse simulation issues on MacOS.
+- Added an Object Tracker. Find the changelog section on it below or learn more [on the docs](https://docs.mcaccess.org/features/#object-tracker)
+- The mod will now announce when the HUD is hidden or shown with the F1 key
+- New keybinding `Control` + `Speak Player Status`: Speak currently active effects
+- Automatically speak gained and lost effects (when configuration option `Enable Player Status` is `on`)
+- Additional entity poses are reported (E.G. swimming, gliding, sleeping) with a new config value (defaulted to true) to enable this functionality
+- End Portal Frame blocks now report wether they have an eye of ender in them or not
+- Added narration for titles and subtitles
+- Made toasts (advancement, recipe unlock, system, and tutorial messages) narrated by the mod
+- Added mod icon to resources so it will be properly displayed in mod management menu
+- There is now a message when the credits are opened from the menu or after defeating the Ender Dragon
+- Added a new config "Always Speak Picked Up Items" that extends the behavior found in fishing harvests to the rest of the game (defaulted to disabled)
+- You can now scroll through old chat messages. View the [keybinding docs](https://docs.mcaccess.org/keybindings/#speak-chat-messages) for the commands
+- You can now use `alt` + `0` or `alt` + `numpad 0` to hear the 10th message on a chat page
+- The mod will now say its version when starting up
+- Player Status now reports the game mode when pressed
+- The selected gamemode on the gamemode switcher (`F3`+`F4`) will now be narrated
+- The narrator is now enabled by default
+- Display Entities are now narrated and trackable in the object tracker (text, item, and block entities)
+- Minecraft Access now works on Wayland on Linux without X11
+- Minecraft Access now runs on Pojav Launcher on iOS
+
+### Feature Updates
+- Cloth Config is now used for this mod's config menu, the location of the config menu is unchanged however, and remains in the `Access Menu`.
+- New `Features` config category that contains on-off switches for some automatic features.
+- Locking feature's speak relative distance config is deprecated. It has been replaced by a new setting that affects both the locking feature and the object tracker.
+- Enforced client side loading of the mod instead of relying on our own detection
+- Updated mod metadata files to properly depend on Architectury API and suggest Jade
+- Changed the player warning sound to be less startling and tied to the player's sound source volume
+- If numbers ended in .0, they will now be trimmed to exclude it
+- Remove [formatting codes](https://minecraft.wiki/w/Formatting_codes) from all narrations
+- Player Status is now no longer available in Creative mode or Spectator mode to match sighted player's view
+- Player Warnings no longer trigger in Creative mode or Spectator mode to match sighted player's view
+- Some functions will no longer attempt to run if they are not relevant to the current game mode
+- Ladders now have a POI group
+- Portals now have a POI group
+- You will now be able to see when you don't have enough lapis or levels when enchanting
+- The XP information is no longer read in creative or spectator mode to match what sighted players see
+- The blocks and entities POI range is now 24 blocks by default to better leverage the new object tracker
+- Speak relative distance is now on by default to give the player more awareness when dealing with POIs in the object tracker
+- Crop growth is now narrated as a percentage instead of ripeness
+
+### Others
+- Moved docs to GitHub Pages, available at https://docs.mcaccess.org/
+- The sound effects overview docs page now contains all sounds currently used by the mod
+- The download and faq pages are no longer part of docs and have instead been moved to [the landing page](https://mcaccess.org/)
+- xdotool is no longer required on Linux
+- The accessibility permission is no longer required on MacOS
+
+### Bug Fixes
+- Fix mouse simulation issues on MacOS
+- Fixed hotbar items not being spoken on the NeoForge platform
+- Added back doors as POI objects
+- Baby entities are now reported (even when they're not animals)
+- Leashed entities are now reported (even when they're not animals)
+- Entities no longer have to be tamed to be considered as sitting by the mod.
+- If a number was at least plus or minus 10 million (like coordinates), it was improperly truncated
+- All spoken numbers now correctly only narrate out to the first number after the decimal point if they are a decimal
+- 12:00 AM is now correctly narrated when listening to the time with 12 hour format instead of 00:00 AM
+- Fence gates will now narrate when open
+- The checkbox widget is now narrated as "checkbox checked" or "checkbox unchecked", instead of "button"
+- The mod will now narrate the new selected item in your hotbar, even if the previous slot you were on matches
+- The mod will no longer apply mouse simulation while typing or while in the keybinds controls menu
+- The log4j.xml dev configuration file will no longer be bundled in the production mod jar
+- When using RIGHT ALT + CAMERA CONTROLS to snap to cardinal directions, the mod will no longer additionally move the camera in the direction of the pressed camera controls key
+- Fixed enchanting table UI reading wrong enchantments
+- Flite is no longer required to be installed on Linux
+- The accessibility onboarding screen no longer speaks using the vanilla Minecraft voice instead of Minecraft Access
+- Features are now initialized each time you join a world, meaning many issues can be resolved by rejoining the world
+- Optimized the title screen by skipping all invalid in-game specific functions when you aren't in a world
+- Narration of messages other than the initial initializing message are now suppressed when the game is not in focus
+- Resolves a bug where the advancements key could remain bound preventing usage of the camera controls
+- Mouse click positions should no longer be slightly off in MacOS
+- Third-party mods like Jade that use narrateMessage will now speak with Minecraft Access instead of the vanilla narrator voice
+
+### Object tracker
+Gives the player a better idea of what is around them and allows for controlling what other POI features like locking target.
+Keybinds:
+- `PGUP`: previous object
+- `PGDOWN`: next object
+- `CTRL` + `PGUP`: previous group
+- `CTRL` + `PGDOWN`: next group
+- `HOME`: narrate current object
+- `END`: target nearest object
+
+### Minecraft 1.21.5
+This is the first release to support Minecraft 1.21.5
+
 ## Release v1.9.0 (2024-12)
 ### New Features
 - Speak current perspective when switched to [#314](https://github.com/khanshoaib3/minecraft-access/issues/314)
