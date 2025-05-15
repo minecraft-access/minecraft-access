@@ -174,8 +174,8 @@ jobs:
         run: |
           changelog=${CHANGELOG//$'\n'/\\n}
           changelog=${changelog//## /### }
-          sed "/<!-- INSERT CHANGELOG HERE -->/a\\\\n## Release v${{ steps.version.outputs.result }} ($(date +%Y-%m))\n${changelog}" -i ./docs/changelog.md
-          git add ./docs/changelog.md
+          sed "/<!-- INSERT CHANGELOG HERE -->/a\\\\n## Release v${{ steps.version.outputs.result }} ($(date +%Y-%m))\n${changelog}" -i ./docs/content/changelog.md
+          git add ./docs/content/changelog.md
           git commit -m "Updated changelog for v${{ steps.version.outputs.result }}" --trailer "Co-authored-by=${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>"
       - name: Tag
         env:
