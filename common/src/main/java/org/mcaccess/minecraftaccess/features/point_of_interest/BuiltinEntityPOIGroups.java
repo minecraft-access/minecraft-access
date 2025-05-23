@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.*;
@@ -49,7 +50,9 @@ public enum BuiltinEntityPOIGroups {
     PASSIVE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.passive",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0f),
-            e -> e instanceof AgeableMob || e instanceof WaterAnimal || e instanceof NeutralMob
+            entity -> {
+                return (entity instanceof AgeableMob || entity instanceof WaterAnimal || entity instanceof NeutralMob) && !(entity.getPassengers().contains(Minecraft.getInstance().player));
+            }
     )),
     PLAYER(new POIGroup<>(// Players
             "minecraft_access.point_of_interest.group.player",
@@ -59,7 +62,9 @@ public enum BuiltinEntityPOIGroups {
     VEHICLE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.vehicle",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1f),
-            VehicleEntity.class::isInstance
+            entity -> {
+                return entity instanceof VehicleEntity vehicle && !(vehicle.getPassengers().contains(Minecraft.getInstance().player));
+            }
     )),
     ITEM(new POIGroup<>(
             "minecraft_access.point_of_interest.group.item",
