@@ -172,6 +172,7 @@
     "minecraft_access.point_of_interest.locking.display_item": "Ghost %s Item",
     "minecraft_access.point_of_interest.locking.dropped_item": "Dropped %s Item",
     "minecraft_access.point_of_interest.locking.locked": "Lock On: %s",
+    "minecraft_access.point_of_interest.locking.nothing_selected": "No POI tracker object selected for locking!",
     "minecraft_access.point_of_interest.locking.tracking_eye_of_ender": "Tracking Eye of Ender",
     "minecraft_access.point_of_interest.marking.marked": "Mark On: %s",
     "minecraft_access.point_of_interest.marking.unmarked": "Unmarked",

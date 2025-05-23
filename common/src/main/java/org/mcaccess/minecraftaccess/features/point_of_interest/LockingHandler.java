@@ -55,9 +55,6 @@ public class LockingHandler {
         instance = new LockingHandler();
     }
 
-    private LockingHandler() {
-    }
-
     /**
      * Loads the configs from the config.json
      */
@@ -184,7 +181,10 @@ public class LockingHandler {
 
     private void relock() {
         Object target = ObjectTracker.getInstance().getCurrentObject();
-        if (target == null) return;
+        if (target == null) {
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.nothing_selected"), false);
+            return;
+        }
         switch (target) {
             case Entity entity -> lockOnEntity(entity);
             case BlockPos blockPos -> lockOnBlock(blockPos);
