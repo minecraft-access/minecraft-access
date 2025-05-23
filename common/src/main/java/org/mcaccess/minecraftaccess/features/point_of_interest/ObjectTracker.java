@@ -184,4 +184,8 @@ public class ObjectTracker {
             narrateCurrentObject(false);
         } else MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found"), true);
     }
+
+    public void  clearCurrentObject(){
+        currentObject = null;
+    }
 }

@@ -41,7 +41,7 @@ public class LockingHandler {
     private static final LockingHandler instance;
     private Config.POI.Locking config;
     private Entity lockedOnEntity = null;
-    private BlockPos3d lockedOnBlock = null;
+    private BlockPos3d lockedOnBlockPos = null;
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
     private Map<Property<?>, Comparable<?>> entriesOfLockedOnBlock;
     private final Interval interval = Interval.defaultDelay();
@@ -80,9 +80,12 @@ public class LockingHandler {
     private void handleLockingKeyPressing() {
         boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
         if (isLockingKeyPressed && Screen.hasAltDown()) {
-            if (lockedOnEntity != null || lockedOnBlock != null) {
-                unlock(true);
-                interval.beReady();
+            if (lockedOnBlockPos != null) {
+                Block currentLockedBlock = Minecraft.getInstance().level.getBlockState(lockedOnBlockPos).getBlock();
+                if (lockedOnEntity != null || lockedOnBlockPos != null || currentLockedBlock != null) {
+                    unlock(true);
+                    interval.beReady();
+                }
             }
         } else if (isLockingKeyPressed) {
             relock();
@@ -98,8 +101,9 @@ public class LockingHandler {
             PlayerUtils.lookAt(lockedOnEntity);
         }
 
-        if (lockedOnBlock != null) {
-            BlockState blockState = WorldUtils.getClientWorld().getBlockState(WorldUtils.blockPosOf(lockedOnBlock.getAccuratePosition()));
+        if (lockedOnBlockPos != null) {
+            if (unlockFromAirBlock()) return;
+            BlockState blockState = WorldUtils.getClientWorld().getBlockState(WorldUtils.blockPosOf(lockedOnBlockPos.getAccuratePosition()));
 
             if (unlockFromLadderIfClimbingOnIt(blockState)) return;
 
@@ -110,7 +114,7 @@ public class LockingHandler {
             boolean entriesOfLockedBlockNotChanged = entries.values() == entriesOfLockedOnBlock.values();
 
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears)
-                PlayerUtils.lookAt(lockedOnBlock);
+                PlayerUtils.lookAt(lockedOnBlockPos);
             else {
                 // Unlock if the state of locked block is changed
                 unlock(true);
@@ -167,8 +171,9 @@ public class LockingHandler {
     private void unlock(boolean speak) {
         lockedOnEntity = null;
         entriesOfLockedOnBlock = null;
-        lockedOnBlock = null;
+        lockedOnBlockPos = null;
         isLockedOnWhereEyeOfEnderDisappears = false;
+        ObjectTracker.getInstance().clearCurrentObject();
 
         if (speak) {
             if (config.unlockingSound) {
@@ -205,7 +210,7 @@ public class LockingHandler {
         if (Blocks.LADDER.equals(blockState.getBlock())) {
 
             Vec3 playerPos = PlayerPositionUtils.getPlayerPosition().orElseThrow();
-            double distance = lockedOnBlock.getCenter().distanceTo(playerPos);
+            double distance = lockedOnBlockPos.getCenter().distanceTo(playerPos);
             if (distance <= 0.5) {
                 unlock(true);
                 return true;
@@ -234,6 +239,13 @@ public class LockingHandler {
         return true;
     }
 
+    private boolean unlockFromAirBlock() {
+        Block currentBlock = Minecraft.getInstance().level.getBlockState(lockedOnBlockPos).getBlock();
+        if (!(currentBlock instanceof AirBlock)) return false;
+        unlock(true);
+        return true;
+    }
+
     /**
      * @return true if locked
      */
@@ -253,8 +265,6 @@ public class LockingHandler {
     }
 
     private void lockOnBlock(BlockPos position) {
-        unlock(false);
-
         BlockState blockState = WorldUtils.getClientWorld().getBlockState(position);
         entriesOfLockedOnBlock = blockState.getValues();
 
@@ -267,11 +277,11 @@ public class LockingHandler {
             default -> position.getCenter();
         };
 
-        lockedOnBlock = new BlockPos3d(position, absolutePosition);
+        lockedOnBlockPos = new BlockPos3d(position, absolutePosition);
 
-        String blockDescription = NarrationUtils.narrateBlock(lockedOnBlock, "");
+        String blockDescription = NarrationUtils.narrateBlock(lockedOnBlockPos, "");
         if (Config.getInstance().poi.speakDistance) {
-            blockDescription += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlock);
+            blockDescription += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlockPos);
         }
         MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.locked", blockDescription), true);
     }
