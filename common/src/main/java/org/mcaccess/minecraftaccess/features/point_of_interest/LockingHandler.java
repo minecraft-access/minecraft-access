@@ -134,7 +134,7 @@ public class LockingHandler {
         if (config.aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getUseItem().getItem() instanceof BowItem) {
             List<Entity> hostileEntities = BuiltinEntityPOIGroups.HOSTILE.group.getItems();
             if (!hostileEntities.isEmpty()) {
-                Entity closestEntity = hostileEntities.stream()
+                Entity entity = hostileEntities.stream()
                         .min(Comparator.comparingDouble(player::distanceTo))
                         .get();
                 if (lockOnEntity(entity)) {
