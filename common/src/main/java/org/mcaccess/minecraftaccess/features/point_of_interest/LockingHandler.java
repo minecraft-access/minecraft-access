@@ -56,6 +56,9 @@ public class LockingHandler {
         instance = new LockingHandler();
     }
 
+    private LockingHandler() {
+    }
+
     /**
      * Loads the configs from the config.json
      */
@@ -81,12 +84,9 @@ public class LockingHandler {
     private void handleLockingKeyPressing() {
         boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
         if (isLockingKeyPressed && Screen.hasAltDown()) {
-            if (lockedOnBlockPos != null) {
-                Block currentLockedBlock = Minecraft.getInstance().level.getBlockState(lockedOnBlockPos).getBlock();
-                if (lockedOnEntity != null || lockedOnBlockPos != null || currentLockedBlock != null) {
-                    unlock(true);
-                    interval.beReady();
-                }
+            if (lockedOnEntity != null || lockedOnBlockPos != null) {
+                unlock(true);
+                interval.beReady();
             }
         } else if (isLockingKeyPressed) {
             relock();
@@ -123,7 +123,7 @@ public class LockingHandler {
         }
     }
 
-/**
+    /**
      * Automatically locks on to the nearest hostile entity when the player is pulling a bow.
      */
     private void bowAimingAssist() {
@@ -135,8 +135,7 @@ public class LockingHandler {
             List<Entity> hostileEntities = BuiltinEntityPOIGroups.HOSTILE.group.getItems();
             if (hostileEntities != null && !hostileEntities.isEmpty()) {
                 Optional<Entity> closestEntity = hostileEntities.stream()
-                        .filter(e -> e != null)
-                        .min(Comparator.comparingDouble(e -> player.distanceTo(e)));
+                        .min(Comparator.comparingDouble(player::distanceTo));
 
                 if (closestEntity.isPresent()) {
                     Entity entity = closestEntity.get();
@@ -168,8 +167,7 @@ public class LockingHandler {
             Vec3 eyePosition = player.getEyePosition();
             Vec3 targetPosition = PlayerUtils.currentEntityLookingAtPosition;
 
-            // Make sure all values are valid before checking if player can see entity
-            if (eyePosition != null && targetPosition != null) {
+            if (targetPosition != null) {
                 boolean canSeeTarget = PlayerUtils.isPlayerCanSee(eyePosition, targetPosition, lockedOnEntity);
 
                 if (canSeeTarget) {
@@ -239,7 +237,7 @@ public class LockingHandler {
     }
 
     /**
-     * If the entity has dead, we'll automatically unlock from it.
+     * If locked on entity is dead or otherwise not valid, unlock.
      *
      * @return true if unlocked
      */
@@ -258,6 +256,11 @@ public class LockingHandler {
         return true;
     }
 
+    /**
+     * If locked on block is an air block or otherwise not valid, unlock.
+     *
+     * @return true if unlocked
+     */
     private boolean unlockFromAirBlock() {
         Block currentBlock = Minecraft.getInstance().level.getBlockState(lockedOnBlockPos).getBlock();
         if (!(currentBlock instanceof AirBlock)) return false;
