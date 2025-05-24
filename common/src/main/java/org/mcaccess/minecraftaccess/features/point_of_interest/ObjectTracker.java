@@ -86,6 +86,10 @@ public class ObjectTracker {
     }
 
     private void narrateCurrentObject(boolean interrupt) {
+        if(currentObject == null){
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
+        }
+
         if (checkAndSpeakIfAllGroupsEmpty()) return;
         boolean speakDistance = Config.getInstance().poi.speakDistance;
 

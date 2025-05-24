@@ -85,7 +85,7 @@ public class LockingHandler {
         boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
         if (isLockingKeyPressed && Screen.hasAltDown()) {
             if (lockedOnEntity != null || lockedOnBlockPos != null) {
-                unlock(true);
+                unlock(true, true);
                 interval.beReady();
             }
         } else if (isLockingKeyPressed) {
@@ -118,7 +118,7 @@ public class LockingHandler {
                 PlayerUtils.lookAt(lockedOnBlockPos);
             else {
                 // Unlock if the state of locked block is changed
-                unlock(true);
+                unlock(true, true);
             }
         }
     }
@@ -145,7 +145,7 @@ public class LockingHandler {
 
         // Reset when not using bow anymore
         if (aimAssistActive && (!player.isUsingItem() || !(player.getUseItem().getItem() instanceof BowItem))) {
-            unlock(false);
+            unlock(false, true);
             aimAssistActive = false;
             lastAimAssistCue = -1;
             lastBowState = -1;
@@ -180,12 +180,12 @@ public class LockingHandler {
         }
     }
 
-    private void unlock(boolean speak) {
+    private void unlock(boolean speak, boolean isStillValid) {
         lockedOnEntity = null;
         entriesOfLockedOnBlock = null;
         lockedOnBlockPos = null;
         isLockedOnWhereEyeOfEnderDisappears = false;
-        ObjectTracker.getInstance().clearCurrentObject();
+        if(!isStillValid) ObjectTracker.getInstance().clearCurrentObject();
 
         if (speak) {
             if (config.unlockingSound) {
@@ -199,7 +199,7 @@ public class LockingHandler {
     private void relock() {
         Object target = ObjectTracker.getInstance().getCurrentObject();
         if (target == null) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.nothing_selected"), false);
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
             return;
         }
         switch (target) {
@@ -224,7 +224,7 @@ public class LockingHandler {
             Vec3 playerPos = PlayerPositionUtils.getPlayerPosition().orElseThrow();
             double distance = lockedOnBlockPos.getCenter().distanceTo(playerPos);
             if (distance <= 0.5) {
-                unlock(true);
+                unlock(true, true);
                 return true;
             }
         }
@@ -247,7 +247,7 @@ public class LockingHandler {
             isLockedOnWhereEyeOfEnderDisappears = true;
         }
 
-        unlock(true);
+        unlock(true, false);
         return true;
     }
 
@@ -259,7 +259,7 @@ public class LockingHandler {
     private boolean unlockFromAirBlock() {
         Block currentBlock = Minecraft.getInstance().level.getBlockState(lockedOnBlockPos).getBlock();
         if (!(currentBlock instanceof AirBlock)) return false;
-        unlock(true);
+        unlock(true, false);
         return true;
     }
 
@@ -269,7 +269,7 @@ public class LockingHandler {
     public boolean lockOnEntity(Entity entity) {
         if (!entity.isAlive()) return false;
 
-        unlock(false);
+        unlock(false, true);
         lockedOnEntity = entity;
 
         String toSpeak = NarrationUtils.narrateEntity(entity);
