@@ -133,15 +133,12 @@ public class LockingHandler {
         // Check if player is using a bow
         if (config.aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getUseItem().getItem() instanceof BowItem) {
             List<Entity> hostileEntities = BuiltinEntityPOIGroups.HOSTILE.group.getItems();
-            if (hostileEntities != null && !hostileEntities.isEmpty()) {
-                Optional<Entity> closestEntity = hostileEntities.stream()
-                        .min(Comparator.comparingDouble(player::distanceTo));
-
-                if (closestEntity.isPresent()) {
-                    Entity entity = closestEntity.get();
-                    if (lockOnEntity(entity)) {
-                        aimAssistActive = true;
-                    }
+            if (!hostileEntities.isEmpty()) {
+                Entity closestEntity = hostileEntities.stream()
+                        .min(Comparator.comparingDouble(player::distanceTo))
+                        .get();
+                if (lockOnEntity(entity)) {
+                    aimAssistActive = true;
                 }
             }
         }
@@ -168,9 +165,7 @@ public class LockingHandler {
             Vec3 targetPosition = PlayerUtils.currentEntityLookingAtPosition;
 
             if (targetPosition != null) {
-                boolean canSeeTarget = PlayerUtils.isPlayerCanSee(eyePosition, targetPosition, lockedOnEntity);
-
-                if (canSeeTarget) {
+                if (PlayerUtils.isPlayerCanSee(eyePosition, targetPosition, lockedOnEntity)) {
                     if (lastAimAssistCue != 1 || bowState != lastBowState) {
                         PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_PLING, config.aimAssistAudioCuesVolume, bowState);
                         lastAimAssistCue = 1;
