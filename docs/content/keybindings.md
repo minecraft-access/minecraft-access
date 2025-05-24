@@ -96,13 +96,15 @@ See also: [Feature Description]({{% relref "/features#inventory-controls" %}}), 
 | `Target nearest object`  | End                | Target the nearest object relative to your current position, regardless of its group |
 | `Locking Key`            | Y                  | Lock onto the block or entity that's currently being targetted by the object tracker |
 
-| Key Combination                   | Description                                                |
-|-----------------------------------|------------------------------------------------------------|
-| `Control` + `Next item`          | Select next object tracker group                           |
-| `Control` + `Previous item`      | Select previous object tracker group                       |
-| `Alt` + `Locking Key`            | Unlock from the currently locked entity or block           |
-| `Control` + `Locking Key`        | Mark the block or entity currently targeted with crosshair |
-| `Control` + `Alt` + `Locking Key`| Unmark from the target                                     |
+| Key Combination                         | Description                                                                          |
+|-----------------------------------------|--------------------------------------------------------------------------------------|
+| `Control` + `Next item`                 | Select next object tracker group                                                     |
+| `Control` + `Previous item`             | Select previous object tracker group                                                 |
+| `Control` + `Target Nearest Object Key` | Target the nearest entity relative to your current position, regardless of its group |
+| `Shift` + `Target Nearest Object Key`   | Target the nearest block relative to your current position, regardless of its group  |
+| `Alt` + `Locking Key`                   | Unlock from the currently locked entity or block                                     |
+| `Control` + `Locking Key`               | Mark the block or entity currently targeted with crosshair                           |
+| `Control` + `Alt` + `Locking Key`       | Unmark from the target                                                               |
 
 See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 [Configuration]({{% relref "/config#point-of-interest" %}})
