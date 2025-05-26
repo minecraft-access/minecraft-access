@@ -22,8 +22,6 @@ import java.util.stream.Stream;
  */
 @Slf4j
 public class POIBlocks {
-    @Getter
-    private static final POIBlocks instance = new POIBlocks();
     private Config.POI.Blocks config;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
@@ -55,12 +53,12 @@ public class POIBlocks {
     public final POIGroup<BlockPos>[] groups = Stream.of(List.of(markedGroup), BuiltinBlockPOIGroups.ALL, List.of(otherBlocksGroup))
             .flatMap(Collection::stream).toArray(POIGroup[]::new);
 
-    private POIBlocks() {
-        loadConfig();
-    }
-
     @Getter
     private List<BlockPos> lastScanResults = new ArrayList<>();
+
+    POIBlocks() {
+        loadConfig();
+    }
 
     public void update(boolean isMarking, Block markedBlock) {
         if (isMarking) setMarkedBlock(markedBlock);

@@ -31,15 +31,16 @@ public class MainClass {
     public static final String MOD_ID = "minecraft_access";
     private static ScreenReaderInterface screenReader = null;
 
-    public static InventoryControls inventoryControls = null;
+    public static AccessMenu accessMenu = null;
     public static BiomeIndicator biomeIndicator = null;
-    public static XPIndicator xpIndicator = null;
     public static FacingDirection facingDirection = null;
+    public static FluidDetector fluidDetector = null;
+    public static InventoryControls inventoryControls = null;
     public static PlayerStatus playerStatus = null;
     public static PlayerWarnings playerWarnings = null;
-    public static AccessMenu accessMenu = null;
-    public static FluidDetector fluidDetector = null;
+    public  static POIMarking poiMarking = null;
     public static SpeakHeldItem speakHeldItem = null;
+    public static XPIndicator xpIndicator = null;
 
     /**
      * Initializes the mod
@@ -126,7 +127,7 @@ public class MainClass {
             speakHeldItem.speakHeldItem();
 
         // POI Marking will handle POI Scan and POI Locking features inside it
-        POIMarking.getInstance().update();
+        poiMarking.update();
 
         FallDetector.getInstance().update();
 
@@ -137,15 +138,16 @@ public class MainClass {
     }
 
     private static void initWorldState(LocalPlayer player) {
-        inventoryControls = new InventoryControls();
+        accessMenu = new AccessMenu();
         biomeIndicator = new BiomeIndicator();
-        xpIndicator = new XPIndicator();
         facingDirection = new FacingDirection();
+        fluidDetector = new FluidDetector();
+        inventoryControls = new InventoryControls();
         playerStatus = new PlayerStatus();
         playerWarnings = new PlayerWarnings();
-        accessMenu = new AccessMenu();
-        fluidDetector = new FluidDetector();
+        poiMarking = new POIMarking();
         speakHeldItem = new SpeakHeldItem();
+        xpIndicator = new XPIndicator();
 
         Minecraft client = Minecraft.getInstance();
         if (client.options.keyAdvancements.same(KeyBindingsHandler.cameraControlsRight)) {

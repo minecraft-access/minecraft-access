@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,8 +36,6 @@ import java.util.Map;
  */
 @Slf4j
 public class LockingHandler {
-    @Getter
-    private static final LockingHandler instance;
     private Config.POI.Locking config;
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlockPos = null;
@@ -51,11 +48,7 @@ public class LockingHandler {
     // -1 = null, 1 = starting, 2 = half drawn, 3 = fully drawn
     private int lastBowState = -1;
 
-    static {
-        instance = new LockingHandler();
-    }
-
-    private LockingHandler() {
+    LockingHandler() {
     }
 
     /**
@@ -184,7 +177,7 @@ public class LockingHandler {
         entriesOfLockedOnBlock = null;
         lockedOnBlockPos = null;
         isLockedOnWhereEyeOfEnderDisappears = false;
-        if(!isStillValid) ObjectTracker.getInstance().clearCurrentObject();
+        if (!isStillValid) MainClass.poiMarking.objectTracker.clearCurrentObject();
 
         if (speak) {
             if (config.unlockingSound) {
@@ -196,7 +189,7 @@ public class LockingHandler {
     }
 
     private void relock() {
-        Object target = ObjectTracker.getInstance().getCurrentObject();
+        Object target = MainClass.poiMarking.objectTracker.getCurrentObject();
         if (target == null) {
             MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
             return;
