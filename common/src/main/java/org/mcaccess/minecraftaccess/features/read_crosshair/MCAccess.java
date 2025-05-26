@@ -12,18 +12,6 @@ import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import java.util.Arrays;
 
 public class MCAccess implements CrosshairNarrator {
-    private static MCAccess INSTANCE;
-
-    private MCAccess() {
-    }
-
-    public static MCAccess getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new MCAccess();
-        }
-        return INSTANCE;
-    }
-
     @Override
     public @NotNull HitResult rayCast() {
         return PlayerUtils.crosshairTarget(PlayerUtils.getInteractionRange());

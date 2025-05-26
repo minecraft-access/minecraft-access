@@ -10,6 +10,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.level.block.FallingBlock;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
@@ -34,11 +35,14 @@ public class MainClass {
     public static AccessMenu accessMenu = null;
     public static BiomeIndicator biomeIndicator = null;
     public static FacingDirection facingDirection = null;
+    public static FallDetector fallDetector = null;
     public static FluidDetector fluidDetector = null;
+    public static HUDStatus hudStatus = null;
     public static InventoryControls inventoryControls = null;
     public static PlayerStatus playerStatus = null;
     public static PlayerWarnings playerWarnings = null;
     public  static POIMarking poiMarking = null;
+    public static ReadCrosshair readCrosshair = null;
     public static SpeakHeldItem speakHeldItem = null;
     public static XPIndicator xpIndicator = null;
 
@@ -91,7 +95,7 @@ public class MainClass {
         if (inventoryControls != null && config.inventoryControls.enabled)
             inventoryControls.update();
 
-        ReadCrosshair.getInstance().tick();
+        readCrosshair.tick();
 
         if (xpIndicator != null && config.features.xpIndicatorEnabled && (PlayerUtils.isAdventure() || PlayerUtils.isSurvival()))
             xpIndicator.update();
@@ -129,9 +133,9 @@ public class MainClass {
         // POI Marking will handle POI Scan and POI Locking features inside it
         poiMarking.update();
 
-        FallDetector.getInstance().update();
+        fallDetector.update();
 
-        HUDStatus.getInstance().update();
+        hudStatus.update();
 
         // This should always be at the bottom
         Keystroke.updateInstances();
@@ -141,11 +145,14 @@ public class MainClass {
         accessMenu = new AccessMenu();
         biomeIndicator = new BiomeIndicator();
         facingDirection = new FacingDirection();
+        fallDetector = new FallDetector();
         fluidDetector = new FluidDetector();
+        hudStatus = new HUDStatus();
         inventoryControls = new InventoryControls();
         playerStatus = new PlayerStatus();
         playerWarnings = new PlayerWarnings();
         poiMarking = new POIMarking();
+        readCrosshair = new ReadCrosshair();
         speakHeldItem = new SpeakHeldItem();
         xpIndicator = new XPIndicator();
 

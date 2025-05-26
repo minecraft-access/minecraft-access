@@ -1,14 +1,10 @@
 package org.mcaccess.minecraftaccess.features;
 
-import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import org.mcaccess.minecraftaccess.MainClass;
 
 public class HUDStatus {
-    @Getter
-    private static HUDStatus instance = new HUDStatus();
-
     private Boolean wasHidden = Minecraft.getInstance().options.hideGui;
 
     public void update() {
