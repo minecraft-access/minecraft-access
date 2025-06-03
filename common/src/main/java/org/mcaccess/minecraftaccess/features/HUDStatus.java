@@ -5,7 +5,11 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.LerpingBossEvent;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.GameType;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.BossHealthOverlayAccessor;
@@ -13,17 +17,14 @@ import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 
 public class HUDStatus {
     private Minecraft client = Minecraft.getInstance().getInstance();
-    private Boolean wasHidden = Minecraft.getInstance().options.hideGui;
+    private Boolean hudWasHidden = Minecraft.getInstance().options.hideGui;
+    private boolean attackCooldownPlayed = false;
     private boolean bossbarKeyIsDown = false;
     private int bossIndex = 0;
 
     public void tick() {
-        Boolean isHidden = client.options.hideGui;
-
-        if (wasHidden != isHidden) {
-            MainClass.narrate(I18n.get(String.format("minecraft_access.hud_status.announce_%s", isHidden ? "hidden" : "shown")), true);
-            wasHidden = isHidden;
-        }
+        hudVisibilityStatus();
+        attackCooldownStatus();
 
         if (KeyBindingsHandler.NARRATE_BOSSBARS_KEY.mapping.consumeClick()) {
             if (!bossbarKeyIsDown) {
@@ -32,6 +33,31 @@ public class HUDStatus {
             }
         } else if (!KeyBindingsHandler.NARRATE_BOSSBARS_KEY.mapping.isDown()) {
             bossbarKeyIsDown = false;
+        }
+    }
+
+    private void hudVisibilityStatus() {
+        Boolean hudIsHidden = client.options.hideGui;
+
+        if (hudWasHidden != hudIsHidden) {
+            MainClass.narrate(I18n.get(String.format("minecraft_access.hud_status.announce_%s", hudIsHidden ? "hidden" : "shown")), true);
+            hudWasHidden = hudIsHidden;
+        }
+    }
+
+    private void attackCooldownStatus() {
+        boolean indicatorShowing = !hudWasHidden && client.options.attackIndicator().get().getId() != 0 && client.gameMode.getPlayerMode() != GameType.SPECTATOR;
+        if (!indicatorShowing) return;
+
+        LocalPlayer player = client.player;
+        if (player == null) return;
+
+        float cooldownProgress = player.getAttackStrengthScale(1.0f);
+        if (!attackCooldownPlayed && cooldownProgress == 1.0f) {
+            player.playNotifySound(SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON, SoundSource.PLAYERS, 1.0f, 1.0f);
+            attackCooldownPlayed = true;
+        } else if (attackCooldownPlayed && cooldownProgress < 1.0f) {
+            attackCooldownPlayed = false;
         }
     }
 
