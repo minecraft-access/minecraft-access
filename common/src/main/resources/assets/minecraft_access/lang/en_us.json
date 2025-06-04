@@ -176,6 +176,7 @@
     "minecraft_access.point_of_interest.marking.marked": "Mark On: %s",
     "minecraft_access.point_of_interest.marking.unmarked": "Unmarked",
     "minecraft_access.point_of_interest.not_found": "No points of interest detected",
+    "minecraft_access.point_of_interest.not_selected": "No Object Tracker object selected!",
     "minecraft_access.point_of_interest.targeting_nearest": "Targeting nearest object",
     "minecraft_access.read_crosshair.baby": "Baby %s",
     "minecraft_access.read_crosshair.bee_hive_facing": "%s Facing: %s",

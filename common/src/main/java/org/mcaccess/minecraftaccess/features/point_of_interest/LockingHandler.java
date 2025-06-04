@@ -41,7 +41,7 @@ public class LockingHandler {
     private static final LockingHandler instance;
     private Config.POI.Locking config;
     private Entity lockedOnEntity = null;
-    private BlockPos3d lockedOnBlock = null;
+    private BlockPos3d lockedOnBlockPos = null;
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
     private Map<Property<?>, Comparable<?>> entriesOfLockedOnBlock;
     private final Interval interval = Interval.defaultDelay();
@@ -83,8 +83,8 @@ public class LockingHandler {
     private void handleLockingKeyPressing() {
         boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
         if (isLockingKeyPressed && Screen.hasAltDown()) {
-            if (lockedOnEntity != null || lockedOnBlock != null) {
-                unlock(true);
+            if (lockedOnEntity != null || lockedOnBlockPos != null) {
+                unlock(true, true);
                 interval.beReady();
             }
         } else if (isLockingKeyPressed) {
@@ -101,8 +101,9 @@ public class LockingHandler {
             PlayerUtils.lookAt(lockedOnEntity);
         }
 
-        if (lockedOnBlock != null) {
-            BlockState blockState = WorldUtils.getClientWorld().getBlockState(WorldUtils.blockPosOf(lockedOnBlock.getAccuratePosition()));
+        if (lockedOnBlockPos != null) {
+            if (unlockFromAirBlock()) return;
+            BlockState blockState = WorldUtils.getClientWorld().getBlockState(WorldUtils.blockPosOf(lockedOnBlockPos.getAccuratePosition()));
 
             if (unlockFromLadderIfClimbingOnIt(blockState)) return;
 
@@ -113,10 +114,10 @@ public class LockingHandler {
             boolean entriesOfLockedBlockNotChanged = entries.values() == entriesOfLockedOnBlock.values();
 
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears)
-                PlayerUtils.lookAt(lockedOnBlock);
+                PlayerUtils.lookAt(lockedOnBlockPos);
             else {
                 // Unlock if the state of locked block is changed
-                unlock(true);
+                unlock(true, true);
             }
         }
     }
@@ -126,11 +127,14 @@ public class LockingHandler {
      */
     private void bowAimingAssist() {
         LocalPlayer player = WorldUtils.getClientPlayer();
+        if (player == null) return;
+
+        // Check if player is using a bow
         if (config.aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getUseItem().getItem() instanceof BowItem) {
             List<Entity> hostileEntities = BuiltinEntityPOIGroups.HOSTILE.group.getItems();
             if (!hostileEntities.isEmpty()) {
                 Entity entity = hostileEntities.stream()
-                        .min(Comparator.comparingDouble(e -> WorldUtils.getClientPlayer().distanceTo(e)))
+                        .min(Comparator.comparingDouble(player::distanceTo))
                         .get();
                 if (lockOnEntity(entity)) {
                     aimAssistActive = true;
@@ -138,14 +142,17 @@ public class LockingHandler {
             }
         }
 
-        if (aimAssistActive && !player.isUsingItem()) {
-            unlock(false);
+        // Reset when not using bow anymore
+        if (aimAssistActive && (!player.isUsingItem() || !(player.getUseItem().getItem() instanceof BowItem))) {
+            unlock(false, true);
             aimAssistActive = false;
             lastAimAssistCue = -1;
             lastBowState = -1;
+            return;
         }
 
-        if (config.aimAssistAudioCuesEnabled && aimAssistActive) {
+        // Handle audio cues for aiming
+        if (config.aimAssistAudioCuesEnabled && aimAssistActive && lockedOnEntity != null) {
             float bowPullingProgress = BowItem.getPowerForTime(player.getTicksUsingItem());
 
             int bowState = -1;
@@ -153,25 +160,31 @@ public class LockingHandler {
             if (bowPullingProgress >= 0.50f && bowPullingProgress < 1f) bowState = 1;
             if (bowPullingProgress == 1f) bowState = 2;
 
-            if (PlayerUtils.isPlayerCanSee(player.getEyePosition(), PlayerUtils.currentEntityLookingAtPosition, lockedOnEntity)) {
-                if (lastAimAssistCue != 1 || bowState != lastBowState) {
-                    PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_PLING, config.aimAssistAudioCuesVolume, bowState);
-                    lastAimAssistCue = 1;
-                }
-            } else if (lastAimAssistCue != 0 || bowState != lastBowState) {
-                PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_BASS, config.aimAssistAudioCuesVolume, bowState);
-                lastAimAssistCue = 0;
-            }
+            Vec3 eyePosition = player.getEyePosition();
+            Vec3 targetPosition = PlayerUtils.currentEntityLookingAtPosition;
 
-            lastBowState = bowState;
+            if (targetPosition != null) {
+                if (PlayerUtils.isPlayerCanSee(eyePosition, targetPosition, lockedOnEntity)) {
+                    if (lastAimAssistCue != 1 || bowState != lastBowState) {
+                        PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_PLING, config.aimAssistAudioCuesVolume, bowState);
+                        lastAimAssistCue = 1;
+                    }
+                } else if (lastAimAssistCue != 0 || bowState != lastBowState) {
+                    PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_BASS, config.aimAssistAudioCuesVolume, bowState);
+                    lastAimAssistCue = 0;
+                }
+
+                lastBowState = bowState;
+            }
         }
     }
 
-    private void unlock(boolean speak) {
+    private void unlock(boolean speak, boolean isStillValid) {
         lockedOnEntity = null;
         entriesOfLockedOnBlock = null;
-        lockedOnBlock = null;
+        lockedOnBlockPos = null;
         isLockedOnWhereEyeOfEnderDisappears = false;
+        if(!isStillValid) ObjectTracker.getInstance().clearCurrentObject();
 
         if (speak) {
             if (config.unlockingSound) {
@@ -184,7 +197,10 @@ public class LockingHandler {
 
     private void relock() {
         Object target = ObjectTracker.getInstance().getCurrentObject();
-        if (target == null) return;
+        if (target == null) {
+            MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
+            return;
+        }
         switch (target) {
             case Entity entity -> lockOnEntity(entity);
             case BlockPos blockPos -> lockOnBlock(blockPos);
@@ -205,9 +221,9 @@ public class LockingHandler {
         if (Blocks.LADDER.equals(blockState.getBlock())) {
 
             Vec3 playerPos = PlayerPositionUtils.getPlayerPosition().orElseThrow();
-            double distance = lockedOnBlock.getCenter().distanceTo(playerPos);
+            double distance = lockedOnBlockPos.getCenter().distanceTo(playerPos);
             if (distance <= 0.5) {
-                unlock(true);
+                unlock(true, true);
                 return true;
             }
         }
@@ -215,7 +231,7 @@ public class LockingHandler {
     }
 
     /**
-     * If the entity has dead, we'll automatically unlock from it.
+     * If locked on entity is dead or otherwise not valid, unlock.
      *
      * @return true if unlocked
      */
@@ -230,7 +246,19 @@ public class LockingHandler {
             isLockedOnWhereEyeOfEnderDisappears = true;
         }
 
-        unlock(true);
+        unlock(true, false);
+        return true;
+    }
+
+    /**
+     * If locked on block is an air block or otherwise not valid, unlock.
+     *
+     * @return true if unlocked
+     */
+    private boolean unlockFromAirBlock() {
+        Block currentBlock = Minecraft.getInstance().level.getBlockState(lockedOnBlockPos).getBlock();
+        if (!(currentBlock instanceof AirBlock)) return false;
+        unlock(true, false);
         return true;
     }
 
@@ -240,7 +268,7 @@ public class LockingHandler {
     public boolean lockOnEntity(Entity entity) {
         if (!entity.isAlive()) return false;
 
-        unlock(false);
+        unlock(false, true);
         lockedOnEntity = entity;
 
         String toSpeak = NarrationUtils.narrateEntity(entity);
@@ -253,8 +281,6 @@ public class LockingHandler {
     }
 
     private void lockOnBlock(BlockPos position) {
-        unlock(false);
-
         BlockState blockState = WorldUtils.getClientWorld().getBlockState(position);
         entriesOfLockedOnBlock = blockState.getValues();
 
@@ -267,11 +293,11 @@ public class LockingHandler {
             default -> position.getCenter();
         };
 
-        lockedOnBlock = new BlockPos3d(position, absolutePosition);
+        lockedOnBlockPos = new BlockPos3d(position, absolutePosition);
 
-        String blockDescription = NarrationUtils.narrateBlock(lockedOnBlock, "");
+        String blockDescription = NarrationUtils.narrateBlock(lockedOnBlockPos, "");
         if (Config.getInstance().poi.speakDistance) {
-            blockDescription += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlock);
+            blockDescription += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlockPos);
         }
         MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.locked", blockDescription), true);
     }
