@@ -28,7 +28,6 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Locks on to the nearest entity or block.<br><br>
