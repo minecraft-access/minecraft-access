@@ -151,20 +151,12 @@ The only function that is bound by default is the narrate target function, and a
 
 See also: [Feature Description]({{% relref "/features#access-menu" %}}), [Configuration]({{% relref "/config#access-menu" %}})
 
-## Book Editing
+## Book Reading
 
-| Single Key                                       | Default Keybinding | Description                                                                                                 |
-|--------------------------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------|
-| `Use Item/Place Block` (the original keybinding) | right mouse key    | Open the book editing screen while holding a [Book and Quill](https://minecraft.wiki/w/Book_and_Quill) item |
-| Tab                                              | not re-mappable    | Select buttons                                                                                              |
-| Space                                            | not re-mappable    | Click selected button                                                                                       |
-| `Attack/Destroy` (the original keybinding)       | left mouse key     | Same as `Space` key, click selected button                                                                  |
-| Page Up                                          | not re-mappable    | Switch to previous page                                                                                     |
-| Page Down                                        | not re-mappable    | Switch to next page                                                                                         |
-| `Done` button                                    | not re-mappable    | Save your unfinished work and quit editing screen                                                           |
-| `Sign` button                                    | not re-mappable    | And enter a title for the book to make it permanently non-editable                                          |
+| Single Key           | Default Keybinding | Description                               |
+|----------------------|--------------------|-------------------------------------------|
+| Repeat Page Contents | R                  | Repeats the text of the current book page |
 
-See also: [Feature Description]({{% relref "/features#book-editing" %}})
 
 ## Speak Chat Messages
 
