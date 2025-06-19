@@ -50,7 +50,7 @@ versionRange = "[${jade_neoforge_version},)"
 dependencies=[
     "architectury@${architectury_api_version}(embedded){modrinth:lhGA9TYQ}{curseforge:419699}",
     "cloth-config@${cloth_config_version}(embedded){modrinth:9s6osm5g}{curseforge:348521}",
-    "jade@${jade_neoforge_version}(optional){modrinth:nvQzSEkH}{curseforge:324717}"
+    "jade@${jade_neoforge_version}(optional){modrinth:nvQzSEkH}{curseforge:324717}",
 ]
 
 [[mixins]]
