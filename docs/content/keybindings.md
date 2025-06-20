@@ -111,7 +111,7 @@ See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 
 | Single Key              | Default Keybinding | Description                       |
 |-------------------------|--------------------|-----------------------------------|
-| `Speak Player Position` | G                  | Speak the player's x y z position |
+| `Speak Player Position` | V                  | Speak the player's x y z position |
 
 | Key Combination  | Description               |
 |------------------|---------------------------|

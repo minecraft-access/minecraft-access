@@ -280,7 +280,7 @@ public class KeyBindingsHandler {
         positionNarrationKey = new KeyMapping(
                 "minecraft_access.keys.other.player_position_key_name",
                 InputConstants.Type.KEYSYM,
-                InputConstants.KEY_G,
+                InputConstants.KEY_V,
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
