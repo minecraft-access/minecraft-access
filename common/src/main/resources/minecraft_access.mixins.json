@@ -42,6 +42,7 @@
     "MouseHandlerAccessor",
     "NarrationElementOutputMixin",
     "NarrationThunkAccessor",
+    "NowPlayingToastMixin",
     "OptionsMixin",
     "PageButtonMixin",
     "RecipeBookComponentAccessor",
