@@ -9,10 +9,10 @@ version = "${version}"
 displayName = "Minecraft Access"
 authors = "Shoaib, Boholder, TheSuperGamer20578, BrailleBennett"
 description = '''
-A mod that helps visually impaired players to play Minecraft.
+A mod that helps visually impaired players play Minecraft.
 '''
 logoFile = "logo-mc-access.png"
-modUrl = "https://modrinth.com/mod/minecraft-access"
+modUrl = "https://modrinth.com/mod/jGzXyfdm"
 displayURL = "https://mcaccess.org"
 
 [[dependencies.minecraft_access]]
@@ -23,7 +23,7 @@ versionRange = "[${neoforge_version},)"
 [[dependencies.minecraft_access]]
 modId = "minecraft"
 type = "required"
-versionRange = "[${minecraft_version},)"
+versionRange = "${minecraft_version}"
 
 [[dependencies.minecraft_access]]
 modId = "architectury"
@@ -33,16 +33,25 @@ ordering = "BEFORE"
 side = "CLIENT"
 
 [[dependencies.minecraft_access]]
+modId = "cloth_config"
+reason = "For this mod's config menu"
+type = "required"
+versionRange = "[${cloth_config_version},)"
+ordering = "BEFORE"
+side = "CLIENT"
+
+[[dependencies.minecraft_access]]
 modId = "jade"
 type = "optional"
 reason = "Jade can be used to integrate with the built in narrator of the mod by improving support with other mods and providing more information about things you look at"
 versionRange = "[${jade_neoforge_version},)"
 
-[[dependencies.minecraft_access]]
-modId = "cloth_config"
-reason = "For this mod's config menu"
-type = "required"
-versionRange = "[${cloth_config_version},)"
+[mc-publish]
+dependencies=[
+    "architectury@${architectury_api_version}(embedded){modrinth:lhGA9TYQ}{curseforge:419699}",
+    "cloth-config@${cloth_config_version}(embedded){modrinth:9s6osm5g}{curseforge:348521}",
+    "jade@${jade_neoforge_version}(optional){modrinth:nvQzSEkH}{curseforge:324717}",
+]
 
 [[mixins]]
 config = "minecraft_access.mixins.json"
