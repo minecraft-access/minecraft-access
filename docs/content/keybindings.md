@@ -126,11 +126,13 @@ See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [
 | Single Key            | Default Keybinding | Description                                                                                |
 |-----------------------|--------------------|--------------------------------------------------------------------------------------------|
 | `Speak Player Status` | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
+| `Narrate Held Item`   | \`                 | Narrate the item the player currently holds in their main hand                             |
 
 | Key Combination                    | Description                                                                   |
 |------------------------------------|-------------------------------------------------------------------------------|
 | `Left Alt` + `Speak Player Status` | Speak only the conditional statuses of the player like air and frost exposure |
 | `Control` + `Speak Player Status`  | Speak currently active effects                                                |
+| `Alt` + `Narrate Held Item`        | Narrate the item the player currently holds in their offhand                  |
 
 See also: [Feature Description]({{% relref "/features#player-status" %}}), [Configuration]({{% relref "/config#player-status" %}})
 

@@ -24,6 +24,7 @@ public class KeyBindingsHandler {
     public static final KeyMapping refreshScreenReader;
     public static final KeyMapping openConfigMenu;
     public static final KeyMapping directionNarrationKey;
+    public static final KeyMapping narrateHeldItemKey;
 
     public static final KeyMapping cameraControlsUp;
     public static final KeyMapping cameraControlsRight;
@@ -368,6 +369,13 @@ public class KeyBindingsHandler {
                 OTHER_GROUP_TRANSLATION_KEY
         );
 
+        narrateHeldItemKey = new KeyMapping(
+                "minecraft_access.keys.other.narrate_held_item_key_name",
+                InputConstants.Type.KEYSYM,
+                InputConstants.KEY_GRAVE,
+                OTHER_GROUP_TRANSLATION_KEY
+        );
+
         objectTrackerNextItem = new KeyMapping(
                 "minecraft_access.keys.object_tracker.next_item",
                 InputConstants.Type.KEYSYM,
@@ -440,6 +448,7 @@ public class KeyBindingsHandler {
                 refreshScreenReader,
                 openConfigMenu,
                 directionNarrationKey,
+                narrateHeldItemKey,
                 objectTrackerNextItem,
                 objectTrackerPreviousItem,
                 objectTrackerNarrateCurrentObject,
