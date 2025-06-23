@@ -6,7 +6,7 @@
 architecturyApi = "16.1.4"
 clothConfig = "18.0.145"
 jmh = "1.37"
-junitJupiter = "5.13.0"
+junitJupiter = "5.13.1"
 mockito = "5.18.0"
 
 [libraries]
@@ -16,27 +16,27 @@ architecturyApiNeoForge = { module = "dev.architectury:architectury-neoforge", v
 clothConfig = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-fabricApi = "net.fabricmc.fabric-api:fabric-api:0.125.3+1.21.5"
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.127.1+"
 fabricLoader = "net.fabricmc:fabric-loader:0.16.14"
 jadeFabric = "maven.modrinth:jade:18.2.0+fabric"
 jadeNeoForge = "maven.modrinth:jade:18.2.0+neoforge"
 minecraft = "com.mojang:minecraft:1.21.5"
 modMenu = "com.terraformersmc:modmenu:14.0.0-rc.2"
-neoForge = "net.neoforged:neoforge:21.5.75"
-parchment = "org.parchmentmc.data:parchment-1.21.5:2025.06.01"
+neoForge = "net.neoforged:neoforge:21.5.80"
+parchment = "org.parchmentmc.data:parchment-1.21.5:2025.06.15"
 
 assertjCore = "org.assertj:assertj-core:3.27.3"
 jmhCore = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmhGeneratorAnnprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 junitJupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiter" }
-junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.13.0"
+junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.13.1"
 lombok = "org.projectlombok:lombok:1.18.38"
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
 [plugins]
-architecturyLoom = { id = "dev.architectury.loom", version = "1.10.431" }
+architecturyLoom = { id = "dev.architectury.loom", version = "1.10.432" }
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.161" }
 gitVersion = { id = "com.palantir.git-version", version = "3.3.0" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.6" }
