@@ -1,28 +1,32 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.toasts.NowPlayingToast;
-import net.minecraft.client.sounds.MusicManager;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NowPlayingToast.class)
-public class NowPlayingToastMixin {
-    @Unique
-    private static Component minecraft_access$lastSong;
+public abstract class NowPlayingToastMixin {
+    @Invoker
+    public abstract Component callGetNowPlayingString(@Nullable String string);
 
-    @Inject(at = @At("RETURN"), method = "getNowPlayingString")
-    private static void speakSong(String string, CallbackInfoReturnable<Component> cir) {
-        if (cir.getReturnValue().equals(minecraft_access$lastSong)) return;
-        minecraft_access$lastSong = cir.getReturnValue();
-        if (Minecraft.getInstance().screen != null) return;
-        String song = cir.getReturnValue().getString();
-        if (song.isEmpty()) return;
-        MainClass.speakWithNarrator("Now Playing: " + song, false);
+    @Inject(at = @At("TAIL"), method = "showToast")
+    public void speakSong(Options options, CallbackInfo ci) {
+        StringBuilder toastTextBuilder = new StringBuilder();
+        toastTextBuilder.append(I18n.get("minecraft_access.toast.shown"))
+                .append(I18n.get("minecraft_access.other.words_connection"))
+                .append(I18n.get("record.nowPlaying",
+                        callGetNowPlayingString(Minecraft.getInstance().getMusicManager().getCurrentMusicTranslationKey())
+                                .getString()));
+
+        MainClass.speakWithNarrator(toastTextBuilder.toString(), false);
     }
 }
