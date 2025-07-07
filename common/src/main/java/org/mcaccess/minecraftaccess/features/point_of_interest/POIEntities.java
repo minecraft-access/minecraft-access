@@ -53,7 +53,7 @@ public class POIEntities {
     }
 
     public void update(boolean isMarking, Entity markedEntity) {
-        if (isMarking) setMarked(markedEntity);
+        setMarked(markedEntity);
         loadConfig();
 
         if (!config.enabled) return;

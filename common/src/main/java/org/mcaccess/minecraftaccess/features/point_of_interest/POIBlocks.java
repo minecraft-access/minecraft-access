@@ -61,7 +61,7 @@ public class POIBlocks {
     }
 
     public void update(boolean isMarking, Block markedBlock) {
-        if (isMarking) setMarkedBlock(markedBlock);
+        setMarkedBlock(markedBlock);
         loadConfig();
 
         if (!config.enabled) return;

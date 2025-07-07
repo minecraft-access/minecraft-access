@@ -177,7 +177,7 @@ public class LockingHandler {
         entriesOfLockedOnBlock = null;
         lockedOnBlockPos = null;
         isLockedOnWhereEyeOfEnderDisappears = false;
-        if (!isStillValid) MainClass.poiMarking.objectTracker.clearCurrentObject();
+        if (!isStillValid) MainClass.poiManager.objectTracker.clearCurrentObject();
 
         if (speak) {
             if (config.unlockingSound) {
@@ -189,7 +189,7 @@ public class LockingHandler {
     }
 
     private void relock() {
-        Object target = MainClass.poiMarking.objectTracker.getCurrentObject();
+        Object target = MainClass.poiManager.objectTracker.getCurrentObject();
         if (target == null) {
             MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
             return;

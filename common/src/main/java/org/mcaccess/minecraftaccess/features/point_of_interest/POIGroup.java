@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -17,9 +18,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class POIGroup<T> {
-    Logger log = LoggerFactory.getLogger(POIGroup.class);
-
     private final String nameTranslateKey;
     private final Sound sound;
 

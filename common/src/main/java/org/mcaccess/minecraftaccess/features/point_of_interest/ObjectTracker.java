@@ -36,8 +36,8 @@ public class ObjectTracker {
 
     private List<POIGroup<?>> getPOIGroups() {
         List<POIGroup<?>> groupList = Stream.concat(
-                Arrays.stream(MainClass.poiMarking.poiEntities.groups),
-                Arrays.stream(MainClass.poiMarking.poiBlocks.groups)
+                Arrays.stream(MainClass.poiManager.poiEntities.groups),
+                Arrays.stream(MainClass.poiManager.poiBlocks.groups)
         ).toList();
 
         List<POIGroup<?>> result = new ArrayList<>();
@@ -171,8 +171,8 @@ public class ObjectTracker {
     }
 
     private void targetNearestObject() {
-        List<Entity> entities = MainClass.poiMarking.poiEntities.getLastScanResults();
-        List<BlockPos> blocks = MainClass.poiMarking.poiBlocks.getLastScanResults();
+        List<Entity> entities = MainClass.poiManager.poiEntities.getLastScanResults();
+        List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults();
 
         if (!entities.isEmpty() && blocks.isEmpty()) currentObject = entities.getFirst();
         if (!blocks.isEmpty() && entities.isEmpty()) currentObject = blocks.getFirst();

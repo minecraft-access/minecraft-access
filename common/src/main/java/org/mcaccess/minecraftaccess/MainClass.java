@@ -10,14 +10,13 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.level.block.FallingBlock;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
 import org.mcaccess.minecraftaccess.features.*;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
-import org.mcaccess.minecraftaccess.features.point_of_interest.POIMarking;
+import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
 import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
@@ -41,7 +40,7 @@ public class MainClass {
     public static InventoryControls inventoryControls = null;
     public static PlayerStatus playerStatus = null;
     public static PlayerWarnings playerWarnings = null;
-    public static POIMarking poiMarking = null;
+    public static POIManager poiManager = null;
     public static ReadCrosshair readCrosshair = null;
     public static SpeakHeldItem speakHeldItem = null;
     public static XPIndicator xpIndicator = null;
@@ -130,8 +129,7 @@ public class MainClass {
         if (!PlayerUtils.isSpectator())
             speakHeldItem.speakHeldItem();
 
-        // POI Marking will handle POI Scan and POI Locking features inside it
-        poiMarking.update();
+        poiManager.update();
 
         fallDetector.update();
 
@@ -151,7 +149,7 @@ public class MainClass {
         inventoryControls = new InventoryControls();
         playerStatus = new PlayerStatus();
         playerWarnings = new PlayerWarnings();
-        poiMarking = new POIMarking();
+        poiManager = new POIManager();
         readCrosshair = new ReadCrosshair();
         speakHeldItem = new SpeakHeldItem();
         xpIndicator = new XPIndicator();

@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -17,20 +18,14 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 public class POIMarking {
-    public POIBlocks poiBlocks;
-    public POIEntities poiEntities;
-    public LockingHandler lockingHandler;
-    public ObjectTracker objectTracker;
-    private boolean onMarking = false;
-    private Entity markedEntity = null;
-    private Block markedBlock = null;
+    @Getter
+    private boolean isMarked = false;
 
-    public POIMarking() {
-        poiBlocks = new POIBlocks();
-        poiEntities = new POIEntities();
-        lockingHandler = new LockingHandler();
-        objectTracker = new ObjectTracker();
-    }
+    @Getter
+    private Entity markedEntity = null;
+
+    @Getter
+    private Block markedBlock = null;
 
     /**
      * Perform this feature before the normal POI scan,
@@ -52,17 +47,10 @@ public class POIMarking {
         } else {
             unmark();
         }
-
-        // Trigger other POI features
-        poiBlocks.update(onMarking, markedBlock);
-        poiEntities.update(onMarking, markedEntity);
-        // Locking Handler (POI Locking) should be after POI Scan features
-        lockingHandler.update();
-        objectTracker.update();
     }
 
     private void mark() {
-        if (onMarking) return;
+        if (isMarked) return;
 
         Minecraft client = Minecraft.getInstance();
         HitResult hit = client.hitResult;
@@ -90,14 +78,14 @@ public class POIMarking {
             }
         }
 
-        onMarking = true;
+        isMarked = true;
     }
 
     private void unmark() {
-        if (!onMarking) return;
-        onMarking = false;
-        markedEntity = null;
+        if (!isMarked) return;
         markedBlock = null;
+        markedEntity = null;
+        isMarked = false;
         MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.marking.unmarked"), true);
     }
 }
