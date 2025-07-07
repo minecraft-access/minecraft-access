@@ -159,7 +159,6 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [Config
 |----------------------|--------------------|-------------------------------------------|
 | Repeat Page Contents | R                  | Repeats the text of the current book page |
 
-
 ## Speak Chat Messages
 
 | Key Combination                                                      | Description                                                                                                                                    |
