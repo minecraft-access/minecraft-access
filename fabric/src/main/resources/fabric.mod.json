@@ -3,7 +3,7 @@
   "id": "minecraft_access",
   "version": "${version}",
   "name": "Minecraft Access",
-  "description": "A mod that helps visually impaired players to play Minecraft.",
+  "description": "A mod that helps visually impaired players play Minecraft.",
   "license": "GPL-3.0-only",
   "icon": "logo-mc-access.png",
   "authors": [
@@ -36,8 +36,8 @@
   ],
   "depends": {
     "fabricloader": "^${fabric_loader_version}",
-    "architectury": "^${architectury_api_version}",
     "minecraft": "${minecraft_version}",
+    "architectury": "^${architectury_api_version}",
     "cloth-config": "^${cloth_config_version}"
   },
   "suggests": {
@@ -49,8 +49,16 @@
         "modmenu.discord": "https://discord.gg/yQjjsDqWQX",
         "modmenu.wiki": "https://docs.mcaccess.org/",
         "modmenu.github_releases": "https://github.com/minecraft-access/minecraft-access/releases",
-        "modmenu.modrinth": "https://modrinth.com/mod/minecraft-access"
+        "modmenu.modrinth": "https://modrinth.com/mod/jGzXyfdm"
       }
+    },
+    "mc-publish": {
+      "dependencies": [
+        "fabric-api@${fabric_api_version}(embedded){modrinth:P7dR8mSH}{curseforge:306612}",
+        "architectury@${architectury_api_version}(embedded){modrinth:lhGA9TYQ}{curseforge:419699}",
+        "cloth-config@${cloth_config_version}(embedded){modrinth:9s6osm5g}{curseforge:348521}",
+        "jade@${jade_fabric_version}(optional){modrinth:nvQzSEkH}{curseforge:324717}"
+      ]
     }
   }
 }
