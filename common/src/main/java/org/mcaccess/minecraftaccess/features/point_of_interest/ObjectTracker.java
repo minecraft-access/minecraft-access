@@ -178,47 +178,42 @@ public class ObjectTracker {
             .stream().sorted((a, b) -> (int)(player.getEyePosition().distanceTo(a.getCenter()) - player.getEyePosition().distanceTo(b.getCenter())))
             .toList();
 
-        TargetNearestObjectStatus status = TargetNearestObjectStatus.NOT_FOUND;
-
-        if (!entities.isEmpty() && (blocks.isEmpty() || Screen.hasControlDown()) && !Screen.hasShiftDown()) {
-            currentObject = entities.getFirst();
-            status = Screen.hasControlDown() ? TargetNearestObjectStatus.SUCCESS_ENTITY : TargetNearestObjectStatus.SUCCESS_BOTH;
-        } else if (entities.isEmpty() && Screen.hasControlDown()) {
-            status = TargetNearestObjectStatus.ENTITY_NOT_FOUND;
-        } else if (!blocks.isEmpty() && (entities.isEmpty() || Screen.hasShiftDown()) && !Screen.hasControlDown()) {
-            currentObject = blocks.getFirst();
-            status = Screen.hasShiftDown() ? TargetNearestObjectStatus.SUCCESS_BLOCK : TargetNearestObjectStatus.SUCCESS_BOTH;
-        } else if (blocks.isEmpty() && Screen.hasShiftDown()) {
-            status = TargetNearestObjectStatus.BLOCK_NOT_FOUND;
-        } else if (!entities.isEmpty() && !blocks.isEmpty() && !Screen.hasControlDown() && !Screen.hasShiftDown()) {
-            double distanceToEntity = player.distanceTo(entities.getFirst());
-            double distanceToBlock = player.getEyePosition().distanceTo(blocks.getFirst().getCenter());
-
-            if (distanceToEntity <= distanceToBlock) currentObject = entities.getFirst();
-            if (distanceToBlock < distanceToEntity) currentObject = blocks.getFirst();
-
-            status = TargetNearestObjectStatus.SUCCESS_BOTH;
+        if (Screen.hasControlDown() && !Screen.hasShiftDown()) {
+            if (entities.isEmpty()) {
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found.entity"), true);
+            } else {
+                currentObject = entities.getFirst();
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest.entity"), true);
+            }
+        } else if (Screen.hasShiftDown() && !Screen.hasControlDown()) {
+            if (blocks.isEmpty()) {
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found.block"), true);
+            } else {
+                currentObject = blocks.getFirst();
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest.block"), true);
+            }
+        } else {
+            if (entities.isEmpty() && blocks.isEmpty()) {
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found"), true);
+            } else if (entities.isEmpty()) {
+                currentObject = blocks.getFirst();
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+            } else if (blocks.isEmpty()) {
+                currentObject = entities.getFirst();
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+            } else {
+                if (player.getEyePosition().distanceTo(blocks.getFirst().getCenter()) < (double) player.distanceTo(entities.getFirst())) {
+                    currentObject = blocks.getFirst();
+                } else {
+                    currentObject = entities.getFirst();
+                }
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+            }
         }
 
-        switch (status) {
-            case BLOCK_NOT_FOUND -> MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found.block"), true);
-            case ENTITY_NOT_FOUND -> MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found.entity"), true);
-            case NOT_FOUND -> MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found"), true);
-            case SUCCESS_ENTITY -> MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest.entity"), true);
-            case SUCCESS_BLOCK -> MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest.block"), true);
-            case SUCCESS_BOTH -> MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+        if (!entities.isEmpty() || !blocks.isEmpty()) {
+            narrateCurrentObject(false);
         }
-
-        if (status.ordinal() > TargetNearestObjectStatus.NOT_FOUND.ordinal()) narrateCurrentObject(false);
-    }
-
-    private enum TargetNearestObjectStatus {
-        BLOCK_NOT_FOUND,
-        ENTITY_NOT_FOUND,
-        NOT_FOUND,
-        SUCCESS_ENTITY,
-        SUCCESS_BLOCK,
-        SUCCESS_BOTH
     }
 
     public void  clearCurrentObject(){
