@@ -169,24 +169,51 @@ public class ObjectTracker {
     }
 
     private void targetNearestObject() {
-        List<Entity> entities = POIEntities.getInstance().getLastScanResults();
-        List<BlockPos> blocks = POIBlocks.getInstance().getLastScanResults();
+        LocalPlayer player = WorldUtils.getClientPlayer();
+        List<Entity> entities = POIEntities.getInstance().getLastScanResults()
+            .stream().sorted((a, b) -> (int)(a.distanceTo(player) - b.distanceTo(player)))
+            .toList();
 
-        if (!entities.isEmpty() && blocks.isEmpty()) currentObject = entities.getFirst();
-        if (!blocks.isEmpty() && entities.isEmpty()) currentObject = blocks.getFirst();
-        if (!entities.isEmpty() && !blocks.isEmpty()) {
-            LocalPlayer player = WorldUtils.getClientPlayer();
-            double distanceToEntity = player.distanceTo(entities.getFirst());
-            double distanceToBlock = player.getEyePosition().distanceTo(blocks.getFirst().getCenter());
+        List<BlockPos> blocks = POIBlocks.getInstance().getLastScanResults()
+            .stream().sorted((a, b) -> (int)(player.getEyePosition().distanceTo(a.getCenter()) - player.getEyePosition().distanceTo(b.getCenter())))
+            .toList();
 
-            if (distanceToEntity <= distanceToBlock) currentObject = entities.getFirst();
-            if (distanceToBlock < distanceToEntity) currentObject = blocks.getFirst();
+        if (Screen.hasControlDown() && !Screen.hasShiftDown()) {
+            if (entities.isEmpty()) {
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found.entity"), true);
+            } else {
+                currentObject = entities.getFirst();
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest.entity"), true);
+            }
+        } else if (Screen.hasShiftDown() && !Screen.hasControlDown()) {
+            if (blocks.isEmpty()) {
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found.block"), true);
+            } else {
+                currentObject = blocks.getFirst();
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest.block"), true);
+            }
+        } else {
+            if (entities.isEmpty() && blocks.isEmpty()) {
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found"), true);
+            } else if (entities.isEmpty()) {
+                currentObject = blocks.getFirst();
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+            } else if (blocks.isEmpty()) {
+                currentObject = entities.getFirst();
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+            } else {
+                if (player.getEyePosition().distanceTo(blocks.getFirst().getCenter()) < (double) player.distanceTo(entities.getFirst())) {
+                    currentObject = blocks.getFirst();
+                } else {
+                    currentObject = entities.getFirst();
+                }
+                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+            }
         }
 
         if (!entities.isEmpty() || !blocks.isEmpty()) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
             narrateCurrentObject(false);
-        } else MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found"), true);
+        }
     }
 
     public void  clearCurrentObject(){
