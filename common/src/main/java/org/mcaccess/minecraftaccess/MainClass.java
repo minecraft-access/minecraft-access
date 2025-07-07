@@ -41,7 +41,7 @@ public class MainClass {
     public static InventoryControls inventoryControls = null;
     public static PlayerStatus playerStatus = null;
     public static PlayerWarnings playerWarnings = null;
-    public  static POIMarking poiMarking = null;
+    public static POIMarking poiMarking = null;
     public static ReadCrosshair readCrosshair = null;
     public static SpeakHeldItem speakHeldItem = null;
     public static XPIndicator xpIndicator = null;

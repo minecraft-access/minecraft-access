@@ -33,7 +33,7 @@ public class ReadCrosshair {
     private boolean partialSpeakingEntity;
     private static final Config.ReadCrosshair config = Config.getInstance().readCrosshair;
     private MCAccess mcAccess;
-    private  Jade jade;
+    private Jade jade;
 
     public ReadCrosshair() {
         loadConfig();
