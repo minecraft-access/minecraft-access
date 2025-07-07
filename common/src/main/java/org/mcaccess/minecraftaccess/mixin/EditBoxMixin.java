@@ -49,29 +49,8 @@ abstract class EditBoxMixin extends AbstractWidget {
     @Nullable
     private String suggestion;
 
-    @Unique
-    private boolean mca$previousFocused = false;
-
     public EditBoxMixin(int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
-    }
-
-    /**
-     * The original logic will repeat whole text input in {@link EditBox} on every text modifying operation.
-     * For example, when editing command in {@link CommandBlockEditScreen}, the game will say:
-     * "Console Command edit box: input text......"
-     * It's quite annoying, so we want to suppress these narrations.
-     * But we still need to speak the whole text once when first focused
-     */
-    @Inject(method = "createNarrationMessage", at = @At("HEAD"), cancellable = true)
-    private void suppressWholeContentNarration(CallbackInfoReturnable<Component> cir) {
-        if (!this.mca$previousFocused && this.isFocused()) {
-            this.mca$previousFocused = true;
-            return;
-        }
-
-        cir.setReturnValue(Component.empty());
-        cir.cancel();
     }
 
     @Inject(method = "updateWidgetNarration", at = @At("TAIL"))
@@ -80,12 +59,6 @@ abstract class EditBoxMixin extends AbstractWidget {
         if (this.value.isBlank() && this.suggestion != null) {
             output.add(NarratedElementType.HINT, this.suggestion);
         }
-    }
-
-
-    @Inject(at = @At("HEAD"), method = "setFocused")
-    private void setFocused(boolean focused, CallbackInfo ci) {
-        if (!focused) this.mca$previousFocused = false;
     }
 
     /**
@@ -151,7 +124,9 @@ abstract class EditBoxMixin extends AbstractWidget {
             return;
         }
         String selectedText = this.getHighlighted();
-        MainClass.speakWithNarrator(selectedText, true);
+        if (!selectedText.isBlank()) {
+            MainClass.speakWithNarrator(selectedText, true);
+        }
     }
 
     @Inject(at = @At("HEAD"), method = "deleteChars")

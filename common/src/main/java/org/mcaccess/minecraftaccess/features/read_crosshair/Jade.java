@@ -4,9 +4,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import snownee.jade.api.ui.IElement;
+import snownee.jade.JadeClient;
+import snownee.jade.impl.Tooltip;
+import snownee.jade.impl.ui.BoxElementImpl;
 import snownee.jade.overlay.RayTracing;
-import snownee.jade.overlay.WailaTickHandler;
 
 import java.util.Arrays;
 
@@ -18,17 +19,20 @@ public class Jade implements CrosshairNarrator {
 
     @Override
     public @Nullable Object deduplication(boolean speakSide, boolean speakConsecutiveBlocks) {
-        if (WailaTickHandler.instance().rootElement == null) {
+        BoxElementImpl rootElement = JadeClient.tickHandler().rootElement;
+        if (rootElement == null) {
             return null;
         }
+        Tooltip tooltip = rootElement.getTooltip();
+        String narration = tooltip.getNarration(tooltip.lines.getFirst()::equals);
         return Arrays.asList(
-                WailaTickHandler.instance().rootElement.getTooltip().lines.getFirst().sortedElements().stream().map(IElement::getMessage).toList(),
+                narration,
                 speakConsecutiveBlocks && rayCast() instanceof BlockHitResult blockHitResult ? blockHitResult.getBlockPos() : null
         );
     }
 
     @Override
     public @NotNull String narrate(boolean speakSide) {
-        return WailaTickHandler.instance().rootElement.getTooltip().getMessage();
+        return JadeClient.tickHandler().rootElement.getTooltip().getNarration();
     }
 }
