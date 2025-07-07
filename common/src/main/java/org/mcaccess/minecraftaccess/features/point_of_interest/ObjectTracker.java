@@ -173,12 +173,12 @@ public class ObjectTracker {
     private void targetNearestObject() {
         LocalPlayer player = WorldUtils.getClientPlayer();
         List<Entity> entities = MainClass.poiManager.poiEntities.getLastScanResults()
-            .stream().sorted((a, b) -> (int)(a.distanceTo(player) - b.distanceTo(player)))
-            .toList();
+                .stream().sorted((a, b) -> (int) (a.distanceTo(player) - b.distanceTo(player)))
+                .toList();
 
         List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults()
-            .stream().sorted((a, b) -> (int)(player.getEyePosition().distanceTo(a.getCenter()) - player.getEyePosition().distanceTo(b.getCenter())))
-            .toList();
+                .stream().sorted((a, b) -> (int) (player.getEyePosition().distanceTo(a.getCenter()) - player.getEyePosition().distanceTo(b.getCenter())))
+                .toList();
 
         if (Screen.hasControlDown() && !Screen.hasShiftDown()) {
             if (entities.isEmpty()) {
