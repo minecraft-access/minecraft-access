@@ -12,18 +12,6 @@ import snownee.jade.overlay.RayTracing;
 import java.util.Arrays;
 
 public class Jade implements CrosshairNarrator {
-    private static Jade INSTANCE;
-
-    private Jade() {
-    }
-
-    public static Jade getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Jade();
-        }
-        return INSTANCE;
-    }
-
     @Override
     public @NotNull HitResult rayCast() {
         return RayTracing.INSTANCE.getTarget();

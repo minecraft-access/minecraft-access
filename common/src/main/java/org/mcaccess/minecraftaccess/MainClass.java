@@ -16,7 +16,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.mcaccess.minecraftaccess.features.*;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
-import org.mcaccess.minecraftaccess.features.point_of_interest.POIMarking;
+import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
 import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
@@ -31,15 +31,19 @@ public class MainClass {
     public static final String MOD_ID = "minecraft_access";
     private static ScreenReaderInterface screenReader = null;
 
-    public static InventoryControls inventoryControls = null;
+    public static AccessMenu accessMenu = null;
     public static BiomeIndicator biomeIndicator = null;
-    public static XPIndicator xpIndicator = null;
     public static FacingDirection facingDirection = null;
+    public static FallDetector fallDetector = null;
+    public static FluidDetector fluidDetector = null;
+    public static HUDStatus hudStatus = null;
+    public static InventoryControls inventoryControls = null;
     public static PlayerStatus playerStatus = null;
     public static PlayerWarnings playerWarnings = null;
-    public static AccessMenu accessMenu = null;
-    public static FluidDetector fluidDetector = null;
+    public static POIManager poiManager = null;
+    public static ReadCrosshair readCrosshair = null;
     public static SpeakHeldItem speakHeldItem = null;
+    public static XPIndicator xpIndicator = null;
 
     /**
      * Initializes the mod
@@ -90,7 +94,7 @@ public class MainClass {
         if (inventoryControls != null && config.inventoryControls.enabled)
             inventoryControls.update();
 
-        ReadCrosshair.getInstance().tick();
+        readCrosshair.tick();
 
         if (xpIndicator != null && config.features.xpIndicatorEnabled && (PlayerUtils.isAdventure() || PlayerUtils.isSurvival()))
             xpIndicator.update();
@@ -125,27 +129,30 @@ public class MainClass {
         if (!PlayerUtils.isSpectator())
             speakHeldItem.speakHeldItem();
 
-        // POI Marking will handle POI Scan and POI Locking features inside it
-        POIMarking.getInstance().update();
+        poiManager.update();
 
-        FallDetector.getInstance().update();
+        fallDetector.update();
 
-        HUDStatus.getInstance().update();
+        hudStatus.update();
 
         // This should always be at the bottom
         Keystroke.updateInstances();
     }
 
     private static void initWorldState(LocalPlayer player) {
-        inventoryControls = new InventoryControls();
+        accessMenu = new AccessMenu();
         biomeIndicator = new BiomeIndicator();
-        xpIndicator = new XPIndicator();
         facingDirection = new FacingDirection();
+        fallDetector = new FallDetector();
+        fluidDetector = new FluidDetector();
+        hudStatus = new HUDStatus();
+        inventoryControls = new InventoryControls();
         playerStatus = new PlayerStatus();
         playerWarnings = new PlayerWarnings();
-        accessMenu = new AccessMenu();
-        fluidDetector = new FluidDetector();
+        poiManager = new POIManager();
+        readCrosshair = new ReadCrosshair();
         speakHeldItem = new SpeakHeldItem();
+        xpIndicator = new XPIndicator();
 
         Minecraft client = Minecraft.getInstance();
         if (client.options.keyAdvancements.same(KeyBindingsHandler.cameraControlsRight)) {

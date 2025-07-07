@@ -28,7 +28,6 @@ public class POIEntities {
     private Config.POI.Entities config;
     private final Interval interval = Interval.defaultDelay();
 
-    private static final POIEntities INSTANCE = new POIEntities();
     private @Nullable Class<? extends Entity> marked = null;
 
     private final POIGroup<Entity> markedGroup = new POIGroup<>(
@@ -46,19 +45,15 @@ public class POIEntities {
     final POIGroup<Entity>[] groups = Stream.of(List.of(markedGroup), BuiltinEntityPOIGroups.ALL, List.of(otherEntitiesGroup))
             .flatMap(Collection::stream).toArray(POIGroup[]::new);
 
-    public static POIEntities getInstance() {
-        return INSTANCE;
-    }
-
     @Getter
     private List<Entity> lastScanResults = new ArrayList<>();
 
-    private POIEntities() {
+    POIEntities() {
         loadConfig();
     }
 
     public void update(boolean isMarking, Entity markedEntity) {
-        if (isMarking) setMarked(markedEntity);
+        setMarked(markedEntity);
         loadConfig();
 
         if (!config.enabled) return;

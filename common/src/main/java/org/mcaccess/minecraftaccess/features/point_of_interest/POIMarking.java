@@ -19,22 +19,13 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 public class POIMarking {
     @Getter
-    private static final POIMarking instance;
-    private static final POIBlocks poiBlocks;
-    private static final POIEntities poiEntities;
-    private static final LockingHandler lockingHandler;
-    private static final ObjectTracker objectTracker;
-    private boolean onMarking = false;
-    private Entity markedEntity = null;
-    private Block markedBlock = null;
+    private boolean isMarked = false;
 
-    static {
-        instance = new POIMarking();
-        poiBlocks = POIBlocks.getInstance();
-        poiEntities = POIEntities.getInstance();
-        lockingHandler = LockingHandler.getInstance();
-        objectTracker = ObjectTracker.getInstance();
-    }
+    @Getter
+    private Entity markedEntity = null;
+
+    @Getter
+    private Block markedBlock = null;
 
     /**
      * Perform this feature before the normal POI scan,
@@ -56,17 +47,10 @@ public class POIMarking {
         } else {
             unmark();
         }
-
-        // Trigger other POI features
-        poiBlocks.update(onMarking, markedBlock);
-        poiEntities.update(onMarking, markedEntity);
-        // Locking Handler (POI Locking) should be after POI Scan features
-        lockingHandler.update();
-        objectTracker.update();
     }
 
     private void mark() {
-        if (onMarking) return;
+        if (isMarked) return;
 
         Minecraft client = Minecraft.getInstance();
         HitResult hit = client.hitResult;
@@ -94,14 +78,14 @@ public class POIMarking {
             }
         }
 
-        onMarking = true;
+        isMarked = true;
     }
 
     private void unmark() {
-        if (!onMarking) return;
-        onMarking = false;
-        markedEntity = null;
+        if (!isMarked) return;
         markedBlock = null;
+        markedEntity = null;
+        isMarked = false;
         MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.marking.unmarked"), true);
     }
 }

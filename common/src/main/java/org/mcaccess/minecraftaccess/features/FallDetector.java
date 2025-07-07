@@ -14,30 +14,17 @@ import java.util.Queue;
 
 @Slf4j
 public class FallDetector {
-    private static final FallDetector instance;
     private final Clock clock;
     private long previousTimeInMillis;
     Minecraft minecraftClient;
     private int count;
     private Config.FallDetector config;
 
-    static {
-        try {
-            instance = new FallDetector();
-        } catch (Exception e) {
-            throw new RuntimeException("Exception occurred in creating FallDetector instance");
-        }
-    }
-
-    private FallDetector() {
+    public FallDetector() {
         clock = Clock.systemDefaultZone();
         minecraftClient = Minecraft.getInstance();
         previousTimeInMillis = clock.millis();
         config = Config.getInstance().fallDetector;
-    }
-
-    public static synchronized FallDetector getInstance() {
-        return instance;
     }
 
     public void update() {

@@ -9,7 +9,6 @@ import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.level.Level;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.features.point_of_interest.LockingHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,8 +34,8 @@ public abstract class EyeOfEnderMixin extends Entity implements ItemSupplier {
         if (!Config.getInstance().poi.locking.autoLockEyeOfEnderEntity)
             return;
 
-       log.debug("Auto locking on eye of ender entity");
-        LockingHandler.getInstance().lockOnEntity(this);
+        log.debug("Auto locking on eye of ender entity");
+        MainClass.poiManager.lockingHandler.lockOnEntity(this);
         MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.tracking_eye_of_ender"), true);
     }
 }

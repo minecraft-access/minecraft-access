@@ -26,23 +26,19 @@ import java.util.function.Predicate;
  * It also gives feedback when a block is powered by a redstone signal or when a door is open similar cases.
  */
 public class ReadCrosshair {
-    private static ReadCrosshair instance;
     private @Nullable Object previous = null;
     private Vec3 previousSoundPos = Vec3.ZERO;
     private final Interval repeatSpeakingInterval = Interval.defaultDelay();
     private boolean partialSpeakingBlock;
     private boolean partialSpeakingEntity;
     private static final Config.ReadCrosshair config = Config.getInstance().readCrosshair;
+    private MCAccess mcAccess;
+    private Jade jade;
 
-    private ReadCrosshair() {
+    public ReadCrosshair() {
         loadConfig();
-    }
-
-    public static ReadCrosshair getInstance() {
-        if (Objects.isNull(instance)) {
-            instance = new ReadCrosshair();
-        }
-        return instance;
+        mcAccess = new MCAccess();
+        jade = new Jade();
     }
 
     public void tick() {
@@ -121,9 +117,9 @@ public class ReadCrosshair {
 
     private CrosshairNarrator getNarrator() {
         if (config.useJade && Platform.isModLoaded("jade")) {
-            return Jade.getInstance();
+            return jade;
         }
-        return MCAccess.getInstance();
+        return mcAccess;
     }
 
     private boolean isIgnored(ResourceLocation identifier) {

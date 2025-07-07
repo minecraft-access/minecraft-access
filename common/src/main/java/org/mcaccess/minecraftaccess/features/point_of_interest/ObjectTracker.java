@@ -26,8 +26,6 @@ import java.util.stream.Stream;
 public class ObjectTracker {
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
-    @Getter
-    private static ObjectTracker instance = new ObjectTracker();
 
     private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerNextItem), Keystroke.TriggeredAt.PRESSED);
     private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerPreviousItem), Keystroke.TriggeredAt.PRESSED);
@@ -38,8 +36,8 @@ public class ObjectTracker {
 
     private List<POIGroup<?>> getPOIGroups() {
         List<POIGroup<?>> groupList = Stream.concat(
-            Arrays.stream(POIEntities.getInstance().groups),
-            Arrays.stream(POIBlocks.getInstance().groups)
+                Arrays.stream(MainClass.poiManager.poiEntities.groups),
+                Arrays.stream(MainClass.poiManager.poiBlocks.groups)
         ).toList();
 
         List<POIGroup<?>> result = new ArrayList<>();
@@ -55,6 +53,9 @@ public class ObjectTracker {
     private Object currentObject = null;
     @Getter
     private POIGroup<?> currentGroup = null;
+
+    ObjectTracker() {
+    }
 
     public void update() {
         Minecraft minecraftClient = Minecraft.getInstance();
@@ -86,7 +87,7 @@ public class ObjectTracker {
     }
 
     private void narrateCurrentObject(boolean interrupt) {
-        if(currentObject == null){
+        if (currentObject == null) {
             MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
         }
 
@@ -95,7 +96,8 @@ public class ObjectTracker {
 
         if (currentObject instanceof Entity entity) {
             String message = NarrationUtils.narrateEntity(entity);
-            if (speakDistance) message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
+            if (speakDistance)
+                message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
             MainClass.speakWithNarrator(message, interrupt);
             WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, entity.position());
         }
@@ -170,13 +172,13 @@ public class ObjectTracker {
 
     private void targetNearestObject() {
         LocalPlayer player = WorldUtils.getClientPlayer();
-        List<Entity> entities = POIEntities.getInstance().getLastScanResults()
-            .stream().sorted((a, b) -> (int)(a.distanceTo(player) - b.distanceTo(player)))
-            .toList();
+        List<Entity> entities = MainClass.poiManager.poiEntities.getLastScanResults()
+                .stream().sorted((a, b) -> (int) (a.distanceTo(player) - b.distanceTo(player)))
+                .toList();
 
-        List<BlockPos> blocks = POIBlocks.getInstance().getLastScanResults()
-            .stream().sorted((a, b) -> (int)(player.getEyePosition().distanceTo(a.getCenter()) - player.getEyePosition().distanceTo(b.getCenter())))
-            .toList();
+        List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults()
+                .stream().sorted((a, b) -> (int) (player.getEyePosition().distanceTo(a.getCenter()) - player.getEyePosition().distanceTo(b.getCenter())))
+                .toList();
 
         if (Screen.hasControlDown() && !Screen.hasShiftDown()) {
             if (entities.isEmpty()) {
@@ -216,7 +218,7 @@ public class ObjectTracker {
         }
     }
 
-    public void  clearCurrentObject(){
+    public void clearCurrentObject() {
         currentObject = null;
     }
 }
