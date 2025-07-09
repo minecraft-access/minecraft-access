@@ -62,8 +62,7 @@ public class BaseScreen extends Screen {
 
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
-        context.drawCenteredString(this.font, this.title, this.width / 2, 15, 16777215);
+        context.drawCenteredString(this.font, this.title, this.width / 2, 15, 0xffffffff);
         super.render(context, mouseX, mouseY, delta);
     }
 }
