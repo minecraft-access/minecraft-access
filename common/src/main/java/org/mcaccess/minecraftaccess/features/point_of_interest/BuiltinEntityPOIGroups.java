@@ -33,7 +33,7 @@ public enum BuiltinEntityPOIGroups {
             }
     )),
     YOUR_PETS(new POIGroup<>(
-            "minecraft_access.point_of_interest.group.your_pets",
+            "minecraft_access.point_of_interest.group.your_pet",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_FLUTE.value(), 1f),
             entity -> entity instanceof TamableAnimal pet && pet.isOwnedBy(WorldUtils.getClientPlayer())
     )),
