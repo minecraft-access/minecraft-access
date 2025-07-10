@@ -19,15 +19,15 @@ public class AnvilScreenMixin {
 
     /**
      * The "drawForeground" method is continually triggered when enchant cost changes,
-     * so there is a repeat check before speaking.
+     * so there is a repeat check before narrating.
      * Let the original logic build the text, we don't want to repeat that.
      */
     @Inject(method = "renderLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
-    protected void speakCost(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
+    protected void narrateCost(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
         if (text instanceof Component text_) {
             String textString = text_.getString();
             if (!textString.equals(minecraft_access$previousText)) {
-                MainClass.speakWithNarrator(textString, true);
+                MainClass.narrate(textString, true);
                 minecraft_access$previousText = textString;
             }
         }

@@ -7,11 +7,11 @@ import org.mcaccess.minecraftaccess.MainClass;
 public class HUDStatus {
     private Boolean wasHidden = Minecraft.getInstance().options.hideGui;
 
-    public void update() {
+    public void tick() {
         Boolean isHidden = Minecraft.getInstance().options.hideGui;
 
         if (wasHidden != isHidden) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.hud_status.announce_".concat(isHidden ? "hidden" : "shown")), true);
+            MainClass.narrate(I18n.get("minecraft_access.hud_status.announce_".concat(isHidden ? "hidden" : "shown")), true);
             wasHidden = isHidden;
         }
     }

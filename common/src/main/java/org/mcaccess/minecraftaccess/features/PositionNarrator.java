@@ -11,12 +11,12 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
- * Adds key bindings to speak the player's position.<br><br>
+ * Adds key bindings to narrate the player's position.<br><br>
  * Keybindings and combinations:<br>
- * 1. Speak Player Position Key (default: G) = Speaks the player's x y and z position.<br>
- * 2. Left Alt + X = Speaks only the x position.<br>
- * 3. Left Alt + C = Speaks only the y position.<br>
- * 4. Left Alt + Z = Speaks only the z position.<br>
+ * 1. Narrate Player Position Key (default: G) = Narrates the player's x y and z position.<br>
+ * 2. Left Alt + X = Narrates only the x position.<br>
+ * 3. Left Alt + C = Narrates only the y position.<br>
+ * 4. Left Alt + Z = Narrates only the z position.<br>
  */
 @Slf4j
 public class PositionNarrator {
@@ -35,7 +35,7 @@ public class PositionNarrator {
     private PositionNarrator() {
     }
 
-    public void update() {
+    public void tick() {
         Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient == null) return;
         if (minecraftClient.player == null) return;
@@ -44,16 +44,16 @@ public class PositionNarrator {
         boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
         if (isLeftAltPressed) {
             if (KeyX.canBeTriggered()) {
-                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXPos(), true);
+                MainClass.narrate(PlayerPositionUtils.getNarratableXPos(), true);
             } else if (KeyC.canBeTriggered()) {
-                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableYPos(), true);
+                MainClass.narrate(PlayerPositionUtils.getNarratableYPos(), true);
             } else if (KeyZ.canBeTriggered()) {
-                MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableZPos(), true);
+                MainClass.narrate(PlayerPositionUtils.getNarratableZPos(), true);
             }
         }
 
         if (positionNarrationKey.canBeTriggered()) {
-            MainClass.speakWithNarrator(PlayerPositionUtils.getNarratableXYZPosition(), true);
+            MainClass.narrate(PlayerPositionUtils.getNarratableXYZPosition(), true);
         }
     }
 }

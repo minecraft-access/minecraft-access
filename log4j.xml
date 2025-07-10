@@ -15,9 +15,6 @@
         <Logger name="org.mcaccess.minecraftaccess" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.compat" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.access_menu" level="DEBUG"/>
-        <Logger name="org.mcaccess.minecraftaccess.features.inventory_controls" level="DEBUG"/>
-        <Logger name="org.mcaccess.minecraftaccess.features.point_of_interest" level="DEBUG"/>
-        <Logger name="org.mcaccess.minecraftaccess.features.read_crosshair" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.AutoLibrarySetup" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.BiomeIndicator" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.CameraControls" level="DEBUG"/>
@@ -26,12 +23,15 @@
         <Logger name="org.mcaccess.minecraftaccess.features.FallDetector" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.FluidDetector" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.HUDStatus" level="DEBUG"/>
+        <Logger name="org.mcaccess.minecraftaccess.features.inventory_controls" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.MenuFix" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.MouseKeySimulation" level="DEBUG"/>
+        <Logger name="org.mcaccess.minecraftaccess.features.narrate_crosshair  " level="DEBUG"/>
+        <Logger name="org.mcaccess.minecraftaccess.features.NarrateHeldItem" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.PlayerStatus" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.PlayerWarnings" level="DEBUG"/>
+        <Logger name="org.mcaccess.minecraftaccess.features.point_of_interest" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.PositionNarrator" level="DEBUG"/>
-        <Logger name="org.mcaccess.minecraftaccess.features.SpeakHeldItem" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.XPIndicator" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.mixin" level="DEBUG"/>
     </Loggers>

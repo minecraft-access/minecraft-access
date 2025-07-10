@@ -35,20 +35,20 @@ public abstract class ClientPacketListenerMixin implements TickablePacketListene
 
         PacketUtils.ensureRunningOnSameThread(packet, this, client);
         Config.Features config = Config.getInstance().features;
-        if (config.alwaysSpeakPickedUpItemsEnabled || (config.fishingHarvestEnabled && player.getMainHandItem().getItem() instanceof FishingRodItem)) {
+        if (config.alwaysNarratePickedUpItems || (config.fishingHarvestEnabled && player.getMainHandItem().getItem() instanceof FishingRodItem)) {
             int cId = packet.getPlayerId();
             int pId = player.getId();
             // Is this item picked by "me" or other players?
             if (cId == pId) {
                 Entity entity = this.level.getEntity(packet.getItemId());
-                // This item might be an ExperienceOrbEntity and we don't want to speak this sort of thing.
+                // This item might be an ExperienceOrbEntity and we don't want to narrate this sort of thing.
                 if (entity instanceof ItemEntity itemEntity) {
                     String name = I18n.get(itemEntity.getItem().getItem().getDescriptionId());
                     log.debug("Fishing harvest: %s".formatted(name));
 
-                    // Have observed this speak will interrupt adventure achievement, level up notification or so,
+                    // Have observed this narrate will interrupt adventure achievement, level up notification or so,
                     // it should be at low priority.
-                    MainClass.speakWithNarrator(I18n.get("minecraft_access.other.picked_up_item", name), false);
+                    MainClass.narrate(I18n.get("minecraft_access.other.picked_up_item", name), false);
                 }
             }
         }

@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.features.read_crosshair;
+package org.mcaccess.minecraftaccess.features.narrate_crosshair;
 
 import dev.architectury.platform.Platform;
 import net.minecraft.client.Minecraft;
@@ -25,17 +25,17 @@ import java.util.function.Predicate;
  * This feature reads the name of the targeted block or entity.<br>
  * It also gives feedback when a block is powered by a redstone signal or when a door is open similar cases.
  */
-public class ReadCrosshair {
+public class NarrateCrosshair {
     private @Nullable Object previous = null;
     private Vec3 previousSoundPos = Vec3.ZERO;
-    private final Interval repeatSpeakingInterval = Interval.defaultDelay();
-    private boolean partialSpeakingBlock;
-    private boolean partialSpeakingEntity;
-    private static final Config.ReadCrosshair config = Config.getInstance().readCrosshair;
+    private final Interval repetitionInterval = Interval.defaultDelay();
+    private boolean filterBlocks;
+    private boolean filterEntities;
+    private static final Config.NarrateCrosshair config = Config.getInstance().narrateCrosshair;
     private MCAccess mcAccess;
     private Jade jade;
 
-    public ReadCrosshair() {
+    public NarrateCrosshair() {
         loadConfig();
         mcAccess = new MCAccess();
         jade = new Jade();
@@ -52,8 +52,8 @@ public class ReadCrosshair {
         if (!config.enabled) return;
 
         CrosshairNarrator narrator = getNarrator();
-        Object deduplication = narrator.deduplication(config.speakSide, !config.disableSpeakingConsecutiveBlocks);
-        if (Objects.equals(deduplication, previous) && !repeatSpeakingInterval.isReady()) {
+        Object deduplication = narrator.deduplication(config.narrateBlockFace, !config.disableNarratingConsecutiveBlocks);
+        if (Objects.equals(deduplication, previous) && !repetitionInterval.isReady()) {
             return;
         }
         previous = deduplication;
@@ -79,38 +79,38 @@ public class ReadCrosshair {
             previousSoundPos = targetPosition;
         }
 
-        if (config.partialSpeaking.enabled) {
+        if (config.filter.enabled) {
             ResourceLocation resourceLocation = switch (hit) {
                 case BlockHitResult blockHitResult ->
                         BuiltInRegistries.BLOCK.getKey(minecraftClient.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
                 case EntityHitResult entityHitResult -> EntityType.getKey(entityHitResult.getEntity().getType());
                 default -> null;
             };
-            if (partialSpeakingBlock && hit.getType() == HitResult.Type.BLOCK && isIgnored(resourceLocation)) {
+            if (filterBlocks && hit.getType() == HitResult.Type.BLOCK && isIgnored(resourceLocation)) {
                 return;
             }
-            if (partialSpeakingEntity && hit.getType() == HitResult.Type.ENTITY && isIgnored(resourceLocation)) {
+            if (filterEntities && hit.getType() == HitResult.Type.ENTITY && isIgnored(resourceLocation)) {
                 return;
             }
         }
 
-        MainClass.speakWithNarrator(narrator.narrate(config.speakSide), true);
+        MainClass.narrate(narrator.narrate(config.narrateBlockFace), true);
     }
 
     private void loadConfig() {
-        repeatSpeakingInterval.setDelay(config.repeatSpeakingInterval, Interval.Unit.Millisecond);
-        switch (config.partialSpeaking.targetMode) {
+        repetitionInterval.setDelay(config.repetitionInterval, Interval.Unit.Millisecond);
+        switch (config.filter.targetMode) {
             case ALL -> {
-                partialSpeakingBlock = true;
-                partialSpeakingEntity = true;
+                filterBlocks = true;
+                filterEntities = true;
             }
             case BLOCK -> {
-                partialSpeakingBlock = true;
-                partialSpeakingEntity = false;
+                filterBlocks = true;
+                filterEntities = false;
             }
             case ENTITY -> {
-                partialSpeakingBlock = false;
-                partialSpeakingEntity = true;
+                filterBlocks = false;
+                filterEntities = true;
             }
         }
     }
@@ -125,9 +125,9 @@ public class ReadCrosshair {
     private boolean isIgnored(ResourceLocation identifier) {
         if (identifier == null) return false;
         String name = identifier.getPath();
-        Predicate<String> p = config.partialSpeaking.fuzzy ? name::contains : name::equals;
-        return config.partialSpeaking.whitelist
-                ? Arrays.stream(config.partialSpeaking.targets).noneMatch(p)
-                : Arrays.stream(config.partialSpeaking.targets).anyMatch(p);
+        Predicate<String> p = config.filter.fuzzy ? name::contains : name::equals;
+        return config.filter.whitelist
+                ? Arrays.stream(config.filter.targets).noneMatch(p)
+                : Arrays.stream(config.filter.targets).anyMatch(p);
     }
 }

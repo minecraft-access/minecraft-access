@@ -28,7 +28,7 @@ public class GameModeSwitcherScreenMixin {
     private void narrateGameMode(GameModeSwitcherScreen instance, @Coerce GameModeIconAccessor value, Operation<Void> original) {
         original.call(instance, value);
         if (!Objects.equals(value, minecraft_access$previous)) {
-            MainClass.speakWithNarrator(value.getName().getString(), true);
+            MainClass.narrate(value.getName().getString(), true);
         }
         minecraft_access$previous = value;
     }

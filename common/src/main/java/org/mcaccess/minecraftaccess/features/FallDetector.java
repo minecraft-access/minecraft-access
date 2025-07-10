@@ -27,7 +27,7 @@ public class FallDetector {
         config = Config.getInstance().fallDetector;
     }
 
-    public void update() {
+    public void tick() {
         config = Config.getInstance().fallDetector;
 
         if (!config.enabled) return;

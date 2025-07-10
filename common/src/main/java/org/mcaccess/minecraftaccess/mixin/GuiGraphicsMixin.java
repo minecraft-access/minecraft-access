@@ -38,6 +38,6 @@ public class GuiGraphicsMixin {
             return;
         }
         previous = combined;
-        MainClass.speakWithNarrator(combined, true);
+        MainClass.narrate(combined, true);
     }
 }

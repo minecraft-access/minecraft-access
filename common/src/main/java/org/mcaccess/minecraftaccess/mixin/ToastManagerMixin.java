@@ -40,6 +40,6 @@ public class ToastManagerMixin {
                             .collect(Collectors.joining(" ")));
             default -> toastTextBuilder.append(I18n.get("minecraft_access.toast.unknown"));
         }
-        MainClass.speakWithNarrator(toastTextBuilder.toString(), false);
+        MainClass.narrate(toastTextBuilder.toString(), false);
     }
 }

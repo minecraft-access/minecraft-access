@@ -13,43 +13,43 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import java.util.function.Function;
 
 /**
- * This class is responsible for speaking hotbar when no inventory screen is opened.
- * For speaking hotbar when any inventory screen is opened, see {@link InventoryControls#getCurrentSlotNarrationText()}
+ * This class is responsible for narrating hotbar when no inventory screen is opened.
+ * For narrating hotbar when any inventory screen is opened, see {@link InventoryControls#getCurrentSlotNarrationText()}
  */
-public class SpeakHeldItem {
+public class NarrateHeldItem {
     private String previousItemName = "";
     private int previousItemCount = 0;
     private int previousHotbarSlot = 0;
-    public static final Function<String, String> HOTBAR_I18N = toSpeak -> I18n.get("minecraft_access.other.selected", toSpeak);
-    public static final Function<String, String> EMPTY_SLOT_I18N = toSpeak -> I18n.get("minecraft_access.inventory_controls.empty_slot", toSpeak);
+    public static final Function<String, String> HOTBAR_I18N = narration -> I18n.get("minecraft_access.other.selected", narration);
+    public static final Function<String, String> EMPTY_SLOT_I18N = narration -> I18n.get("minecraft_access.inventory_controls.empty_slot", narration);
 
-    public void speakHeldItem() {
+    public void tick() {
         ItemStack currentStack = ((GuiAccessor) Minecraft.getInstance().gui).getLastToolHighlight();
         int heldItemTooltipFade = ((GuiAccessor) Minecraft.getInstance().gui).getToolHighlightTimer();
         boolean currentStackIsEmpty = currentStack.isEmpty();
         LocalPlayer player = Minecraft.getInstance().player;
 
         if (heldItemTooltipFade == 0 && currentStackIsEmpty && player != null) {
-            // Speak "empty slot" when the selected slot is empty
-            speakIfHeldChanged("", 0, player.getInventory().getSelectedSlot(), SpeakHeldItem.EMPTY_SLOT_I18N);
+            // Narrate "empty slot" when the selected slot is empty
+            narrateIfHeldChanged("", 0, player.getInventory().getSelectedSlot(), NarrateHeldItem.EMPTY_SLOT_I18N);
         }
 
         if (!currentStackIsEmpty && player != null) {
-            // Speak held item's name and count
-            speakIfHeldChanged(currentStack.getHoverName().getString(), currentStack.getCount(), player.getInventory().getSelectedSlot(), SpeakHeldItem.HOTBAR_I18N);
+            // Narrate held item's name and count
+            narrateIfHeldChanged(currentStack.getHoverName().getString(), currentStack.getCount(), player.getInventory().getSelectedSlot(), NarrateHeldItem.HOTBAR_I18N);
         }
     }
 
-    private void speakIfHeldChanged(String itemName, int itemCount, int hotbarSlot, Function<String, String> i18n) {
+    private void narrateIfHeldChanged(String itemName, int itemCount, int hotbarSlot, Function<String, String> i18n) {
         boolean nameChanged = !previousItemName.equals(itemName);
         boolean countChanged = previousItemCount != itemCount;
         boolean slotChanged = previousHotbarSlot != hotbarSlot;
 
         if (nameChanged || slotChanged) {
             String itemCountText = itemCount == 0 ? "" : NarrationUtils.narrateNumber(itemCount) + " ";
-            MainClass.speakWithNarrator(i18n.apply(itemCountText + itemName), true);
-        } else if (countChanged && Config.getInstance().features.reportHeldItemsCountWhenChanged) {
-            MainClass.speakWithNarrator(String.valueOf(itemCount), true);
+            MainClass.narrate(i18n.apply(itemCountText + itemName), true);
+        } else if (countChanged && Config.getInstance().features.narrateHeldItemsCountWhenChanged) {
+            MainClass.narrate(String.valueOf(itemCount), true);
         }
         previousItemName = itemName;
         previousItemCount = itemCount;

@@ -78,9 +78,9 @@ public class Config implements ConfigData {
     @ConfigEntry.Category("fallDetector")
     @ConfigEntry.Gui.TransitiveObject
     public FallDetector fallDetector = new FallDetector();
-    @ConfigEntry.Category("readCrosshair")
+    @ConfigEntry.Category("narrateCrosshair")
     @ConfigEntry.Gui.TransitiveObject
-    public ReadCrosshair readCrosshair = new ReadCrosshair();
+    public NarrateCrosshair narrateCrosshair = new NarrateCrosshair();
     @ConfigEntry.Category("accessMenu")
     @ConfigEntry.Gui.TransitiveObject
     public AccessMenu accessMenu = new AccessMenu();
@@ -92,13 +92,13 @@ public class Config implements ConfigData {
         private Features() {}
 
         public boolean actionBarEnabled = true;
-        public boolean onlySpeakActionBarUpdates = false;
+        public boolean onlyNarrateActionBarUpdates = false;
         public boolean biomeIndicatorEnabled = true;
         public boolean xpIndicatorEnabled = true;
         public boolean facingDirectionEnabled = true;
         public boolean fishingHarvestEnabled = true;
-        public boolean alwaysSpeakPickedUpItemsEnabled = false;
-        public boolean reportHeldItemsCountWhenChanged = true;
+        public boolean alwaysNarratePickedUpItems = false;
+        public boolean narrateHeldItemsCountWhenChanged = true;
     }
 
     public static final class SpeechSettings {
@@ -120,7 +120,7 @@ public class Config implements ConfigData {
         public boolean enabled = true;
         public boolean autoOpenRecipeBook = true;
         public String rowAndColumnFormat = "%dx%d";
-        public boolean speakFocusedSlotChanges = true;
+        public boolean narrateFocusedSlotChanges = true;
         public int delayMilliseconds = 150;
     }
 
@@ -132,7 +132,7 @@ public class Config implements ConfigData {
     public static final class POI {
         private POI() {}
 
-        public boolean speakDistance = true;
+        public boolean narrateDistance = true;
         @ConfigEntry.Gui.CollapsibleObject
         public Blocks blocks = new Blocks();
         @ConfigEntry.Gui.CollapsibleObject
@@ -205,20 +205,20 @@ public class Config implements ConfigData {
         public int delay = 2500;
     }
 
-    public static final class ReadCrosshair {
-        private ReadCrosshair() {}
+    public static final class NarrateCrosshair {
+        private NarrateCrosshair() {}
 
         public boolean enabled = true;
         public boolean useJade = true;
-        public boolean speakSide = true;
-        public boolean disableSpeakingConsecutiveBlocks = false;
-        public long repeatSpeakingInterval = 0;
-        public boolean speakAdditionalEntityPoses = true;
+        public boolean narrateBlockFace = true;
+        public boolean disableNarratingConsecutiveBlocks = false;
+        public long repetitionInterval = 0;
+        public boolean narrateAdditionalEntityPoses = true;
 
         @ConfigEntry.Gui.CollapsibleObject
         public RelativePositionSoundCue relativePositionSoundCue = new RelativePositionSoundCue();
         @ConfigEntry.Gui.CollapsibleObject
-        public PartialSpeaking partialSpeaking = new PartialSpeaking();
+        public Filter filter = new Filter();
 
         public static final class RelativePositionSoundCue {
             private RelativePositionSoundCue() {}
@@ -228,8 +228,8 @@ public class Config implements ConfigData {
             public float maxSoundVolume = 0.4f;
         }
 
-        public static final class PartialSpeaking {
-            private PartialSpeaking() {}
+        public static final class Filter {
+            private Filter() {}
 
             public boolean enabled = false;
             public boolean whitelist = true;

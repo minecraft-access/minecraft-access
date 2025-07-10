@@ -47,7 +47,7 @@ public class MouseKeySimulation {
         mouseScrolls[1].interval.setDelay(config.scrollDelayMilliseconds, Interval.Unit.Millisecond);
     }
 
-    public static void runOnTick() {
+    public static void tick() {
         loadConfig();
         MOUSE_SCROLL_ACTIONS.forEach(t -> {
             if (t.getA().canBeTriggered()) {

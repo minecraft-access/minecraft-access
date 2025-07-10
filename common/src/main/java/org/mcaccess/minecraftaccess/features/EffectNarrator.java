@@ -19,11 +19,11 @@ public class EffectNarrator {
         // This will prevent duplicate narration of beacon, conduit power
         if (WorldUtils.getClientPlayer().hasEffect(effect.getEffect())) return;
         String effectName = NarrationUtils.narrateEffect(effect);
-        MainClass.speakWithNarrator(I18n.get(GAINED) + " " + effectName, false);
+        MainClass.narrate(I18n.get(GAINED) + " " + effectName, false);
     }
 
     public static void narrateLost(MobEffect effect) {
         String effectName = I18n.get(effect.getDescriptionId());
-        MainClass.speakWithNarrator(I18n.get(LOST) + " " + effectName, false);
+        MainClass.narrate(I18n.get(LOST) + " " + effectName, false);
     }
 }

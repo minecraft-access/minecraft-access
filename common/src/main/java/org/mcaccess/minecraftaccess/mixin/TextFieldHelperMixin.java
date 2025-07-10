@@ -37,13 +37,13 @@ public abstract class TextFieldHelperMixin {
     protected abstract String getSelected(String string);
 
     @Inject(at = @At("TAIL"), method = "setCursorToEnd()V")
-    public void speakTextOfSwitchedLine(CallbackInfo ci) {
-        MainClass.speakWithNarrator(this.getMessageFn.get(), true);
+    public void narrateTextOfSwitchedLine(CallbackInfo ci) {
+        MainClass.narrate(this.getMessageFn.get(), true);
     }
 
     @Inject(at = @At("HEAD"), method = "keyPressed")
-    private void speakCursorHoverOverText(int keyCode, CallbackInfoReturnable<Boolean> cir) {
-        // is selecting, let the selecting text speaking method do the job instead
+    private void narrateCursorHoverOverText(int keyCode, CallbackInfoReturnable<Boolean> cir) {
+        // is selecting, let the selecting text narrating method do the job instead
         if (Screen.hasShiftDown()) {
             return;
         }
@@ -52,34 +52,34 @@ public abstract class TextFieldHelperMixin {
             case InputConstants.KEY_LEFT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosByWordsWithOffset(-1));
-                    MainClass.speakWithNarrator(hoveredText, true);
+                    MainClass.narrate(hoveredText, true);
                 } else {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosWithOffset(-1));
-                    MainClass.speakWithNarrator(hoveredText, true);
+                    MainClass.narrate(hoveredText, true);
                 }
                 return;
             }
             case InputConstants.KEY_RIGHT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosByWordsWithOffset(1));
-                    MainClass.speakWithNarrator(hoveredText, true);
+                    MainClass.narrate(hoveredText, true);
                 } else {
                     String hoveredText = this.getCursorHoveredOverText(getCursorPosWithOffset(1));
-                    MainClass.speakWithNarrator(hoveredText, true);
+                    MainClass.narrate(hoveredText, true);
                 }
                 return;
             }
             case InputConstants.KEY_HOME: {
                 String text = this.getMessageFn.get();
                 if (Strings.isNotEmpty(text)) {
-                    MainClass.speakWithNarrator(text.substring(0, 1), true);
+                    MainClass.narrate(text.substring(0, 1), true);
                 }
                 return;
             }
             case InputConstants.KEY_END: {
                 String text = this.getMessageFn.get();
                 if (Strings.isNotEmpty(text)) {
-                    MainClass.speakWithNarrator(text.substring(text.length() - 1), true);
+                    MainClass.narrate(text.substring(text.length() - 1), true);
                 }
             }
         }
@@ -96,21 +96,21 @@ public abstract class TextFieldHelperMixin {
     }
 
     @Inject(at = @At("RETURN"), method = "keyPressed")
-    private void speakSelectedText(int keyCode, CallbackInfoReturnable<Boolean> cir) {
+    private void narrateSelectedText(int keyCode, CallbackInfoReturnable<Boolean> cir) {
         String selectedText = this.getSelected(this.getMessageFn.get());
-        MainClass.speakWithNarrator(selectedText, true);
+        MainClass.narrate(selectedText, true);
     }
 
     @Inject(at = @At("HEAD"), method = "removeCharsFromCursor")
-    private void speakErasedText(int offset, CallbackInfo ci) {
+    private void narrateErasedText(int offset, CallbackInfo ci) {
         int cursorPos = Util.offsetByCodepoints(this.getMessageFn.get(), this.cursorPos, offset);
         // select all text (ctrl+a) will not change the cursor position,
         // if we delete all text then, the erasedText will be a wrong value (one char ahead of cursor)
-        // don't speak under this condition
-        boolean allTextAreSelected = this.selectionPos == 0;
-        if (!allTextAreSelected) {
+        // don't narrate under this condition
+        boolean allTextSelected = this.selectionPos == 0;
+        if (!allTextSelected) {
             String erasedText = getCursorHoveredOverText(cursorPos);
-            MainClass.speakWithNarrator(erasedText, true);
+            MainClass.narrate(erasedText, true);
         }
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * Since text modifying narrations are suppressed in {@link EditBoxMixin},
- * manually speak (command) suggestions (in {@link AbstractCommandBlockEditScreen} and {@link ChatScreen}).
+ * manually narrate (command) suggestions (in {@link AbstractCommandBlockEditScreen} and {@link ChatScreen}).
  */
 @Mixin(CommandSuggestions.SuggestionsList.class)
 public class CommandSuggestionsSuggestionsListMixin {
@@ -38,36 +38,36 @@ public class CommandSuggestionsSuggestionsListMixin {
     private void simplifySuggestionNarration(CallbackInfoReturnable<Component> cir) {
         // Don't know why they update this value here
         this.lastNarratedEntry = this.current;
-        String textToSpeak = mca$getSuggestionTextToSpeak();
-        cir.setReturnValue(Component.nullToEmpty(textToSpeak));
+        String textNarration = mca$getSuggestionTextNarration();
+        cir.setReturnValue(Component.nullToEmpty(textNarration));
         cir.cancel();
     }
 
     @Unique
-    private String mca$getSuggestionTextToSpeak() {
+    private String mca$getSuggestionTextNarration() {
         Suggestion suggestion = this.suggestionList.get(this.current);
         Message message = suggestion.getTooltip();
 
         String format = Config.getInstance().commandSuggestionNarratorFormat;
-        String textToSpeak = format.formatted(this.current + 1, this.suggestionList.size(), suggestion.getText());
+        String textNarration = format.formatted(this.current + 1, this.suggestionList.size(), suggestion.getText());
 
         if (message != null) {
-            textToSpeak = I18n.get("minecraft_access.other.selected", textToSpeak + " " + message.getString());
+            textNarration = I18n.get("minecraft_access.other.selected", textNarration + " " + message.getString());
         } else {
-            textToSpeak = I18n.get("minecraft_access.other.selected", textToSpeak);
+            textNarration = I18n.get("minecraft_access.other.selected", textNarration);
         }
-        return textToSpeak;
+        return textNarration;
     }
 
     @Inject(at = @At("HEAD"), method = "useSuggestion")
-    private void speakCompletion(CallbackInfo ci) {
+    private void narrateCompletion(CallbackInfo ci) {
         String selected = this.suggestionList.get(this.current).getText();
-        MainClass.speakWithNarrator(selected, true);
+        MainClass.narrate(selected, true);
     }
 
     @Inject(at = @At("RETURN"), method = "<init>")
-    private void speakFirstSuggestionWhenSuggestionsAreShown(CallbackInfo ci) {
-        String first = mca$getSuggestionTextToSpeak();
-        MainClass.speakWithNarrator(first, true);
+    private void narrateFirstSuggestionWhenSuggestionsAreShown(CallbackInfo ci) {
+        String first = mca$getSuggestionTextNarration();
+        MainClass.narrate(first, true);
     }
 }

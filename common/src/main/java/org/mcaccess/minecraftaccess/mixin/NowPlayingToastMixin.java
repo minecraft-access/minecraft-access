@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -22,7 +21,7 @@ public abstract class NowPlayingToastMixin {
     }
 
     @Inject(at = @At("TAIL"), method = "showToast")
-    public void speakSong(Options options, CallbackInfo ci) {
+    public void narrateSong(Options options, CallbackInfo ci) {
         StringBuilder toastTextBuilder = new StringBuilder();
         toastTextBuilder.append(I18n.get("minecraft_access.toast.shown"))
                 .append(I18n.get("minecraft_access.other.words_connection"))
@@ -30,6 +29,6 @@ public abstract class NowPlayingToastMixin {
                         getNowPlayingString(Minecraft.getInstance().getMusicManager().getCurrentMusicTranslationKey())
                                 .getString()));
 
-        MainClass.speakWithNarrator(toastTextBuilder.toString(), false);
+        MainClass.narrate(toastTextBuilder.toString(), false);
     }
 }

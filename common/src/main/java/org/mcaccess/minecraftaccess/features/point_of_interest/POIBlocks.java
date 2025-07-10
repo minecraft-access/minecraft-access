@@ -60,7 +60,7 @@ public class POIBlocks {
         loadConfig();
     }
 
-    public void update(boolean isMarking, Block markedBlock) {
+    public void tick(boolean isMarking, Block markedBlock) {
         setMarkedBlock(markedBlock);
         loadConfig();
 

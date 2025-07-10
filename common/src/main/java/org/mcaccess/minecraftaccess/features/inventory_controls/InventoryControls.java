@@ -22,7 +22,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.ExtendedRecipeBookCategory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.*;
@@ -30,6 +29,7 @@ import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
+
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
@@ -94,7 +94,7 @@ public class InventoryControls {
         return config.rowAndColumnFormat;
     }
 
-    public void update() {
+    public void tick() {
         if (!interval.isReady()) return;
         this.minecraftClient = Minecraft.getInstance();
 
@@ -137,16 +137,16 @@ public class InventoryControls {
                 }
                 //</editor-fold>
 
-                refreshGroupListAndSelectFirstGroup(false); // Interrupt is false to let it speak the screen's name
+                refreshGroupListAndSelectFirstGroup(false); // Interrupt is false to let it narrate the screen's name
             }
 
             if (currentSlotsGroupList.isEmpty()) return;
 
-            if (config.speakFocusedSlotChanges) {
+            if (config.narrateFocusedSlotChanges) {
                 String slotNarrationText = getCurrentSlotNarrationText();
                 if (!previousSlotText.equals(slotNarrationText)) {
                     previousSlotText = slotNarrationText;
-                    MainClass.speakWithNarrator(previousSlotText, true);
+                    MainClass.narrate(previousSlotText, true);
                 }
             }
 
@@ -308,11 +308,10 @@ public class InventoryControls {
             MouseUtils.moveAndLeftClick(p.x(), p.y());
             moveToSlotItem(currentSlotItem, 100);
 
-            String text = toggleCraftableButton.isStateTriggered()
+            String narration = toggleCraftableButton.isStateTriggered()
                     ? I18n.get("gui.recipebook.toggleRecipes.all")
                     : ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString();
-            log.debug("Recipe toggle key pressed, {}", text);
-            MainClass.speakWithNarrator(text, true);
+            MainClass.narrate(narration, true);
 
             return true;
         }
@@ -359,7 +358,7 @@ public class InventoryControls {
 
         SlotItem slotItem = getGroupItemInDirection(focusDirection);
         if (slotItem == null) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.inventory_controls.no_slot_in_direction", I18n.get(focusDirection.getString())), true);
+            MainClass.narrate(I18n.get("minecraft_access.inventory_controls.no_slot_in_direction", I18n.get(focusDirection.getString())), true);
             return;
         }
 
@@ -427,17 +426,16 @@ public class InventoryControls {
      * Focuses at the specified slot item in the current group and narrate its details.
      *
      * @param slotItem  The object of the slot item to focus.
-     * @param interrupt Whether to stop the narrator from speaking the previous message or not.
+     * @param interrupt Whether to stop the narrator from narrating the previous message or not.
      */
     private void focusSlotItem(@NotNull SlotItem slotItem, boolean interrupt) {
         currentSlotItem = slotItem;
         moveToSlotItem(currentSlotItem);
-//       log.info("Slot %d/%d selected".formatted(slotItem.slot.getIndex() + 1, currentGroup.slotItems.size()));
 
-        String toSpeak = getCurrentSlotNarrationText();
-        if (!toSpeak.isEmpty()) {
-            previousSlotText = toSpeak;
-            MainClass.speakWithNarrator(toSpeak, interrupt);
+        String narration = getCurrentSlotNarrationText();
+        if (!narration.isEmpty()) {
+            previousSlotText = narration;
+            MainClass.narrate(narration, interrupt);
         }
     }
 
@@ -525,7 +523,7 @@ public class InventoryControls {
     /**
      * Refreshes the current group list and selects the first group.
      *
-     * @param interrupt Whether to stop the narrator from speaking the previous message or not.
+     * @param interrupt Whether to stop the narrator from narrating the previous message or not.
      */
     private void refreshGroupListAndSelectFirstGroup(boolean interrupt) {
         currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
@@ -537,7 +535,7 @@ public class InventoryControls {
     private void selectGroup(boolean interrupt) {
         currentGroup = currentSlotsGroupList.get(currentGroupIndex);
         log.debug("Group(name:{}) {}/{} selected", currentGroup.getGroupName(), currentGroupIndex + 1, currentSlotsGroupList.size());
-        MainClass.speakWithNarrator(I18n.get("minecraft_access.inventory_controls.group_selected",
+        MainClass.narrate(I18n.get("minecraft_access.inventory_controls.group_selected",
                 currentGroup.isScrollable ? I18n.get("minecraft_access.inventory_controls.scrollable") : "",
                 currentGroup.getGroupName()), interrupt);
         focusSlotItem(currentGroup.getFirstGroupItem(), false);

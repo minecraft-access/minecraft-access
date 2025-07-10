@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.screen_reader;
 
-import org.mcaccess.minecraftaccess.Config;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import lombok.extern.slf4j.Slf4j;
+import org.mcaccess.minecraftaccess.Config;
 
 @Slf4j
 public class ScreenReaderMacOS implements ScreenReaderInterface {

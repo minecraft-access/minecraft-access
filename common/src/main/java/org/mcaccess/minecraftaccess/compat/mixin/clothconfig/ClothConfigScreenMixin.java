@@ -99,7 +99,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
     private void mca$switchCategory(boolean forward) {
         int nextIndex = this.selectedCategoryIndex + (forward ? 1 : -1);
         if (nextIndex < 0 || nextIndex >= tabButtons.size()) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.reached_the_border"), true);
+            MainClass.narrate(I18n.get("minecraft_access.other.reached_the_border"), true);
             return;
         }
 
