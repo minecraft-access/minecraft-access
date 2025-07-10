@@ -4,6 +4,28 @@ title: "Changelog"
 
 <!-- INSERT CHANGELOG HERE -->
 
+## Release v1.10.1 (2025-07)
+### New Features
+- A message will now be spoken if there is no valid object selected to lock onto in the POI tracker
+- You can now press CTRL/SHIFT + TARGET NEAREST OBJECT to target the nearest entity/block respectively
+- Added a new keybind (` by default) that speaks the main hand item the player is holding, when held in conjunction with an alt key, it will speak the current offhand item.
+- The mod now runs on Minecraft version 1.21.7
+- The Now Playing toast is now narrated if you have the vanilla option enabled
+
+### Bug Fixes
+- Aim assist no longer crashes the game
+- It is now much more difficult (hopefully impossible) to lock onto air or have an invalid POI object locked
+- Target nearest object now actually targets the nearest object
+- POI and object tracker features now reset when you join a new world. This stops leftover data like old POIs or tracked objects from carrying over from previous worlds.
+- You can now once again mark and unmark blocks and entities as expected
+- Mod managers like Modrinth and CurseForge will no longer install embedded dependency mods separately when installing Minecraft Access
+- Fixed tooltip narration when moving the mouse without inventory controls enabled
+
+### Feature Updates
+- If you are riding a vehicle or mount, the POI sound and entry are suppressed.
+- The Narrate Player Position key is now bound to `V` by default
+- The repeat book page key is now `R` instead of `alt+R`
+
 ## Release v1.10.0 (2025-05)
 ### New Features
 - Support navigating and narrating on the config menu of the [Cloth Config](https://shedaniel.gitbook.io/cloth-config) library, this provides support to the config menus of other mods that also use this library. (If you run into a mod's config menu that is built with Cloth that isn't accessible, report it as a bug)
