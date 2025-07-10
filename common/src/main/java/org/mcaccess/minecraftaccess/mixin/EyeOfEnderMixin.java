@@ -36,6 +36,6 @@ public abstract class EyeOfEnderMixin extends Entity implements ItemSupplier {
 
         log.debug("Auto locking on eye of ender entity");
         MainClass.poiManager.lockingHandler.lockOnEntity(this);
-        MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.tracking_eye_of_ender"), true);
+        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.locking.tracking_eye_of_ender"), true);
     }
 }

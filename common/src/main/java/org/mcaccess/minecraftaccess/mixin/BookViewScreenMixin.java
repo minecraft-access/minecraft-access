@@ -19,7 +19,7 @@ public class BookViewScreenMixin {
     @Inject(at = @At("HEAD"), method = "keyPressed")
     public void repeatPageContents(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (keyCode == InputConstants.KEY_R) {
-            MainClass.speakWithNarrator(this.bookAccess.getPage(this.currentPage).getString(), true);
+            MainClass.narrate(this.bookAccess.getPage(this.currentPage).getString(), true);
         }
     }
 }

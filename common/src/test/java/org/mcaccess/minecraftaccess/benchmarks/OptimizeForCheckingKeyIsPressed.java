@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
  * <p>
  * ref:
  * There aren't big general speed differences between streams and loops: <a href="https://stackoverflow.com/a/34632749/11397457">...</a>
- * <a href="https://minecraft.fandom.com/wiki/Tick">...</a>
+ * <a href="https://minecraft.wiki/w/Tick">...</a>
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)

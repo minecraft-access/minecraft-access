@@ -88,7 +88,7 @@ public class AccessMenu {
     private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
     }
 
-    public void update() {
+    public void tick() {
         minecraftClient = Minecraft.getInstance();
         if (minecraftClient.player == null) return;
 
@@ -140,12 +140,12 @@ public class AccessMenu {
         if (hit == null) return;
         switch (hit.getType()) {
             case MISS, ENTITY ->
-                    MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
+                    MainClass.narrate(I18n.get("minecraft_access.access_menu.target_missed"), true);
             case BLOCK -> {
                 BlockHitResult blockHit = (BlockHitResult) hit;
                 BlockPos blockPos = blockHit.getBlockPos();
-                String text = NarrationUtils.narrateBlock(blockPos, "") + ", " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
-                MainClass.speakWithNarrator(text, true);
+                String narration = NarrationUtils.narrateBlock(blockPos, "") + ", " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
+                MainClass.narrate(narration, true);
             }
         }
     }
@@ -155,11 +155,11 @@ public class AccessMenu {
         if (hit == null) return;
         switch (hit.getType()) {
             case MISS, ENTITY ->
-                    MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.target_missed"), true);
+                    MainClass.narrate(I18n.get("minecraft_access.access_menu.target_missed"), true);
             case BLOCK -> {
                 BlockHitResult blockHitResult = (BlockHitResult) hit;
                 BlockPos blockPos = blockHitResult.getBlockPos();
-                MainClass.speakWithNarrator(NarrationUtils.narrateCoordinatesOf(blockPos), true);
+                MainClass.narrate(NarrationUtils.narrateCoordinatesOf(blockPos), true);
             }
         }
     }
@@ -171,7 +171,7 @@ public class AccessMenu {
         minecraftClient.player.clientSideCloseContainer();
 
         int light = minecraftClient.level.getMaxLocalRawBrightness(minecraftClient.player.blockPosition());
-        MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.light_level", NarrationUtils.narrateNumber(light)), true);
+        MainClass.narrate(I18n.get("minecraft_access.access_menu.light_level", NarrationUtils.narrateNumber(light)), true);
     }
 
     public static void getBiome() {
@@ -182,7 +182,7 @@ public class AccessMenu {
 
         Holder<Biome> var27 = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
         String name = I18n.get(BiomeIndicator.getBiomeName(var27));
-        MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.biome", name), true);
+        MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true);
     }
 
     public static void getXP() {
@@ -191,14 +191,14 @@ public class AccessMenu {
         minecraftClient.player.clientSideCloseContainer();
 
         if (PlayerUtils.isSpectator()) {
-            MainClass.speakWithNarrator(I18n.get("gameMode.spectator"), true);
+            MainClass.narrate(I18n.get("gameMode.spectator"), true);
             return;
         } else if(PlayerUtils.isCreative()) {
-            MainClass.speakWithNarrator(I18n.get("gameMode.creative"), true);
+            MainClass.narrate(I18n.get("gameMode.creative"), true);
             return;
         }
 
-        MainClass.speakWithNarrator(I18n.get("minecraft_access.access_menu.xp",
+        MainClass.narrate(I18n.get("minecraft_access.access_menu.xp",
                         NarrationUtils.narrateNumber(PlayerUtils.getExperienceLevel()),
                         NarrationUtils.narrateNumber(PlayerUtils.getExperienceProgress())),
                 true);
@@ -228,8 +228,8 @@ public class AccessMenu {
             }
         }
 
-        String toSpeak = "%02d:%02d".formatted(hours, minutes);
-        toSpeak = I18n.get(translationKey, toSpeak);
-        MainClass.speakWithNarrator(toSpeak, true);
+        String narration = "%02d:%02d".formatted(hours, minutes);
+        narration = I18n.get(translationKey, narration);
+        MainClass.narrate(narration, true);
     }
 }

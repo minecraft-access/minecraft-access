@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.features;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DirectJoinServerScreen;
@@ -20,10 +19,12 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
+import java.util.List;
+
 /**
  * Moves the mouse to the top left of the screen and then performs left click.
  * This fixes the bug in which the mouse cursor interrupts when navigating through the screen elements
- * which results in infinite speaking of `Screen element x out of x` by the narrator
+ * which results in infinite narrating of `Screen element x out of x` by the narrator
  */
 @Slf4j
 public class MenuFix {
@@ -50,7 +51,7 @@ public class MenuFix {
         EditServerScreen.class
     );
 
-    public static void update(Minecraft minecraftClient) {
+    public static void tick(Minecraft minecraftClient) {
         if (!Config.getInstance().menuFixEnabled || minecraftClient.screen == null) {
             return;
         }

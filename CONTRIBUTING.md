@@ -143,9 +143,9 @@ One is triggered by original game logic invoking.
 With the help of the Mixin framework, we inject logics into original code,
 so when original code is called, the injected logic will be executed too.
 This execution type is suitable for making existing game content accessible,
-like speaking the held item when switching items in hotbar.
+like narrating the held item when switching items in hotbar.
 
-The [tick](https://minecraft.fandom.com/wiki/Tick) mechanism constantly triggers the other type of logic.
+The [tick](https://minecraft.wiki/w/Tick) mechanism constantly triggers the other type of logic.
 This is achieved by adding custom function invoking logic into original game's tick processing method in platform-dependent code, which is called every tick.
 Different platforms implement different ways to achieve this.
 The `MainClass.clientTickEventsMethod()` is invoked when platform tick event is fired, then it calls every execution function inside this method, each feature will check if its condition is met, if so, it will execute their particular logic, or it will directly return as skipping this tick.
@@ -167,7 +167,7 @@ we'll also extract the non-mixin part as an independent class in `features` subp
 
 The `screen_reader` subpackage contains the implementation of screen reader proxy.
 Following the Interface segregation principle,
-we invoke this proxy everywhere where it needs to speak some text through a screen reader.
+we invoke this proxy everywhere where it needs to narrate some text through a screen reader.
 Then this proxy is responsible for passing text to the real screen reader
 (another layer of interface from SAPI, in fact).
 

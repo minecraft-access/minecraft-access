@@ -59,7 +59,7 @@ public class CameraControls {
         }
     }
 
-    public static void update() {
+    public static void tick() {
         if (!interval.isReady()) return;
         loadConfigurations();
         keyListener();
@@ -200,9 +200,9 @@ public class CameraControls {
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
         if (Config.getInstance().features.facingDirectionEnabled) {
             if (direction.isRotatingHorizontal)
-                MainClass.speakWithNarrator(horizontalDirection, true);
+                MainClass.narrate(horizontalDirection, true);
             else if (verticalDirection != null)
-                MainClass.speakWithNarrator(verticalDirection, true);
+                MainClass.narrate(verticalDirection, true);
         }
     }
 
@@ -221,9 +221,9 @@ public class CameraControls {
 
         if (Config.getInstance().features.facingDirectionEnabled) {
             if (direction.in(Orientation.LAYER.MIDDLE)) {
-                MainClass.speakWithNarrator(PlayerPositionUtils.getHorizontalFacingDirectionInWords(), true);
+                MainClass.narrate(PlayerPositionUtils.getHorizontalFacingDirectionInWords(), true);
             } else {
-                MainClass.speakWithNarrator(PlayerPositionUtils.getVerticalFacingDirectionInWords(), true);
+                MainClass.narrate(PlayerPositionUtils.getVerticalFacingDirectionInWords(), true);
             }
         }
     }

@@ -52,7 +52,7 @@ public class POIEntities {
         loadConfig();
     }
 
-    public void update(boolean isMarking, Entity markedEntity) {
+    public void tick(boolean isMarking, Entity markedEntity) {
         setMarked(markedEntity);
         loadConfig();
 

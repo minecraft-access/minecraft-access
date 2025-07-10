@@ -16,7 +16,7 @@ public class BiomeIndicator {
     @Nullable
     private String previousBiome = null;
 
-    public void update() {
+    public void tick() {
         Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient == null) return;
         if (minecraftClient.level == null) return;
@@ -28,7 +28,7 @@ public class BiomeIndicator {
 
         if (!name.equalsIgnoreCase(previousBiome)) {
             previousBiome = name;
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.biome", name), true);
+            MainClass.narrate(I18n.get("minecraft_access.other.biome", name), true);
         }
     }
 

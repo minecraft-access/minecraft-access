@@ -6,7 +6,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Mainly add custom keypress handling
- * to simulate screen reader's text speaking behavior when editing text in input fields.
+ * to simulate screen reader's text narrating behavior when editing text in input fields.
  */
 @Mixin(EditBox.class)
 abstract class EditBoxMixin extends AbstractWidget {
@@ -54,8 +53,7 @@ abstract class EditBoxMixin extends AbstractWidget {
     }
 
     @Inject(method = "updateWidgetNarration", at = @At("TAIL"))
-    private void speakSuggestionWhenContentIsEmpty(NarrationElementOutput output, CallbackInfo ci) {
-        // I'm surprised that this is not originally accessible
+    private void narrateSuggestionWhenContentIsEmpty(NarrationElementOutput output, CallbackInfo ci) {
         if (this.value.isBlank() && this.suggestion != null) {
             output.add(NarratedElementType.HINT, this.suggestion);
         }
@@ -74,11 +72,11 @@ abstract class EditBoxMixin extends AbstractWidget {
     }
 
     @Inject(at = @At("HEAD"), method = "keyPressed")
-    private void speakCursorHoverOverText(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void narrateCursorHoverOverText(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (!this.canConsumeInput()) {
             return;
         }
-        // is selecting, let the selecting text speaking method do the job instead
+        // is selecting, let the selecting text narrating method do the job instead
         if (Screen.hasShiftDown()) {
             return;
         }
@@ -87,58 +85,58 @@ abstract class EditBoxMixin extends AbstractWidget {
             case InputConstants.KEY_LEFT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(-1));
-                    MainClass.speakWithNarrator(hoveredText, true);
+                    MainClass.narrate(hoveredText, true);
                 } else {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getCursorPos(-1));
-                    MainClass.speakWithNarrator(hoveredText, true);
+                    MainClass.narrate(hoveredText, true);
                 }
                 return;
             }
             case InputConstants.KEY_RIGHT: {
                 if (Screen.hasControlDown()) {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getWordPosition(1));
-                    MainClass.speakWithNarrator(hoveredText, true);
+                    MainClass.narrate(hoveredText, true);
                 } else {
                     String hoveredText = this.mca$getCursorHoverOverText(this.getCursorPos(1));
-                    MainClass.speakWithNarrator(hoveredText, true);
+                    MainClass.narrate(hoveredText, true);
                 }
                 return;
             }
             case InputConstants.KEY_HOME: {
                 if (Strings.isNotEmpty(this.value)) {
-                    MainClass.speakWithNarrator(this.value.substring(0, 1), true);
+                    MainClass.narrate(this.value.substring(0, 1), true);
                 }
                 return;
             }
             case InputConstants.KEY_END: {
                 if (Strings.isNotEmpty(this.value)) {
-                    MainClass.speakWithNarrator(this.value.substring(this.value.length() - 1), true);
+                    MainClass.narrate(this.value.substring(this.value.length() - 1), true);
                 }
             }
         }
     }
 
     @Inject(at = @At("RETURN"), method = "keyPressed")
-    private void speakSelectedText(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void narrateSelectedText(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (!this.canConsumeInput()) {
             return;
         }
         String selectedText = this.getHighlighted();
         if (!selectedText.isBlank()) {
-            MainClass.speakWithNarrator(selectedText, true);
+            MainClass.narrate(selectedText, true);
         }
     }
 
     @Inject(at = @At("HEAD"), method = "deleteChars")
-    private void speakErasedText(int characterOffset, CallbackInfo ci) {
+    private void narrateErasedText(int characterOffset, CallbackInfo ci) {
         int cursorPos = this.getCursorPos(characterOffset);
         // select all text (ctrl+a) will not change the cursor position,
         // if we delete all text then, the erasedText will be a wrong value (one char ahead of cursor)
-        // don't speak under this condition
+        // don't narrate under this condition
         boolean allTextAreSelected = this.highlightPos == 0;
         if (!allTextAreSelected) {
             String erasedText = mca$getCursorHoverOverText(cursorPos);
-            MainClass.speakWithNarrator(erasedText, true);
+            MainClass.narrate(erasedText, true);
         }
     }
 

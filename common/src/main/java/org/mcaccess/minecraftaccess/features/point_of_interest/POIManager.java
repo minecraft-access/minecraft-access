@@ -15,12 +15,12 @@ public class POIManager {
         poiMarking = new POIMarking();
     }
 
-    public void update() {
-        poiMarking.update();
-        poiBlocks.update(poiMarking.isMarked(), poiMarking.getMarkedBlock());
-        poiEntities.update(poiMarking.isMarked(), poiMarking.getMarkedEntity());
+    public void tick() {
+        poiMarking.tick();
+        poiBlocks.tick(poiMarking.isMarked(), poiMarking.getMarkedBlock());
+        poiEntities.tick(poiMarking.isMarked(), poiMarking.getMarkedEntity());
         // Locking Handler (POI Locking) should be after POI Scan features
-        lockingHandler.update();
-        objectTracker.update();
+        lockingHandler.tick();
+        objectTracker.tick();
     }
 }

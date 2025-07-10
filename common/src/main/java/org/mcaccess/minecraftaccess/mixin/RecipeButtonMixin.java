@@ -41,8 +41,8 @@ public abstract class RecipeButtonMixin {
         if (!sameItem || minecraft_access$interval.isReady()) {
             String craftable = collection.hasCraftable() ? "craftable" : "not_craftable";
             craftable = I18n.get("minecraft_access.other." + craftable);
-            String toSpeak = "%s %d %s".formatted(craftable, itemStack.getCount(), itemName);
-            MainClass.speakWithNarrator(toSpeak, true);
+            String narration = "%s %d %s".formatted(craftable, itemStack.getCount(), itemName);
+            MainClass.narrate(narration, true);
         }
 
         // update the states

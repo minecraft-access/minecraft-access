@@ -90,7 +90,7 @@ public class NarrationUtils {
 
         List<String> equipments = new ArrayList<>();
 
-        if (Config.getInstance().readCrosshair.speakAdditionalEntityPoses) {
+        if (Config.getInstance().narrateCrosshair.narrateAdditionalEntityPoses) {
             switch (entity.getPose()) {
                 case SLEEPING -> text = I18n.get("minecraft_access.read_crosshair.sleeping", text);
                 case DYING -> text = I18n.get("minecraft_access.read_crosshair.dying", text);
@@ -273,9 +273,9 @@ public class NarrationUtils {
     /**
      * @param pos  block position (in the client world)
      * @param side if side is provided, then the invoker is ReadCrosshair
-     * @return (toSpeak, currentQuery):
-     * "toSpeak" is the actual one to be spoken through Narrator,
-     * "currentQuery" is kind of shortened "toSpeak" that is used for checking if target is changed compared to previous.
+     * @return (narration, currentQuery):
+     * "narration" is the actual one to be narrated through Narrator,
+     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     public static Tuple<String, String> narrateBlockForContentChecking(BlockPos pos, String side) {
         Minecraft client = Minecraft.getInstance();
@@ -292,28 +292,28 @@ public class NarrationUtils {
         Block block = blockInfo.type();
         BlockEntity blockEntity = blockInfo.entity();
 
-        // Difference between toSpeak and currentQuery:
-        // currentQuery is used for checking condition, toSpeak is actually the one to be spoken.
-        // currentQuery is checked to not speak the same block repeatedly, two blocks can have same name.
+        // Difference between narration and currentQuery:
+        // currentQuery is used for checking condition, narration is actually the one to be narrated.
+        // currentQuery is checked to not narrate the same block repeatedly, two blocks can have same name.
         String name = block.getName().getString();
-        String toSpeak = Strings.isBlank(side) ? name : name + " " + side;
+        String narration = Strings.isBlank(side) ? name : name + " " + side;
         String currentQuery = name + side;
 
-        // Different special narration (toSpeak) about different type of blocks
+        // Different special narration (narration) about different type of blocks
         if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
-            toSpeak = NarrationUtils.narrateFluidBlock(blockPos);
-            return new Tuple<>(toSpeak, toSpeak);
+            narration = NarrationUtils.narrateFluidBlock(blockPos);
+            return new Tuple<>(narration, narration);
         }
 
         if (blockEntity != null) {
             if (blockState.is(BlockTags.ALL_SIGNS)) {
-                toSpeak = getSignInfo((SignBlockEntity) blockEntity, client.player, toSpeak);
+                narration = getSignInfo((SignBlockEntity) blockEntity, client.player, narration);
             } else if (blockEntity instanceof BeehiveBlockEntity beehiveBlockEntity) {
-                Tuple<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, toSpeak, currentQuery);
-                toSpeak = beehiveInfo.getA();
+                Tuple<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, narration, currentQuery);
+                narration = beehiveInfo.getA();
                 currentQuery = beehiveInfo.getB();
             } else
-                // Speak monster spawner mob type
+                // Narrate monster spawner mob type
                 if (blockEntity instanceof SpawnerBlockEntity spawner) {
                     // Will not support non-vanilla custom configured multiple-mob spawner (like generated with command)
                     Entity entity = ((BaseSpawnerAccessor) spawner.getSpawner()).getDisplayEntity();
@@ -322,36 +322,36 @@ public class NarrationUtils {
                     if (entity != null) {
                         entityName = Objects.requireNonNull(entity.getDisplayName()).getString();
                     }
-                    toSpeak = entityName + " " + toSpeak;
+                    narration = entityName + " " + narration;
                     currentQuery = entityName + currentQuery;
                 }
         }
 
-        Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, toSpeak, currentQuery);
-        toSpeak = cropsInfo.getA();
+        Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, narration, currentQuery);
+        narration = cropsInfo.getA();
         currentQuery = cropsInfo.getB();
         if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
-            toSpeak = I18n.get("minecraft_access.crop.wet_farmland", toSpeak);
+            narration = I18n.get("minecraft_access.crop.wet_farmland", narration);
             currentQuery = "wet" + currentQuery;
         } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
             if (blockState.getValue(EndPortalFrameBlock.HAS_EYE)) {
-                toSpeak = I18n.get("minecraft_access.read_crosshair.end_portal_frame_with_eye", toSpeak);
+                narration = I18n.get("minecraft_access.read_crosshair.end_portal_frame_with_eye", narration);
             } else {
-                toSpeak = I18n.get("minecraft_access.read_crosshair.end_portal_frame_empty", toSpeak);
+                narration = I18n.get("minecraft_access.read_crosshair.end_portal_frame_empty", narration);
             }
         }
 
         // Redstone related
-        Tuple<String, String> redstoneRelatedInfo = getRedstoneRelatedInfo(clientWorld, blockPos, block, blockState, toSpeak, currentQuery);
-        toSpeak = redstoneRelatedInfo.getA();
+        Tuple<String, String> redstoneRelatedInfo = getRedstoneRelatedInfo(clientWorld, blockPos, block, blockState, narration, currentQuery);
+        narration = redstoneRelatedInfo.getA();
         currentQuery = redstoneRelatedInfo.getB();
 
         if (clientWorld.getFluidState(blockPos).is(Fluids.WATER)) {
-            toSpeak = I18n.get("minecraft_access.crop.water_logged", toSpeak);
+            narration = I18n.get("minecraft_access.crop.water_logged", narration);
             currentQuery = "waterlogged" + currentQuery;
         }
 
-        return new Tuple<>(toSpeak, currentQuery);
+        return new Tuple<>(narration, currentQuery);
     }
 
     /**
@@ -362,7 +362,7 @@ public class NarrationUtils {
         return narrateBlockForContentChecking(pos, side).getA();
     }
 
-    private static String getSignInfo(SignBlockEntity signEntity, LocalPlayer player, String toSpeak) {
+    private static String getSignInfo(SignBlockEntity signEntity, LocalPlayer player, String narration) {
         String[] lines = new String[4];
 
         for (int i = 0; i < 4; i++) {
@@ -370,63 +370,63 @@ public class NarrationUtils {
             lines[i] = signEntity.getText(signEntity.isFacingFrontText(player)).getMessage(i, false).getString();
         }
         String content = String.join(", ", lines);
-        return I18n.get("minecraft_access.read_crosshair.sign_" + (signEntity.isFacingFrontText(player) ? "front" : "back") + "_content", toSpeak, content);
+        return I18n.get("minecraft_access.read_crosshair.sign_" + (signEntity.isFacingFrontText(player) ? "front" : "back") + "_content", narration, content);
     }
 
-    private static @NotNull Tuple<String, String> getRedstoneRelatedInfo(ClientLevel world, BlockPos blockPos, Block block, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getRedstoneRelatedInfo(ClientLevel world, BlockPos blockPos, Block block, BlockState blockState, String narration, String currentQuery) {
         boolean isEmittingPower = world.hasSignal(blockPos, Direction.DOWN);
         boolean isReceivingPower = world.hasNeighborSignal(blockPos);
 
         if (block instanceof PistonBaseBlock) {
             String facing = blockState.getValue(PistonBaseBlock.FACING).getName();
-            toSpeak = I18n.get("minecraft_access.read_crosshair.facing", toSpeak, I18n.get("minecraft_access.direction." + facing));
+            narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + facing));
             currentQuery += "facing " + facing;
             if (isReceivingPower) {
-                toSpeak = I18n.get("minecraft_access.read_crosshair.powered", toSpeak);
+                narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
                 currentQuery += "powered";
             }
         } else if ((block instanceof GlowLichenBlock || block instanceof RedstoneLampBlock) && (isReceivingPower || isEmittingPower)) {
-            toSpeak = I18n.get("minecraft_access.read_crosshair.powered", toSpeak);
+            narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
             currentQuery += "powered";
 //        } else if ((block instanceof RedstoneTorchBlock || block instanceof LeverBlock || block instanceof AbstractButtonBlock) && isEmittingPower) { // pre 1.19.3
         } else if (block instanceof RedStoneWireBlock) {
-            Tuple<String, String> p = getRedstoneWireInfo(blockState, blockPos, toSpeak, currentQuery);
-            toSpeak = p.getA();
+            Tuple<String, String> p = getRedstoneWireInfo(blockState, blockPos, narration, currentQuery);
+            narration = p.getA();
             currentQuery = p.getB();
         } else if ((block instanceof RedstoneTorchBlock || block instanceof LeverBlock || block instanceof ButtonBlock) && isEmittingPower) { // From 1.19.3
-            toSpeak = I18n.get("minecraft_access.read_crosshair.powered", toSpeak);
+            narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
             currentQuery += "powered";
         } else if ((block instanceof DoorBlock doorBlock && doorBlock.isOpen(blockState)) || (block instanceof FenceGateBlock && blockState.getValue(FenceGateBlock.OPEN))) {
-            toSpeak = I18n.get("minecraft_access.read_crosshair.opened", toSpeak);
+            narration = I18n.get("minecraft_access.read_crosshair.opened", narration);
             currentQuery += "open";
         } else if (block instanceof HopperBlock) {
-            toSpeak = I18n.get("minecraft_access.read_crosshair.facing", toSpeak, I18n.get("minecraft_access.direction." + blockState.getValue(HopperBlock.FACING).getName()));
+            narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + blockState.getValue(HopperBlock.FACING).getName()));
             currentQuery += "facing " + blockState.getValue(HopperBlock.FACING).getName();
             if (isReceivingPower) {
-                toSpeak = I18n.get("minecraft_access.read_crosshair.locked", toSpeak);
+                narration = I18n.get("minecraft_access.read_crosshair.locked", narration);
                 currentQuery += "locked";
             }
         } else if (block instanceof ObserverBlock) {
-            toSpeak = I18n.get("minecraft_access.read_crosshair.facing", toSpeak, I18n.get("minecraft_access.direction." + blockState.getValue(ObserverBlock.FACING).getName()));
+            narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + blockState.getValue(ObserverBlock.FACING).getName()));
             currentQuery += "facing " + blockState.getValue(ObserverBlock.FACING).getName();
             if (isEmittingPower) {
-                toSpeak = I18n.get("minecraft_access.read_crosshair.powered", toSpeak);
+                narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
                 currentQuery += "powered";
             }
         } else if (block instanceof DispenserBlock) {
-            toSpeak = I18n.get("minecraft_access.read_crosshair.facing", toSpeak, I18n.get("minecraft_access.direction." + blockState.getValue(DispenserBlock.FACING).getName()));
+            narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + blockState.getValue(DispenserBlock.FACING).getName()));
             currentQuery += "facing " + blockState.getValue(DispenserBlock.FACING).getName();
             if (isReceivingPower) {
-                toSpeak = I18n.get("minecraft_access.read_crosshair.powered", toSpeak);
+                narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
                 currentQuery += "powered";
             }
         } else if (block instanceof ComparatorBlock) {
             ComparatorMode mode = blockState.getValue(ComparatorBlock.MODE);
             Direction facing = blockState.getValue(ComparatorBlock.FACING);
             String correctFacing = I18n.get("minecraft_access.direction." + Orientation.getOppositeDirectionKey(facing.getName()).toLowerCase());
-            toSpeak = I18n.get("minecraft_access.read_crosshair.comparator_info", toSpeak, correctFacing, mode);
+            narration = I18n.get("minecraft_access.read_crosshair.comparator_info", narration, correctFacing, mode);
             if (isReceivingPower) {
-                toSpeak = I18n.get("minecraft_access.read_crosshair.powered", toSpeak);
+                narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
                 currentQuery += "powered";
             }
             currentQuery += "mode:" + mode + " facing:" + correctFacing;
@@ -436,24 +436,24 @@ public class NarrationUtils {
             Direction facing = blockState.getValue(ComparatorBlock.FACING);
             String correctFacing = I18n.get("minecraft_access.direction." + Orientation.getOppositeDirectionKey(facing.getName()).toLowerCase());
 
-            toSpeak = I18n.get("minecraft_access.read_crosshair.repeater_info", toSpeak, correctFacing, delay);
+            narration = I18n.get("minecraft_access.read_crosshair.repeater_info", narration, correctFacing, delay);
             currentQuery += "delay:" + delay + " facing:" + correctFacing;
             if (locked) {
-                toSpeak = I18n.get("minecraft_access.read_crosshair.locked", toSpeak);
+                narration = I18n.get("minecraft_access.read_crosshair.locked", narration);
                 currentQuery += "locked";
             }
         } else if (isReceivingPower) { // For all the other blocks
-            toSpeak = I18n.get("minecraft_access.read_crosshair.powered", toSpeak);
+            narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
             currentQuery += "powered";
         }
 
-        return new Tuple<>(toSpeak, currentQuery);
+        return new Tuple<>(narration, currentQuery);
     }
 
-    private static @NotNull Tuple<String, String> getRedstoneWireInfo(BlockState blockState, BlockPos pos, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getRedstoneWireInfo(BlockState blockState, BlockPos pos, String narration, String currentQuery) {
         int powerLevel = blockState.getValue(RedStoneWireBlock.POWER);
         if (powerLevel > 0) {
-            toSpeak = I18n.get("minecraft_access.read_crosshair.redstone_wire_power", toSpeak, powerLevel);
+            narration = I18n.get("minecraft_access.read_crosshair.redstone_wire_power", narration, powerLevel);
             currentQuery += "power level " + powerLevel;
         }
 
@@ -484,40 +484,40 @@ public class NarrationUtils {
             // If there's no redstone wire on x+1 side,
             // then current wire is not connected to that side,
             // so it's not connected to all directions.
-            if (!result) return new Tuple<>(toSpeak, currentQuery);
+            if (!result) return new Tuple<>(narration, currentQuery);
         }
 
-        String directionsToSpeak = String.join(I18n.get("minecraft_access.other.words_connection"), connectedDirections);
-        toSpeak = I18n.get("minecraft_access.read_crosshair.redstone_wire_connection", toSpeak, directionsToSpeak);
+        String directionsNarration = String.join(I18n.get("minecraft_access.other.words_connection"), connectedDirections);
+        narration = I18n.get("minecraft_access.read_crosshair.redstone_wire_connection", narration, directionsNarration);
         currentQuery += "connected to " + connectedDirections;
 
-        return new Tuple<>(toSpeak, currentQuery);
+        return new Tuple<>(narration, currentQuery);
     }
 
-    private static @NotNull Tuple<String, String> getBeehiveInfo(BeehiveBlockEntity blockEntity, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getBeehiveInfo(BeehiveBlockEntity blockEntity, BlockState blockState, String narration, String currentQuery) {
         boolean isSmoked = blockEntity.isSedated();
         int honeyLevel = blockState.getValue(BeehiveBlock.HONEY_LEVEL);
         Direction facingDirection = blockState.getValue(BeehiveBlock.FACING);
 
         if (isSmoked) {
-            toSpeak = I18n.get("minecraft_access.read_crosshair.bee_hive_smoked", toSpeak);
+            narration = I18n.get("minecraft_access.read_crosshair.bee_hive_smoked", narration);
             currentQuery += "smoked";
         }
 
         if (honeyLevel > 0) {
-            toSpeak = I18n.get("minecraft_access.read_crosshair.bee_hive_honey_level", toSpeak, honeyLevel);
+            narration = I18n.get("minecraft_access.read_crosshair.bee_hive_honey_level", narration, honeyLevel);
             currentQuery += ("honey-level:" + honeyLevel);
         }
 
-        toSpeak = I18n.get("minecraft_access.read_crosshair.bee_hive_facing", toSpeak, facingDirection.getName());
+        narration = I18n.get("minecraft_access.read_crosshair.bee_hive_facing", narration, facingDirection.getName());
         currentQuery += ("facing:" + facingDirection.getName());
 
-        return new Tuple<>(toSpeak, currentQuery);
+        return new Tuple<>(narration, currentQuery);
     }
 
-    private static @NotNull Tuple<String, String> getCropsInfo(Block block, BlockState blockState, String toSpeak, String currentQuery) {
+    private static @NotNull Tuple<String, String> getCropsInfo(Block block, BlockState blockState, String narration, String currentQuery) {
         if (block instanceof CropBlock crop) {
-            return addCropGrowth(toSpeak, currentQuery, crop.getAge(blockState), crop.getMaxAge());
+            return addCropGrowth(narration, currentQuery, crop.getAge(blockState), crop.getMaxAge());
         }
 
         // There are some growable blocks that are not crop blocks like the Torch Flower crop
@@ -527,27 +527,27 @@ public class NarrationUtils {
                     .findFirst();
 
             if (ageProperty.isPresent()) {
-                return addCropGrowth(toSpeak, currentQuery, blockState.getValue(ageProperty.get().getKey()), ageProperty.get().getValue());
+                return addCropGrowth(narration, currentQuery, blockState.getValue(ageProperty.get().getKey()), ageProperty.get().getValue());
             }
         }
 
         // No growth information found
-        return new Tuple<>(toSpeak, currentQuery);
+        return new Tuple<>(narration, currentQuery);
     }
 
-    private static @NotNull Tuple<String, String> addCropGrowth(String toSpeak, String currentQuery, int age, int maxAge) {
+    private static @NotNull Tuple<String, String> addCropGrowth(String narration, String currentQuery, int age, int maxAge) {
         if (age == maxAge) {
-            return new Tuple<>(I18n.get("minecraft_access.crop.mature", toSpeak), I18n.get("minecraft_access.crop.mature", currentQuery));
+            return new Tuple<>(I18n.get("minecraft_access.crop.mature", narration), I18n.get("minecraft_access.crop.mature", currentQuery));
         }
         float growth = (float) age / maxAge;
-        return new Tuple<>(I18n.get("minecraft_access.crop.percent", (int) (growth * 100), toSpeak), I18n.get("minecraft_access.crop.percent", (int) (growth * 100), currentQuery));
+        return new Tuple<>(I18n.get("minecraft_access.crop.percent", (int) (growth * 100), narration), I18n.get("minecraft_access.crop.percent", (int) (growth * 100), currentQuery));
     }
 
     /**
      * @param pos fluid position (in the client world)
-     * @return (toSpeak, currentQuery):
-     * "toSpeak" is the actual one to be spoken through Narrator,
-     * "currentQuery" is kind of shortened "toSpeak" that is used for checking if target is changed compared to previous.
+     * @return (narration, currentQuery):
+     * "narration" is the actual one to be narrated through Narrator,
+     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateFluidBlock(BlockPos pos) {
         FluidState fluidState = WorldUtils.getClientWorld().getFluidState(pos);

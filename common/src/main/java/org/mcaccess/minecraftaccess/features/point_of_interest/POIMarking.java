@@ -32,7 +32,7 @@ public class POIMarking {
      * and suppress the normal POI scan (by switching their targets to marked target)
      * if this feature is enabled.
      */
-    public void update() {
+    public void tick() {
         if (Config.getInstance().poi.marking.enabled) {
             boolean controlPressed = Screen.hasControlDown();
             boolean altPressed = Screen.hasAltDown();
@@ -67,14 +67,14 @@ public class POIMarking {
                 markedBlock = world.getBlockState(pos).getBlock();
 
                 String name = NarrationUtils.narrateBlock(pos, "");
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.marking.marked", name), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.marking.marked", name), true);
             }
             case ENTITY -> {
                 Entity e = ((EntityHitResult) hit).getEntity();
                 markedEntity = e;
 
                 String name = NarrationUtils.narrateEntity(e);
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.marking.marked", name), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.marking.marked", name), true);
             }
         }
 
@@ -86,6 +86,6 @@ public class POIMarking {
         markedBlock = null;
         markedEntity = null;
         isMarked = false;
-        MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.marking.unmarked"), true);
+        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.marking.unmarked"), true);
     }
 }

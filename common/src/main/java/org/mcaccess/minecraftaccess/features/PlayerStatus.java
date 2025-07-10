@@ -16,18 +16,18 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
- * Adds a key bind to narrate/speak the player's non potion related statuses.<br>
- * - Speak Player Status Key (default: R) = Speaks the health and hunger.<br>
+ * Adds a key bind to narrate the player's non potion related statuses.<br>
+ * - Narrate Player Status Key (default: R) = Narrates the health and hunger.<br>
  */
 @Slf4j
 public class PlayerStatus {
     IntervalKeystroke narrationKey = new IntervalKeystroke(
-            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().speakPlayerStatusKey),
+            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().narratePlayerStatusKey),
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
             Interval.ms(3000));
 
-    public void update() {
+    public void tick() {
         Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient.player == null) return;
         if (minecraftClient.screen != null) return;
@@ -52,44 +52,44 @@ public class PlayerStatus {
             double maxAir = Math.round((minecraftClient.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
             double frostExposurePercent = Math.round((minecraftClient.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
 
-            boolean isStatusKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().speakPlayerStatusKey);
+            boolean isStatusKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().narratePlayerStatusKey);
 
-            String toSpeak = "";
+            String narration = "";
 
             if (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()) {
                 if (!Screen.hasAltDown()) {
                     if (absorption > 0) {
-                        toSpeak += I18n.get("minecraft_access.player_status.base_with_absorption", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(absorption), NarrationUtils.narrateNumber(maxHealth), NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger), NarrationUtils.narrateNumber(armor));
+                        narration += I18n.get("minecraft_access.player_status.base_with_absorption", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(absorption), NarrationUtils.narrateNumber(maxHealth), NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger), NarrationUtils.narrateNumber(armor));
                     } else {
-                        toSpeak += I18n.get("minecraft_access.player_status.base", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth), NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger), NarrationUtils.narrateNumber(armor));
+                        narration += I18n.get("minecraft_access.player_status.base", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth), NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger), NarrationUtils.narrateNumber(armor));
                     }
                 }
 
                 if ((minecraftClient.player.isUnderWater() || minecraftClient.player.getAirSupply() < minecraftClient.player.getMaxAirSupply()) && !minecraftClient.player.canBreatheUnderwater()) {
                     air = Math.max(air, 0.0);
-                    toSpeak += I18n.get("minecraft_access.player_status.air", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir));
+                    narration += I18n.get("minecraft_access.player_status.air", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir));
                 }
 
                 if ((minecraftClient.player.isInPowderSnow || frostExposurePercent > 0) && minecraftClient.player.canFreeze())
-                    toSpeak += I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent));
+                    narration += I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent));
             }
 
-            if (toSpeak.isEmpty() && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()))
-                toSpeak += I18n.get("minecraft_access.player_status.no_conditional_status");
+            if (narration.isEmpty() && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()))
+                narration += I18n.get("minecraft_access.player_status.no_conditional_status");
 
-            if (!toSpeak.equals(I18n.get("minecraft_access.player_status.no_conditional_status")))
-                toSpeak = addGameMode(toSpeak);
+            if (!narration.equals(I18n.get("minecraft_access.player_status.no_conditional_status")))
+                narration = addGameMode(narration);
 
-            MainClass.speakWithNarrator(toSpeak, true);
+            MainClass.narrate(narration, true);
         }
         narrationKey.updateStateForNextTick();
     }
 
-    public String addGameMode(String toSpeak) {
-        if (!toSpeak.isEmpty())
-            toSpeak += I18n.get("minecraft_access.other.words_connection");
+    public String addGameMode(String narration) {
+        if (!narration.isEmpty())
+            narration += I18n.get("minecraft_access.other.words_connection");
 
-        toSpeak += switch (Minecraft.getInstance().gameMode.getPlayerMode()) {
+        narration += switch (Minecraft.getInstance().gameMode.getPlayerMode()) {
             case SURVIVAL -> PlayerUtils.isHardCore() ? I18n.get("gameMode.hardcore") : I18n.get("gameMode.survival");
             case CREATIVE -> I18n.get("gameMode.creative");
             case SPECTATOR -> I18n.get("gameMode.spectator");
@@ -98,10 +98,10 @@ public class PlayerStatus {
 
         //  If the player is in a hard core world but a different game mode
         if (PlayerUtils.isHardCore() && !PlayerUtils.isSurvival()) {
-            toSpeak += " " + I18n.get("options.difficulty.hardcore");
+            narration += " " + I18n.get("options.difficulty.hardcore");
         }
 
-        return toSpeak;
+        return narration;
     }
 
     private void narrateHeldItem(boolean hasAltDown) {
@@ -124,6 +124,6 @@ public class PlayerStatus {
             heldItemName = I18n.get("minecraft_access.read_crosshair.spawner_empty");
         }
 
-        MainClass.speakWithNarrator("%s: %s".formatted(hand, heldItemName), false);
+        MainClass.narrate("%s: %s".formatted(hand, heldItemName), false);
     }
 }

@@ -9,7 +9,7 @@ import java.util.Set;
  * Initializes all the keybindings used by the mod.
  */
 public class KeyBindingsHandler {
-    public static final KeyMapping speakPlayerStatusKey;
+    public static final KeyMapping narratePlayerStatusKey;
     public static final KeyMapping lockingHandlerKey;
     public static final KeyMapping positionNarrationKey;
     public static final KeyMapping accessMenuKey;
@@ -264,7 +264,7 @@ public class KeyBindingsHandler {
                 MOUSE_SIMULATION_KEY
         );
 
-        speakPlayerStatusKey = new KeyMapping(
+        narratePlayerStatusKey = new KeyMapping(
                 "minecraft_access.keys.other.player_status_key_name",
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_R,
@@ -433,7 +433,7 @@ public class KeyBindingsHandler {
                 mouseSimulationMiddleMouseKey,
                 mouseSimulationScrollUpKey,
                 mouseSimulationScrollDownKey,
-                speakPlayerStatusKey,
+                narratePlayerStatusKey,
                 lockingHandlerKey,
                 positionNarrationKey,
                 accessMenuKey,

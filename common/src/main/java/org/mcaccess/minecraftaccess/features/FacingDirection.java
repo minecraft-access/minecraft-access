@@ -9,12 +9,12 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
- * Adds key binding to speak the player's facing direction.<br>
- * - Speak Facing Direction Key (default: H) = Speaks the player facing direction.
+ * Adds key binding to narrate the player's facing direction.<br>
+ * - Narrate Facing Direction Key (default: H) = Narrates the player facing direction.
  */
 @Slf4j
 public class FacingDirection {
-    public void update() {
+    public void tick() {
         try {
             Minecraft minecraftClient = Minecraft.getInstance();
             if (minecraftClient == null) return;
@@ -26,16 +26,16 @@ public class FacingDirection {
 
             boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
 
-            String toSpeak;
+            String narration;
             if (isLeftAltPressed) {
                 String t = PlayerPositionUtils.getVerticalFacingDirectionInWords();
-                toSpeak = I18n.get("minecraft_access.other.facing_direction", t);
+                narration = I18n.get("minecraft_access.other.facing_direction", t);
             } else {
                 String string = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
-                toSpeak = I18n.get("minecraft_access.other.facing_direction", string);
+                narration = I18n.get("minecraft_access.other.facing_direction", string);
             }
 
-            MainClass.speakWithNarrator(toSpeak, true);
+            MainClass.narrate(narration, true);
         } catch (Exception e) {
             log.error("An error occurred in DirectionNarrator.", e);
         }

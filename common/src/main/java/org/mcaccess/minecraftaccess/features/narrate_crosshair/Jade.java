@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.features.read_crosshair;
+package org.mcaccess.minecraftaccess.features.narrate_crosshair;
 
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -18,7 +18,7 @@ public class Jade implements CrosshairNarrator {
     }
 
     @Override
-    public @Nullable Object deduplication(boolean speakSide, boolean speakConsecutiveBlocks) {
+    public @Nullable Object deduplication(boolean narrateSide, boolean narrateConsecutiveBlocks) {
         BoxElementImpl rootElement = JadeClient.tickHandler().rootElement;
         if (rootElement == null) {
             return null;
@@ -27,12 +27,12 @@ public class Jade implements CrosshairNarrator {
         String narration = tooltip.getNarration(tooltip.lines.getFirst()::equals);
         return Arrays.asList(
                 narration,
-                speakConsecutiveBlocks && rayCast() instanceof BlockHitResult blockHitResult ? blockHitResult.getBlockPos() : null
+                narrateConsecutiveBlocks && rayCast() instanceof BlockHitResult blockHitResult ? blockHitResult.getBlockPos() : null
         );
     }
 
     @Override
-    public @NotNull String narrate(boolean speakSide) {
+    public @NotNull String narrate(boolean narrateSide) {
         return JadeClient.tickHandler().rootElement.getTooltip().getNarration();
     }
 }

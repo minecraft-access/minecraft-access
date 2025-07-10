@@ -9,14 +9,14 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
 /**
- * This feature speaks when the player xp level is increased or decreased.
+ * This feature narrates when the player xp level is increased or decreased.
  */
 @Slf4j
 public class XPIndicator {
     @Nullable
     private Integer previousXPLevel = null;
 
-    public void update() {
+    public void tick() {
         Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient == null) return;
         if (minecraftClient.level == null) return;
@@ -35,8 +35,8 @@ public class XPIndicator {
         boolean increased = previousXPLevel < currentXPLevel;
         previousXPLevel = currentXPLevel;
 
-        String toSpeak = (increased) ? I18n.get("minecraft_access.xp_indicator.increased", NarrationUtils.narrateNumber(currentXPLevel))
+        String narration = (increased) ? I18n.get("minecraft_access.xp_indicator.increased", NarrationUtils.narrateNumber(currentXPLevel))
                 : I18n.get("minecraft_access.xp_indicator.decreased", NarrationUtils.narrateNumber(currentXPLevel));
-        MainClass.speakWithNarrator(toSpeak, true);
+        MainClass.narrate(narration, true);
     }
 }

@@ -50,7 +50,7 @@ public class FluidDetector {
 
     /**
      * Finds the closest fluid(water/lava) source and plays a sound at its position and
-     * speaks its name with relative position.
+     * narrates its name with relative position.
      *
      * @param water Whether to find water or lava source block or not.
      */
@@ -70,7 +70,7 @@ public class FluidDetector {
         BlockPos closestFluidPos = findFluid(minecraftClient, startingPointPos, config.range, water);
         if (closestFluidPos == null) {
             log.debug("Unable to find closest fluid source");
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.other.not_found"), true);
+            MainClass.narrate(I18n.get("minecraft_access.other.not_found"), true);
             return;
         }
 
@@ -81,7 +81,7 @@ public class FluidDetector {
         String posDifference = NarrationUtils.narrateRelativePositionOfPlayerAnd(closestFluidPos);
         String name = minecraftClient.level.getBlockState(closestFluidPos).getBlock().getName().getString();
 
-        MainClass.speakWithNarrator(name + ", " + posDifference, true);
+        MainClass.narrate(name + ", " + posDifference, true);
     }
 
     /**

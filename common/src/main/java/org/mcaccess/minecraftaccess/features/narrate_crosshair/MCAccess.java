@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.features.read_crosshair;
+package org.mcaccess.minecraftaccess.features.narrate_crosshair;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.BlockHitResult;
@@ -18,17 +18,17 @@ public class MCAccess implements CrosshairNarrator {
     }
 
     @Override
-    public @Nullable Object deduplication(boolean speakSide, boolean speakConsecutiveBlocks) {
+    public @Nullable Object deduplication(boolean narrateSide, boolean narrateConsecutiveBlocks) {
         HitResult hit = rayCast();
         if (hit.getType() == HitResult.Type.MISS) {
             return null;
         }
         return switch (hit) {
             case BlockHitResult blockHitResult -> {
-                String side = speakSide ? blockHitResult.getDirection().getName() : "";
+                String side = narrateSide ? blockHitResult.getDirection().getName() : "";
                 yield Arrays.asList(
                         NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getB(),
-                        speakConsecutiveBlocks ? blockHitResult.getBlockPos() : null
+                        narrateConsecutiveBlocks ? blockHitResult.getBlockPos() : null
                 );
             }
             case EntityHitResult entityHitResult -> NarrationUtils.narrateEntity(entityHitResult.getEntity());
@@ -37,10 +37,10 @@ public class MCAccess implements CrosshairNarrator {
     }
 
     @Override
-    public @NotNull String narrate(boolean speakSide) {
+    public @NotNull String narrate(boolean narrateSide) {
         return switch (rayCast()) {
             case BlockHitResult blockHitResult -> {
-                String side = speakSide ? I18n.get(String.format("minecraft_access.direction.%s", blockHitResult.getDirection().getName())) : "";
+                String side = narrateSide ? I18n.get(String.format("minecraft_access.direction.%s", blockHitResult.getDirection().getName())) : "";
                 yield NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getA();
             }
             case EntityHitResult entityHitResult -> NarrationUtils.narrateEntity(entityHitResult.getEntity());

@@ -59,7 +59,7 @@ public class LockingHandler {
         interval.setDelay(config.delay, Interval.Unit.Millisecond);
     }
 
-    public void update() {
+    public void tick() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
         loadConfig();
@@ -172,18 +172,18 @@ public class LockingHandler {
         }
     }
 
-    private void unlock(boolean speak, boolean isStillValid) {
+    private void unlock(boolean narrate, boolean isStillValid) {
         lockedOnEntity = null;
         entriesOfLockedOnBlock = null;
         lockedOnBlockPos = null;
         isLockedOnWhereEyeOfEnderDisappears = false;
         if (!isStillValid) MainClass.poiManager.objectTracker.clearCurrentObject();
 
-        if (speak) {
+        if (narrate) {
             if (config.unlockingSound) {
                 PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_BASEDRUM, 0.4f, 2f);
             } else {
-                MainClass.speakWithNarrator(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
+                MainClass.narrate(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
             }
         }
     }
@@ -191,7 +191,7 @@ public class LockingHandler {
     private void relock() {
         Object target = MainClass.poiManager.objectTracker.getCurrentObject();
         if (target == null) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
+            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
             return;
         }
         switch (target) {
@@ -264,12 +264,12 @@ public class LockingHandler {
         unlock(false, true);
         lockedOnEntity = entity;
 
-        String toSpeak = NarrationUtils.narrateEntity(entity);
+        String narration = NarrationUtils.narrateEntity(entity);
 
-        if (Config.getInstance().poi.speakDistance) {
-            toSpeak += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
+        if (Config.getInstance().poi.narrateDistance) {
+            narration += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
         }
-        MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.locked", toSpeak), true);
+        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.locking.locked", narration), true);
         return true;
     }
 
@@ -289,9 +289,9 @@ public class LockingHandler {
         lockedOnBlockPos = new BlockPos3d(position, absolutePosition);
 
         String blockDescription = NarrationUtils.narrateBlock(lockedOnBlockPos, "");
-        if (Config.getInstance().poi.speakDistance) {
+        if (Config.getInstance().poi.narrateDistance) {
             blockDescription += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlockPos);
         }
-        MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.locking.locked", blockDescription), true);
+        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.locking.locked", blockDescription), true);
     }
 }

@@ -57,7 +57,7 @@ public class ObjectTracker {
     ObjectTracker() {
     }
 
-    public void update() {
+    public void tick() {
         Minecraft minecraftClient = Minecraft.getInstance();
 
         if (minecraftClient.player == null) return;
@@ -88,72 +88,72 @@ public class ObjectTracker {
 
     private void narrateCurrentObject(boolean interrupt) {
         if (currentObject == null) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
+            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
         }
 
-        if (checkAndSpeakIfAllGroupsEmpty()) return;
-        boolean speakDistance = Config.getInstance().poi.speakDistance;
+        if (checkAndNarrateIfAllGroupsEmpty()) return;
+        boolean narrateDistance = Config.getInstance().poi.narrateDistance;
 
         if (currentObject instanceof Entity entity) {
-            String message = NarrationUtils.narrateEntity(entity);
-            if (speakDistance)
-                message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
-            MainClass.speakWithNarrator(message, interrupt);
+            String narration = NarrationUtils.narrateEntity(entity);
+            if (narrateDistance)
+                narration += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
+            MainClass.narrate(narration, interrupt);
             WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, entity.position());
         }
 
         if (currentObject instanceof BlockPos blockPos) {
-            String message = NarrationUtils.narrateBlock(blockPos, null);
-            if (speakDistance) message += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
-            MainClass.speakWithNarrator(message, interrupt);
+            String narration = NarrationUtils.narrateBlock(blockPos, null);
+            if (narrateDistance) narration += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
+            MainClass.narrate(narration, interrupt);
             WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, blockPos.getCenter());
         }
     }
 
     private void moveGroup(int step) {
-        if (checkAndSpeakIfAllGroupsEmpty()) return;
+        if (checkAndNarrateIfAllGroupsEmpty()) return;
 
         int currentGroupIndex = groups.indexOf(currentGroup);
 
         if ((currentGroupIndex + step) > (groups.size() - 1)) {
-            MainClass.speakWithNarrator(I18n.get(END_OF_LIST), true);
-            MainClass.speakWithNarrator(currentGroup.getTranslatedName(), false);
+            MainClass.narrate(I18n.get(END_OF_LIST), true);
+            MainClass.narrate(currentGroup.getTranslatedName(), false);
             return;
         }
 
         if ((currentGroupIndex + step) < 0) {
-            MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
-            MainClass.speakWithNarrator(currentGroup.getTranslatedName(), false);
+            MainClass.narrate(I18n.get(START_OF_LIST), true);
+            MainClass.narrate(currentGroup.getTranslatedName(), false);
             return;
         }
 
         currentGroup = groups.get(currentGroupIndex + step);
         currentObject = currentGroup.sortByDistance().getFirst();
-        MainClass.speakWithNarrator(currentGroup.getTranslatedName(), true);
+        MainClass.narrate(currentGroup.getTranslatedName(), true);
         narrateCurrentObject(false);
     }
 
     private void moveObject(int step) {
-        if (checkAndSpeakIfAllGroupsEmpty()) return;
+        if (checkAndNarrateIfAllGroupsEmpty()) return;
 
         List<?> objects = currentGroup.sortByDistance();
         int currentObjectIndex = objects.indexOf(currentObject);
 
         if (currentObjectIndex == -1) {
-            MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
+            MainClass.narrate(I18n.get(START_OF_LIST), true);
             currentObject = objects.get(0);
             narrateCurrentObject(false);
             return;
         }
 
         if ((currentObjectIndex + step) > (objects.size() - 1)) {
-            MainClass.speakWithNarrator(I18n.get(END_OF_LIST), true);
+            MainClass.narrate(I18n.get(END_OF_LIST), true);
             narrateCurrentObject(false);
             return;
         }
 
         if ((currentObjectIndex + step) < 0) {
-            MainClass.speakWithNarrator(I18n.get(START_OF_LIST), true);
+            MainClass.narrate(I18n.get(START_OF_LIST), true);
             narrateCurrentObject(false);
             return;
         }
@@ -162,9 +162,9 @@ public class ObjectTracker {
         narrateCurrentObject(true);
     }
 
-    private boolean checkAndSpeakIfAllGroupsEmpty() {
+    private boolean checkAndNarrateIfAllGroupsEmpty() {
         if (groups.isEmpty()) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found"), true);
+            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found"), true);
 
             return true;
         } else return false;
@@ -182,34 +182,34 @@ public class ObjectTracker {
 
         if (Screen.hasControlDown() && !Screen.hasShiftDown()) {
             if (entities.isEmpty()) {
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found.entity"), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.entity"), true);
             } else {
                 currentObject = entities.getFirst();
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest.entity"), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest.entity"), true);
             }
         } else if (Screen.hasShiftDown() && !Screen.hasControlDown()) {
             if (blocks.isEmpty()) {
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found.block"), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.block"), true);
             } else {
                 currentObject = blocks.getFirst();
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest.block"), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest.block"), true);
             }
         } else {
             if (entities.isEmpty() && blocks.isEmpty()) {
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.not_found"), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found"), true);
             } else if (entities.isEmpty()) {
                 currentObject = blocks.getFirst();
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
             } else if (blocks.isEmpty()) {
                 currentObject = entities.getFirst();
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
             } else {
                 if (player.getEyePosition().distanceTo(blocks.getFirst().getCenter()) < (double) player.distanceTo(entities.getFirst())) {
                     currentObject = blocks.getFirst();
                 } else {
                     currentObject = entities.getFirst();
                 }
-                MainClass.speakWithNarrator(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+                MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
             }
         }
 

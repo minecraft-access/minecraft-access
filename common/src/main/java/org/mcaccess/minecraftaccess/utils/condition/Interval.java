@@ -47,7 +47,7 @@ public class Interval {
      */
     public boolean isReady() {
         // There is configuration that set to 0 to disable the timer
-        // ref: Read Crosshair - Repeat Speaking Interval (in milliseconds) (0 to disable)
+        // ref: Read Crosshair - Repeat Narrating Interval (in milliseconds) (0 to disable)
         if (delay == 0) return false;
         if (System.nanoTime() - lastRunTime > delay) {
             reset();

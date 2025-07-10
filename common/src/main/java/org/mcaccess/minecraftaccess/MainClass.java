@@ -16,8 +16,8 @@ import org.apache.logging.log4j.util.Strings;
 import org.mcaccess.minecraftaccess.features.*;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
+import org.mcaccess.minecraftaccess.features.narrate_crosshair.NarrateCrosshair;
 import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
-import org.mcaccess.minecraftaccess.features.read_crosshair.ReadCrosshair;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
@@ -38,11 +38,11 @@ public class MainClass {
     public static FluidDetector fluidDetector = null;
     public static HUDStatus hudStatus = null;
     public static InventoryControls inventoryControls = null;
+    public static NarrateCrosshair narrateCrosshair = null;
+    public static NarrateHeldItem narrateHeldItem = null;
     public static PlayerStatus playerStatus = null;
     public static PlayerWarnings playerWarnings = null;
     public static POIManager poiManager = null;
-    public static ReadCrosshair readCrosshair = null;
-    public static SpeakHeldItem speakHeldItem = null;
     public static XPIndicator xpIndicator = null;
 
     /**
@@ -85,55 +85,55 @@ public class MainClass {
         changeLogLevelBaseOnDebugConfig();
 
         if (config.menuFixEnabled) {
-            MenuFix.update(minecraftClient);
+            MenuFix.tick(minecraftClient);
         }
 
         if (minecraftClient.level == null)
             return;
 
         if (inventoryControls != null && config.inventoryControls.enabled)
-            inventoryControls.update();
+            inventoryControls.tick();
 
-        readCrosshair.tick();
+        narrateCrosshair.tick();
 
         if (xpIndicator != null && config.features.xpIndicatorEnabled && (PlayerUtils.isAdventure() || PlayerUtils.isSurvival()))
-            xpIndicator.update();
+            xpIndicator.tick();
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled)
-            biomeIndicator.update();
+            biomeIndicator.tick();
 
-        facingDirection.update();
+        facingDirection.tick();
 
-        PositionNarrator.getInstance().update();
+        PositionNarrator.getInstance().tick();
 
         if (WorldUtils.getClientPlayer() != null) {
             if (playerStatus != null) {
-                playerStatus.update();
+                playerStatus.tick();
             }
 
             if (!PlayerUtils.isPlayerTyping())
-                MouseKeySimulation.runOnTick();
+                MouseKeySimulation.tick();
 
             if (minecraftClient.screen == null) {
                 // These features are suppressed when there is any screen opening
-                CameraControls.update();
+                CameraControls.tick();
             }
         }
 
         if (playerWarnings != null && config.playerWarnings.enabled && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()))
-            playerWarnings.update();
+            playerWarnings.tick();
 
         if (accessMenu != null && config.accessMenu.enabled)
-            accessMenu.update();
+            accessMenu.tick();
 
         if (!PlayerUtils.isSpectator())
-            speakHeldItem.speakHeldItem();
+            narrateHeldItem.tick();
 
-        poiManager.update();
+        poiManager.tick();
 
-        fallDetector.update();
+        fallDetector.tick();
 
-        hudStatus.update();
+        hudStatus.tick();
 
         // This should always be at the bottom
         Keystroke.updateInstances();
@@ -147,11 +147,11 @@ public class MainClass {
         fluidDetector = new FluidDetector();
         hudStatus = new HUDStatus();
         inventoryControls = new InventoryControls();
+        narrateCrosshair = new NarrateCrosshair();
+        narrateHeldItem = new NarrateHeldItem();
         playerStatus = new PlayerStatus();
         playerWarnings = new PlayerWarnings();
         poiManager = new POIManager();
-        readCrosshair = new ReadCrosshair();
-        speakHeldItem = new SpeakHeldItem();
         xpIndicator = new XPIndicator();
 
         Minecraft client = Minecraft.getInstance();
@@ -185,9 +185,9 @@ public class MainClass {
         MainClass.screenReader = screenReader;
     }
 
-    public static void speakWithNarrator(String text, boolean interrupt) {
+    public static void narrate(String text, boolean interrupt) {
         if (Strings.isEmpty(text) || !Minecraft.getInstance().isWindowActive()) {
-            log.warn("The speaking of string \"{}\" with interrupt={} was suppressed", text, interrupt);
+            log.warn("The narration of string \"{}\" with interrupt={} was suppressed", text, interrupt);
             return;
         }
         if (Minecraft.getInstance().options.narrator().get() != NarratorStatus.OFF) {

@@ -6,7 +6,6 @@ import org.mcaccess.minecraftaccess.utils.NarratorDummy;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AccessibilityOnboardingScreen.class)
 public class AccessibilityOnboardingScreenMixin {

@@ -233,12 +233,12 @@ public class PlayerUtils {
     public static void narrateCurrentPlayerEffects() {
         Collection<MobEffectInstance> effects = WorldUtils.getClientPlayer().getActiveEffects();
         if (effects.isEmpty()) {
-            MainClass.speakWithNarrator(I18n.get("minecraft_access.effect_narration.no_effects"), true);
+            MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
             return;
         }
-        String toSpeak = effects.stream().map(NarrationUtils::narrateEffect)
+        String narration = effects.stream().map(NarrationUtils::narrateEffect)
                 .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection")));
-        MainClass.speakWithNarrator(toSpeak, true);
+        MainClass.narrate(narration, true);
     }
 
     public static boolean isPlayerTyping() {
