@@ -30,6 +30,12 @@ subprojects {
         silentMojangMappingsLicense()
     }
 
+    idea {
+        module {
+            excludeDirs += file('./run/')
+        }
+    }
+
     dependencies {
         minecraft libs.minecraft
         mappings loom.layered() {

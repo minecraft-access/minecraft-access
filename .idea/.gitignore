@@ -1,0 +1,9 @@
+/*
+!/inspectionProfiles/
+!/runConfigurations/
+/runConfigurations/Minecraft_*.xml
+!/.gitignore
+!/.name
+!/icon.png
+!/vcs.xml
+!/externalDependencies.xml

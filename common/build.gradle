@@ -2,6 +2,12 @@ architectury {
     common("fabric", "neoforge")
 }
 
+idea {
+    module {
+        excludeDirs += file('./logs/')
+    }
+}
+
 dependencies {
     modImplementation libs.jadeFabric
     modImplementation libs.architecturyApi
