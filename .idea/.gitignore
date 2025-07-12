@@ -4,6 +4,7 @@
 /runConfigurations/Minecraft_*.xml
 !/.gitignore
 !/.name
+!/checkstyle-idea.xml
+!/externalDependencies.xml
 !/icon.png
 !/vcs.xml
-!/externalDependencies.xml

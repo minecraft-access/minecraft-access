@@ -79,6 +79,7 @@ allprojects {
     apply plugin: "java"
     apply plugin: libs.plugins.architecturyPlugin.get().pluginId
     apply plugin: "maven-publish"
+    apply plugin: 'checkstyle'
 
     base.archivesName = 'minecraft-access'
 
@@ -91,5 +92,13 @@ allprojects {
 
     java {
         withSourcesJar()
+    }
+
+    dependencies {
+        checkstyle libs.checkstyle
+    }
+
+    checkstyle {
+        toolVersion = libs.checkstyle.get().version
     }
 }

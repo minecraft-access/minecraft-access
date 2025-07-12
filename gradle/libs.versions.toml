@@ -35,6 +35,8 @@ lombok = "org.projectlombok:lombok:1.18.38"
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
+checkstyle = "com.puppycrawl.tools:checkstyle:10.26.1"
+
 [plugins]
 architecturyLoom = { id = "dev.architectury.loom", version = "1.10.433" }
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.161" }
