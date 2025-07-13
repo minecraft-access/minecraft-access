@@ -5,6 +5,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -51,7 +52,7 @@ public enum BuiltinEntityPOIGroups {
             "minecraft_access.point_of_interest.group.passive",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0f),
             entity -> {
-                return (entity instanceof AgeableMob || entity instanceof WaterAnimal || entity instanceof NeutralMob) && !(entity.getPassengers().contains(Minecraft.getInstance().player));
+                return (entity instanceof AgeableMob || entity instanceof WaterAnimal || entity instanceof NeutralMob || entity instanceof Allay) && !(entity.getPassengers().contains(Minecraft.getInstance().player));
             }
     )),
     PLAYER(new POIGroup<>(// Players
