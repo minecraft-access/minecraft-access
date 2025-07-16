@@ -19,6 +19,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -172,13 +173,16 @@ public class ObjectTracker {
 
     private void targetNearestObject() {
         LocalPlayer player = WorldUtils.getClientPlayer();
+
         List<Entity> entities = MainClass.poiManager.poiEntities.getLastScanResults()
-                .stream().sorted((a, b) -> (int) (a.distanceTo(player) - b.distanceTo(player)))
-                .toList();
+            .stream()
+            .sorted(Comparator.comparingDouble(a -> a.distanceTo(player)))
+            .toList();
 
         List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults()
-                .stream().sorted((a, b) -> (int) (player.getEyePosition().distanceTo(a.getCenter()) - player.getEyePosition().distanceTo(b.getCenter())))
-                .toList();
+            .stream()
+            .sorted(Comparator.comparingDouble(a -> player.getEyePosition().distanceTo(a.getCenter())))
+            .toList();
 
         if (Screen.hasControlDown() && !Screen.hasShiftDown()) {
             if (entities.isEmpty()) {
