@@ -4,8 +4,10 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <module name="Checker">
     <property name="severity" value="error"/>
-    <module name="FileLength">
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/suppressions.xml"/>
     </module>
+    <module name="FileLength"/>
     <module name="FileTabCharacter"/>
     <module name="LineLength">
         <property name="severity" value="error"/>

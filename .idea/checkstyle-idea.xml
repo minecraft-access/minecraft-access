@@ -13,6 +13,11 @@
                 <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
                 <ConfigurationLocation id="ef06fc7f-a47b-461d-8887-a53bedb84646" type="PROJECT_RELATIVE" scope="All" description="Minecraft Access">
                     $PROJECT_DIR$/config/checkstyle/checkstyle.xml
+                    <option name="properties">
+                        <map>
+                            <entry key="config_loc" value="$PROJECT_DIR$/config/checkstyle"/>
+                        </map>
+                    </option>
                 </ConfigurationLocation>
             </list>
         </option>

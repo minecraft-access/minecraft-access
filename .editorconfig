@@ -22,3 +22,6 @@ ij_java_class_count_to_use_import_on_demand = 25
 ij_java_names_count_to_use_import_on_demand = 25
 ij_java_imports_layout = @*, |, java.**, javax.**, |, *, |, org.mcaccess.**, |, $*
 ij_java_visibility = EscalateVisible
+
+[{*.yml,*.yaml}]
+indent_size = 2
