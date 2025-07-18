@@ -28,6 +28,9 @@ subprojects {
 
     loom {
         silentMojangMappingsLicense()
+        runs {
+            remove server
+        }
     }
 
     idea {
