@@ -20,6 +20,7 @@ fabricApi = "net.fabricmc.fabric-api:fabric-api:0.128.2+1.21.7"
 fabricLoader = "net.fabricmc:fabric-loader:0.16.14"
 jadeFabric = "maven.modrinth:jade:19.0.4+fabric"
 jadeNeoForge = "maven.modrinth:jade:19.0.4+neoforge"
+lombok = "org.projectlombok:lombok:1.18.38"
 minecraft = "com.mojang:minecraft:1.21.7"
 modMenu = "com.terraformersmc:modmenu:15.0.0-beta.3"
 neoForge = "net.neoforged:neoforge:21.7.8-beta"
@@ -31,7 +32,6 @@ jmhGeneratorAnnprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", 
 junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 junitJupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiter" }
 junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.13.3"
-lombok = "org.projectlombok:lombok:1.18.38"
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
