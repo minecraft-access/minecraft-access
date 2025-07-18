@@ -7,6 +7,7 @@ jobs:
     name: Build
     if: >
       vars.CI == 'full' && github.ref_protected && github.ref_type == 'branch'
+      && (github.event.head_commit == null || !contains(github.event.head_commit.message, 'CI: no-publish'))
     uses: ./.github/workflows/build.yml
     with:
       ref: ${{ github.ref }}
@@ -14,8 +15,6 @@ jobs:
     name: Publish Build
     needs:
       - build
-    if: |
-      github.event_name == 'push' && github.ref_protected && github.ref_type == 'branch' && vars.CI == 'full'
     uses: ./.github/workflows/publish-build.yml
     secrets: inherit
     with:
