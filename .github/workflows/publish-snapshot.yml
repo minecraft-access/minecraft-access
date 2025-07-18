@@ -1,0 +1,41 @@
+name: Publish Snapshot
+on:
+  push:
+
+jobs:
+  build:
+    name: Build
+    if: >
+      vars.CI == 'full' && github.ref_protected && github.ref_type == 'branch'
+    uses: ./.github/workflows/build.yml
+    with:
+      ref: ${{ github.ref }}
+  publish:
+    name: Publish Build
+    needs:
+      - build
+    if: |
+      github.event_name == 'push' && github.ref_protected && github.ref_type == 'branch' && vars.CI == 'full'
+    uses: ./.github/workflows/publish-build.yml
+    secrets: inherit
+    with:
+      title: "Snapshot #${{ github.run_number }} [${{ github.ref_name }}]"
+      tag: ${{ vars.SNAPSHOT_TAG }}
+      colour: 4360181
+      url: ${{ github.event.compare }}
+      message: ${{ vars.SNAPSHOT_MESSAGE }}
+      description: "```\n${{ join(github.event.commits.*.message, '\n```\n```\n') }}\n```"
+      # language=json
+      fields: |
+        [
+          {
+            "name": "Branch",
+            "value": "`${{ github.ref_name }}`",
+            "inline": true
+          },
+          {
+            "name": "Build Number",
+            "value": "#${{ github.run_number }}",
+            "inline": true
+          }
+        ]
