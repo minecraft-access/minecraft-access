@@ -11,8 +11,10 @@ jobs:
   build:
     name: Build
     if: >
-      github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'bedrock-breakers')
-      || github.event.action == 'labeled' && github.event.label.name == 'bedrock-breakers'
+      vars.CI == 'full' && (
+        github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'bedrock-breakers')
+        || github.event.action == 'labeled' && github.event.label.name == 'bedrock-breakers'
+      )
     uses: ./.github/workflows/build.yml
     with:
       ref: ${{ github.event.pull_request.merge_commit_sha || github.event.pull_request.head.sha }}

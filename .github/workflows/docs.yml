@@ -41,6 +41,7 @@ jobs:
           path: ./docs/public/
 
   deploy:
+    if: vars.CI == 'full'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
