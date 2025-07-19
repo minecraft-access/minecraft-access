@@ -16,6 +16,7 @@
     "BookViewScreenMixin",
     "ButtonMixin",
     "ChatComponentAccessor",
+    "ChatComponentMixin",
     "ChatScreenMixin",
     "CheckboxMixin",
     "ClientPacketListenerMixin",
