@@ -57,6 +57,12 @@ Sounds can be played by pressing the play button.
 |---------------------------------------------------------------------------------------|---------------------------------------------------------------------|
 | [Health], [hunger], [air], or [frost] reached the configured danger warning threshold | {{< wikiSound "Respawn_anchor_deplete1" >}} Shatter and woosh sound |
 
+### Chat
+
+| Description | Sound |
+|-|-|
+| Plays when sending or recieving a chat message | {{< wikiSound "Successful_hit" >}} Ding sound |
+
 ## Disclaimer
 
 Most sounds are taken from Minecraft and are property of Mojang,

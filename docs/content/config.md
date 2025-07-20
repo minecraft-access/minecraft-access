@@ -97,8 +97,8 @@ See also: [Feature Description]({{% relref "/features#inventory-controls" %}}), 
 
 ## Point of Interest
 
-| Configuration                           | Default Value | Description                                                 |
-|-----------------------------------------|---------------|-------------------------------------------------------------|
+| Configuration                           | Default Value | Description                                                                    |
+|-----------------------------------------|---------------|--------------------------------------------------------------------------------|
 | Speak Relative Distance to Entity/Block | false         | Speak relative distance to the target when using the object tracker or locking |
 
 See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
@@ -128,17 +128,17 @@ See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 
 ### Entities/Blocks Locking
 
-| Configuration                           | Default Value | Description                                                                                  |
-|-----------------------------------------|---------------|----------------------------------------------------------------------------------------------|
-| Enabled                                 | true          | Whether to enable this feature                                                               |
-| Lock on Blocks                          | true          | Enable lock on POI blocks as well, if false, only entities can be locked                     |
-| Play Sound                              | true          | Play a sound cue at positions of detected entities                                           |
-| Play Sound Instead Of Speak             | false         | Play a base drum sound cue on unlock instead of speak `unlock`                               |
-| Auto Lock on to Eye of Ender when Used  | true          | Automatically lock on to the [Eye of Ender](https://minecraft.wiki/w/Eye_of_Ender) when used |
-| Delay (in milliseconds)                 | 100           | Cooldown between two feature executions                                                      |
-| Bow aim assist                          | true          | Enable automatic temporary locking onto the nearest monster when using a bow                 |
-| Aim assist sound                        | true          | Enables audio cues for bow aim assist                                                        |
-| Aim assist sound volume                 | 0.5           | Controls the volume of the aim assist audio cues                                             |
+| Configuration                          | Default Value | Description                                                                                  |
+|----------------------------------------|---------------|----------------------------------------------------------------------------------------------|
+| Enabled                                | true          | Whether to enable this feature                                                               |
+| Lock on Blocks                         | true          | Enable lock on POI blocks as well, if false, only entities can be locked                     |
+| Play Sound                             | true          | Play a sound cue at positions of detected entities                                           |
+| Play Sound Instead Of Speak            | false         | Play a base drum sound cue on unlock instead of speak `unlock`                               |
+| Auto Lock on to Eye of Ender when Used | true          | Automatically lock on to the [Eye of Ender](https://minecraft.wiki/w/Eye_of_Ender) when used |
+| Delay (in milliseconds)                | 100           | Cooldown between two feature executions                                                      |
+| Bow aim assist                         | true          | Enable automatic temporary locking onto the nearest monster when using a bow                 |
+| Aim assist sound                       | true          | Enables audio cues for bow aim assist                                                        |
+| Aim assist sound volume                | 0.5           | Controls the volume of the aim assist audio cues                                             |
 
 ### Entities/Blocks Marking
 
@@ -220,13 +220,15 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybin
 | Speak Harvest Of Fishing             | true          | Whether to speak the harvest of fishing                                                                                                          |
 | Always Speak Picked Up Items         | false         | Whether to speak any items you pick up (this will also enable speaking of fishing harvests)                                                      |
 | Report Held Items Count When Changed | true          | Whether to report the number of held items when it changed                                                                                       |
+| Play a sound for new chat messages   | true          | Whether to play a sound when sending or recieving a chat message                                                                                 |
+| Chat message sound volume            | 0.5           | Volume of the new chat message sound                                                                                                             |
 
 ## General
 
 | Configuration                          | Default Value | Description                                                                                                                                                               |
 |----------------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Command Suggestion Narrator Format     | `%dx%d %s`    | The speaking format of the command suggestion, two `%d` represent the order of focused suggestion and total number of suggestions, `%s` represents the suggestion content |
-| Use 12 Hour Time Format                | false         | Whether to use 12 hour time format when speaking the time                                                                                                                 | 
+| Use 12 Hour Time Format                | false         | Whether to use 12 hour time format when speaking the time                                                                                                                 |
 | Enable Menu Fix                        | true          | Whether to enable [`Menu Fix`]({{% relref "/features#menu-fix" %}}) feature                                                                                               |
 | Debug Mode                             | true          | Developer config, whether to print debug messages into log                                                                                                                |
 | Multiple Click Speed (in milliseconds) | 750           | The maximum time interval between two keystrokes in multiple click operations like `double-click`                                                                         |

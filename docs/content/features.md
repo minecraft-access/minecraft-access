@@ -275,6 +275,10 @@ to open the [Social Interactions Screen](https://minecraft.wiki/w/Social_interac
 
 See also: [Keybindings]({{% relref "/keybindings#speak-chat-messages" %}})
 
+### Play a sound for new chat messages
+
+By default, the mod | will play a sound when sending or recieving a message in chat.
+
 ### Speak Action Bar Messages
 
 Messages shown in the form of the [action bar](https://minecraft.wiki/w/Commands/title) are common in modded multiplayer servers,
