@@ -52,16 +52,9 @@ public class NarrateHeldItem {
         StringBuilder itemName = new StringBuilder();
         itemName.append(itemStack.getHoverName().getString());
 
-        Optional<JukeboxPlayable> playableOpt = Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE));
-        if (playableOpt.isPresent()) {
-            Optional<ResourceKey<JukeboxSong>> songKeyOpt = playableOpt.get().song().key();
-            if (songKeyOpt.isPresent()) {
-                String songPath = songKeyOpt.get().location().getPath();
-                String translatedDiscName = I18n.get("jukebox_song.minecraft." + songPath);
-                itemName.append(" ")
-                        .append(translatedDiscName);
-            }
-        }
+        Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
+                .flatMap(jukeboxPlayable -> jukeboxPlayable.song().key())
+                .ifPresent(discNumber -> itemName.append(" ").append(I18n.get("jukebox_song.minecraft." + discNumber.location().getPath())));
 
         return itemName.toString();
     }
