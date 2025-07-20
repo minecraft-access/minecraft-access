@@ -4,6 +4,12 @@ title: "Changelog"
 
 <!-- INSERT CHANGELOG HERE -->
 
+## Release v1.10.2 (2025-07)
+### Bug Fixes
+- The "Your pets" POI group now uses the correct i18n string
+- Allays are now categorized as "passive" entities instead of falling through to the "other" category for sound queues and object tracking
+- Fixed an edge case where using the target nearest object feature would crash the game
+
 ## Release v1.10.1 (2025-07)
 ### New Features
 - A message will now be spoken if there is no valid object selected to lock onto in the POI tracker
