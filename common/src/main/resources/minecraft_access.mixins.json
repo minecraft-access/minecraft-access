@@ -30,7 +30,6 @@
     "GameModeSwitcherScreenMixin",
     "GameNarratorAccessor",
     "GameNarratorMixin",
-    "GuiAccessor",
     "GuiGraphicsMixin",
     "GuiMixin",
     "I18NAccessor",
