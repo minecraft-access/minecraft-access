@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+    <component name="ExternalDependencies">
+        <plugin id="CheckStyle-IDEA"/>
+        <plugin id="Git4Idea"/>
+        <plugin id="Lombook Plugin"/>
+        <plugin id="com.demonwav.minecraft-dev"/>
+        <plugin id="com.intellij.gradle"/>
+        <plugin id="com.intellij.grazie.pro"/>
+        <plugin id="com.intellij.java"/>
+        <plugin id="com.intellij.modules.json"/>
+        <plugin id="me.shedaniel.architectury"/>
+        <plugin id="org.editorconfig.editorconfigjetbrains"/>
+        <plugin id="org.intellij.plugins.markdown"/>
+        <plugin id="org.jetbrains.plugins.github"/>
+        <plugin id="tanvd.grazi"/>
+    </component>
+</project>
