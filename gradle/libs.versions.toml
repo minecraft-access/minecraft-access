@@ -23,8 +23,8 @@ jadeNeoForge = "maven.modrinth:jade:19.0.4+neoforge"
 lombok = "org.projectlombok:lombok:1.18.38"
 minecraft = "com.mojang:minecraft:1.21.8"
 modMenu = "com.terraformersmc:modmenu:15.0.0-beta.3"
-neoForge = "net.neoforged:neoforge:21.8.2-beta"
-parchment = "org.parchmentmc.data:parchment-1.21.8:2025.07.18"
+neoForge = "net.neoforged:neoforge:21.8.4-beta"
+parchment = "org.parchmentmc.data:parchment-1.21.8:2025.07.20"
 
 assertjCore = "org.assertj:assertj-core:3.27.3"
 jmhCore = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }

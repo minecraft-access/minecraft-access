@@ -1,12 +1,22 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Objects;
+import java.util.Optional;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.*;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
+import net.minecraft.client.gui.screens.inventory.AnvilScreen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.SearchRecipeBookCategory;
 import net.minecraft.client.resources.language.I18n;
@@ -22,18 +32,20 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.ExtendedRecipeBookCategory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.mixin.*;
+import org.mcaccess.minecraftaccess.mixin.AbstractContainerScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.AbstractRecipeBookScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.AnvilScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.CreativeModeInventoryScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.EditBoxAccessor;
+import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
+import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
-
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * This features lets us use keyboard in inventory screens. Works with all default minecraft screens.
@@ -489,7 +501,8 @@ public class InventoryControls {
 
         ItemStack itemStack = slot.getItem();
         // <slot row col prefix> <count>
-        String info = "%s %d".formatted(currentGroup.getSlotPrefix(slot), itemStack.getCount());
+        String info = "%s %s".formatted(currentGroup.getSlotPrefix(slot),
+                (itemStack.getCount() != 1 && !itemStack.isEmpty()) ? String.valueOf(itemStack.getCount()) : "");
 
         // <name> <description>
         StringBuilder toolTipString = new StringBuilder();
@@ -607,7 +620,6 @@ public class InventoryControls {
             boolean origin = ((EditBoxAccessor) w).getCanLoseFocus();
             w.setCanLoseFocus(true);
             w.setFocused(false);
-            // set origin value back since we don't know what it is and don't want to screw up the inner state.
             w.setCanLoseFocus(origin);
         }
     }
