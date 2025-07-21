@@ -3,9 +3,8 @@ package org.mcaccess.minecraftaccess.features;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.item.ItemStack;
+
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -31,10 +30,6 @@ public class PlayerStatus {
         Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient.player == null) return;
         if (minecraftClient.screen != null) return;
-
-        while (KeyBindingsHandler.narrateHeldItemKey.consumeClick()) {
-            narrateHeldItem(Screen.hasAltDown());
-        }
 
         if (narrationKey.canBeTriggered()) {
             if (Screen.hasControlDown()) {
@@ -102,28 +97,5 @@ public class PlayerStatus {
         }
 
         return narration;
-    }
-
-    private void narrateHeldItem(boolean hasAltDown) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        String hand;
-        ItemStack heldItem;
-        String heldItemName;
-
-        if (!hasAltDown) {
-            hand = I18n.get("options.mainHand");
-            heldItem = player.getMainHandItem();
-        } else {
-            hand = I18n.get("minecraft_access.other.offhand");
-            heldItem = player.getOffhandItem();
-        }
-
-        if (!heldItem.isEmpty()) {
-            heldItemName = heldItem.getItemName().getString();
-        } else {
-            heldItemName = I18n.get("minecraft_access.read_crosshair.spawner_empty");
-        }
-
-        MainClass.narrate("%s: %s".formatted(hand, heldItemName), false);
     }
 }
