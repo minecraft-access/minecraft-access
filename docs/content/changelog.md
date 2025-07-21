@@ -4,6 +4,14 @@ title: "Changelog"
 
 <!-- INSERT CHANGELOG HERE -->
 
+## Release v1.10.3 (2025-07)
+### New Features
+- Update to 1.21.8
+
+### Feature Updates
+- If items have a stack size of 1, the inventory number narration is now suppressed to match sighted information
+- The narrate held item key now uses the same logic for narration of item names as when you select them in your hotbar (including stack size and music disc name)
+
 ## Release v1.10.2 (2025-07)
 ### Bug Fixes
 - The "Your pets" POI group now uses the correct i18n string
