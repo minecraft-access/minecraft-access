@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
  * placeholders makes translators know the context better.
  * ref: <a href="https://codereview.stackexchange.com/a/194454">source</a>
  */
-public class NamedFormatter {
+public final class NamedFormatter {
     private static final Pattern RE = Pattern.compile(
             "\\\\(.)" + // Treat any character after a backslash literally
-                    "|" +
+                    '|' +
                     "(\\{([^)]+?)})"  // Look for {keys} to replace, "?" for non-greedy
     );
 
@@ -19,21 +19,21 @@ public class NamedFormatter {
     }
 
     /**
-     * Expands format strings containing <code>{keys}</code>.
+     * Expands format strings containing {@code {keys}}.
      *
      * <p>Examples:</p>
      *
      * <ul>
-     * <li><code>NamedFormatter.format("Hello, {name}!", Map.of("name", "200_success"))</code> → <code>"Hello, 200_success!"</code></li>
-     * <li><code>NamedFormatter.format("Hello, \{name}!", Map.of("name", "200_success"))</code> → <code>"Hello, {name}!"</code></li>
-     * <li><code>NamedFormatter.format("Hello, {name}!", Map.of("foo", "bar"))</code> → <code>"Hello, {name}!"</code></li>
+     * <li>{@code NamedFormatter.format("Hello, {name}!", Map.of("name", "200_success"))} → {@code "Hello, 200_success!"}</li>
+     * <li>{@code NamedFormatter.format("Hello, \{name}!", Map.of("name", "200_success"))} → {@code "Hello, {name}!"}</li>
+     * <li>{@code NamedFormatter.format("Hello, {name}!", Map.of("foo", "bar"))} → {@code "Hello, {name}!"}</li>
      * </ul>
      *
      * @param fmt    The format string.  Any character in the format string that
      *               follows a backslash is treated literally.  Any
-     *               <code>{key}</code> is replaced by its corresponding value
-     *               in the <code>values</code> map.  If the key does not exist
-     *               in the <code>values</code> map, then it is left unsubstituted.
+     *               {@code {key}} is replaced by its corresponding value
+     *               in the {@code values} map.  If the key does not exist
+     *               in the {@code values} map, then it is left unsubstituted.
      * @param values Key-value pairs to be used in the substitutions.
      * @return The formatted string.
      */

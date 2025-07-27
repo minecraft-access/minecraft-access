@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 
@@ -9,6 +10,7 @@ import net.minecraft.world.phys.Vec3;
  * See also: {@link NonCubeBlockAbsolutePositions}
  */
 public class BlockPos3d extends BlockPos {
+    @Getter
     private final Vec3 accuratePosition;
 
     public BlockPos3d(Vec3 position) {
@@ -28,9 +30,5 @@ public class BlockPos3d extends BlockPos {
 
     public static BlockPos3d of(BlockPos position) {
         return new BlockPos3d(position);
-    }
-
-    public Vec3 getAccuratePosition() {
-        return accuratePosition;
     }
 }

@@ -31,22 +31,22 @@ public class DoubleClick extends TimedKeystroke {
     public void updateStateForNextTick() {
         hasKeyPressed = isPressing();
 
-        boolean waitingTooLong = this.interval.isReady();
+        boolean waitingTooLong = interval.isReady();
         if (waitingTooLong || canBeTriggered()) {
-            this.triggeredCount = 0;
+            triggeredCount = 0;
             return;
         }
 
         // count as one valid keystroke
-        if (this.timing.happen(this)) {
-            this.triggeredCount += 1;
-            this.interval.reset();
+        if (timing.happen(this)) {
+            triggeredCount += 1;
+            interval.reset();
         }
     }
 
     @Override
     protected boolean otherTriggerConditions() {
         // triggered at the second keystroke
-        return this.triggeredCount == 1;
+        return triggeredCount == 1;
     }
 }

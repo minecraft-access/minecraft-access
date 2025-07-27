@@ -1,26 +1,30 @@
 package org.mcaccess.minecraftaccess.utils.system;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.Minecraft;
-import org.lwjgl.glfw.GLFW;
-import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
-
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
+import org.lwjgl.glfw.GLFW;
+
+import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
+
 /**
  * Contains functions to simulate mouse events.
  */
 @Slf4j
-public class MouseUtils {
+public final class MouseUtils {
     /**
      * The {@link Minecraft} is singleton and {@link Minecraft#window} only be initialized once in constructor,
      * so this is safe to cache it.
      */
     private static long windowPointer = 0;
+
+    private MouseUtils() {
+    }
 
     public static void moveAndLeftClick(int x, int y) {
         move(x, y);
@@ -30,7 +34,7 @@ public class MouseUtils {
                 // with a little bit of waiting, everything is ok now.
                 // I've tried to set the value to 10, and it doesn't always work, 20 is fine.
                 TimeUnit.MILLISECONDS.sleep(20);
-            } catch (Exception ignored) {
+            } catch (InterruptedException ignored) {
             }
         }
         Key.LEFT.click();
@@ -42,6 +46,10 @@ public class MouseUtils {
         getMouseHandler().invokeOnMove(getWindowPointer(), x, y);
     }
 
+    public static void move(Coordinates coordinates) {
+        move(coordinates.x(), coordinates.y());
+    }
+
     public static void moveAfterDelay(int x, int y, int delayInMillSecs) {
         new Timer().schedule(new TimerTask() {
             @Override
@@ -51,18 +59,11 @@ public class MouseUtils {
         }, delayInMillSecs);
     }
 
-    public record Coordinates(int x, int y) {
-    }
-
     public static Coordinates calcRealPositionOfWidget(int x, int y) {
         double scale = Minecraft.getInstance().getWindow().getGuiScale();
         int realX = (int) (x * scale);
         int realY = (int) (y * scale);
         return new Coordinates(realX, realY);
-    }
-
-    public static void move(Coordinates coordinates) {
-        move(coordinates.x(), coordinates.y());
     }
 
     public static void performAt(int x, int y, Consumer<Coordinates> consumer) {
@@ -78,6 +79,9 @@ public class MouseUtils {
             windowPointer = Minecraft.getInstance().getWindow().getWindow();
         }
         return windowPointer;
+    }
+
+    public record Coordinates(int x, int y) {
     }
 
     public enum Key {
@@ -121,7 +125,7 @@ public class MouseUtils {
         public void scroll() {
             log.debug("Mouse {} scrolled", this);
             // captured real mouse scrolling always results in x=0, y=1/-1
-            int offset = this == Wheel.UP ? 1 : -1;
+            int offset = this == UP ? 1 : -1;
             getMouseHandler().invokeOnScroll(getWindowPointer(), 0, offset);
         }
     }

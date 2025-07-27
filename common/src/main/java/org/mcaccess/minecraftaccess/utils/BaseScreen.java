@@ -29,12 +29,13 @@ public class BaseScreen extends Screen {
 
     @Override
     protected void init() {
-        this.centerX = this.width / 2;
-        this.buttonHeight = 20;
-        this.marginY = buttonHeight + buttonHeight / 4;
-        this.calculatedYPosition = this.height / 6 - marginY; // Starting Y position (marginY will again be added in buildButtonWidget() so it is subtracted here to equate)
-        this.leftColumnX = 10;
-        this.rightColumnX = centerX + 10;
+        centerX = width / 2;
+        buttonHeight = 20;
+        marginY = buttonHeight + buttonHeight / 4;
+        // Starting Y position (marginY will again be added in buildButtonWidget() so it is subtracted here to equate)
+        calculatedYPosition = height / 6 - marginY;
+        leftColumnX = 10;
+        rightColumnX = centerX + 10;
         shouldRenderInLeftColumn = true;
     }
 
@@ -43,14 +44,14 @@ public class BaseScreen extends Screen {
     }
 
     protected Button buildButtonWidget(String translationKeyOrText, Button.OnPress pressAction, boolean shouldRenderInSeparateRow) {
-        String buttonText = I18n.exists(translationKeyOrText) ? I18n.get((translationKeyOrText)) : translationKeyOrText;
-        int calculatedButtonWidth = this.font.width(buttonText) + 35;
+        String buttonText = I18n.exists(translationKeyOrText) ? I18n.get(translationKeyOrText) : translationKeyOrText;
+        int calculatedButtonWidth = font.width(buttonText) + 35;
         if (shouldRenderInSeparateRow) {
             calculatedXPosition = centerX - calculatedButtonWidth / 2;
             calculatedYPosition += marginY;
             shouldRenderInLeftColumn = true;
         } else {
-            calculatedXPosition = (shouldRenderInLeftColumn) ? leftColumnX : rightColumnX;
+            calculatedXPosition = shouldRenderInLeftColumn ? leftColumnX : rightColumnX;
             if (shouldRenderInLeftColumn) calculatedYPosition += marginY;
             shouldRenderInLeftColumn = !shouldRenderInLeftColumn;
         }
@@ -62,7 +63,7 @@ public class BaseScreen extends Screen {
 
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        context.drawCenteredString(this.font, this.title, this.width / 2, 15, 0xffffffff);
+        context.drawCenteredString(font, title, width / 2, 15, 0xffffffff);
         super.render(context, mouseX, mouseY, delta);
     }
 }

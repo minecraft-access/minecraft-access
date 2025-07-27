@@ -1,16 +1,18 @@
 package org.mcaccess.minecraftaccess.features;
 
+import java.time.Clock;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import org.mcaccess.minecraftaccess.Config;
 
-import java.time.Clock;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import org.mcaccess.minecraftaccess.Config;
 
 @Slf4j
 public class FallDetector {
@@ -45,18 +47,18 @@ public class FallDetector {
         previousTimeInMillis = currentTimeInMillis;
 
         log.trace("Searching for fall in nearby area...");
-        SearchNearbyPositions();
+        searchNearbyPositions();
         log.trace("Searching ended");
     }
 
-    private void SearchNearbyPositions() {
+    private void searchNearbyPositions() {
         if (minecraftClient.level == null) return;
         BlockPos center = minecraftClient.player.blockPosition();
 
         Queue<BlockPos> toSearch = new LinkedList<>();
-        HashSet<BlockPos> searched = new HashSet<>();
-        int[] dirX = {-1, 0, 1, 0};
-        int[] dirZ = {0, 1, 0, -1};
+        Set<BlockPos> searched = new HashSet<>();
+        int[] dirX = new int[]{-1, 0, 1, 0};
+        int[] dirZ = new int[]{0, 1, 0, -1};
         count = 0;
 
         toSearch.add(center);
@@ -77,16 +79,19 @@ public class FallDetector {
         }
     }
 
-    private boolean isValid(BlockPos dir, BlockPos center, HashSet<BlockPos> searched) {
-        if (Math.abs(dir.getX() - center.getX()) > config.range)
+    private boolean isValid(BlockPos dir, BlockPos center, Set<BlockPos> searched) {
+        if (Math.abs(dir.getX() - center.getX()) > config.range) {
             return false;
+        }
 
-        if (Math.abs(dir.getZ() - center.getZ()) > config.range)
+        if (Math.abs(dir.getZ() - center.getZ()) > config.range) {
             return false;
+        }
 
         //noinspection RedundantIfStatement
-        if (searched.contains(dir))
+        if (searched.contains(dir)) {
             return false;
+        }
 
         return true;
     }
@@ -96,16 +101,18 @@ public class FallDetector {
 
         if (getDepth(toCheck, config.depth) < config.depth) return;
 
-        log.debug("{}) Found qualified fall position: x:{} y:{} z:{}", ++count, toCheck.getX(), toCheck.getY(), toCheck.getZ());
-        minecraftClient.level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, config.volume, 1f, true);
+        ++count;
+        log.debug("{}) Found qualified fall position: x:{} y:{} z:{}", count, toCheck.getX(), toCheck.getY(), toCheck.getZ());
+        minecraftClient.level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, config.volume, 1.0f, true);
     }
 
     private int getDepth(BlockPos blockPos, int maxDepth) {
-        if (maxDepth <= 0)
+        if (maxDepth <= 0) {
             return 0;
+        }
 
         if (!(minecraftClient.level.getBlockState(blockPos).isAir())) return 0;
 
-        return 1 + getDepth(blockPos.below(), --maxDepth);
+        return 1 + getDepth(blockPos.below(), maxDepth - 1);
     }
 }

@@ -1,12 +1,12 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-
-import net.minecraft.core.BlockPos;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import net.minecraft.core.BlockPos;
+
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 /**
  * @implNote uses DFS algorithm

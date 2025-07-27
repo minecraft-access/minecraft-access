@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.features;
 
+import java.util.Objects;
+
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -21,7 +23,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 @Slf4j
 public class PlayerStatus {
     IntervalKeystroke narrationKey = new IntervalKeystroke(
-            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().narratePlayerStatusKey),
+            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.NARRATE_PLAYER_STATUS_KEY.mapping),
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
             Interval.ms(3000));
@@ -47,55 +49,71 @@ public class PlayerStatus {
             double maxAir = Math.round((minecraftClient.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
             double frostExposurePercent = Math.round((minecraftClient.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
 
-            boolean isStatusKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().narratePlayerStatusKey);
-
-            String narration = "";
+            StringBuilder narration = new StringBuilder();
 
             if (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()) {
                 if (!Screen.hasAltDown()) {
                     if (absorption > 0) {
-                        narration += I18n.get("minecraft_access.player_status.base_with_absorption", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(absorption), NarrationUtils.narrateNumber(maxHealth), NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger), NarrationUtils.narrateNumber(armor));
+                        narration.append(I18n.get(
+                                "minecraft_access.player_status.base_with_absorption",
+                                NarrationUtils.narrateNumber(health),
+                                NarrationUtils.narrateNumber(absorption),
+                                NarrationUtils.narrateNumber(maxHealth),
+                                NarrationUtils.narrateNumber(hunger),
+                                NarrationUtils.narrateNumber(maxHunger),
+                                NarrationUtils.narrateNumber(armor))
+                        );
                     } else {
-                        narration += I18n.get("minecraft_access.player_status.base", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth), NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger), NarrationUtils.narrateNumber(armor));
+                        narration.append(I18n.get(
+                                "minecraft_access.player_status.base",
+                                NarrationUtils.narrateNumber(health),
+                                NarrationUtils.narrateNumber(maxHealth),
+                                NarrationUtils.narrateNumber(hunger),
+                                NarrationUtils.narrateNumber(maxHunger),
+                                NarrationUtils.narrateNumber(armor))
+                        );
                     }
                 }
 
                 if ((minecraftClient.player.isUnderWater() || minecraftClient.player.getAirSupply() < minecraftClient.player.getMaxAirSupply()) && !minecraftClient.player.canBreatheUnderwater()) {
                     air = Math.max(air, 0.0);
-                    narration += I18n.get("minecraft_access.player_status.air", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir));
+                    narration.append(I18n.get("minecraft_access.player_status.air", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir)));
                 }
 
-                if ((minecraftClient.player.isInPowderSnow || frostExposurePercent > 0) && minecraftClient.player.canFreeze())
-                    narration += I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent));
+                if ((minecraftClient.player.isInPowderSnow || frostExposurePercent > 0) && minecraftClient.player.canFreeze()) {
+                    narration.append(I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent)));
+                }
             }
 
-            if (narration.isEmpty() && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()))
-                narration += I18n.get("minecraft_access.player_status.no_conditional_status");
+            if (narration.isEmpty() && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure())) {
+                narration.append(I18n.get("minecraft_access.player_status.no_conditional_status"));
+            }
 
-            if (!narration.equals(I18n.get("minecraft_access.player_status.no_conditional_status")))
-                narration = addGameMode(narration);
+            if (!Objects.equals(narration.toString(), I18n.get("minecraft_access.player_status.no_conditional_status"))) {
+                addGameMode(narration);
+            }
 
-            MainClass.narrate(narration, true);
+            MainClass.narrate(narration.toString(), true);
         }
         narrationKey.updateStateForNextTick();
     }
 
-    public String addGameMode(String narration) {
-        if (!narration.isEmpty())
-            narration += I18n.get("minecraft_access.other.words_connection");
+    public void addGameMode(StringBuilder narration) {
+        if (!narration.isEmpty()) {
+            narration.append(I18n.get("minecraft_access.other.words_connection"));
+        }
 
-        narration += switch (Minecraft.getInstance().gameMode.getPlayerMode()) {
+        narration.append(switch (Minecraft.getInstance().gameMode.getPlayerMode()) {
             case SURVIVAL -> PlayerUtils.isHardCore() ? I18n.get("gameMode.hardcore") : I18n.get("gameMode.survival");
             case CREATIVE -> I18n.get("gameMode.creative");
             case SPECTATOR -> I18n.get("gameMode.spectator");
             case ADVENTURE -> I18n.get("gameMode.adventure");
-        };
+        });
 
         //  If the player is in a hard core world but a different game mode
         if (PlayerUtils.isHardCore() && !PlayerUtils.isSurvival()) {
-            narration += " " + I18n.get("options.difficulty.hardcore");
+            narration.append(' ')
+                    .append(I18n.get("options.difficulty.hardcore"));
         }
-
-        return narration;
     }
 }

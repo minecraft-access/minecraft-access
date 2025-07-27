@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -36,7 +37,7 @@ public class POIMarking {
         if (Config.getInstance().poi.marking.enabled) {
             boolean controlPressed = Screen.hasControlDown();
             boolean altPressed = Screen.hasAltDown();
-            boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
+            boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping);
 
             if (lockingKeyPressed && altPressed && controlPressed) {
                 unmark();

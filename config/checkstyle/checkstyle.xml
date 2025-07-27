@@ -7,6 +7,10 @@
     <module name="SuppressionFilter">
         <property name="file" value="${config_loc}/suppressions.xml"/>
     </module>
+    <module name="SuppressWarningsFilter"/>
+    <module name="TreeWalker">
+        <module name="SuppressWarningsHolder"/>
+    </module>
     <module name="FileLength"/>
     <module name="FileTabCharacter"/>
     <module name="LineLength">
@@ -54,7 +58,6 @@
         <module name="JavadocMissingLeadingAsterisk"/>
         <module name="JavadocMissingWhitespaceAfterAsterisk"/>
         <module name="JavadocTagContinuationIndentation"/>
-        <module name="JavadocType"/>
         <module name="MissingOverride"/>
         <module name="ModifiedControlVariable"/>
         <module name="ModifierOrder"/>
@@ -122,7 +125,7 @@
         <module name="IllegalThrows"/>
         <module name="ImportOrder">
             <property name="groups" value="/^javax?\./,*,org.mcaccess."/>
-            <property name="option" value="under"/>
+            <property name="option" value="bottom"/>
             <property name="separated" value="true"/>
             <property name="sortStaticImportsAlphabetically" value="true"/>
         </module>
@@ -131,7 +134,6 @@
         <module name="InterfaceIsType"/>
         <module name="InterfaceTypeParameterName"/>
         <module name="JavaNCSS"/>
-        <module name="LambdaBodyLength"/>
         <module name="LambdaParameterName"/>
         <module name="LeftCurly">
             <property name="ignoreEnums" value="false"/>
@@ -149,7 +151,9 @@
         <module name="NestedTryDepth"/>
         <module name="NoLineWrap"/>
         <module name="NoWhitespaceAfter"/>
-        <module name="NoWhitespaceBefore"/>
+        <module name="NoWhitespaceBefore">
+            <property name="tokens" value="COMMA, SEMI, POST_INC, POST_DEC, LABELED_STAT"/>
+        </module>
         <module name="NoWhitespaceBeforeCaseDefaultColon"/>
         <module name="OperatorWrap"/>
         <module name="OverloadMethodsDeclarationOrder"/>
@@ -164,7 +168,9 @@
         <module name="RequireEmptyLineBeforeBlockTagGroup"/>
         <module name="RightCurly"/>
         <module name="SealedShouldHavePermitsList"/>
-        <module name="SeparatorWrap"/>
+        <module name="SeparatorWrap">
+            <property name="tokens" value="COMMA, SEMI, ELLIPSIS, ARRAY_DECLARATOR, RBRACK"/>
+        </module>
         <module name="SingleLineJavadoc">
             <property name="ignoreInlineTags" value="false"/>
         </module>
@@ -175,7 +181,6 @@
         <module name="UnnecessarySemicolonInEnumeration"/>
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround">
-            <property name="allowEmptyConstructors" value="true"/>
             <property name="allowEmptyLambdas" value="true"/>
         </module>
     </module>
@@ -184,6 +189,7 @@
         <module name="JavadocMethod"/>
         <module name="JavadocParagraph"/>
         <module name="JavadocStyle"/>
+        <module name="JavadocType"/>
         <module name="VariableDeclarationUsageDistance"/>
     </module>
 </module>

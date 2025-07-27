@@ -1,12 +1,13 @@
 package org.mcaccess.minecraftaccess.benchmarks;
 
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+
+import org.openjdk.jmh.Main;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
-
-import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 /**
  * Should I imperatively avoid using streams when the input has only one element for checking key is pressed?
@@ -29,22 +30,22 @@ import java.util.stream.IntStream;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class OptimizeForCheckingKeyIsPressed {
-    private static final int[] keyCode = new int[]{0};
+    private static final int[] KEYCODE = new int[]{0};
 
     public static void main(String[] args) throws Exception {
-        org.openjdk.jmh.Main.main(args);
+        Main.main(args);
     }
 
     @Benchmark
     public boolean useStreamForOneElement() {
         int handle = 1;
-        return IntStream.of(keyCode).anyMatch(c -> mockIsKeyPressed(handle, c));
+        return IntStream.of(KEYCODE).anyMatch(c -> mockIsKeyPressed(handle, c));
     }
 
     @Benchmark
     public boolean notUseStreamForOneElement() {
         int handle = 1;
-        return mockIsKeyPressed(handle, keyCode[0]);
+        return mockIsKeyPressed(handle, KEYCODE[0]);
     }
 
     private static boolean mockIsKeyPressed(int handle, int code) {

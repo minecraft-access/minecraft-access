@@ -22,7 +22,7 @@ public class NarrateHeldItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        while (KeyBindingsHandler.narrateHeldItemKey.consumeClick()) {
+        while (KeyBindingsHandler.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
             narrateHand(Screen.hasAltDown());
         }
 
@@ -58,7 +58,7 @@ public class NarrateHeldItem {
 
         Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
                 .flatMap(jukeboxPlayable -> jukeboxPlayable.song().key())
-                .ifPresent(discNumber -> itemName.append(" ").append(I18n.get("jukebox_song.minecraft." + discNumber.location().getPath())));
+                .ifPresent(discNumber -> itemName.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.location().getPath())));
 
         return itemName.toString();
     }

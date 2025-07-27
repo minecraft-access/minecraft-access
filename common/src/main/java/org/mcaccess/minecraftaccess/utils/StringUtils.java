@@ -4,12 +4,17 @@ import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class StringUtils {
+public final class StringUtils {
+    private StringUtils() {
+    }
 
     public static String getLineTextWhereTheCursorIsLocatedIn(String whole, int cursor) {
         // ref: https://stackoverflow.com/questions/5034442/indexes-of-all-occurrences-of-character-in-a-string
         String lineSeparator = "\n";
-        int index = whole.indexOf(lineSeparator), previousIndex = 0, start = 0, end = whole.length();
+        int index = whole.indexOf(lineSeparator);
+        int previousIndex = 0;
+        int start = 0;
+        int end = whole.length();
 
         // for example whole="\na", cursor=0
         if (cursor == 0 && index == 0) return "";
@@ -34,7 +39,6 @@ public class StringUtils {
         }
         return whole.substring(start, end);
     }
-
 
     /**
      * Comma first, then whitespaces.

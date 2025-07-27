@@ -1,20 +1,112 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.mcaccess.minecraftaccess.test_utils.MockKeystrokeAction;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import org.mcaccess.minecraftaccess.test_utils.MockKeystrokeAction;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class KeystrokeTest {
+    private static void checkPressing(MockKeystrokeAction keystroke, boolean expected, Function<Keystroke, Boolean> actual) {
+        checkPressing(keystroke,
+                k -> assertThat(actual.apply(k)).isEqualTo(expected),
+                k -> assertThat(actual.apply(k))
+                        .as("keystroke condition should be reverted")
+                        .isEqualTo(!expected));
+    }
+
+    private static void checkPressing(MockKeystrokeAction keystroke, Consumer<Keystroke> trueAssertion, Consumer<Keystroke> falseAssertion) {
+        Keystroke k = new Keystroke(keystroke.supplier, Keystroke.TriggeredAt.PRESSING);
+
+        trueAssertion.accept(k);
+        k.updateStateForNextTick();
+
+        keystroke.revertKeystrokeResult();
+        falseAssertion.accept(k);
+        k.updateStateForNextTick();
+
+        keystroke.revertKeystrokeResult();
+        trueAssertion.accept(k);
+    }
+
+    private static void checkNotPressing(MockKeystrokeAction keystroke, boolean expected, Function<Keystroke, Boolean> actual) {
+        checkNotPressing(keystroke,
+                k -> assertThat(actual.apply(k))
+                        .as("keystroke condition should be reverted")
+                        .isEqualTo(expected),
+                k -> assertThat(actual.apply(k)).isEqualTo(!expected));
+    }
+
+    private static void checkNotPressing(MockKeystrokeAction keystroke, Consumer<Keystroke> trueAssertion, Consumer<Keystroke> falseAssertion) {
+        Keystroke k = new Keystroke(keystroke.supplier, Keystroke.TriggeredAt.NOT_PRESSING);
+
+        falseAssertion.accept(k);
+        k.updateStateForNextTick();
+
+        keystroke.revertKeystrokeResult();
+        trueAssertion.accept(k);
+        k.updateStateForNextTick();
+
+        keystroke.revertKeystrokeResult();
+        falseAssertion.accept(k);
+    }
+
+    private static void checkReleased(MockKeystrokeAction keystroke, boolean expected, Function<Keystroke, Boolean> actual) {
+        checkReleased(keystroke,
+                k -> assertThat(actual.apply(k))
+                        .as("originally pressed key should be released now, vice versa")
+                        .isEqualTo(expected),
+                k -> assertThat(actual.apply(k)).isEqualTo(!expected));
+    }
+
+    private static void checkReleased(MockKeystrokeAction keystroke, Consumer<Keystroke> trueAssertion, Consumer<Keystroke> falseAssertion) {
+        Keystroke k = new Keystroke(keystroke.supplier, Keystroke.TriggeredAt.RELEASED);
+
+        // tick 0
+        k.updateStateForNextTick();
+
+        // tick 1
+        keystroke.revertKeystrokeResult();
+        trueAssertion.accept(k);
+        k.updateStateForNextTick();
+
+        // tick 2
+        keystroke.revertKeystrokeResult();
+        falseAssertion.accept(k);
+    }
+
+    private static void checkPressed(MockKeystrokeAction keystroke, boolean expected, Function<Keystroke, Boolean> actual) {
+        checkPressed(keystroke,
+                k -> assertThat(actual.apply(k))
+                        .as("originally released key should be pressed now, vice versa")
+                        .isEqualTo(!expected),
+                k -> assertThat(actual.apply(k)).isEqualTo(expected));
+    }
+
+    private static void checkPressed(MockKeystrokeAction keystroke, Consumer<Keystroke> trueAssertion, Consumer<Keystroke> falseAssertion) {
+        Keystroke k = new Keystroke(keystroke.supplier);
+
+        // tick 0
+        k.updateStateForNextTick();
+
+        // tick 1
+        keystroke.revertKeystrokeResult();
+        trueAssertion.accept(k);
+        k.updateStateForNextTick();
+
+        // tick 2
+        keystroke.revertKeystrokeResult();
+        falseAssertion.accept(k);
+    }
 
     static class InitKeystrokeConditionSameAsExpected implements ArgumentsProvider {
         @Override
@@ -148,97 +240,5 @@ class KeystrokeTest {
                     },
                     k -> assertThat(k.canBeTriggered()).isEqualTo(expected));
         }
-    }
-
-    private static void checkPressing(MockKeystrokeAction keystroke, boolean expected, Function<Keystroke, Boolean> actual) {
-        checkPressing(keystroke,
-                k -> assertThat(actual.apply(k)).isEqualTo(expected),
-                k -> assertThat(actual.apply(k))
-                        .as("keystroke condition should be reverted")
-                        .isEqualTo(!expected));
-    }
-
-    private static void checkPressing(MockKeystrokeAction keystroke, Consumer<Keystroke> trueAssertion, Consumer<Keystroke> falseAssertion) {
-        Keystroke k = new Keystroke(keystroke.supplier, Keystroke.TriggeredAt.PRESSING);
-
-        trueAssertion.accept(k);
-        k.updateStateForNextTick();
-
-        keystroke.revertKeystrokeResult();
-        falseAssertion.accept(k);
-        k.updateStateForNextTick();
-
-        keystroke.revertKeystrokeResult();
-        trueAssertion.accept(k);
-    }
-
-    private static void checkNotPressing(MockKeystrokeAction keystroke, boolean expected, Function<Keystroke, Boolean> actual) {
-        checkNotPressing(keystroke,
-                k -> assertThat(actual.apply(k))
-                        .as("keystroke condition should be reverted")
-                        .isEqualTo(expected),
-                k -> assertThat(actual.apply(k)).isEqualTo(!expected));
-    }
-
-    private static void checkNotPressing(MockKeystrokeAction keystroke, Consumer<Keystroke> trueAssertion, Consumer<Keystroke> falseAssertion) {
-        Keystroke k = new Keystroke(keystroke.supplier, Keystroke.TriggeredAt.NOT_PRESSING);
-
-        falseAssertion.accept(k);
-        k.updateStateForNextTick();
-
-        keystroke.revertKeystrokeResult();
-        trueAssertion.accept(k);
-        k.updateStateForNextTick();
-
-        keystroke.revertKeystrokeResult();
-        falseAssertion.accept(k);
-    }
-
-    private static void checkReleased(MockKeystrokeAction keystroke, boolean expected, Function<Keystroke, Boolean> actual) {
-        checkReleased(keystroke,
-                k -> assertThat(actual.apply(k))
-                        .as("originally pressed key should be released now, vice versa")
-                        .isEqualTo(expected),
-                k -> assertThat(actual.apply(k)).isEqualTo(!expected));
-    }
-
-    private static void checkReleased(MockKeystrokeAction keystroke, Consumer<Keystroke> trueAssertion, Consumer<Keystroke> falseAssertion) {
-        Keystroke k = new Keystroke(keystroke.supplier, Keystroke.TriggeredAt.RELEASED);
-
-        // tick 0
-        k.updateStateForNextTick();
-
-        // tick 1
-        keystroke.revertKeystrokeResult();
-        trueAssertion.accept(k);
-        k.updateStateForNextTick();
-
-        // tick 2
-        keystroke.revertKeystrokeResult();
-        falseAssertion.accept(k);
-    }
-
-    private static void checkPressed(MockKeystrokeAction keystroke, boolean expected, Function<Keystroke, Boolean> actual) {
-        checkPressed(keystroke,
-                k -> assertThat(actual.apply(k))
-                        .as("originally released key should be pressed now, vice versa")
-                        .isEqualTo(!expected),
-                k -> assertThat(actual.apply(k)).isEqualTo(expected));
-    }
-
-    private static void checkPressed(MockKeystrokeAction keystroke, Consumer<Keystroke> trueAssertion, Consumer<Keystroke> falseAssertion) {
-        Keystroke k = new Keystroke(keystroke.supplier);
-
-        // tick 0
-        k.updateStateForNextTick();
-
-        // tick 1
-        keystroke.revertKeystrokeResult();
-        trueAssertion.accept(k);
-        k.updateStateForNextTick();
-
-        // tick 2
-        keystroke.revertKeystrokeResult();
-        falseAssertion.accept(k);
     }
 }

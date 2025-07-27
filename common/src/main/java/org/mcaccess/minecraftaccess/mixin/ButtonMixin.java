@@ -13,6 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ButtonMixin {
     @Inject(at = @At("HEAD"), method = "updateWidgetNarration", cancellable = true) // From 1.19.3
     private void appendNarrations(NarrationElementOutput builder, CallbackInfo callbackInfo) {
-        if(Minecraft.getInstance().screen instanceof MerchantScreen) callbackInfo.cancel();
+        if (Minecraft.getInstance().screen instanceof MerchantScreen) callbackInfo.cancel();
     }
 }

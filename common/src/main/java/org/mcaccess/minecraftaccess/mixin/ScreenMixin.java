@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
     @Unique
-    Logger mca$log = LoggerFactory.getLogger("org.mcaccess.minecraftaccess.mixin.ScreenMixin");
+    private static final Logger LOG = LoggerFactory.getLogger("org.mcaccess.minecraftaccess.mixin.ScreenMixin");
 
     @WrapOperation(method = "keyPressed",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;changeFocus(Lnet/minecraft/client/gui/ComponentPath;)V"))
     private void debugLogFocusedComponent(Screen instance, ComponentPath path, Operation<Void> original) {
-        mca$log.debug("Focus on path: {}", path);
+        LOG.debug("Focus on path: {}", path);
         original.call(instance, path);
     }
 }

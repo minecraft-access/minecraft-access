@@ -12,7 +12,7 @@ public class Interval {
 
     protected Interval(long lastRunTime, long delayInNanoTime) {
         this.lastRunTime = lastRunTime;
-        this.delay = delayInNanoTime;
+        delay = delayInNanoTime;
     }
 
     /**
@@ -20,7 +20,7 @@ public class Interval {
      */
     public static Interval ms(long delay) {
         // 1 milliseconds = 1*10^6 nanoseconds
-        return new Interval(System.nanoTime(), Unit.Millisecond.toNano(delay));
+        return new Interval(System.nanoTime(), Unit.MILLISECOND.toNano(delay));
     }
 
     /**
@@ -28,14 +28,14 @@ public class Interval {
      */
     public static Interval sec(long delay) {
         // 1 seconds = 1*10^9 nanoseconds
-        return new Interval(System.nanoTime(), Unit.Second.toNano(delay));
+        return new Interval(System.nanoTime(), Unit.SECOND.toNano(delay));
     }
 
     /**
      * Use the value of {@link Config#multipleClickSpeedMilliseconds} as delay
      */
     public static Interval defaultDelay() {
-        return Interval.ms(Config.getInstance().multipleClickSpeedMilliseconds);
+        return ms(Config.getInstance().multipleClickSpeedMilliseconds);
     }
 
     public void reset() {
@@ -62,8 +62,8 @@ public class Interval {
     }
 
     public enum Unit {
-        Millisecond(1000_000),
-        Second(1000_000_000);
+        MILLISECOND(1_000_000),
+        SECOND(1_000_000_000);
 
         private final long factor;
 
@@ -72,7 +72,7 @@ public class Interval {
         }
 
         public long toNano(long value) {
-            return value * this.factor;
+            return value * factor;
         }
     }
 

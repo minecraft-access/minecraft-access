@@ -1,5 +1,8 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
+import java.util.List;
+import java.util.Optional;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.LoomScreen;
@@ -19,13 +22,11 @@ import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.entity.BannerPattern;
+
 import org.mcaccess.minecraftaccess.mixin.LoomScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.MerchantScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.SingleItemRecipeAccessor;
 import org.mcaccess.minecraftaccess.mixin.StonecutterScreenAccessor;
-
-import java.util.List;
-import java.util.Optional;
 
 public class SlotItem {
     public SlotItem upSlotItem = null;
@@ -47,8 +48,8 @@ public class SlotItem {
 
     public SlotItem(Slot slot) {
         this.slot = slot;
-        this.x = slot.x + 9;
-        this.y = slot.y + 9;
+        x = slot.x + 9;
+        y = slot.y + 9;
     }
 
     public SlotItem(int x, int y, int recipeOrTradeIndex) {
@@ -90,7 +91,7 @@ public class SlotItem {
             DyeColor color = dyeItem.getDyeColor();
 
             // banner pattern trans key = banner pattern name + color name
-            String transKey = pattern.translationKey() + "." + color.name().toLowerCase();
+            String transKey = pattern.translationKey() + '.' + color.name().toLowerCase();
             return I18n.get(transKey);
         }
 
@@ -106,7 +107,7 @@ public class SlotItem {
             List<Component> toolTip = Screen.getTooltipFromItem(Minecraft.getInstance(), item);
             StringBuilder toolTipString = new StringBuilder();
             for (Component text : toolTip) {
-                toolTipString.append(text.getString()).append("\n");
+                toolTipString.append(text.getString()).append('\n');
             }
 
             return "%s %s".formatted(item.getCount(), toolTipString);
@@ -132,10 +133,11 @@ public class SlotItem {
             String sellItemString = sellItem.getCount() + " " + sellItem.getHoverName().getString();
 
             String tradeText;
-            if (secondBuyItem.isEmpty())
+            if (secondBuyItem.isEmpty()) {
                 tradeText = I18n.get("minecraft_access.inventory_controls.trade_text_format", firstBuyItemString, sellItemString);
-            else
+            } else {
                 tradeText = I18n.get("minecraft_access.inventory_controls.trade_text_format_with_second_item", firstBuyItemString, secondBuyItemString, sellItemString);
+            }
 
             return tradeText;
         }

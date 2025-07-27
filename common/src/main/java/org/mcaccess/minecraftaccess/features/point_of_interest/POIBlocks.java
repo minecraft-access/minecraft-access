@@ -1,5 +1,10 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
@@ -8,14 +13,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Scans the area to find exposed ore blocks, doors, buttons, ladders, etc., groups them and plays a sound only at ore blocks.
@@ -28,7 +29,7 @@ public class POIBlocks {
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.markedBlock",
-            new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
+            new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
             pos -> WorldUtils.getBlockState(pos).is(markedBlock)
     );
 
@@ -105,7 +106,7 @@ public class POIBlocks {
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (config.volume == 0f) return;
+        if (config.volume == 0.0f) return;
         if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
             markedGroup.playSoundForGroupItems(BlockPos::getCenter, config.volume);
         } else if (config.playSound) {
@@ -121,7 +122,7 @@ public class POIBlocks {
 
     private void loadConfig() {
         config = Config.getInstance().poi.blocks;
-        interval.setDelay(config.delay, Interval.Unit.Millisecond);
+        interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
     }
 
     private void setMarkedBlock(@Nullable Block block) {

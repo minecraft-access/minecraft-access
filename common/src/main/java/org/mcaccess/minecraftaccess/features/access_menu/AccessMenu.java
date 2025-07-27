@@ -1,5 +1,8 @@
 package org.mcaccess.minecraftaccess.features.access_menu;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -12,6 +15,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
@@ -24,9 +28,6 @@ import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 /**
  * Opens a menu when F4 button is pressed (configurable) with helpful options.
  */
@@ -37,55 +38,52 @@ public class AccessMenu {
      */
     public static final double RAY_CAST_DISTANCE = 20.0;
     private static Minecraft minecraftClient;
-    private static final MenuKeystroke menuKey = new MenuKeystroke(KeyBindingsHandler.getInstance().accessMenuKey);
+    private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyBindingsHandler.ACCESS_MENU_KEY.mapping);
     private boolean gameModeSwitcherActive = false;
     /**
      * Access Menu function direct keys (configured in keybinding settings)
      * and Access Menu shortcuts bar keys (alt + number keys)
      * share cooldown interval.
      */
-    private static final Interval[] functionIntervals = new Interval[10];
+    private static final Interval[] FUNCTION_INTERVALS = new Interval[10];
 
     /**
      * Should be same order as {@link AccessMenuGUI#init()}
      */
     private static final MenuFunction[] FUNCTIONS = new MenuFunction[]{
-            new MenuFunction(0, new IntervalKeystroke(KeyBindingsHandler.getInstance().openConfigMenu),
+            new MenuFunction(0, new IntervalKeystroke(KeyBindingsHandler.OPEN_CONFIG_MENU.mapping),
                     () -> Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, null).get())),
-            new MenuFunction(1, new IntervalKeystroke(KeyBindingsHandler.getInstance().narrateTarget),
+            new MenuFunction(1, new IntervalKeystroke(KeyBindingsHandler.NARRATE_TARGET.mapping),
                     AccessMenu::getBlockAndFluidTargetInformation),
-            new MenuFunction(2, new IntervalKeystroke(KeyBindingsHandler.getInstance().targetPosition),
+            new MenuFunction(2, new IntervalKeystroke(KeyBindingsHandler.TARGET_POSITION.mapping),
                     AccessMenu::getBlockAndFluidTargetPosition),
-            new MenuFunction(3, new IntervalKeystroke(KeyBindingsHandler.getInstance().lightLevel),
+            new MenuFunction(3, new IntervalKeystroke(KeyBindingsHandler.LIGHT_LEVEL.mapping),
                     AccessMenu::getLightLevel),
-            new MenuFunction(4, new IntervalKeystroke(KeyBindingsHandler.getInstance().closestWaterSource),
+            new MenuFunction(4, new IntervalKeystroke(KeyBindingsHandler.CLOSEST_WATER_SOURCE.mapping),
                     () -> MainClass.fluidDetector.findClosestWaterSource(true)),
-            new MenuFunction(5, new IntervalKeystroke(KeyBindingsHandler.getInstance().closestLavaSource),
+            new MenuFunction(5, new IntervalKeystroke(KeyBindingsHandler.CLOSEST_LAVA_SOURCE.mapping),
                     () -> MainClass.fluidDetector.findClosestLavaSource(true)),
-            new MenuFunction(6, new IntervalKeystroke(KeyBindingsHandler.getInstance().currentBiome),
+            new MenuFunction(6, new IntervalKeystroke(KeyBindingsHandler.CURRENT_BIOME.mapping),
                     AccessMenu::getBiome),
-            new MenuFunction(7, new IntervalKeystroke(KeyBindingsHandler.getInstance().timeOfDay),
+            new MenuFunction(7, new IntervalKeystroke(KeyBindingsHandler.TIME_OF_DAY.mapping),
                     AccessMenu::getTimeOfDay),
-            new MenuFunction(8, new IntervalKeystroke(KeyBindingsHandler.getInstance().xpLevel),
+            new MenuFunction(8, new IntervalKeystroke(KeyBindingsHandler.XP_LEVEL.mapping),
                     AccessMenu::getXP),
-            new MenuFunction(9, new IntervalKeystroke(KeyBindingsHandler.getInstance().refreshScreenReader),
+            new MenuFunction(9, new IntervalKeystroke(KeyBindingsHandler.REFRESH_SCREEN_READER.mapping),
                     () -> ScreenReaderController.refreshScreenReader(true)),
     };
 
     static {
         // other functions get one second interval
-        Arrays.fill(functionIntervals, Interval.sec(1));
+        Arrays.fill(FUNCTION_INTERVALS, Interval.sec(1));
         for (int i = 0; i < 10; i++) {
-            FUNCTIONS[i].keystroke.interval = functionIntervals[i];
+            FUNCTIONS[i].keystroke.interval = FUNCTION_INTERVALS[i];
         }
 
         // the two long-time-running find-the-closest-liquid-source functions
         // are disabled in "alt + number keys" combination
-        functionIntervals[4] = Interval.ms(0);
-        functionIntervals[5] = Interval.ms(0);
-    }
-
-    private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
+        FUNCTION_INTERVALS[4] = Interval.ms(0);
+        FUNCTION_INTERVALS[5] = Interval.ms(0);
     }
 
     public void tick() {
@@ -105,11 +103,11 @@ public class AccessMenu {
                 }
             }
 
-            if (menuKey.canOpenMenu() && !gameModeSwitcherActive) {
+            if (MENU_KEY.canOpenMenu() && !gameModeSwitcherActive) {
                 minecraftClient.setScreen(new AccessMenuGUI("access_menu"));
             }
         } else if (minecraftClient.screen instanceof AccessMenuGUI) {
-            if (menuKey.closeMenuIfMenuKeyPressing()) return;
+            if (MENU_KEY.closeMenuIfMenuKeyPressing()) return;
             handleInMenuActions();
         }
 
@@ -129,7 +127,7 @@ public class AccessMenu {
                 .filter(f -> InputConstants.isKeyDown(handle, f.number + InputConstants.KEY_0))
                 .findFirst()
                 .ifPresent(f -> {
-                    if (functionIntervals[f.number].isReady()) {
+                    if (FUNCTION_INTERVALS[f.number].isReady()) {
                         f.func().run();
                     }
                 });
@@ -139,8 +137,7 @@ public class AccessMenu {
         HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
         if (hit == null) return;
         switch (hit.getType()) {
-            case MISS, ENTITY ->
-                    MainClass.narrate(I18n.get("minecraft_access.access_menu.target_missed"), true);
+            case MISS, ENTITY -> MainClass.narrate(I18n.get("minecraft_access.access_menu.target_missed"), true);
             case BLOCK -> {
                 BlockHitResult blockHit = (BlockHitResult) hit;
                 BlockPos blockPos = blockHit.getBlockPos();
@@ -154,8 +151,7 @@ public class AccessMenu {
         HitResult hit = PlayerUtils.crosshairTarget(RAY_CAST_DISTANCE);
         if (hit == null) return;
         switch (hit.getType()) {
-            case MISS, ENTITY ->
-                    MainClass.narrate(I18n.get("minecraft_access.access_menu.target_missed"), true);
+            case MISS, ENTITY -> MainClass.narrate(I18n.get("minecraft_access.access_menu.target_missed"), true);
             case BLOCK -> {
                 BlockHitResult blockHitResult = (BlockHitResult) hit;
                 BlockPos blockPos = blockHitResult.getBlockPos();
@@ -193,7 +189,7 @@ public class AccessMenu {
         if (PlayerUtils.isSpectator()) {
             MainClass.narrate(I18n.get("gameMode.spectator"), true);
             return;
-        } else if(PlayerUtils.isCreative()) {
+        } else if (PlayerUtils.isCreative()) {
             MainClass.narrate(I18n.get("gameMode.creative"), true);
             return;
         }
@@ -213,23 +209,25 @@ public class AccessMenu {
         int hours = (int) (daytime / 1000) % 24;
         int minutes = (int) ((daytime % 1000) * 60 / 1000);
 
-        String translationKey = "minecraft_access.access_menu.time_of_day";
+        StringBuilder translationKey = new StringBuilder("minecraft_access.access_menu.time_of_day");
         if (Config.getInstance().use12HourTimeFormat) {
             if (hours == 0) {
                 hours = 12;
-                translationKey += "_am";
+                translationKey.append("_am");
             } else if (hours > 12) {
                 hours -= 12;
-                translationKey += "_pm";
+                translationKey.append("_pm");
             } else if (hours == 12) {
-                translationKey += "_pm";
+                translationKey.append("_pm");
             } else {
-                translationKey += "_am";
+                translationKey.append("_am");
             }
         }
 
-        String narration = "%02d:%02d".formatted(hours, minutes);
-        narration = I18n.get(translationKey, narration);
+        String narration = I18n.get(translationKey.toString(), String.format("%02d:%02d", hours, minutes));
         MainClass.narrate(narration, true);
+    }
+
+    private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
     }
 }

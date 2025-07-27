@@ -5,15 +5,29 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.player.LocalPlayer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
-import org.mcaccess.minecraftaccess.features.*;
+
+import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
+import org.mcaccess.minecraftaccess.features.BiomeIndicator;
+import org.mcaccess.minecraftaccess.features.CameraControls;
+import org.mcaccess.minecraftaccess.features.FacingDirection;
+import org.mcaccess.minecraftaccess.features.FallDetector;
+import org.mcaccess.minecraftaccess.features.FluidDetector;
+import org.mcaccess.minecraftaccess.features.HUDStatus;
+import org.mcaccess.minecraftaccess.features.MenuFix;
+import org.mcaccess.minecraftaccess.features.MouseKeySimulation;
+import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
+import org.mcaccess.minecraftaccess.features.PlayerStatus;
+import org.mcaccess.minecraftaccess.features.PlayerWarnings;
+import org.mcaccess.minecraftaccess.features.PositionNarrator;
+import org.mcaccess.minecraftaccess.features.XPIndicator;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import org.mcaccess.minecraftaccess.features.narrate_crosshair.NarrateCrosshair;
@@ -27,8 +41,9 @@ import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 @Slf4j
-public class MainClass {
+public final class MainClass {
     public static final String MOD_ID = "minecraft_access";
+    @Getter
     private static ScreenReaderInterface screenReader = null;
 
     public static AccessMenu accessMenu = null;
@@ -45,6 +60,9 @@ public class MainClass {
     public static POIManager poiManager = null;
     public static XPIndicator xpIndicator = null;
 
+    private MainClass() {
+    }
+
     /**
      * Initializes the mod
      */
@@ -57,11 +75,12 @@ public class MainClass {
         new AutoLibrarySetup().initialize();
 
         ScreenReaderController.refreshScreenReader();
-        if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
-            MainClass.getScreenReader().say(startupMessage, true);
+        if (getScreenReader() != null && getScreenReader().isInitialized()) {
+            getScreenReader().narrate(startupMessage, true);
+        }
 
-        for (KeyMapping km : KeyBindingsHandler.getInstance().getKeys()) {
-            KeyMappingRegistry.register(km);
+        for (KeyBindingsHandler key : KeyBindingsHandler.values()) {
+            KeyMappingRegistry.register(key.mapping);
         }
 
         ClientTickEvent.CLIENT_POST.register(MainClass::clientTickEventsMethod);
@@ -69,8 +88,9 @@ public class MainClass {
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (MainClass.getScreenReader() != null && MainClass.getScreenReader().isInitialized())
-                MainClass.getScreenReader().closeScreenReader();
+            if (getScreenReader() != null && getScreenReader().isInitialized()) {
+                getScreenReader().closeScreenReader();
+            }
         }, "Shutdown-thread"));
     }
 
@@ -88,31 +108,36 @@ public class MainClass {
             MenuFix.tick(minecraftClient);
         }
 
-        if (minecraftClient.level == null)
+        if (minecraftClient.level == null) {
             return;
+        }
 
-        if (inventoryControls != null && config.inventoryControls.enabled)
+        if (inventoryControls != null && config.inventoryControls.enabled) {
             inventoryControls.tick();
+        }
 
         narrateCrosshair.tick();
 
-        if (xpIndicator != null && config.features.xpIndicatorEnabled && (PlayerUtils.isAdventure() || PlayerUtils.isSurvival()))
+        if (xpIndicator != null && config.features.xpIndicatorEnabled && (PlayerUtils.isAdventure() || PlayerUtils.isSurvival())) {
             xpIndicator.tick();
+        }
 
-        if (biomeIndicator != null && config.features.biomeIndicatorEnabled)
+        if (biomeIndicator != null && config.features.biomeIndicatorEnabled) {
             biomeIndicator.tick();
+        }
 
         facingDirection.tick();
 
-        PositionNarrator.getInstance().tick();
+        PositionNarrator.getINSTANCE().tick();
 
         if (WorldUtils.getClientPlayer() != null) {
             if (playerStatus != null) {
                 playerStatus.tick();
             }
 
-            if (!PlayerUtils.isPlayerTyping())
+            if (!PlayerUtils.isPlayerTyping()) {
                 MouseKeySimulation.tick();
+            }
 
             if (minecraftClient.screen == null) {
                 // These features are suppressed when there is any screen opening
@@ -120,14 +145,17 @@ public class MainClass {
             }
         }
 
-        if (playerWarnings != null && config.playerWarnings.enabled && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()))
+        if (playerWarnings != null && config.playerWarnings.enabled && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure())) {
             playerWarnings.tick();
+        }
 
-        if (accessMenu != null && config.accessMenu.enabled)
+        if (accessMenu != null && config.accessMenu.enabled) {
             accessMenu.tick();
+        }
 
-        if (!PlayerUtils.isSpectator())
+        if (!PlayerUtils.isSpectator()) {
             narrateHeldItem.tick();
+        }
 
         poiManager.tick();
 
@@ -155,7 +183,7 @@ public class MainClass {
         xpIndicator = new XPIndicator();
 
         Minecraft client = Minecraft.getInstance();
-        if (client.options.keyAdvancements.same(KeyBindingsHandler.cameraControlsRight)) {
+        if (client.options.keyAdvancements.same(KeyBindingsHandler.CAMERA_CONTROLS_RIGHT.mapping)) {
             client.options.keyAdvancements.setKey(InputConstants.UNKNOWN);
             client.options.save();
             client.options.load();
@@ -175,10 +203,6 @@ public class MainClass {
         } else if (log.isDebugEnabled()) {
             Configurator.setLevel("org.mcaccess.minecraftaccess", Level.INFO);
         }
-    }
-
-    public static ScreenReaderInterface getScreenReader() {
-        return MainClass.screenReader;
     }
 
     public static void setScreenReader(ScreenReaderInterface screenReader) {

@@ -1,23 +1,24 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.StringUtils;
 
 @Mixin(GuiGraphics.class)
 public class GuiGraphicsMixin {

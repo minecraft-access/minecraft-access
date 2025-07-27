@@ -1,21 +1,22 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import java.util.Objects;
+
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
-import org.mcaccess.minecraftaccess.MainClass;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Coerce;
 
-import java.util.Objects;
+import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(GameModeSwitcherScreen.class)
 public class GameModeSwitcherScreenMixin {
     @Unique
-    private GameModeIconAccessor minecraft_access$previous;
+    private GameModeIconAccessor previous;
 
     @WrapOperation(
             at = @At(
@@ -27,9 +28,9 @@ public class GameModeSwitcherScreenMixin {
     )
     private void narrateGameMode(GameModeSwitcherScreen instance, @Coerce GameModeIconAccessor value, Operation<Void> original) {
         original.call(instance, value);
-        if (!Objects.equals(value, minecraft_access$previous)) {
+        if (!Objects.equals(value, previous)) {
             MainClass.narrate(value.getName().getString(), true);
         }
-        minecraft_access$previous = value;
+        previous = value;
     }
 }

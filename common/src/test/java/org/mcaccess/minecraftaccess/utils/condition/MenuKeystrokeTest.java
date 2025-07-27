@@ -3,8 +3,10 @@ package org.mcaccess.minecraftaccess.utils.condition;
 import net.minecraft.client.gui.screens.Screen;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mcaccess.minecraftaccess.test_utils.MockKeystrokeAction;
 import org.mcaccess.minecraftaccess.test_utils.MockMinecraftClientWrapper;
+import org.mcaccess.minecraftaccess.test_utils.annotations.MockMinecraftClient;
 import org.mcaccess.minecraftaccess.test_utils.extensions.MockMinecraftClientExtension;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -12,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockMinecraftClientExtension.class)
 class MenuKeystrokeTest {
-    @org.mcaccess.minecraftaccess.test_utils.annotations.MockMinecraftClient
+    @MockMinecraftClient
     MockMinecraftClientWrapper mockClient;
 
     /**
