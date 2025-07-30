@@ -58,6 +58,7 @@ public final class MainClass {
     public static PlayerStatus playerStatus = null;
     public static PlayerWarnings playerWarnings = null;
     public static POIManager poiManager = null;
+    public static PositionNarrator positionNarrator = null;
     public static XPIndicator xpIndicator = null;
 
     private MainClass() {
@@ -128,7 +129,7 @@ public final class MainClass {
 
         facingDirection.tick();
 
-        PositionNarrator.getINSTANCE().tick();
+        positionNarrator.tick();
 
         if (WorldUtils.getClientPlayer() != null) {
             if (playerStatus != null) {
@@ -180,6 +181,7 @@ public final class MainClass {
         playerStatus = new PlayerStatus();
         playerWarnings = new PlayerWarnings();
         poiManager = new POIManager();
+        positionNarrator = new PositionNarrator();
         xpIndicator = new XPIndicator();
 
         Minecraft client = Minecraft.getInstance();

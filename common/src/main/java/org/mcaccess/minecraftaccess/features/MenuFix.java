@@ -26,8 +26,6 @@ import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.EditWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 
-import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
@@ -37,6 +35,9 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  */
 @Slf4j
 public final class MenuFix {
+    private static boolean isRKeyDown = false;
+    private static boolean wasAltDownLastTick = false;
+
     private static Class<? extends Screen> prevScreenClass = TitleScreen.class;
     private static final Set<Class<? extends Screen>> MENUS_NEED_FIX = Set.of(
             TitleScreen.class,
@@ -63,24 +64,34 @@ public final class MenuFix {
     private MenuFix() {
     }
 
-    public static void tick(Minecraft minecraftClient) {
-        if (!Config.getInstance().menuFixEnabled || minecraftClient.screen == null) {
+    public static void tick(Minecraft client) {
+        if (client.screen == null) {
             return;
         }
 
-        Class<? extends Screen> currentScreen = minecraftClient.screen.getClass();
+        Class<? extends Screen> currentScreen = client.screen.getClass();
         if (MENUS_NEED_FIX.contains(currentScreen)) {
             if (prevScreenClass != currentScreen) {
-                log.debug("Performing menu fix on {}", minecraftClient.screen.getTitle().getString());
+                log.debug("Performing menu fix on {}", client.screen.getTitle().getString());
                 moveMouseCursor();
                 prevScreenClass = currentScreen;
             }
 
-            boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-            boolean isRPressed = KeyUtils.isAnyPressed(InputConstants.KEY_R);
-            if (isLeftAltPressed && isRPressed) {
-                moveMouseCursor();
+            boolean isAltDown = Screen.hasAltDown();
+            long window = client.getWindow().getWindow();
+            if (isAltDown) {
+                if (InputConstants.isKeyDown(window, InputConstants.KEY_R)) {
+                    if (!isRKeyDown && wasAltDownLastTick) {
+                        isRKeyDown = true;
+                        moveMouseCursor();
+                    } else if (!isRKeyDown) {
+                        isRKeyDown = true;
+                    }
+                } else {
+                    isRKeyDown = false;
+                }
             }
+            wasAltDownLastTick = isAltDown;
         }
     }
 

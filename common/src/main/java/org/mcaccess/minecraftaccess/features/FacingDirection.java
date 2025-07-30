@@ -2,12 +2,12 @@ package org.mcaccess.minecraftaccess.features;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * Adds key binding to narrate the player's facing direction.<br>
@@ -15,25 +15,29 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
  */
 @Slf4j
 public class FacingDirection {
+    private boolean isDirectionNarrationKeyDown = false;
+
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null) return;
+        if (client.screen != null) return;
 
-        boolean isDirectionNarrationKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.DIRECTION_NARRATION_KEY.mapping);
-        if (!isDirectionNarrationKeyPressed) return;
+        if (KeyBindingsHandler.DIRECTION_NARRATION_KEY.mapping.consumeClick()) {
+            if (!isDirectionNarrationKeyDown) {
+                isDirectionNarrationKeyDown = true;
+                String narration;
+                if (Screen.hasAltDown()) {
+                    String verticleDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
+                    narration = I18n.get("minecraft_access.other.facing_direction", verticleDirection);
+                } else {
+                    String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
+                    narration = I18n.get("minecraft_access.other.facing_direction", horizontalDirection);
+                }
 
-        boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-
-        String narration;
-        if (isLeftAltPressed) {
-            String t = PlayerPositionUtils.getVerticalFacingDirectionInWords();
-            narration = I18n.get("minecraft_access.other.facing_direction", t);
-        } else {
-            String string = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
-            narration = I18n.get("minecraft_access.other.facing_direction", string);
+                MainClass.narrate(narration, true);
+            }
+        } else if (!KeyBindingsHandler.DIRECTION_NARRATION_KEY.mapping.isDown()) {
+            isDirectionNarrationKeyDown = false;
         }
-
-        MainClass.narrate(narration, true);
     }
 }

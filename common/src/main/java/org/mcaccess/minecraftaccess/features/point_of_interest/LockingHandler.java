@@ -34,7 +34,6 @@ import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * Locks on to the nearest entity or block.<br><br>
@@ -50,6 +49,8 @@ public class LockingHandler {
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
     private Map<Property<?>, Comparable<?>> entriesOfLockedOnBlock;
     private final Interval interval = Interval.defaultDelay();
+    private boolean isLockingHandlerKeyDown = false;
+    private boolean wasAltDownLastTick = false;
     private boolean aimAssistActive = false;
     // 0 = can't shoot, 1 = can shoot
     private int lastAimAssistCue = -1;
@@ -68,32 +69,39 @@ public class LockingHandler {
     }
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
+        Minecraft client = Minecraft.getInstance();
 
         loadConfig();
-        if (!interval.isReady()) return;
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.screen != null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
+        if (client.screen != null) return;
 
         handleLockingKeyPressing();
-        lookAtLockedTarget();
-        bowAimingAssist();
+
+        if (interval.isReady()) {
+            lookAtLockedTarget();
+            bowAimingAssist();
+        }
     }
 
     private void handleLockingKeyPressing() {
-        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping);
-        if (isLockingKeyPressed && Screen.hasAltDown()) {
-            if (lockedOnEntity != null || lockedOnBlockPos != null) {
-                unlock(true, true);
-                interval.beReady();
+        boolean isAltDown = Screen.hasAltDown();
+        if (KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping.consumeClick()) {
+            if (!isLockingHandlerKeyDown) {
+                isLockingHandlerKeyDown = true;
+                if (wasAltDownLastTick && isAltDown) {
+                    if (lockedOnEntity != null || lockedOnBlockPos != null) {
+                        unlock(true, true);
+                    }
+                } else {
+                    relock();
+                }
             }
-        } else if (isLockingKeyPressed) {
-            relock();
-            interval.reset();
-        } else {
-            interval.beReady();
+        } else if (!KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping.isDown()) {
+            isLockingHandlerKeyDown = false;
         }
+
+        wasAltDownLastTick = isAltDown;
     }
 
     private void lookAtLockedTarget() {

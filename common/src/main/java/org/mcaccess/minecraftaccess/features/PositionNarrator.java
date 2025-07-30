@@ -1,54 +1,80 @@
 package org.mcaccess.minecraftaccess.features;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
-/**
- * Adds key bindings to narrate the player's position.<br><br>
- * Keybindings and combinations:<br>
- * 1. Narrate Player Position Key (default: G) = Narrates the player's x y and z position.<br>
- * 2. Left Alt + X = Narrates only the x position.<br>
- * 3. Left Alt + C = Narrates only the y position.<br>
- * 4. Left Alt + Z = Narrates only the z position.<br>
- */
 @Slf4j
 public final class PositionNarrator {
-    @Getter
-    private static final PositionNarrator INSTANCE = new PositionNarrator();
-    public static Keystroke keyX = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_X));
-    public static Keystroke keyC = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_C));
-    public static Keystroke keyZ = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_Z));
-    public static Keystroke positionNarrationKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.POSITION_NARRATION_KEY.mapping));
-
-    private PositionNarrator() {
-    }
+    private boolean isXKeyDown = false;
+    private boolean isCKeyDown = false;
+    private boolean isZKeyDown = false;
+    private boolean isPositionNarrationKeyDown = false;
+    private boolean wasAltDownLastTick = false;
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null || client.screen != null) return;
 
-        boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-        if (isLeftAltPressed) {
-            if (keyX.canBeTriggered()) {
-                MainClass.narrate(PlayerPositionUtils.getNarratableXPos(), true);
-            } else if (keyC.canBeTriggered()) {
-                MainClass.narrate(PlayerPositionUtils.getNarratableYPos(), true);
-            } else if (keyZ.canBeTriggered()) {
-                MainClass.narrate(PlayerPositionUtils.getNarratableZPos(), true);
+        boolean isAltDown = Screen.hasAltDown();
+        long window = client.getWindow().getWindow();
+
+        if (isAltDown) {
+            if (InputConstants.isKeyDown(window, InputConstants.KEY_X)) {
+                // Only trigger if Alt was already down when X was pressed
+                if (!isXKeyDown && wasAltDownLastTick) {
+                    isXKeyDown = true;
+                    MainClass.narrate(PlayerPositionUtils.getNarratableXPos(), true);
+                } else if (!isXKeyDown) {
+                    // X pressed but Alt wasn't down first - just mark as down without narrating
+                    isXKeyDown = true;
+                }
+            } else {
+                isXKeyDown = false;
             }
+
+            if (InputConstants.isKeyDown(window, InputConstants.KEY_C)) {
+                if (!isCKeyDown && wasAltDownLastTick) {
+                    isCKeyDown = true;
+                    MainClass.narrate(PlayerPositionUtils.getNarratableYPos(), true);
+                } else if (!isCKeyDown) {
+                    isCKeyDown = true;
+                }
+            } else {
+                isCKeyDown = false;
+            }
+
+            if (InputConstants.isKeyDown(window, InputConstants.KEY_Z)) {
+                if (!isZKeyDown && wasAltDownLastTick) {
+                    isZKeyDown = true;
+                    MainClass.narrate(PlayerPositionUtils.getNarratableZPos(), true);
+                } else if (!isZKeyDown) {
+                    isZKeyDown = true;
+                }
+            } else {
+                isZKeyDown = false;
+            }
+        } else {
+            isXKeyDown = false;
+            isCKeyDown = false;
+            isZKeyDown = false;
         }
 
-        if (positionNarrationKey.canBeTriggered()) {
-            MainClass.narrate(PlayerPositionUtils.getNarratableXYZPosition(), true);
+        // Update Alt state for next tick
+        wasAltDownLastTick = isAltDown;
+
+        if (KeyBindingsHandler.POSITION_NARRATION_KEY.mapping.consumeClick()) {
+            if (!isPositionNarrationKeyDown) {
+                isPositionNarrationKeyDown = true;
+                MainClass.narrate(PlayerPositionUtils.getNarratableXYZPosition(), true);
+            }
+        } else if (!KeyBindingsHandler.POSITION_NARRATION_KEY.mapping.isDown()) {
+            isPositionNarrationKeyDown = false;
         }
     }
 }

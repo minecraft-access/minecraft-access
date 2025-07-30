@@ -1,64 +1,96 @@
 package org.mcaccess.minecraftaccess.features;
 
-import java.util.Set;
-
-import net.minecraft.util.Tuple;
-import org.apache.commons.lang3.tuple.Triple;
-
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
-import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
  * Simulate mouse key operations by programmatically invoking vanilla mouse key operation handlers.
+ * Supports both press-and-hold and click functionality for mouse buttons.
  */
-public final class MouseKeySimulation {
-    private static final Keystroke[] MOUSE_CLICKS = new Keystroke[]{
-            new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.MOUSE_SIMULATION_LEFT_MOUSE_KEY.mapping)),
-            new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.MOUSE_SIMULATION_MIDDLE_MOUSE_KEY.mapping)),
-            new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.MOUSE_SIMULATION_RIGHT_MOUSE_KEY.mapping)),
-    };
-    public static final Set<Triple<Keystroke, Runnable, Runnable>> MOUSE_CLICK_ACTIONS = Set.of(
-            Triple.of(MOUSE_CLICKS[0], MouseUtils.Key.LEFT::press, MouseUtils.Key.LEFT::release),
-            Triple.of(MOUSE_CLICKS[1], MouseUtils.Key.MIDDLE::press, MouseUtils.Key.MIDDLE::release),
-            Triple.of(MOUSE_CLICKS[2], MouseUtils.Key.RIGHT::press, MouseUtils.Key.RIGHT::release)
-    );
-    private static final IntervalKeystroke[] MOUSE_SCROLLS = new IntervalKeystroke[]{
-            new IntervalKeystroke(KeyBindingsHandler.MOUSE_SIMULATION_SCROLL_UP_KEY.mapping),
-            new IntervalKeystroke(KeyBindingsHandler.MOUSE_SIMULATION_SCROLL_DOWN_KEY.mapping),
-    };
-    public static final Set<Tuple<IntervalKeystroke, Runnable>> MOUSE_SCROLL_ACTIONS = Set.of(
-            new Tuple<IntervalKeystroke, Runnable>(MOUSE_SCROLLS[0], MouseUtils.Wheel.UP::scroll),
-            new Tuple<IntervalKeystroke, Runnable>(MOUSE_SCROLLS[1], MouseUtils.Wheel.DOWN::scroll)
-    );
+public class MouseKeySimulation {
+    private static int scrollDelayMilliseconds;
+    private static long lastScrollUpTime = 0;
+    private static long lastScrollDownTime = 0;
 
-    private MouseKeySimulation() {
-    }
+    private static boolean leftMouseKeyWasDown = false;
+    private static boolean middleMouseKeyWasDown = false;
+    private static boolean rightMouseKeyWasDown = false;
 
-    private static void loadConfig() {
-        Config.MouseSimulation config = Config.getInstance().mouseSimulation;
-        MOUSE_SCROLLS[0].interval.setDelay(config.scrollDelayMilliseconds, Interval.Unit.MILLISECOND);
-        MOUSE_SCROLLS[1].interval.setDelay(config.scrollDelayMilliseconds, Interval.Unit.MILLISECOND);
-    }
+    private static boolean scrollUpKeyWasDown = false;
+    private static boolean scrollDownKeyWasDown = false;
 
     public static void tick() {
         loadConfig();
-        MOUSE_SCROLL_ACTIONS.forEach(t -> {
-            if (t.getA().canBeTriggered()) {
-                t.getB().run();
-            }
-        });
+        checkMouseButtonKeys();
+        checkScrollKeys();
+    }
 
-        MOUSE_CLICK_ACTIONS.forEach(t -> {
-            if (t.getLeft().isPressed()) {
-                t.getMiddle().run();
-            } else if (t.getLeft().isReleased()) {
-                t.getRight().run();
+    /**
+     * Load configuration settings
+     */
+    private static void loadConfig() {
+        scrollDelayMilliseconds = Config.getInstance().mouseSimulation.scrollDelayMilliseconds;
+    }
+
+    /**
+     * Check all mouse button keys (left, middle, right) and handle press/hold/release
+     */
+    private static void checkMouseButtonKeys() {
+        boolean leftMouseKeyIsDown = KeyBindingsHandler.MOUSE_SIMULATION_LEFT_MOUSE_KEY.mapping.isDown();
+        if (leftMouseKeyIsDown && !leftMouseKeyWasDown) {
+            MouseUtils.Key.LEFT.press();
+        } else if (!leftMouseKeyIsDown && leftMouseKeyWasDown) {
+            MouseUtils.Key.LEFT.release();
+        }
+        leftMouseKeyWasDown = leftMouseKeyIsDown;
+
+        boolean middleMouseKeyIsDown = KeyBindingsHandler.MOUSE_SIMULATION_MIDDLE_MOUSE_KEY.mapping.isDown();
+        if (middleMouseKeyIsDown && !middleMouseKeyWasDown) {
+            MouseUtils.Key.MIDDLE.press();
+        } else if (!middleMouseKeyIsDown && middleMouseKeyWasDown) {
+            MouseUtils.Key.MIDDLE.release();
+        }
+        middleMouseKeyWasDown = middleMouseKeyIsDown;
+
+        boolean rightMouseKeyIsDown = KeyBindingsHandler.MOUSE_SIMULATION_RIGHT_MOUSE_KEY.mapping.isDown();
+        if (rightMouseKeyIsDown && !rightMouseKeyWasDown) {
+            MouseUtils.Key.RIGHT.press();
+        } else if (!rightMouseKeyIsDown && rightMouseKeyWasDown) {
+            MouseUtils.Key.RIGHT.release();
+        }
+        rightMouseKeyWasDown = rightMouseKeyIsDown;
+    }
+
+    /**
+     * Check scroll keys with delay handling
+     */
+    private static void checkScrollKeys() {
+        long currentTime = System.currentTimeMillis();
+
+        boolean scrollUpKeyIsDown = KeyBindingsHandler.MOUSE_SIMULATION_SCROLL_UP_KEY.mapping.isDown();
+        if (scrollUpKeyIsDown) {
+            if (!scrollUpKeyWasDown || canScroll(lastScrollUpTime)) {
+                MouseUtils.Wheel.UP.scroll();
+                lastScrollUpTime = currentTime;
             }
-        });
+        }
+        scrollUpKeyWasDown = scrollUpKeyIsDown;
+
+        boolean scrollDownKeyIsDown = KeyBindingsHandler.MOUSE_SIMULATION_SCROLL_DOWN_KEY.mapping.isDown();
+        if (scrollDownKeyIsDown) {
+            if (!scrollDownKeyWasDown || canScroll(lastScrollDownTime)) {
+                MouseUtils.Wheel.DOWN.scroll();
+                lastScrollDownTime = currentTime;
+            }
+        }
+        scrollDownKeyWasDown = scrollDownKeyIsDown;
+    }
+
+    /**
+     * Check if enough time has passed for scrolling
+     */
+    private static boolean canScroll(long lastScrollTime) {
+        return System.currentTimeMillis() - lastScrollTime >= scrollDelayMilliseconds;
     }
 }

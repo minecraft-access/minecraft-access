@@ -1,7 +1,5 @@
 package org.mcaccess.minecraftaccess.features;
 
-import java.util.Objects;
-
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -11,10 +9,6 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
-import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * Adds a key bind to narrate the player's non potion related statuses.<br>
@@ -22,80 +16,82 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
  */
 @Slf4j
 public class PlayerStatus {
-    IntervalKeystroke narrationKey = new IntervalKeystroke(
-            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.NARRATE_PLAYER_STATUS_KEY.mapping),
-            Keystroke.TriggeredAt.PRESSED,
-            // 3s interval
-            Interval.ms(3000));
+    private boolean isStatusKeyDown = false;
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null) return;
+        if (client.screen != null) return;
 
-        if (narrationKey.canBeTriggered()) {
-            if (Screen.hasControlDown()) {
-                PlayerUtils.narrateCurrentPlayerEffects();
-                return;
-            }
+        if (KeyBindingsHandler.NARRATE_PLAYER_STATUS_KEY.mapping.consumeClick()) {
+            if (!isStatusKeyDown) {
+                isStatusKeyDown = true;
+                if (Screen.hasControlDown()) {
+                    PlayerUtils.narrateCurrentPlayerEffects();
+                    return;
+                }
 
-            double health = Math.round((minecraftClient.player.getHealth() / 2.0) * 10.0) / 10.0;
-            double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
-            double absorption = Math.round((minecraftClient.player.getAbsorptionAmount() / 2.0) * 10.0) / 10.0;
-            double hunger = Math.round((minecraftClient.player.getFoodData().getFoodLevel() / 2.0) * 10.0) / 10.0;
-            double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
-            double armor = Math.round((minecraftClient.player.getArmorValue() / 2.0) * 10.0) / 10.0;
-            double air = Math.round((minecraftClient.player.getAirSupply() / 20.0) * 10.0) / 10.0;
-            double maxAir = Math.round((minecraftClient.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
-            double frostExposurePercent = Math.round((minecraftClient.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
+                double health = Math.round((client.player.getHealth() / 2.0) * 10.0) / 10.0;
+                double maxHealth = Math.round((client.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
+                double absorption = Math.round((client.player.getAbsorptionAmount() / 2.0) * 10.0) / 10.0;
+                double hunger = Math.round((client.player.getFoodData().getFoodLevel() / 2.0) * 10.0) / 10.0;
+                double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
+                double armor = Math.round((client.player.getArmorValue() / 2.0) * 10.0) / 10.0;
+                double air = Math.round((client.player.getAirSupply() / 20.0) * 10.0) / 10.0;
+                double maxAir = Math.round((client.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
+                double frostExposurePercent = Math.round((client.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
 
-            StringBuilder narration = new StringBuilder();
+                StringBuilder narration = new StringBuilder();
 
-            if (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()) {
-                if (!Screen.hasAltDown()) {
-                    if (absorption > 0) {
-                        narration.append(I18n.get(
-                                "minecraft_access.player_status.base_with_absorption",
-                                NarrationUtils.narrateNumber(health),
-                                NarrationUtils.narrateNumber(absorption),
-                                NarrationUtils.narrateNumber(maxHealth),
-                                NarrationUtils.narrateNumber(hunger),
-                                NarrationUtils.narrateNumber(maxHunger),
-                                NarrationUtils.narrateNumber(armor))
-                        );
-                    } else {
-                        narration.append(I18n.get(
-                                "minecraft_access.player_status.base",
-                                NarrationUtils.narrateNumber(health),
-                                NarrationUtils.narrateNumber(maxHealth),
-                                NarrationUtils.narrateNumber(hunger),
-                                NarrationUtils.narrateNumber(maxHunger),
-                                NarrationUtils.narrateNumber(armor))
-                        );
+                if (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()) {
+                    if (!Screen.hasAltDown()) {
+                        if (absorption > 0) {
+                            narration.append(I18n.get(
+                                    "minecraft_access.player_status.base_with_absorption",
+                                    NarrationUtils.narrateNumber(health),
+                                    NarrationUtils.narrateNumber(absorption),
+                                    NarrationUtils.narrateNumber(maxHealth),
+                                    NarrationUtils.narrateNumber(hunger),
+                                    NarrationUtils.narrateNumber(maxHunger),
+                                    NarrationUtils.narrateNumber(armor))
+                            );
+                        } else {
+                            narration.append(I18n.get(
+                                    "minecraft_access.player_status.base",
+                                    NarrationUtils.narrateNumber(health),
+                                    NarrationUtils.narrateNumber(maxHealth),
+                                    NarrationUtils.narrateNumber(hunger),
+                                    NarrationUtils.narrateNumber(maxHunger),
+                                    NarrationUtils.narrateNumber(armor))
+                            );
+                        }
+                    }
+
+                    if ((client.player.isUnderWater() || client.player.getAirSupply() < client.player.getMaxAirSupply()) && !client.player.canBreatheUnderwater()) {
+                        air = Math.max(air, 0.0);
+                        narration.append(I18n.get("minecraft_access.player_status.air",
+                                NarrationUtils.narrateNumber(air),
+                                NarrationUtils.narrateNumber(maxAir)));
+                    }
+
+                    if ((client.player.isInPowderSnow || frostExposurePercent > 0) && client.player.canFreeze()) {
+                        narration.append(I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent)));
                     }
                 }
 
-                if ((minecraftClient.player.isUnderWater() || minecraftClient.player.getAirSupply() < minecraftClient.player.getMaxAirSupply()) && !minecraftClient.player.canBreatheUnderwater()) {
-                    air = Math.max(air, 0.0);
-                    narration.append(I18n.get("minecraft_access.player_status.air", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir)));
+                if (narration.isEmpty() && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure())) {
+                    narration.append(I18n.get("minecraft_access.player_status.no_conditional_status"));
                 }
 
-                if ((minecraftClient.player.isInPowderSnow || frostExposurePercent > 0) && minecraftClient.player.canFreeze()) {
-                    narration.append(I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent)));
+                if (!narration.toString().equals(I18n.get("minecraft_access.player_status.no_conditional_status"))) {
+                    addGameMode(narration);
                 }
-            }
 
-            if (narration.isEmpty() && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure())) {
-                narration.append(I18n.get("minecraft_access.player_status.no_conditional_status"));
+                MainClass.narrate(narration.toString(), true);
             }
-
-            if (!Objects.equals(narration.toString(), I18n.get("minecraft_access.player_status.no_conditional_status"))) {
-                addGameMode(narration);
-            }
-
-            MainClass.narrate(narration.toString(), true);
+        } else if (!KeyBindingsHandler.NARRATE_PLAYER_STATUS_KEY.mapping.isDown()) {
+            isStatusKeyDown = false;
         }
-        narrationKey.updateStateForNextTick();
     }
 
     public void addGameMode(StringBuilder narration) {

@@ -21,18 +21,17 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 @Slf4j
 public class ObjectTracker {
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
 
-    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.OBJECT_TRACKER_NEXT_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.OBJECT_TRACKER_PREVIOUS_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.TARGET_NEAREST_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
+    private boolean isNextItemKeyDown = false;
+    private boolean isPreviousItemKeyDown = false;
+    private boolean isNarrateCurrentObjectKeyDown = false;
+    private boolean isTargetNearestObjectKeyDown = false;
+    private boolean wasControlDownLastTick = false;
 
     @Getter
     private Object currentObject = null;
@@ -60,23 +59,60 @@ public class ObjectTracker {
     }
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
+        Minecraft client = Minecraft.getInstance();
 
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.screen != null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
+        if (client.screen != null) return;
 
         updateGroups();
 
-        if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
+        boolean isControlDown = Screen.hasControlDown() && wasControlDownLastTick;
+        if (KeyBindingsHandler.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping.consumeClick()) {
+            if (!isNarrateCurrentObjectKeyDown) {
+                isNarrateCurrentObjectKeyDown = true;
+                narrateCurrentObject(true);
+            }
+        } else if (!KeyBindingsHandler.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping.isDown()) {
+            isNarrateCurrentObjectKeyDown = false;
+        }
 
-        if (nextItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(1);
-        if (previousItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(-1);
+        if (KeyBindingsHandler.OBJECT_TRACKER_NEXT_ITEM.mapping.consumeClick()) {
+            if (!isNextItemKeyDown) {
+                isNextItemKeyDown = true;
+                if (isControlDown) {
+                    moveGroup(1);
+                } else {
+                    moveObject(1);
+                }
+            }
+        } else if (!KeyBindingsHandler.OBJECT_TRACKER_NEXT_ITEM.mapping.isDown()) {
+            isNextItemKeyDown = false;
+        }
 
-        if (nextItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(1);
-        if (previousItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(-1);
+        if (KeyBindingsHandler.OBJECT_TRACKER_PREVIOUS_ITEM.mapping.consumeClick()) {
+            if (!isPreviousItemKeyDown) {
+                isPreviousItemKeyDown = true;
+                if (isControlDown) {
+                    moveGroup(-1);
+                } else {
+                    moveObject(-1);
+                }
+            }
+        } else if (!KeyBindingsHandler.OBJECT_TRACKER_PREVIOUS_ITEM.mapping.isDown()) {
+            isPreviousItemKeyDown = false;
+        }
 
-        if (targetNearestObjectKeyPressed.canBeTriggered()) targetNearestObject();
+        if (KeyBindingsHandler.TARGET_NEAREST_OBJECT.mapping.consumeClick()) {
+            if (!isTargetNearestObjectKeyDown) {
+                isTargetNearestObjectKeyDown = true;
+                targetNearestObject();
+            }
+        } else if (!KeyBindingsHandler.TARGET_NEAREST_OBJECT.mapping.isDown()) {
+            isTargetNearestObjectKeyDown = false;
+        }
+
+        wasControlDownLastTick = Screen.hasControlDown();
     }
 
     private void updateGroups() {

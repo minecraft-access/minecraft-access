@@ -17,13 +17,19 @@ public class NarrateHeldItem {
     private String previousItemName = "";
     private int previousItemCount = 0;
     private int previousSelectedSlot = 0;
+    private boolean isNarrateHeldItemKeyDown = false;
 
     public void tick() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        while (KeyBindingsHandler.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
-            narrateHand(Screen.hasAltDown());
+        if (KeyBindingsHandler.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
+            if (!isNarrateHeldItemKeyDown) {
+                isNarrateHeldItemKeyDown = true;
+                narrateHand(Screen.hasAltDown());
+            }
+        } else if (!KeyBindingsHandler.NARRATE_HELD_ITEM_KEY.mapping.isDown()) {
+            isNarrateHeldItemKeyDown = false;
         }
 
         ItemStack currentItemStack = player.getMainHandItem();
@@ -80,6 +86,6 @@ public class NarrateHeldItem {
         int heldItemCount = heldItem.getCount();
         heldItemName = (heldItemCount != 1 && !heldItem.isEmpty()) ? heldItemCount + " " + heldItemName : heldItemName;
 
-        MainClass.narrate("%s: %s".formatted(hand, heldItemName), false);
+        MainClass.narrate("%s: %s".formatted(hand, heldItemName), true);
     }
 }
