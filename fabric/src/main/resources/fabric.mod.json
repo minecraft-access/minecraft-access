@@ -17,9 +17,9 @@
         "emassey0135"
     ],
     "contact": {
-        "homepage": "https://mcaccess.org",
-        "sources": "https://github.com/minecraft-access/minecraft-access",
-        "issues": "https://github.com/minecraft-access/minecraft-access/issues"
+        "homepage": "https://mcaccess.org/",
+        "sources": "https://github.com/minecraft-access/minecraft-access/",
+        "issues": "https://github.com/minecraft-access/minecraft-access/issues/"
     },
     "environment": "client",
     "entrypoints": {
@@ -46,10 +46,10 @@
     "custom": {
         "modmenu": {
             "links": {
-                "modmenu.discord": "https://discord.gg/yQjjsDqWQX",
+                "modmenu.discord": "https://discord.mcaccess.org/",
                 "modmenu.wiki": "https://docs.mcaccess.org/",
-                "modmenu.github_releases": "https://github.com/minecraft-access/minecraft-access/releases",
-                "modmenu.modrinth": "https://modrinth.com/mod/jGzXyfdm"
+                "modmenu.github_releases": "https://github.com/minecraft-access/minecraft-access/releases/",
+                "modmenu.modrinth": "https://modrinth.com/mod/jGzXyfdm/"
             }
         },
         "mc-publish": {

@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
-issueTrackerURL = "https://github.com/minecraft-access/minecraft-access/issues"
+issueTrackerURL = "https://github.com/minecraft-access/minecraft-access/issues/"
 license = "GPL-3.0-only"
 
 [[mods]]
@@ -12,8 +12,8 @@ description = '''
 A mod that helps visually impaired players play Minecraft.
 '''
 logoFile = "logo-mc-access.png"
-modUrl = "https://modrinth.com/mod/jGzXyfdm"
-displayURL = "https://mcaccess.org"
+modUrl = "https://modrinth.com/mod/jGzXyfdm/"
+displayURL = "https://mcaccess.org/"
 
 [[dependencies.minecraft_access]]
 modId = "neoforge"

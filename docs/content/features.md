@@ -5,9 +5,9 @@ title: "Features"
 This page contains details for all the features that are currently in the mod.
 
 If you have any questions about original game functions, please search on the [Minecraft wiki](https://minecraft.wiki/?search) first before asking for help.
-If you have any suggestions on improvements to existing features or about a new feature, you can [join the discord server](https://discord.gg/yQjjsDqWQX) or [post an issue](https://github.com/khanshoaib3/minecraft-access/issues).
+If you have any suggestions on improvements to existing features or about a new feature, you can [join the discord server](https://discord.mcaccess.org/) or [post an issue](https://github.com/minecraft-access/minecraft-access/issues).
 
-There is also a page for [viewing all sound effects](https://html-preview.github.io/?url=https://github.com/khanshoaib3/minecraft-access/blob/1.21/docs/sounds.html) used in this mod.
+There is also a page for [viewing all sound effects]({{% relref "/sounds" %}}) used in this mod.
 
 ## Camera Controls
 
@@ -176,8 +176,8 @@ See also: [Configuration]({{% relref "/config#fall-detector" %}})
 ## Access Menu
 
 This menu can be accessed by pressing the F4 key by default
-and integrates a number of helper functions which can be executed from within the menu 
-or by using the individual hotkey directly. 
+and integrates a number of helper functions which can be executed from within the menu
+or by using the individual hotkey directly.
 Note that the individual function keys aren't bound by default, aside from narrate target,
 so you will need to bind the ones you want to use yourself.
 
