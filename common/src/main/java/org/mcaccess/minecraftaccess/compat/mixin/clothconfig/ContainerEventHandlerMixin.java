@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
+import java.util.List;
+
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
@@ -9,8 +11,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.List;
 
 @Mixin(ContainerEventHandler.class)
 public interface ContainerEventHandlerMixin {
@@ -22,14 +22,14 @@ public interface ContainerEventHandlerMixin {
             return subcategory.filteredEntries();
         } else if (instance instanceof ClothConfigScreen) {
             // remove scroll arrow buttons since they're useless for blind users
-            return instance.children().stream().filter(this::mca$isNotArrowButton).toList();
+            return instance.children().stream().filter(this::isNotArrowButton).toList();
         } else {
             return original.call(instance);
         }
     }
 
     @Unique
-    private boolean mca$isNotArrowButton(GuiEventListener c) {
+    private boolean isNotArrowButton(GuiEventListener c) {
         ClothConfigScreenAccessor accessor = (ClothConfigScreenAccessor) this;
         return c != accessor.getButtonLeftTab() && c != accessor.getButtonRightTab();
     }

@@ -1,10 +1,10 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.Component;
-import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -12,8 +12,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Arrays;
-import java.util.List;
+import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.StringUtils;
 
 /**
  * Narrates the currently selected hotbar item's name and the action bar.
@@ -28,29 +29,29 @@ public class GuiMixin {
     private Component subtitle;
 
     @Unique
-    private String minecraft_access$previousActionBarContent = "";
+    private String previousActionBarContent = "";
 
     @Inject(at = @At("HEAD"), method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V")
     public void narrateActionbar(Component message, boolean tinted, CallbackInfo ci) {
         Config config = Config.getInstance();
         if (config.features.actionBarEnabled) {
             String msg = message.getString();
-            boolean contentChanged = !this.minecraft_access$previousActionBarContent.equals(msg);
+            boolean contentChanged = !previousActionBarContent.equals(msg);
             if (contentChanged) {
                 if (config.features.onlyNarrateActionBarUpdates) {
-                    minecraft_access$onlyNarrateChangedParts(msg);
+                    onlyNarrateChangedParts(msg);
                 } else {
                     MainClass.narrate(msg, true);
                 }
-                this.minecraft_access$previousActionBarContent = msg;
+                previousActionBarContent = msg;
             }
         }
     }
 
     @Unique
-    private void minecraft_access$onlyNarrateChangedParts(String msg) {
+    private void onlyNarrateChangedParts(String msg) {
         List<String> parts = Arrays.asList(StringUtils.splitToParts(msg));
-        List<String> previousParts = Arrays.asList(StringUtils.splitToParts(this.minecraft_access$previousActionBarContent));
+        List<String> previousParts = Arrays.asList(StringUtils.splitToParts(previousActionBarContent));
         parts.removeAll(previousParts);
         String narration = String.join(", ", parts);
         MainClass.narrate(narration, true);

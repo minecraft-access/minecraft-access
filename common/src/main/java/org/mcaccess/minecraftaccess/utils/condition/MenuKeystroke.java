@@ -1,12 +1,13 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
+import java.util.Objects;
+import java.util.function.BooleanSupplier;
+
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Contract;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
-import java.util.Objects;
-import java.util.function.BooleanSupplier;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * After experimentation, there is only one valid combination for opening and closing a menu with single key:

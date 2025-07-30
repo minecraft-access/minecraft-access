@@ -1,19 +1,20 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import java.util.Objects;
+
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.mcaccess.minecraftaccess.features.EffectNarrator;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
+import org.mcaccess.minecraftaccess.features.EffectNarrator;
+import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 @SuppressWarnings("EqualsBetweenInconvertibleTypes")
 @Mixin(LivingEntity.class)

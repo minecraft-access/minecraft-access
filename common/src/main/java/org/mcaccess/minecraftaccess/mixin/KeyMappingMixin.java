@@ -1,5 +1,8 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import java.util.Collection;
+import java.util.Map;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -11,9 +14,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * This class is for making one {@link InputConstants.Key} being multiple {@link KeyMapping}'s "boundKey".
@@ -62,6 +62,6 @@ public class KeyMappingMixin {
 
     @Inject(at = @At("RETURN"), method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V")
     void initMap(String translationKey, InputConstants.Type type, int code, String category, CallbackInfo ci) {
-        KEY_TO_BINDINGS_LIST.put(this.key, (KeyMapping) (Object) this);
+        KEY_TO_BINDINGS_LIST.put(key, (KeyMapping) (Object) this);
     }
 }

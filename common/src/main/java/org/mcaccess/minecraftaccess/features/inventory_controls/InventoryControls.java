@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -50,7 +49,8 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 /**
  * This features lets us use keyboard in inventory screens. Works with all default minecraft screens.
  * <p>
- * Key binds and combinations: (all key binds are re-mappable(except two keys) from the game's controls menu and these key binds do not interrupt with any other key with same key.)<br>
+ * Key binds and combinations:
+ * (all key binds are re-mappable(except two keys) from the game's controls menu and these key binds do not interrupt with any other key with same key.)<br>
  * 1) Up Key (default: I) = Focus to slot above.<br>
  * 2) Right Key (default: L) = Focus to slot right.<br>
  * 3) Down Key (default: K) = Focus to slot down.<br>
@@ -93,7 +93,7 @@ public class InventoryControls {
         }
 
         String getString() {
-            return this.value;
+            return value;
         }
 
     }
@@ -108,7 +108,7 @@ public class InventoryControls {
 
     public void tick() {
         if (!interval.isReady()) return;
-        this.minecraftClient = Minecraft.getInstance();
+        minecraftClient = Minecraft.getInstance();
 
         if (minecraftClient.player == null) return;
         if (minecraftClient.screen == null) {
@@ -121,49 +121,44 @@ public class InventoryControls {
         }
         if (!(minecraftClient.screen instanceof AbstractContainerScreen)) return;
 
-        try {
-            loadConfig();
-            currentScreen = (AbstractContainerScreenAccessor) minecraftClient.screen;
-            currentRecipeBookWidget = getRecipeBookWidget(minecraftClient.screen);
-            currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
+        loadConfig();
+        currentScreen = (AbstractContainerScreenAccessor) minecraftClient.screen;
+        currentRecipeBookWidget = getRecipeBookWidget(minecraftClient.screen);
+        currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
 
-            interval.adjustNextReadyTimeBy(keyListener());
+        interval.adjustNextReadyTimeBy(keyListener());
 
-            // On screen open
-            if (previousScreen != currentScreen) {
-                previousScreen = currentScreen;
-                if (currentScreen instanceof AnvilScreen anvilScreen) {
-                    setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getName(), false);
-                }
-                if (currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
-                    EditBox searchBox = ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox();
-                    if (searchBox.canConsumeInput()) {
-                        setSearchBoxFocus(searchBox, false);
-                    }
-                }
-
-                //<editor-fold desc="Always open recipe book on screen open">
-                if (config.autoOpenRecipeBook && currentRecipeBookWidget != null) {
-                    if (!currentRecipeBookWidget.isVisible()) currentRecipeBookWidget.toggleVisibility();
-                    setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), false);
-                }
-                //</editor-fold>
-
-                refreshGroupListAndSelectFirstGroup(false); // Interrupt is false to let it narrate the screen's name
+        // On screen open
+        if (previousScreen != currentScreen) {
+            previousScreen = currentScreen;
+            if (currentScreen instanceof AnvilScreen anvilScreen) {
+                setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getName(), false);
             }
-
-            if (currentSlotsGroupList.isEmpty()) return;
-
-            if (config.narrateFocusedSlotChanges) {
-                String slotNarrationText = getCurrentSlotNarrationText();
-                if (!previousSlotText.equals(slotNarrationText)) {
-                    previousSlotText = slotNarrationText;
-                    MainClass.narrate(previousSlotText, true);
+            if (currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
+                EditBox searchBox = ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox();
+                if (searchBox.canConsumeInput()) {
+                    setSearchBoxFocus(searchBox, false);
                 }
             }
 
-        } catch (Exception e) {
-            log.error("Error encountered in Inventory Controls feature.", e);
+            //<editor-fold desc="Always open recipe book on screen open">
+            if (config.autoOpenRecipeBook && currentRecipeBookWidget != null) {
+                if (!currentRecipeBookWidget.isVisible()) currentRecipeBookWidget.toggleVisibility();
+                setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), false);
+            }
+            //</editor-fold>
+
+            refreshGroupListAndSelectFirstGroup(false); // Interrupt is false to let it narrate the screen's name
+        }
+
+        if (currentSlotsGroupList.isEmpty()) return;
+
+        if (config.narrateFocusedSlotChanges) {
+            String slotNarrationText = getCurrentSlotNarrationText();
+            if (!previousSlotText.equals(slotNarrationText)) {
+                previousSlotText = slotNarrationText;
+                MainClass.narrate(previousSlotText, true);
+            }
         }
     }
 
@@ -179,21 +174,20 @@ public class InventoryControls {
      */
     private void loadConfig() {
         config = Config.getInstance().inventoryControls;
-        interval.setDelay(config.delayMilliseconds, Interval.Unit.Millisecond);
+        interval.setDelay(config.delayMilliseconds, Interval.Unit.MILLISECOND);
     }
 
     /**
      * Handles the key inputs.
      */
     private boolean keyListener() {
-        KeyBindingsHandler kbh = KeyBindingsHandler.getInstance();
-        boolean isGroupKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsGroupKey);
-        boolean isUpKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsUpKey);
-        boolean isRightKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsRightKey);
-        boolean isDownKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsDownKey);
-        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsLeftKey);
-        boolean isSwitchTabKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsSwitchTabKey);
-        boolean isToggleCraftableKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsToggleCraftableKey);
+        boolean isGroupKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_GROUP_KEY.mapping);
+        boolean isUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_UP_KEY.mapping);
+        boolean isRightKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
+        boolean isDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_DOWN_KEY.mapping);
+        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_LEFT_KEY.mapping);
+        boolean isSwitchTabKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
+        boolean isToggleCraftableKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
         boolean isLeftShiftPressed = KeyUtils.isLeftShiftPressed();
         boolean isEnterPressed = KeyUtils.isEnterPressed();
         boolean isTPressed = KeyUtils.isAnyPressed(InputConstants.KEY_T);
@@ -246,10 +240,11 @@ public class InventoryControls {
         }
         if (isSwitchTabKeyPressed) {
             log.debug("Switch Tab key pressed");
-            if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen)
+            if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen) {
                 changeRecipeTab(!isLeftShiftPressed);
-            else if (currentScreen instanceof CreativeModeInventoryScreen)
+            } else if (currentScreen instanceof CreativeModeInventoryScreen) {
                 changeCreativeInventoryTab(!isLeftShiftPressed);
+            }
 
             return true;
         }
@@ -508,12 +503,12 @@ public class InventoryControls {
         StringBuilder toolTipString = new StringBuilder();
         List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, minecraftClient.player, TooltipFlag.NORMAL);
         for (Component line : toolTipList) {
-            toolTipString.append(line.getString()).append(" ");
+            toolTipString.append(line.getString()).append(' ');
         }
 
         Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
                 .flatMap(jukeboxPlayable -> jukeboxPlayable.song().key())
-                .ifPresent(discNumber -> toolTipString.append(" ").append(I18n.get("jukebox_song.minecraft." + discNumber.location().getPath())));
+                .ifPresent(discNumber -> toolTipString.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.location().getPath())));
 
         // <slot row col prefix> <count> <name> <description>
         return "%s %s".formatted(info, toolTipString.toString());
@@ -559,25 +554,17 @@ public class InventoryControls {
      *
      * @param goForward Whether to switch to next tab or previous tab.
      */
-    @SuppressWarnings("ConstantValue")
     private void changeCreativeInventoryTab(boolean goForward) {
         if (!(currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen)) return;
 
-        ListIterator<CreativeModeTab> nextTab = CreativeModeTabs.tabs().listIterator();
+        int tab = CreativeModeTabs.tabs().indexOf(CreativeModeInventoryScreenAccessor.getSelectedTab());
 
-        //noinspection StatementWithEmptyBody
-        while (nextTab.hasNext() && nextTab.next() != CreativeModeInventoryScreenAccessor.getSelectedTab()) {
-        }
-
-        if (goForward && nextTab.hasNext()) {
-            ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).invokeSelectTab(nextTab.next());
+        if (goForward && tab + 1 < CreativeModeTabs.tabs().size()) {
+            ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).invokeSelectTab(CreativeModeTabs.tabs().get(tab + 1));
             refreshGroupListAndSelectFirstGroup(false);
-        } else if (!goForward) {
-            nextTab.previous();
-            if (nextTab.hasPrevious()) {
-                ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).invokeSelectTab(nextTab.previous());
-                refreshGroupListAndSelectFirstGroup(false);
-            }
+        } else if (!goForward && tab - 1 >= 0) {
+            ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).invokeSelectTab(CreativeModeTabs.tabs().get(tab - 1));
+            refreshGroupListAndSelectFirstGroup(false);
         }
     }
 

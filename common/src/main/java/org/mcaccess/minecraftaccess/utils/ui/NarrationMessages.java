@@ -4,7 +4,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 /**
- * Preparing {@link net.minecraft.network.chat.Component}s for {@link NarrationElementOutput}
+ * Preparing {@link Component}s for {@link NarrationElementOutput}
  */
 public class NarrationMessages {
     /**

@@ -1,15 +1,17 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mcaccess.minecraftaccess.MainClass;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import org.mcaccess.minecraftaccess.MainClass;
 
 public class SlotsGroup {
     private final @NotNull String groupKey;
@@ -18,10 +20,10 @@ public class SlotsGroup {
     public List<SlotItem> slotItems;
     public boolean isScrollable = false;
 
-    private final HashMap<Slot, String> slotNamePrefixMap;
+    private final Map<Slot, String> slotNamePrefixMap;
 
     public SlotsGroup(@NotNull String groupKey, @Nullable String groupName, @Nullable Byte index, @Nullable List<SlotItem> slotItems) {
-        this.slotNamePrefixMap = new HashMap<>();
+        slotNamePrefixMap = new HashMap<>();
         this.groupKey = groupKey;
         this.groupName = groupName;
         this.index = index;
@@ -37,36 +39,36 @@ public class SlotsGroup {
     }
 
     public void setSlotPrefix(Slot slot, String prefix) {
-        this.slotNamePrefixMap.put(slot, prefix);
+        slotNamePrefixMap.put(slot, prefix);
     }
 
     public String getSlotPrefix(Slot slot) {
-        String output = this.slotNamePrefixMap.get(slot);
+        String output = slotNamePrefixMap.get(slot);
         return output != null ? output : "";
     }
 
     public SlotItem getFirstGroupItem() {
-        return this.slotItems.getFirst();
+        return slotItems.getFirst();
     }
 
     public SlotItem getLastGroupItem() {
-        return this.slotItems.getLast();
+        return slotItems.getLast();
     }
 
     public boolean hasSlotItemAbove(@NotNull SlotItem slotItem) {
-        return (slotItem.upSlotItem != null) || (slotItem.y != this.getFirstGroupItem().y);
+        return slotItem.upSlotItem != null || slotItem.y != getFirstGroupItem().y;
     }
 
     public boolean hasSlotItemBelow(@NotNull SlotItem slotItem) {
-        return (slotItem.downSlotItem != null) || (slotItem.y != this.getLastGroupItem().y);
+        return slotItem.downSlotItem != null || slotItem.y != getLastGroupItem().y;
     }
 
     public boolean hasSlotItemLeft(@NotNull SlotItem slotItem) {
-        return (slotItem.leftSlotItem != null) || (slotItem.x != this.getFirstGroupItem().x);
+        return slotItem.leftSlotItem != null || slotItem.x != getFirstGroupItem().x;
     }
 
     public boolean hasSlotItemRight(@NotNull SlotItem slotItem) {
-        return (slotItem.rightSlotItem != null) || (slotItem.x != this.getLastGroupItem().x);
+        return slotItem.rightSlotItem != null || slotItem.x != getLastGroupItem().x;
     }
 
     void mapTheGroupList(int factor) {
@@ -75,50 +77,55 @@ public class SlotsGroup {
 
     // Maps the list into 2d form like a matrix, the factor being the no. of columns and transpose is whether to transpose the matrix or not
     void mapTheGroupList(int factor, boolean transpose) {
-        int size = this.slotItems.size();
+        int size = slotItems.size();
         for (int i = 0; i < size; i++) {
             int above = i - factor;
             int right = i + 1;
             int below = i + factor;
             int left = i - 1;
 
-            if (above >= 0)
-                if (transpose)
-                    this.slotItems.get(i).leftSlotItem = this.slotItems.get(above);
-                else
-                    this.slotItems.get(i).upSlotItem = this.slotItems.get(above);
-
-            if (right < size && right % factor != 0)
-                if (transpose)
-                    this.slotItems.get(i).downSlotItem = this.slotItems.get(right);
-                else
-                    this.slotItems.get(i).rightSlotItem = this.slotItems.get(right);
-
-            if (below < size)
-                if (transpose)
-                    this.slotItems.get(i).rightSlotItem = this.slotItems.get(below);
-                else
-                    this.slotItems.get(i).downSlotItem = this.slotItems.get(below);
-
-            if (left >= 0 && (left + 1) % factor != 0)
-                if (transpose)
-                    this.slotItems.get(i).upSlotItem = this.slotItems.get(left);
-                else
-                    this.slotItems.get(i).leftSlotItem = this.slotItems.get(left);
+            if (above >= 0) {
+                if (transpose) {
+                    slotItems.get(i).leftSlotItem = slotItems.get(above);
+                } else {
+                    slotItems.get(i).upSlotItem = slotItems.get(above);
+                }
+            }
+            if (right < size && right % factor != 0) {
+                if (transpose) {
+                    slotItems.get(i).downSlotItem = slotItems.get(right);
+                } else {
+                    slotItems.get(i).rightSlotItem = slotItems.get(right);
+                }
+            }
+            if (below < size) {
+                if (transpose) {
+                    slotItems.get(i).rightSlotItem = slotItems.get(below);
+                } else {
+                    slotItems.get(i).downSlotItem = slotItems.get(below);
+                }
+            }
+            if (left >= 0 && (left + 1) % factor != 0) {
+                if (transpose) {
+                    slotItems.get(i).upSlotItem = slotItems.get(left);
+                } else {
+                    slotItems.get(i).leftSlotItem = slotItems.get(left);
+                }
+            }
         }
     }
 
     // Sets the row and column as prefix
     void setRowColumnPrefixForSlots() {
-        int size = (int) Math.round(Math.sqrt(this.slotItems.size()));
+        int size = (int) Math.round(Math.sqrt(slotItems.size()));
         int i = 0;
 
         for (int row = 1; row <= size; row++) {
             for (int column = 1; column <= size; column++) {
-                Slot slot = this.slotItems.get(i).slot;
+                Slot slot = slotItems.get(i).slot;
                 String prefix = MainClass.inventoryControls.getRowAndColumnFormat().formatted(row, column);
 
-                this.setSlotPrefix(slot, prefix);
+                setSlotPrefix(slot, prefix);
                 ++i;
             }
         }

@@ -1,5 +1,12 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
@@ -9,16 +16,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * Scans the area for entities, groups them and plays a sound at their location.
@@ -32,7 +33,7 @@ public class POIEntities {
 
     private final POIGroup<Entity> markedGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.markedEntity",
-            new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
+            new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
             e -> marked != null && marked.isInstance(e)
     );
 
@@ -94,7 +95,7 @@ public class POIEntities {
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (config.volume == 0f) return;
+        if (config.volume == 0.0f) return;
         Function<Entity, Vec3> mapper = e -> e.blockPosition().getCenter();
         if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
             markedGroup.playSoundForGroupItems(mapper, config.volume);
@@ -110,7 +111,7 @@ public class POIEntities {
      */
     private void loadConfig() {
         config = Config.getInstance().poi.entities;
-        interval.setDelay(config.delay, Interval.Unit.Millisecond);
+        interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
     }
 
     private void setMarked(@Nullable Entity entity) {

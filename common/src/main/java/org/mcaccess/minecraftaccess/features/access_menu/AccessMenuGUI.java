@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
@@ -25,51 +26,51 @@ public class AccessMenuGUI extends BaseScreen {
     public void init() {
         super.init();
 
-        Button blockAndFluidTargetInformationButton = this.buildButtonWidget("1", "minecraft_access.access_menu.gui.button.block_and_fluid_target_info",
+        Button blockAndFluidTargetInformationButton = buildButtonWidget("1", "minecraft_access.access_menu.gui.button.block_and_fluid_target_info",
                 (button) -> AccessMenu.getBlockAndFluidTargetInformation());
-        this.addRenderableWidget(blockAndFluidTargetInformationButton);
+        addRenderableWidget(blockAndFluidTargetInformationButton);
 
-        Button blockAndFluidTargetPositionButton = this.buildButtonWidget("2", "minecraft_access.access_menu.gui.button.block_and_fluid_target_position",
+        Button blockAndFluidTargetPositionButton = buildButtonWidget("2", "minecraft_access.access_menu.gui.button.block_and_fluid_target_position",
                 (button) -> AccessMenu.getBlockAndFluidTargetPosition());
-        this.addRenderableWidget(blockAndFluidTargetPositionButton);
+        addRenderableWidget(blockAndFluidTargetPositionButton);
 
-        Button lightLevelButton = this.buildButtonWidget("3", "minecraft_access.access_menu.gui.button.light_level",
+        Button lightLevelButton = buildButtonWidget("3", "minecraft_access.access_menu.gui.button.light_level",
                 (button) -> AccessMenu.getLightLevel());
-        this.addRenderableWidget(lightLevelButton);
+        addRenderableWidget(lightLevelButton);
 
-        Button findWaterButton = this.buildButtonWidget("4", "minecraft_access.access_menu.gui.button.find_water",
+        Button findWaterButton = buildButtonWidget("4", "minecraft_access.access_menu.gui.button.find_water",
                 (button) -> MainClass.fluidDetector.findClosestWaterSource(true));
-        this.addRenderableWidget(findWaterButton);
+        addRenderableWidget(findWaterButton);
 
-        Button findLavaButton = this.buildButtonWidget("5", "minecraft_access.access_menu.gui.button.find_lava",
+        Button findLavaButton = buildButtonWidget("5", "minecraft_access.access_menu.gui.button.find_lava",
                 (button) -> MainClass.fluidDetector.findClosestLavaSource(true));
-        this.addRenderableWidget(findLavaButton);
+        addRenderableWidget(findLavaButton);
 
-        Button biomeButton = this.buildButtonWidget("6", "minecraft_access.access_menu.gui.button.biome",
+        Button biomeButton = buildButtonWidget("6", "minecraft_access.access_menu.gui.button.biome",
                 (button) -> AccessMenu.getBiome());
-        this.addRenderableWidget(biomeButton);
+        addRenderableWidget(biomeButton);
 
-        Button timeOfDayButton = this.buildButtonWidget("7", "minecraft_access.access_menu.gui.button.time_of_day",
+        Button timeOfDayButton = buildButtonWidget("7", "minecraft_access.access_menu.gui.button.time_of_day",
                 (button) -> AccessMenu.getTimeOfDay());
-        this.addRenderableWidget(timeOfDayButton);
+        addRenderableWidget(timeOfDayButton);
 
-        Button xpButton = this.buildButtonWidget("8", "minecraft_access.access_menu.gui.button.xp",
+        Button xpButton = buildButtonWidget("8", "minecraft_access.access_menu.gui.button.xp",
                 (button) -> AccessMenu.getXP());
-        this.addRenderableWidget(xpButton);
+        addRenderableWidget(xpButton);
 
-        Button refreshScreenReaderButton = this.buildButtonWidget("9", "minecraft_access.access_menu.gui.button.refresh_screen_reader",
+        Button refreshScreenReaderButton = buildButtonWidget("9", "minecraft_access.access_menu.gui.button.refresh_screen_reader",
                 (button) -> ScreenReaderController.refreshScreenReader(true));
-        this.addRenderableWidget(refreshScreenReaderButton);
+        addRenderableWidget(refreshScreenReaderButton);
 
-        Button openConfigMenuButton = this.buildButtonWidget("0", "minecraft_access.access_menu.gui.button.open_config_menu",
+        Button openConfigMenuButton = buildButtonWidget("0", "minecraft_access.access_menu.gui.button.open_config_menu",
                 (button) -> Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, this).get()));
-        this.addRenderableWidget(openConfigMenuButton);
+        addRenderableWidget(openConfigMenuButton);
     }
 
     private Button buildButtonWidget(String shortcut, String translationKey, Button.OnPress pressAction) {
         Component label = Component.literal(shortcut)
                 .append(". ")
                 .append(I18n.get(translationKey));
-        return super.buildButtonWidget(label.getString(), pressAction);
+        return buildButtonWidget(label.getString(), pressAction);
     }
 }

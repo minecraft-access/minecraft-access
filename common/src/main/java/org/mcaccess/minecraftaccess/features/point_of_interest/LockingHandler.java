@@ -1,5 +1,9 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -10,10 +14,18 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.BowItem;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -23,10 +35,6 @@ import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Locks on to the nearest entity or block.<br><br>
@@ -56,7 +64,7 @@ public class LockingHandler {
      */
     private void loadConfig() {
         config = Config.getInstance().poi.locking;
-        interval.setDelay(config.delay, Interval.Unit.Millisecond);
+        interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
     }
 
     public void tick() {
@@ -74,7 +82,7 @@ public class LockingHandler {
     }
 
     private void handleLockingKeyPressing() {
-        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.lockingHandlerKey);
+        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping);
         if (isLockingKeyPressed && Screen.hasAltDown()) {
             if (lockedOnEntity != null || lockedOnBlockPos != null) {
                 unlock(true, true);
@@ -106,9 +114,9 @@ public class LockingHandler {
             Map<Property<?>, Comparable<?>> entries = blockState.getValues();
             boolean entriesOfLockedBlockNotChanged = entries.values() == entriesOfLockedOnBlock.values();
 
-            if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears)
+            if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears) {
                 PlayerUtils.lookAt(lockedOnBlockPos);
-            else {
+            } else {
                 // Unlock if the state of locked block is changed
                 unlock(true, true);
             }
@@ -149,9 +157,9 @@ public class LockingHandler {
             float bowPullingProgress = BowItem.getPowerForTime(player.getTicksUsingItem());
 
             int bowState = -1;
-            if (bowPullingProgress >= 0f && bowPullingProgress < 0.50f) bowState = 0;
-            if (bowPullingProgress >= 0.50f && bowPullingProgress < 1f) bowState = 1;
-            if (bowPullingProgress == 1f) bowState = 2;
+            if (bowPullingProgress >= 0.0f && bowPullingProgress < 0.50f) bowState = 0;
+            if (bowPullingProgress >= 0.50f && bowPullingProgress < 1.0f) bowState = 1;
+            if (bowPullingProgress == 1.0f) bowState = 2;
 
             Vec3 eyePosition = player.getEyePosition();
             Vec3 targetPosition = PlayerUtils.currentEntityLookingAtPosition;
@@ -181,7 +189,7 @@ public class LockingHandler {
 
         if (narrate) {
             if (config.unlockingSound) {
-                PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_BASEDRUM, 0.4f, 2f);
+                PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_BASEDRUM, 0.4f, 2.0f);
             } else {
                 MainClass.narrate(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
             }
@@ -264,10 +272,11 @@ public class LockingHandler {
         unlock(false, true);
         lockedOnEntity = entity;
 
-        String narration = NarrationUtils.narrateEntity(entity);
+        StringBuilder narration = new StringBuilder(NarrationUtils.narrateEntity(entity));
 
         if (Config.getInstance().poi.narrateDistance) {
-            narration += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
+            narration.append(' ')
+                    .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition()));
         }
         MainClass.narrate(I18n.get("minecraft_access.point_of_interest.locking.locked", narration), true);
         return true;
@@ -288,9 +297,10 @@ public class LockingHandler {
 
         lockedOnBlockPos = new BlockPos3d(position, absolutePosition);
 
-        String blockDescription = NarrationUtils.narrateBlock(lockedOnBlockPos, "");
+        StringBuilder blockDescription = new StringBuilder(NarrationUtils.narrateBlock(lockedOnBlockPos, ""));
         if (Config.getInstance().poi.narrateDistance) {
-            blockDescription += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlockPos);
+            blockDescription.append(' ')
+                    .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlockPos));
         }
         MainClass.narrate(I18n.get("minecraft_access.point_of_interest.locking.locked", blockDescription), true);
     }

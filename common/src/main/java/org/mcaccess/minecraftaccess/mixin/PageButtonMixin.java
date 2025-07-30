@@ -13,13 +13,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PageButton.class)
 public class PageButtonMixin {
-    @Shadow @Final private boolean isForward;
+    @Shadow
+    @Final
+    private boolean isForward;
 
     @Inject(at = @At("HEAD"), method = "renderWidget")
-    public void renderButton(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci){
-        if(this.isForward)
-            ((AbstractWidgetAccessor)this).setMessage(Component.literal(I18n.get("minecraft_access.menus.book_screen.next_page_button_name")));
-        else
-            ((AbstractWidgetAccessor)this).setMessage(Component.literal(I18n.get("minecraft_access.menus.book_screen.previous_page_button_name")));
+    public void renderButton(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if (isForward) {
+            ((AbstractWidgetAccessor) this).setMessage(Component.literal(I18n.get("minecraft_access.menus.book_screen.next_page_button_name")));
+        } else {
+            ((AbstractWidgetAccessor) this).setMessage(Component.literal(I18n.get("minecraft_access.menus.book_screen.previous_page_button_name")));
+        }
     }
 }

@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.utils.condition;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mcaccess.minecraftaccess.test_utils.MockInterval;
 import org.mcaccess.minecraftaccess.test_utils.MockKeystrokeAction;
 import org.mcaccess.minecraftaccess.test_utils.extensions.MockConfigExtension;

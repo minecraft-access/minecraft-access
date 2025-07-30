@@ -1,6 +1,10 @@
 package org.mcaccess.minecraftaccess.utils;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -12,7 +16,6 @@ import java.util.zip.ZipInputStream;
  *
  * @author www.codejava.net
  */
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class UnzipUtility {
     /**
      * Size of the buffer to read/write data

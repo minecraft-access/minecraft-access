@@ -1,5 +1,9 @@
 package org.mcaccess.minecraftaccess.utils;
 
+import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -28,12 +32,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.features.point_of_interest.BlockPos3d;
-
-import java.util.Collection;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * This class provides delegate calls to {@link LocalPlayer}.
@@ -44,9 +45,12 @@ import java.util.stream.Collectors;
  * we can't go back to Junit 4 from 5 since some of the mechanisms currently used for unit testing have no alternatives in 4.
  * Forgive me for doing this, but it's the most economical way.)
  */
-public class PlayerUtils {
+public final class PlayerUtils {
     // A way to get exactly at what part of the entity the player is looking when locked on it
     public static Vec3 currentEntityLookingAtPosition = null;
+
+    private PlayerUtils() {
+    }
 
     public static void playSoundOnPlayer(Holder.Reference<SoundEvent> sound, float volume, float pitch) {
         WorldUtils.getClientPlayer().playSound(sound.value(), volume, pitch);
@@ -110,21 +114,20 @@ public class PlayerUtils {
         currentEntityLookingAtPosition = firstPos;
     }
 
-    public static boolean isPlayerCanSee(Vec3 playerEyePos, Vec3 somewhereOnEntity, Entity entity) {
-        BlockHitResult hitResult = entity.level().clip(
-                new ClipContext(somewhereOnEntity, playerEyePos,
-                        ClipContext.Block.COLLIDER,
-                        ClipContext.Fluid.NONE, entity));
-        return hitResult.getType() == HitResult.Type.MISS;
-    }
-
-    @SuppressWarnings("unused")
     public static void lookAt(BlockPos position) {
         lookAt(position.getCenter());
     }
 
     public static void lookAt(BlockPos3d position) {
         lookAt(position.getAccuratePosition());
+    }
+
+    public static boolean isPlayerCanSee(Vec3 playerEyePos, Vec3 somewhereOnEntity, Entity entity) {
+        BlockHitResult hitResult = entity.level().clip(
+                new ClipContext(somewhereOnEntity, playerEyePos,
+                        ClipContext.Block.COLLIDER,
+                        ClipContext.Fluid.NONE, entity));
+        return hitResult.getType() == HitResult.Type.MISS;
     }
 
     public static int getExperienceLevel() {
@@ -152,11 +155,11 @@ public class PlayerUtils {
      * So use this method to get what fluid the player might be looking at.
      *
      * @return fluid block if player isn't in fluid and is looking at a fluid block,
-     * or MinecraftClient.crosshairTarget otherwise
+     *     or MinecraftClient.crosshairTarget otherwise
      */
     public static HitResult crosshairTarget(double rayCastDistance) {
         BlockHitResult fluidHitResult = crosshairFluidTarget(rayCastDistance);
-        if (HitResult.Type.BLOCK.equals(fluidHitResult.getType()) && PlayerUtils.isNotInFluid()) {
+        if (fluidHitResult.getType() == HitResult.Type.BLOCK && isNotInFluid()) {
             return fluidHitResult;
         } else {
             return Minecraft.getInstance().hitResult;
@@ -169,7 +172,7 @@ public class PlayerUtils {
         // Whatever the inner values are, they are not used.
         BlockHitResult missed = BlockHitResult.miss(Vec3.ZERO, Direction.UP, BlockPos.ZERO);
 
-        if (!HitResult.Type.BLOCK.equals(hit.getType())) return missed;
+        if (hit.getType() != HitResult.Type.BLOCK) return missed;
 
         BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
         ClientLevel world = WorldUtils.getClientWorld();
@@ -248,36 +251,36 @@ public class PlayerUtils {
 
     public static boolean isCreative() {
         Minecraft client = Minecraft.getInstance();
-        if (client == null || client.gameMode == null) return false;
+        if (client.gameMode == null) return false;
         GameType currentGameMode = client.gameMode.getPlayerMode();
         return currentGameMode == GameType.CREATIVE;
     }
 
     public static boolean isSpectator() {
         Minecraft client = Minecraft.getInstance();
-        if (client == null || client.gameMode == null) return false;
+        if (client.gameMode == null) return false;
         GameType currentGameMode = client.gameMode.getPlayerMode();
         return currentGameMode == GameType.SPECTATOR;
     }
 
     public static boolean isAdventure() {
         Minecraft client = Minecraft.getInstance();
-        if (client == null || client.gameMode == null) return false;
+        if (client.gameMode == null) return false;
         GameType currentGameMode = client.gameMode.getPlayerMode();
         return currentGameMode == GameType.ADVENTURE;
     }
 
     public static boolean isSurvival() {
         Minecraft client = Minecraft.getInstance();
-        if (client == null || client.gameMode == null) return false;
+        if (client.gameMode == null) return false;
         GameType currentGameMode = client.gameMode.getPlayerMode();
         return currentGameMode == GameType.SURVIVAL;
     }
 
     public static boolean isHardCore() {
         Minecraft client = Minecraft.getInstance();
-        if (client == null || client.level == null) return false;
+        if (client.level == null) return false;
         LevelData levelData = client.level.getLevelData();
-        return levelData != null && levelData.isHardcore();
+        return levelData.isHardcore();
     }
 }

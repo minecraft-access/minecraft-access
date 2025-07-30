@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.utils;
 
+import java.util.function.Predicate;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -11,17 +13,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 
-import java.util.function.Predicate;
-
-public class WorldUtils {
+public final class WorldUtils {
+    private WorldUtils() {
+    }
 
     public static BlockPos blockPosOf(Vec3 accuratePos) {
         return BlockPos.containing(accuratePos);
-    }
-
-    public record BlockInfo(BlockPos pos, BlockState state, Block type, BlockEntity entity) {
     }
 
     public static BlockState getBlockState(BlockPos pos) {
@@ -90,5 +90,8 @@ public class WorldUtils {
     public static void playSoundAtPosition(SoundEvent sound, float volume, float pitch, Vec3 position) {
         // note that the useDistance param only works for positions 100 blocks away, check its code.
         getClientWorld().playLocalSound(position.x, position.y, position.z, sound, SoundSource.BLOCKS, volume, pitch, true);
+    }
+
+    public record BlockInfo(BlockPos pos, BlockState state, Block type, BlockEntity entity) {
     }
 }

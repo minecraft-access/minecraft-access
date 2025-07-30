@@ -6,6 +6,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
+
 import org.mcaccess.minecraftaccess.MainClass;
 
 /**
@@ -18,13 +19,12 @@ public class BiomeIndicator {
 
     public void tick() {
         Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient == null) return;
         if (minecraftClient.level == null) return;
         if (minecraftClient.player == null) return;
         if (minecraftClient.screen != null) return;
 
-        Holder<Biome> var27 = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
-        String name = I18n.get(getBiomeName(var27));
+        Holder<Biome> biome = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
+        String name = I18n.get(getBiomeName(biome));
 
         if (!name.equalsIgnoreCase(previousBiome)) {
             previousBiome = name;
@@ -50,8 +50,8 @@ public class BiomeIndicator {
      */
     private static String getBiomeTranslationKey(Holder<Biome> biome) {
         return biome.unwrap().map(
-                (biomeKey) -> "biome." + biomeKey.location().getNamespace() + "." + biomeKey.location().getPath(),
-                (biomeValue) -> "[unregistered " + biomeValue + "]" // For unregistered biome
+                (biomeKey) -> "biome." + biomeKey.location().getNamespace() + '.' + biomeKey.location().getPath(),
+                (biomeValue) -> "[unregistered " + biomeValue + ']' // For unregistered biome
         );
     }
 }

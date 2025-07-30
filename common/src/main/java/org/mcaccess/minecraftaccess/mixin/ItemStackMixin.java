@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import java.util.List;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
@@ -13,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
-
 @Mixin(value = ItemStack.class, priority = 0)
 public class ItemStackMixin {
     @Inject(at = @At("RETURN"), method = "getTooltipLines")
@@ -26,6 +26,6 @@ public class ItemStackMixin {
 
         int totalDurability = itemStack.getMaxDamage();
         int remainingDurability = totalDurability - itemStack.getDamageValue();
-        list.add(1, Component.nullToEmpty((I18n.get("item.durability", remainingDurability, totalDurability).formatted(ChatFormatting.GREEN))));
+        list.add(1, Component.nullToEmpty(I18n.get("item.durability", remainingDurability, totalDurability).formatted(ChatFormatting.GREEN)));
     }
 }

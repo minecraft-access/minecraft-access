@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.features.narrate_crosshair;
 
+import java.util.Arrays;
+
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
@@ -8,8 +10,6 @@ import snownee.jade.JadeClient;
 import snownee.jade.impl.Tooltip;
 import snownee.jade.impl.ui.BoxElementImpl;
 import snownee.jade.overlay.RayTracing;
-
-import java.util.Arrays;
 
 public class Jade implements CrosshairNarrator {
     @Override

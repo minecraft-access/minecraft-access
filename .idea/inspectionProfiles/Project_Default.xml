@@ -14,13 +14,6 @@
         <inspection_tool class="BlockMarkerComments" enabled="true" level="WARNING" enabled_by_default="true"/>
         <inspection_tool class="BooleanExpressionMayBeConditional" enabled="true" level="WARNING" enabled_by_default="true"
                          editorAttributes="WARNING_ATTRIBUTES"/>
-        <inspection_tool class="BooleanMethodNameMustStartWithQuestion" enabled="true" level="WEAK WARNING" enabled_by_default="true"
-                         editorAttributes="INFO_ATTRIBUTES">
-            <option name="ignoreBooleanMethods" value="false"/>
-            <option name="ignoreInAnnotationInterface" value="true"/>
-            <option name="onlyWarnOnBaseMethods" value="true"/>
-            <option name="questionString" value="are,can,check,contains,could,endsWith,equals,has,is,matches,must,shall,should,startsWith,was,were,will,would"/>
-        </inspection_tool>
         <inspection_tool class="CallToStringConcatCanBeReplacedByOperator" enabled="true" level="WARNING" enabled_by_default="true"/>
         <inspection_tool class="CastCanBeReplacedWithVariable" enabled="true" level="WARNING" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES"/>
         <inspection_tool class="CastThatLosesPrecision" enabled="true" level="WARNING" enabled_by_default="true">
@@ -61,6 +54,23 @@
         <inspection_tool class="ExceptionNameDoesntEndWithException" enabled="true" level="WARNING" enabled_by_default="true"/>
         <inspection_tool class="ExtendsUtilityClass" enabled="true" level="ERROR" enabled_by_default="true" editorAttributes="ERRORS_ATTRIBUTES"/>
         <inspection_tool class="FallthruInSwitchStatement" enabled="true" level="WARNING" enabled_by_default="true"/>
+        <inspection_tool class="FieldNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
+            <extension name="ConstantNamingConvention" enabled="true">
+                <option name="m_regex" value="[A-Z][A-Z_\d]*"/>
+                <option name="m_minLength" value="1"/>
+                <option name="m_maxLength" value="100"/>
+            </extension>
+            <extension name="ConstantWithMutableFieldTypeNamingConvention" enabled="true">
+                <option name="m_regex" value="[A-Z][A-Z_\d]*"/>
+                <option name="m_minLength" value="1"/>
+                <option name="m_maxLength" value="100"/>
+            </extension>
+            <extension name="EnumeratedConstantNamingConvention" enabled="true">
+                <option name="m_regex" value="[A-Z][A-Z_\d]*"/>
+                <option name="m_minLength" value="1"/>
+                <option name="m_maxLength" value="100"/>
+            </extension>
+        </inspection_tool>
         <inspection_tool class="FloatingPointEquality" enabled="true" level="WARNING" enabled_by_default="true"/>
         <inspection_tool class="GrStringStyleViolation" enabled="true" level="WEAK WARNING" enabled_by_default="true">
             <option name="interpolatedStringQuotation" value="DOUBLE_QUOTED"/>

@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.test_utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,7 +32,7 @@ public class MockMinecraftClientWrapper {
     }
 
     public void setScreen(Class<? extends Screen> screenClass) {
-        Screen screen = Mockito.mock(screenClass);
+        Screen screen = mock(screenClass);
         lenient().doAnswer((ignored) -> {
             mockitoClient.screen = null;
             return null;

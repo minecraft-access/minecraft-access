@@ -1,27 +1,21 @@
 package org.mcaccess.minecraftaccess.utils.system;
 
-public class OsUtils {
-    private static String OS = null;
-    private static String Arch = null;
+public final class OsUtils {
+    private OsUtils() {
+    }
 
     /**
      * Returns the name of the OS
      */
     public static String getOsName() {
-        if (OS == null) {
-            OS = System.getProperty("os.name");
-        }
-        return OS;
+        return System.getProperty("os.name");
     }
 
     /**
      * Returns the architecture of the JRE
      */
-    public static String getOsArchitecture(){
-        if (Arch == null) {
-            Arch = System.getProperty("os.arch");
-        }
-        return Arch;
+    public static String getOsArchitecture() {
+        return System.getProperty("os.arch");
     }
 
     /**
@@ -52,7 +46,7 @@ public class OsUtils {
      * Checks whether the architecture of JRE is 64 bit or not
      * @return Returns true if the architecture is 64 bit
      */
-    public static boolean is64Bit(){
+    public static boolean is64Bit() {
         return getOsArchitecture().contains("64");
     }
 }

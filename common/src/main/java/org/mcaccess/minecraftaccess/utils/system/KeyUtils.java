@@ -1,21 +1,24 @@
 package org.mcaccess.minecraftaccess.utils.system;
 
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
 
-import java.util.Arrays;
-import java.util.stream.IntStream;
+import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
 
 /**
  * For Alt (left OR right), Shift (left OR right), Control (left OR right) pressing conditions,
  * use Screen.has[Alt|Shift|Control]Down() methods instead.
  */
-public class KeyUtils {
+public final class KeyUtils {
+    private KeyUtils() {
+    }
+
     public static boolean isOnePressed(int keyCode) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient == null) return false;
         long handle = minecraftClient.getWindow().getWindow();
         return InputConstants.isKeyDown(handle, keyCode);
     }
@@ -25,7 +28,6 @@ public class KeyUtils {
      */
     public static boolean isAnyPressed(int... keyCodes) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient == null) return false;
         long handle = minecraftClient.getWindow().getWindow();
         return IntStream.of(keyCodes).anyMatch(c -> InputConstants.isKeyDown(handle, c));
     }
@@ -49,7 +51,7 @@ public class KeyUtils {
         if (keyCode > 7) {
             // If this keybinding is bound to a keyboard-key,
             // let's use our key-pressing-check logic to circumvent the limitation.
-            return KeyUtils.isOnePressed(keyCode);
+            return isOnePressed(keyCode);
         } else {
             // If this keybinding is bound to a non-keyboard key, execute the original method.
             return b.isDown();

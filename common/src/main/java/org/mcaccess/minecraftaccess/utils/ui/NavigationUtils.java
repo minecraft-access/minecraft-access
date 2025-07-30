@@ -7,7 +7,10 @@ import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.navigation.ScreenDirection;
 import org.jetbrains.annotations.Nullable;
 
-public class NavigationUtils {
+public final class NavigationUtils {
+    private NavigationUtils() {
+    }
+
     /**
      * Only for vertical navigation
      *
@@ -15,7 +18,7 @@ public class NavigationUtils {
      */
     public static boolean isDirectionBackward(FocusNavigationEvent event) {
         if (event instanceof FocusNavigationEvent.ArrowNavigation(ScreenDirection direction)) {
-            return direction.equals(ScreenDirection.UP);
+            return direction == ScreenDirection.UP;
         } else if (event instanceof FocusNavigationEvent.TabNavigation(boolean forward)) {
             return !forward;
         }

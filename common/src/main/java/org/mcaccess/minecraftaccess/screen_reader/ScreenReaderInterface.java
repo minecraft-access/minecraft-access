@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.screen_reader;
 
-
 public interface ScreenReaderInterface {
 
     /**
@@ -19,7 +18,7 @@ public interface ScreenReaderInterface {
      * @param text The text to be spoken
      * @param interrupt Specifies whether to skip speaking the previous text or not
      */
-    void say(String text, boolean interrupt);
+    void narrate(String text, boolean interrupt);
 
     /**
      * Closes the screen reader
