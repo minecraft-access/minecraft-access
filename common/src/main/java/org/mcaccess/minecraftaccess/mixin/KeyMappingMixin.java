@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * This class is for making one {@link InputConstants.Key} being multiple {@link KeyMapping}'s "boundKey".
- * See issue <a href="https://github.com/khanshoaib3/minecraft-access/issues/310">#310</a> for details.
+ * See issue <a href="https://github.com/minecraft-access/minecraft-access/issues/310">#310</a> for details.
  */
 @Mixin(KeyMapping.class)
 public class KeyMappingMixin {

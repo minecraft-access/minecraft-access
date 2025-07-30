@@ -28,7 +28,7 @@ public final class MouseUtils {
 
     public static void moveAndLeftClick(int x, int y) {
         move(x, y);
-        // fix the https://github.com/khanshoaib3/minecraft-access/issues/65
+        // fix the https://github.com/minecraft-access/minecraft-access/issues/65
         if (OsUtils.isWindows()) {
             try {
                 // with a little bit of waiting, everything is ok now.

@@ -295,7 +295,7 @@ public class InventoryControls {
             } else if (currentScreen instanceof AnvilScreen anvilScreen) {
                 setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getName(), true);
             } else if (recipeBookIsOpening()) {
-                // resolve can-not-enter-characters-issue https://github.com/khanshoaib3/minecraft-access/issues/67
+                // resolve can-not-enter-characters-issue https://github.com/minecraft-access/minecraft-access/issues/67
                 minecraftClient.screen.setFocused(currentRecipeBookWidget);
                 setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), true);
             }
