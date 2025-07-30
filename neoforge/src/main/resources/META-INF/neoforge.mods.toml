@@ -7,7 +7,7 @@ license = "GPL-3.0-only"
 modId = "minecraft_access"
 version = "${version}"
 displayName = "Minecraft Access"
-authors = "Shoaib, Boholder, TheSuperGamer20578, BrailleBennett"
+authors = "Shoaib, TheSuperGamer20578, BrailleBennett, and contributors"
 description = '''
 A mod that helps visually impaired players play Minecraft.
 '''
@@ -47,7 +47,7 @@ reason = "Jade can be used to integrate with the built in narrator of the mod by
 versionRange = "[${jade_neoforge_version},)"
 
 [mc-publish]
-dependencies=[
+dependencies = [
     "architectury@${architectury_api_version}(embedded){modrinth:lhGA9TYQ}{curseforge:419699}",
     "cloth-config@${cloth_config_version}(embedded){modrinth:9s6osm5g}{curseforge:348521}",
     "jade@${jade_neoforge_version}(optional){modrinth:nvQzSEkH}{curseforge:324717}",
