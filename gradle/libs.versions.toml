@@ -16,7 +16,7 @@ architecturyApiNeoForge = { module = "dev.architectury:architectury-neoforge", v
 clothConfig = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-fabricApi = "net.fabricmc.fabric-api:fabric-api:0.131.2+"
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.131.0+1.21.8"
 fabricLoader = "net.fabricmc:fabric-loader:0.17.1"
 jadeFabric = "maven.modrinth:jade:19.0.4+fabric"
 jadeNeoForge = "maven.modrinth:jade:19.0.4+neoforge"
