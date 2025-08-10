@@ -1,5 +1,5 @@
-architectury {
-    common("fabric", "neoforge")
+plugins {
+    alias(libs.plugins.neogradle)
 }
 
 idea {
@@ -8,12 +8,18 @@ idea {
     }
 }
 
-dependencies {
-    modImplementation libs.jadeFabric
-    modImplementation libs.architecturyApi
-    modImplementation libs.clothConfig
+tasks.shadowJar.enabled = false
 
-    // https://projectlombok.org/setup/gradle
+dependencies {
+    compileOnly libs.neoForge
+    compileOnly libs.mixin
+    compileOnly libs.mixinExtras
+    annotationProcessor libs.mixinExtras
+
+    compileOnly libs.jadeNeoForge
+    compileOnly libs.architecturyApiNeoForge
+    compileOnly libs.clothConfigNeoForge
+
     compileOnly libs.lombok
     annotationProcessor libs.lombok
     testCompileOnly libs.lombok
@@ -35,6 +41,5 @@ dependencies {
 test {
     useJUnitPlatform()
     // Suppress JVM warning about mockito's behavior when running unit tests with IntelliJ
-    // ref: https://stackoverflow.com/questions/77951485/getting-a-java-agent-has-been-loaded-warning-in-intellij-after-upgrading-jdk-17
-    jvmArgs("-XX:+EnableDynamicAgentLoading")
+    jvmArgs('-XX:+EnableDynamicAgentLoading')
 }

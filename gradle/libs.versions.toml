@@ -22,6 +22,8 @@ jadeFabric = "maven.modrinth:jade:19.0.4+fabric"
 jadeNeoForge = "maven.modrinth:jade:19.0.4+neoforge"
 lombok = "org.projectlombok:lombok:1.18.38"
 minecraft = "com.mojang:minecraft:1.21.8"
+mixin = "org.spongepowered:mixin:0.8.5"
+mixinExtras = "io.github.llamalad7:mixinextras-common:0.3.5"
 modMenu = "com.terraformersmc:modmenu:15.0.0-beta.3"
 neoForge = "net.neoforged:neoforge:21.8.29"
 parchment = "org.parchmentmc.data:parchment-1.21.8:2025.07.20"
@@ -38,7 +40,7 @@ mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.re
 checkstyle = "com.puppycrawl.tools:checkstyle:11.0.0"
 
 [plugins]
-architecturyLoom = { id = "dev.architectury.loom", version = "1.10.434" }
-architecturyPlugin = { id = "architectury-plugin", version = "3.4.161" }
 gitVersion = { id = "com.palantir.git-version", version = "4.0.0" }
+loom = { id = "fabric-loom", version = "1.11-SNAPSHOT" }
+neogradle = { id = "net.neoforged.gradle.userdev", version = "7.0.192" }
 shadow = { id = "com.gradleup.shadow", version = "9.0.0" }

@@ -1,51 +1,33 @@
 plugins {
-    alias(libs.plugins.architecturyPlugin)
-    alias(libs.plugins.architecturyLoom) apply false
+    id 'java'
+    id 'idea'
     alias(libs.plugins.gitVersion)
+    alias(libs.plugins.shadow) apply false
 }
 
 def git = versionDetails()
 def tag = git.lastTag.substring(1)
-if (System.getenv("GITHUB_ACTIONS") == "true") {
-    if (System.getenv("GITHUB_WORKFLOW") == "Release") {
+if (System.getenv('GITHUB_ACTIONS') == 'true') {
+    if (System.getenv('GITHUB_WORKFLOW') == 'Release') {
         version = tag
-    } else if (System.getenv("PULL_REQUEST")) {
-        version = "${tag}${tag.contains("-") ? "." : "-"}SNAPSHOT.pr.${System.getenv("PULL_REQUEST")}.${System.getenv("GITHUB_RUN_NUMBER")}"
+    } else if (System.getenv('PULL_REQUEST')) {
+        version = "${tag}${tag.contains('-') ? '.' : '-'}SNAPSHOT.pr.${System.getenv('PULL_REQUEST')}.${System.getenv('GITHUB_RUN_NUMBER')}"
     } else {
-        version = "${tag}${tag.contains("-") ? "." : "-"}SNAPSHOT.${System.getenv("GITHUB_RUN_NUMBER")}"
+        version = "${tag}${tag.contains('-') ? '.' : '-'}SNAPSHOT.${System.getenv('GITHUB_RUN_NUMBER')}"
     }
 } else {
-    version = "${tag}${tag.contains("-") ? "." : "-"}SNAPSHOT"
-}
-
-architectury {
-    minecraft = libs.minecraft.get().version
+    version = "${tag}${tag.contains('-') ? '.' : '-'}SNAPSHOT"
 }
 
 subprojects {
-    apply plugin: libs.plugins.architecturyLoom.get().pluginId
-    version = "${rootProject.version}+${project.name}"
+    apply plugin: 'java'
+    apply plugin: 'com.gradleup.shadow'
 
-    loom {
-        silentMojangMappingsLicense()
-        runs {
-            remove server
-        }
-    }
+    version = "${rootProject.version}+${project.name}"
 
     idea {
         module {
             excludeDirs += file('./run/')
-        }
-    }
-
-    dependencies {
-        minecraft libs.minecraft
-        mappings loom.layered() {
-            officialMojangMappings()
-            parchment variantOf(libs.parchment) {
-                artifactType("zip")
-            }
         }
     }
 
@@ -61,8 +43,12 @@ subprojects {
             url = 'https://maven.neoforged.net/releases/'
         }
         maven {
-            name = 'Mod Menu'
+            name = 'TerraformersMC'
             url = 'https://maven.terraformersmc.com/'
+        }
+        maven {
+            name = 'Shedaniel'
+            url = 'https://maven.shedaniel.me/'
         }
         exclusiveContent {
             forRepository {
@@ -76,26 +62,40 @@ subprojects {
             }
         }
     }
-}
 
-allprojects {
-    apply plugin: "java"
-    apply plugin: libs.plugins.architecturyPlugin.get().pluginId
-    apply plugin: "maven-publish"
-    apply plugin: 'checkstyle'
-
-    base.archivesName = 'minecraft-access'
-
-    group = "org.mcaccess.minecraftaccess"
+    jar {
+        archiveClassifier = 'dev'
+    }
 
     tasks.withType(JavaCompile).configureEach {
-        options.encoding = "UTF-8"
+        options.encoding = 'UTF-8'
         options.release = 21
     }
 
-    java {
-        withSourcesJar()
+    processResources {
+        filesMatching(['fabric.mod.json', 'META-INF/neoforge.mods.toml']) {
+            expand version: project.version,
+                    fabric_loader_version: libs.fabricLoader.get().version,
+                    fabric_api_version: libs.fabricApi.get().version,
+                    architectury_api_version: libs.architecturyApiFabric.get().version,
+                    jade_fabric_version: libs.jadeFabric.get().version,
+                    cloth_config_version: libs.clothConfigFabric.get().version,
+                    minecraft_version: libs.minecraft.get().version,
+                    neoforge_version: libs.neoForge.get().version,
+                    jade_neoforge_version: libs.jadeNeoForge.get().version
+        }
     }
+
+    shadowJar {
+        configurations = [project.configurations.shadow]
+    }
+}
+
+allprojects {
+    apply plugin: 'checkstyle'
+
+    group = 'org.mcaccess'
+    base.archivesName = 'minecraft-access'
 
     dependencies {
         checkstyle libs.checkstyle
