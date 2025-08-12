@@ -1,18 +1,17 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.client.gui.screens.WinScreen;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(WinScreen.class)
 public class WinScreenMixin {
-    @Inject(at = @At("HEAD"), method = "init")
-    public void init(CallbackInfo ci) {
-        MainClass.narrate(I18n.get("minecraft_access.credits_screen.started_tip"), false);
+    @ModifyReturnValue(at = @At("RETURN"), method = "getNarrationMessage")
+    private Component addCreditsTip(Component original) {
+        return Component.translatable("minecraft_access.credits_screen.started_tip")
+                .append(Component.translatable("minecraft_access.other.words_connection"))
+                .append(original);
     }
 }
