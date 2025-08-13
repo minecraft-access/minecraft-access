@@ -682,7 +682,7 @@ public final class GroupGenerator {
 
         RecipeBookComponent<?> recipeBookWidget = null;
         if (screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen) {
-            recipeBookWidget = ((AbstractRecipeBookScreenAccessor) recipeBookScreen).getRecipeBookComponent();
+            recipeBookWidget = ((AbstractRecipeBookScreenAccessor) recipeBookScreen).minecraft_access$getRecipeBookComponent();
         }
         if (recipeBookWidget == null || !recipeBookWidget.isVisible()) {
             return foundGroups;
