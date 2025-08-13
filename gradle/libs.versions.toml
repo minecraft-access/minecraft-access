@@ -16,17 +16,17 @@ architecturyApiNeoForge = { module = "dev.architectury:architectury-neoforge", v
 clothConfig = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-fabricApi = "net.fabricmc.fabric-api:fabric-api:0.131.0+1.21.8"
-fabricLoader = "net.fabricmc:fabric-loader:0.17.1"
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.131.3+"
+fabricLoader = "net.fabricmc:fabric-loader:0.17.2"
 jadeFabric = "maven.modrinth:jade:19.0.4+fabric"
 jadeNeoForge = "maven.modrinth:jade:19.0.4+neoforge"
 lombok = "org.projectlombok:lombok:1.18.38"
 minecraft = "com.mojang:minecraft:1.21.8"
 modMenu = "com.terraformersmc:modmenu:15.0.0-beta.3"
-neoForge = "net.neoforged:neoforge:21.8.29"
+neoForge = "net.neoforged:neoforge:21.8.31"
 parchment = "org.parchmentmc.data:parchment-1.21.8:2025.07.20"
 
-assertjCore = "org.assertj:assertj-core:3.27.3"
+assertjCore = "org.assertj:assertj-core:3.27.4"
 jmhCore = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmhGeneratorAnnprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
@@ -41,4 +41,4 @@ checkstyle = "com.puppycrawl.tools:checkstyle:11.0.0"
 architecturyLoom = { id = "dev.architectury.loom", version = "1.10.434" }
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.161" }
 gitVersion = { id = "com.palantir.git-version", version = "4.0.0" }
-shadow = { id = "com.gradleup.shadow", version = "9.0.0" }
+shadow = { id = "com.gradleup.shadow", version = "9.0.1" }
