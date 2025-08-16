@@ -176,8 +176,8 @@ public class AccessMenu {
 
         minecraftClient.player.clientSideCloseContainer();
 
-        Holder<Biome> var27 = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
-        String name = I18n.get(BiomeIndicator.getBiomeName(var27));
+        Holder<Biome> currentBiome = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
+        String name = I18n.get(BiomeIndicator.getBiomeName(currentBiome));
         MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true);
     }
 

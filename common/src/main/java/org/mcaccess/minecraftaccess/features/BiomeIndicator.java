@@ -3,8 +3,10 @@ package org.mcaccess.minecraftaccess.features;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.MainClass;
@@ -15,20 +17,22 @@ import org.mcaccess.minecraftaccess.MainClass;
 @Slf4j
 public class BiomeIndicator {
     @Nullable
-    private String previousBiome = null;
+    private Holder<Biome> previousBiome = null;
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.level == null) return;
+        if (client.player == null) return;
+        if (client.screen != null) return;
+        BlockPos pos = client.player.blockPosition();
+        LevelChunk currentChunk = client.level.getChunkSource().getChunk(pos.getX() >> 4, pos.getZ() >> 4, false);
+        if (currentChunk == null) return;
 
-        Holder<Biome> biome = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
-        String name = I18n.get(getBiomeName(biome));
-
-        if (!name.equalsIgnoreCase(previousBiome)) {
-            previousBiome = name;
-            MainClass.narrate(I18n.get("minecraft_access.other.biome", name), true);
+        Holder<Biome> currentBiome = client.level.getBiome(client.player.blockPosition());
+        if (currentBiome != previousBiome) {
+            previousBiome = currentBiome;
+            String translatedBiome = I18n.get(getBiomeName(currentBiome));
+            MainClass.narrate(I18n.get("minecraft_access.other.biome", translatedBiome), true);
         }
     }
 
@@ -39,19 +43,10 @@ public class BiomeIndicator {
      * @return the biome's name
      */
     public static String getBiomeName(Holder<Biome> biome) {
-        return I18n.get(getBiomeTranslationKey(biome));
-    }
-
-    /**
-     * Gets the biome translation key from registry entry
-     *
-     * @param biome the biome's registry entry
-     * @return the biome's translation key
-     */
-    private static String getBiomeTranslationKey(Holder<Biome> biome) {
-        return biome.unwrap().map(
+        String key = biome.unwrap().map(
                 (biomeKey) -> "biome." + biomeKey.location().getNamespace() + '.' + biomeKey.location().getPath(),
                 (biomeValue) -> "[unregistered " + biomeValue + ']' // For unregistered biome
         );
+        return I18n.get(key);
     }
 }
