@@ -70,7 +70,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ComparatorMode;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
@@ -595,19 +594,10 @@ public final class NarrationUtils {
      */
     private static String narrateFluidBlock(BlockPos pos) {
         FluidState fluidState = WorldUtils.getClientWorld().getFluidState(pos);
-        String name = getFluidI18NName(fluidState.holder());
+        Optional<String> fluidName = getTranslatedName(fluidState.holder(), "block");
         int level = fluidState.getAmount();
         String levelString = level < 8 ? I18n.get("minecraft_access.read_crosshair.fluid_level", level) : "";
-        return name + ' ' + levelString;
-    }
-
-    private static String getFluidI18NName(Holder<Fluid> fluid) {
-        String translationKey = fluid.unwrap()
-                .map(
-                        fluidKey -> String.format("block.%s.%s", fluidKey.location().getNamespace(), fluidKey.location().getPath()),
-                        fluidValue -> "[unregistered " + fluidValue + ']'
-                );
-        return I18n.get(translationKey);
+        return fluidName.map(name -> String.format("%s %s", name, levelString)).orElse(levelString);
     }
 
     /**
@@ -636,5 +626,20 @@ public final class NarrationUtils {
         }
 
         return result.toString();
+    }
+
+    /**
+     * Gets the translated name from registry entry.
+     *
+     * @param holder the holder's registry entry
+     * @param type the type of holder you want the translated name for
+     * @return the holder's human readable name as an Optional
+     */
+    public static Optional<String> getTranslatedName(Holder<?> holder, String type) {
+        Optional<String> translatedName = holder.unwrapKey().map(key -> I18n.get(key.location().toLanguageKey(type)));
+        if (translatedName.isEmpty()) {
+            log.error("Failed to get a valid translation of the %s name".formatted(type));
+        }
+        return translatedName;
     }
 }

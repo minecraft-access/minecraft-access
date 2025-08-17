@@ -18,7 +18,6 @@ import net.minecraft.world.phys.HitResult;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -177,8 +176,8 @@ public class AccessMenu {
         minecraftClient.player.clientSideCloseContainer();
 
         Holder<Biome> currentBiome = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
-        String name = I18n.get(BiomeIndicator.getBiomeName(currentBiome));
-        MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true);
+        NarrationUtils.getTranslatedName(currentBiome, "biome")
+                .ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true));
     }
 
     public static void getXP() {

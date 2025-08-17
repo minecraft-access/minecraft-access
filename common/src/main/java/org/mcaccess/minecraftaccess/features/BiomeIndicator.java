@@ -10,6 +10,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 /**
  * Narrates the name of the biome when entering a different biome.
@@ -31,22 +32,7 @@ public class BiomeIndicator {
         Holder<Biome> currentBiome = client.level.getBiome(client.player.blockPosition());
         if (currentBiome != previousBiome) {
             previousBiome = currentBiome;
-            String translatedBiome = I18n.get(getBiomeName(currentBiome));
-            MainClass.narrate(I18n.get("minecraft_access.other.biome", translatedBiome), true);
+            NarrationUtils.getTranslatedName(currentBiome, "biome").ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.other.biome", name), true));
         }
-    }
-
-    /**
-     * Gets the biome name from registry entry
-     *
-     * @param biome the biome's registry entry
-     * @return the biome's name
-     */
-    public static String getBiomeName(Holder<Biome> biome) {
-        String key = biome.unwrap().map(
-                (biomeKey) -> "biome." + biomeKey.location().getNamespace() + '.' + biomeKey.location().getPath(),
-                (biomeValue) -> "[unregistered " + biomeValue + ']' // For unregistered biome
-        );
-        return I18n.get(key);
     }
 }
