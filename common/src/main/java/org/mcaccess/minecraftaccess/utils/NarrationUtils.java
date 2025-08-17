@@ -638,7 +638,7 @@ public final class NarrationUtils {
     public static Optional<String> getTranslatedName(Holder<?> holder, String type) {
         Optional<String> translatedName = holder.unwrapKey().map(key -> I18n.get(key.location().toLanguageKey(type)));
         if (translatedName.isEmpty()) {
-            log.error("Failed to get a valid translation of the %s name".formatted(type));
+            log.error("Failed to get a valid translation of the {} name", type);
         }
         return translatedName;
     }
