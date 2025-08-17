@@ -220,7 +220,7 @@ jobs:
           github-tag: v${{ needs.prepare.outputs.version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-name: Minecraft Access v${{ needs.prepare.outputs.version }}
-          files: ./minecraft-access/*+${{ matrix.loader.slug }}.jar
+          files: ./*+${{ matrix.loader.slug }}.jar
           name: Minecraft Access v${{ needs.prepare.outputs.version }} for ${{ matrix.loader.name }}
           version: ${{ needs.prepare.outputs.version }}+${{ matrix.loader.slug }}
           changelog: ${{ needs.prepare.outputs.changelog }}
