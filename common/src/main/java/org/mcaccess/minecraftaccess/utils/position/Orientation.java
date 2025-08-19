@@ -78,16 +78,18 @@ public enum Orientation {
         if (normalised < 0) {
             normalised += 360;
         }
-        if (normalised >= 210 && normalised <= 240) {
-            return NORTH_EAST;
-        } else if (normalised >= 300 && normalised <= 330) {
-            return SOUTH_EAST;
-        } else if (normalised >= 30 && normalised <= 60) {
+
+        // Ordinal Directions
+        if (normalised >= 11.25 && normalised < 78.75) {        // SW quadrant
             return SOUTH_WEST;
-        } else if (normalised >= 120 && normalised <= 150) {
+        } else if (normalised >= 101.25 && normalised < 168.75) { // NW quadrant
             return NORTH_WEST;
+        } else if (normalised >= 191.25 && normalised < 258.75) { // NE quadrant
+            return NORTH_EAST;
+        } else if (normalised >= 281.25 && normalised < 348.75) { // SE quadrant
+            return SOUTH_EAST;
         } else {
-            // edge case
+            // Cardinal Directions
             return of(WorldUtils.getClientPlayer().getDirection());
         }
     }

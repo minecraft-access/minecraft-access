@@ -180,6 +180,10 @@ public class LockingHandler {
         }
     }
 
+    public boolean isPlayerLocked() {
+        return lockedOnBlockPos != null || lockedOnEntity != null;
+    }
+
     private void unlock(boolean narrate, boolean isStillValid) {
         lockedOnEntity = null;
         entriesOfLockedOnBlock = null;

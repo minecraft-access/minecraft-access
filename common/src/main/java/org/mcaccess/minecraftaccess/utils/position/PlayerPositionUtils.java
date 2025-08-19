@@ -86,11 +86,13 @@ public final class PlayerPositionUtils {
             return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(-angle)) + ' ' + I18n.get("minecraft_access.direction.up");
         } else if (isBetween(angle, -2, 2)) {
             return I18n.get("minecraft_access.direction.straight");
-        } else if (isBetween(angle, 3, 97)) {
+        } else if (isBetween(angle, 3, 87)) {
             return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(angle)) + ' ' + I18n.get("minecraft_access.direction.down");
         } else if (isBetween(angle, 88, 90)) {
             return I18n.get("minecraft_access.direction.down");
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     public static boolean isBetween(int x, int lower, int upper) {
