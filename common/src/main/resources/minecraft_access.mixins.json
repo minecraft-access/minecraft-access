@@ -43,6 +43,7 @@
     "MerchantScreenAccessor",
     "MinecraftMixin",
     "MouseHandlerAccessor",
+    "MouseHandlerMixin",
     "NarrationElementOutputMixin",
     "NarrationThunkAccessor",
     "NarrationThunkMixin",
