@@ -77,19 +77,25 @@ public class LockingHandler {
         if (minecraftClient.screen != null) return;
 
         handleLockingKeyPressing();
-        lookAtLockedTarget();
+        if (isPlayerLocked()) {
+            lookAtLockedTarget();
+        }
         bowAimingAssist();
     }
 
     private void handleLockingKeyPressing() {
         boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping);
         if (isLockingKeyPressed && Screen.hasAltDown()) {
-            if (lockedOnEntity != null || lockedOnBlockPos != null) {
+            if (isPlayerLocked()) {
                 unlock(true, true);
                 interval.beReady();
             }
         } else if (isLockingKeyPressed) {
-            relock();
+            if (!PlayerUtils.isPlayerSpectating()) {
+                relock();
+            } else {
+                MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
+            }
             interval.reset();
         } else {
             interval.beReady();
@@ -97,6 +103,11 @@ public class LockingHandler {
     }
 
     private void lookAtLockedTarget() {
+        if (PlayerUtils.isPlayerSpectating()) {
+            unlock(true, true);
+            return;
+        }
+
         if (lockedOnEntity != null) {
             if (unlockFromDeadEntity()) return;
             PlayerUtils.lookAt(lockedOnEntity);

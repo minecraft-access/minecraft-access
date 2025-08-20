@@ -9,6 +9,7 @@ import net.minecraft.world.phys.Vec3;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.DoubleClick;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -230,8 +231,8 @@ public final class CameraControls {
     }
 
     private static boolean handleLocking() {
-        if (!MainClass.poiManager.lockingHandler.isPlayerLocked()) return false;
-        MainClass.narrate(I18n.get("filled_map.locked"), true);
+        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || PlayerUtils.isPlayerSpectating())) return false;
+        MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
         return true;
     }
 
