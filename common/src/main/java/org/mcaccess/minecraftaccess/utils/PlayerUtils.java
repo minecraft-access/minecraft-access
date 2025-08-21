@@ -283,4 +283,8 @@ public final class PlayerUtils {
         LevelData levelData = client.level.getLevelData();
         return levelData.isHardcore();
     }
+
+    public static boolean isPlayerSpectating() {
+        return !Minecraft.getInstance().getCameraEntity().is(Minecraft.getInstance().player);
+    }
 }

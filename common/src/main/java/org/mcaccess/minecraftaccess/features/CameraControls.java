@@ -2,12 +2,14 @@ package org.mcaccess.minecraftaccess.features;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.phys.Vec3;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.DoubleClick;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -176,6 +178,7 @@ public final class CameraControls {
      * @param direction on given direction
      */
     private static void rotateCameraBy(float angle, RotatingDirection direction) {
+        if (handleLocking()) return;
         float horizontalAngleDelta = angle * direction.horizontalWight;
         float verticalAngleDelta = angle * direction.verticalWight;
         log.debug("Rotating camera by x:{} y:{}", horizontalAngleDelta, verticalAngleDelta);
@@ -199,6 +202,7 @@ public final class CameraControls {
      * @param direction to given direction
      */
     private static void rotateCameraTo(Orientation direction) {
+        if (handleLocking()) return;
         LocalPlayer player = WorldUtils.getClientPlayer();
         Vec3 playerBlockPosition = player.position();
         Vec3 targetBlockPosition = playerBlockPosition.add(Vec3.atLowerCornerOf(direction.vector));
@@ -221,8 +225,15 @@ public final class CameraControls {
      * @param lookOpposite Whether to snap the opposite cardinal direction or not and centers it.
      */
     private static void centerCamera(boolean lookOpposite) {
+        if (handleLocking()) return;
         Orientation o = PlayerPositionUtils.getHorizontalFacing();
         rotateCameraTo(lookOpposite ? o.getOpposite() : o);
+    }
+
+    private static boolean handleLocking() {
+        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || PlayerUtils.isPlayerSpectating())) return false;
+        MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
+        return true;
     }
 
     private record CameraConfig(float normalRotatingAngle, float modifiedRotatingAngle) {
