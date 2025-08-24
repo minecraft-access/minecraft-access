@@ -35,7 +35,7 @@ jobs:
           HUGO_ENVIRONMENT: production
         run: |
           hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}"
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           name: github-pages
           path: ./docs/public/
