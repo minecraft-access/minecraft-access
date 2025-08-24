@@ -48,23 +48,24 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.BlockPos3d;
 public final class PlayerUtils {
     // A way to get exactly at what part of the entity the player is looking when locked on it
     public static Vec3 currentEntityLookingAtPosition = null;
+    private static Minecraft client = Minecraft.getInstance();
 
     private PlayerUtils() {
     }
 
     public static void playSoundOnPlayer(Holder.Reference<SoundEvent> sound, float volume, float pitch) {
-        WorldUtils.getClientPlayer().playSound(sound.value(), volume, pitch);
+        client.player.playSound(sound.value(), volume, pitch);
     }
 
     public static void lookAt(Vec3 position) {
-        WorldUtils.getClientPlayer().lookAt(EntityAnchorArgument.Anchor.EYES, position);
+        client.player.lookAt(EntityAnchorArgument.Anchor.EYES, position);
     }
 
     /**
      * Let player looks at entity even the entity exposes a very small part of its body
      */
     public static void lookAt(Entity entity) {
-        Vec3 playerEyePos = WorldUtils.getClientPlayer().getEyePosition();
+        Vec3 playerEyePos = client.player.getEyePosition();
 
         // Try to look at entity's eyes or Enderman's stomach first.
         boolean targetIsEnderman = entity instanceof EnderMan;
@@ -131,23 +132,22 @@ public final class PlayerUtils {
     }
 
     public static int getExperienceLevel() {
-        return WorldUtils.getClientPlayer().experienceLevel;
+        return client.player.experienceLevel;
     }
 
     /**
      * @return percentage-based number
      */
     public static float getExperienceProgress() {
-        return WorldUtils.getClientPlayer().experienceProgress * 100;
+        return client.player.experienceProgress * 100;
     }
 
-    public static boolean isNotInFluid() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
-        boolean inFluid = player.isSwimming()
+    public static boolean isInFluid() {
+        LocalPlayer player = client.player;
+        return player.isSwimming()
                 || player.isUnderWater()
                 || player.isInWater()
                 || player.isInLava();
-        return !inFluid;
     }
 
     /**
@@ -159,15 +159,15 @@ public final class PlayerUtils {
      */
     public static HitResult crosshairTarget(double rayCastDistance) {
         BlockHitResult fluidHitResult = crosshairFluidTarget(rayCastDistance);
-        if (fluidHitResult.getType() == HitResult.Type.BLOCK && isNotInFluid()) {
+        if (fluidHitResult.getType() == HitResult.Type.BLOCK && !isInFluid()) {
             return fluidHitResult;
         } else {
-            return Minecraft.getInstance().hitResult;
+            return client.hitResult;
         }
     }
 
     private static BlockHitResult crosshairFluidTarget(double rayCastDistance) {
-        Entity camera = Objects.requireNonNull(Minecraft.getInstance().getCameraEntity());
+        Entity camera = Objects.requireNonNull(client.getCameraEntity());
         HitResult hit = camera.pick(rayCastDistance, 0.0F, true);
         // Whatever the inner values are, they are not used.
         BlockHitResult missed = BlockHitResult.miss(Vec3.ZERO, Direction.UP, BlockPos.ZERO);
@@ -175,7 +175,7 @@ public final class PlayerUtils {
         if (hit.getType() != HitResult.Type.BLOCK) return missed;
 
         BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
-        ClientLevel world = WorldUtils.getClientWorld();
+        ClientLevel world = client.level;
 
         BlockState blockState = world.getBlockState(blockPos);
         boolean thisBlockIsFluidBlock = blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA);
@@ -193,7 +193,7 @@ public final class PlayerUtils {
      * @return minimum value between block range and entity range
      */
     public static double getInteractionRange() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = client.player;
         return Math.min(player.blockInteractionRange(), player.entityInteractionRange());
     }
 
@@ -204,7 +204,7 @@ public final class PlayerUtils {
      * @return number of ham shank in HUD
      */
     public static double getHunger() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = client.player;
         double hungerPoints = player.getFoodData().getFoodLevel();
         return hungerPoints / 2;
     }
@@ -216,7 +216,7 @@ public final class PlayerUtils {
      * @return number of heart in HUD
      */
     public static double getHearts() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = client.player;
         double healthPoints = player.getHealth();
         return healthPoints / 2;
     }
@@ -228,13 +228,13 @@ public final class PlayerUtils {
      * @return number of bubble in HUD
      */
     public static long getAir() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = client.player;
         double air = player.getAirSupply();
         return Math.round((air / 30) * 10) / 10;
     }
 
     public static void narrateCurrentPlayerEffects() {
-        Collection<MobEffectInstance> effects = WorldUtils.getClientPlayer().getActiveEffects();
+        Collection<MobEffectInstance> effects = client.player.getActiveEffects();
         if (effects.isEmpty()) {
             MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
             return;
@@ -245,46 +245,41 @@ public final class PlayerUtils {
     }
 
     public static boolean isPlayerTyping() {
-        Screen currentScreen = Minecraft.getInstance().screen;
+        Screen currentScreen = client.screen;
         return currentScreen != null && (currentScreen.getFocused() instanceof EditBox || currentScreen instanceof KeyBindsScreen);
     }
 
     public static boolean isCreative() {
-        Minecraft client = Minecraft.getInstance();
         if (client.gameMode == null) return false;
         GameType currentGameMode = client.gameMode.getPlayerMode();
         return currentGameMode == GameType.CREATIVE;
     }
 
     public static boolean isSpectator() {
-        Minecraft client = Minecraft.getInstance();
         if (client.gameMode == null) return false;
         GameType currentGameMode = client.gameMode.getPlayerMode();
         return currentGameMode == GameType.SPECTATOR;
     }
 
     public static boolean isAdventure() {
-        Minecraft client = Minecraft.getInstance();
         if (client.gameMode == null) return false;
         GameType currentGameMode = client.gameMode.getPlayerMode();
         return currentGameMode == GameType.ADVENTURE;
     }
 
     public static boolean isSurvival() {
-        Minecraft client = Minecraft.getInstance();
         if (client.gameMode == null) return false;
         GameType currentGameMode = client.gameMode.getPlayerMode();
         return currentGameMode == GameType.SURVIVAL;
     }
 
     public static boolean isHardCore() {
-        Minecraft client = Minecraft.getInstance();
         if (client.level == null) return false;
         LevelData levelData = client.level.getLevelData();
         return levelData.isHardcore();
     }
 
     public static boolean isPlayerSpectating() {
-        return !Minecraft.getInstance().getCameraEntity().is(Minecraft.getInstance().player);
+        return !client.getCameraEntity().is(client.player);
     }
 }

@@ -21,8 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
-
 public enum BuiltinEntityPOIGroups {
     HOSTILE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.hostile",
@@ -30,7 +28,7 @@ public enum BuiltinEntityPOIGroups {
             entity -> {
                 if (entity instanceof Monster) return true;
                 if (entity instanceof NeutralMob mob) {
-                    LocalPlayer player = WorldUtils.getClientPlayer();
+                    LocalPlayer player = Minecraft.getInstance().player;
                     boolean mobAttackedPlayer = mob.equals(player.getLastHurtByMob());
                     boolean mobAngryAtPlayer = player.getUUID().equals(mob.getPersistentAngerTarget());
                     return mobAttackedPlayer || mobAngryAtPlayer;
@@ -41,7 +39,7 @@ public enum BuiltinEntityPOIGroups {
     YOUR_PETS(new POIGroup<>(
             "minecraft_access.point_of_interest.group.your_pet",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_FLUTE.value(), 1.0f),
-            entity -> entity instanceof TamableAnimal pet && pet.isOwnedBy(WorldUtils.getClientPlayer())
+            entity -> entity instanceof TamableAnimal pet && pet.isOwnedBy(Minecraft.getInstance().player)
     )),
     OTHER_PETS(new POIGroup<>(
             "minecraft_access.point_of_interest.group.other_pet",

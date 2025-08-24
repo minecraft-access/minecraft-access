@@ -37,7 +37,6 @@ import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 @Slf4j
@@ -97,18 +96,18 @@ public final class MainClass {
     /**
      * This method gets called at the end of every tick
      *
-     * @param minecraftClient The current minecraft client object
+     * @param client The current minecraft client object
      */
-    public static void clientTickEventsMethod(Minecraft minecraftClient) {
+    public static void clientTickEventsMethod(Minecraft client) {
         Config config = Config.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
 
         if (config.menuFixEnabled) {
-            MenuFix.tick(minecraftClient);
+            MenuFix.tick(client);
         }
 
-        if (minecraftClient.level == null) {
+        if (client.level == null) {
             return;
         }
 
@@ -130,7 +129,7 @@ public final class MainClass {
 
         PositionNarrator.getINSTANCE().tick();
 
-        if (WorldUtils.getClientPlayer() != null) {
+        if (client.player != null) {
             if (playerStatus != null) {
                 playerStatus.tick();
             }
@@ -139,7 +138,7 @@ public final class MainClass {
                 MouseKeySimulation.tick();
             }
 
-            if (minecraftClient.screen == null) {
+            if (client.screen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.tick();
             }

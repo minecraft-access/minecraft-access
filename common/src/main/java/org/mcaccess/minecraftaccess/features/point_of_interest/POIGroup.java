@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -78,7 +79,7 @@ public class POIGroup<T> {
     }
 
     private double distanceBetweenPlayerAnd(T item) {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = Minecraft.getInstance().player;
         return switch (item) {
             case Entity entity -> player.distanceTo(entity);
             case BlockPos blockPos -> player.getEyePosition().distanceTo(blockPos.getCenter());

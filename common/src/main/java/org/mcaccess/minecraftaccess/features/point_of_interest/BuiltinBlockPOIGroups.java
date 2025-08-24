@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
@@ -31,13 +32,13 @@ public enum BuiltinBlockPOIGroups {
     ORE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.ore",
             new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
-            pos -> Ore.PREDICATE.test(WorldUtils.getBlockState(pos).getBlock())
+            pos -> Ore.PREDICATE.test(getBlockState(pos).getBlock())
     )),
     FUNCTIONAL(new POIGroup<>(
             "minecraft_access.point_of_interest.group.functional",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                Block block = WorldUtils.getBlockState(pos).getBlock();
+                Block block = getBlockState(pos).getBlock();
                 return block instanceof ButtonBlock || block instanceof LeverBlock || Functional.PREDICATE.test(block);
             }
     )),
@@ -67,24 +68,24 @@ public enum BuiltinBlockPOIGroups {
             "minecraft_access.point_of_interest.group.fluid",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                Level world = WorldUtils.getClientWorld();
+                Level world = Minecraft.getInstance().level;
                 boolean configEnabled = Config.getInstance().poi.blocks.detectFluidBlocks;
                 boolean isSource = world.getFluidState(pos).getAmount() == 8;
                 boolean isLiquid = world.getBlockState(pos).getBlock() instanceof LiquidBlock;
-                return configEnabled && isLiquid && PlayerUtils.isNotInFluid() && isSource;
+                return configEnabled && isLiquid && !PlayerUtils.isInFluid() && isSource;
             }
     )),
     HAVE_INTERFACE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.gui",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BANJO.value(), 0.0f),
             pos -> {
-                BlockState state = WorldUtils.getBlockState(pos);
+                BlockState state = getBlockState(pos);
                 if (state.getBlock() instanceof ChestBlock) {
                     ChestType chestType = state.getValue(ChestBlock.TYPE);
                     // intentionally ignore LEFT so two-blocks-size big chest can be detected as single chest
                     return chestType == ChestType.SINGLE || chestType == ChestType.RIGHT;
                 } else {
-                    return state.getMenuProvider(WorldUtils.getClientWorld(), pos) != null;
+                    return state.getMenuProvider(Minecraft.getInstance().level, pos) != null;
                 }
             }
     ));
@@ -97,6 +98,10 @@ public enum BuiltinBlockPOIGroups {
 
     BuiltinBlockPOIGroups(POIGroup<BlockPos> group) {
         this.group = group;
+    }
+
+    private static BlockState getBlockState(BlockPos pos) {
+        return Minecraft.getInstance().level.getBlockState(pos);
     }
 
     private static final class Ore {

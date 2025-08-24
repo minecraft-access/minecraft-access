@@ -18,7 +18,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
@@ -78,9 +77,9 @@ public class POIEntities {
             group.clear();
         }
 
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = Minecraft.getInstance().player;
         AABB scanBox = player.getBoundingBox().inflate(config.range, config.range, config.range);
-        List<Entity> entities = WorldUtils.getClientWorld().getEntities(player, scanBox);
+        List<Entity> entities = Minecraft.getInstance().level.getEntities(player, scanBox);
 
         for (Entity entity : entities) {
             for (POIGroup<Entity> group : groups) {

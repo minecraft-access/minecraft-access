@@ -595,7 +595,7 @@ public final class NarrationUtils {
      * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateFluidBlock(BlockPos pos) {
-        FluidState fluidState = WorldUtils.getClientWorld().getFluidState(pos);
+        FluidState fluidState = Minecraft.getInstance().level.getFluidState(pos);
         Optional<String> fluidName = getTranslatedName(fluidState.holder(), "block");
         int level = fluidState.getAmount();
         String levelString = level < 8 ? I18n.get("minecraft_access.read_crosshair.fluid_level", level) : "";

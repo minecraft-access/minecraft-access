@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Block;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
@@ -26,11 +26,12 @@ public class POIBlocks {
     private Config.POI.Blocks config;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
+    private ClientLevel world = Minecraft.getInstance().level;
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.markedBlock",
             new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
-            pos -> WorldUtils.getBlockState(pos).is(markedBlock)
+            pos -> world.getBlockState(pos).is(markedBlock)
     );
 
     /**
@@ -42,9 +43,9 @@ public class POIBlocks {
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.otherBlocks",
             pos -> {
-                BlockState state = WorldUtils.getBlockState(pos);
+                BlockState state = world.getBlockState(pos);
                 boolean blockAlreadyInGroup = this.otherBlocksGroup.getItems().stream()
-                        .map(p -> WorldUtils.getBlockState(p).getBlock())
+                        .map(p -> world.getBlockState(p).getBlock())
                         .anyMatch(t -> t.equals(state.getBlock()));
                 return !state.isAir() && !blockAlreadyInGroup;
             }
@@ -96,7 +97,7 @@ public class POIBlocks {
         });
 
         // where player's leg be
-        BlockPos pos = WorldUtils.getClientPlayer().blockPosition();
+        BlockPos pos = Minecraft.getInstance().player.blockPosition();
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.below(), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos, config.range);

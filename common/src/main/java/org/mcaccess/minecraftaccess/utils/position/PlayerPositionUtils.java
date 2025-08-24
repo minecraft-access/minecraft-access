@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 /**
  * Functions about getting player entity's position, facing direction etc.
@@ -47,7 +46,7 @@ public final class PlayerPositionUtils {
         Optional<Vec3> op = getPlayerPosition();
         if (op.isEmpty()) return Optional.empty();
         Vec3 p = op.get();
-        return Optional.of(WorldUtils.blockPosOf(p));
+        return Optional.of(BlockPos.containing(p));
     }
 
     public static String getNarratableXYZPosition() {
@@ -70,7 +69,7 @@ public final class PlayerPositionUtils {
      * @return -90 (head up) ~ 90 (head down)
      */
     public static int getVerticalFacingDirection() {
-        return (int) WorldUtils.getClientPlayer().getRotationVector().x;
+        return (int) Minecraft.getInstance().player.getRotationVector().x;
     }
 
     /**
@@ -100,7 +99,7 @@ public final class PlayerPositionUtils {
     }
 
     public static int getHorizontalFacingDirectionInDegrees() {
-        int angle = (int) WorldUtils.getClientPlayer().getRotationVector().y;
+        int angle = (int) Minecraft.getInstance().player.getRotationVector().y;
         return angle % 360;
     }
 

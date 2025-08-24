@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.utils.system;
 
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;

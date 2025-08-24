@@ -178,7 +178,7 @@ public class ObjectTracker {
     }
 
     private void targetNearestObject() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = Minecraft.getInstance().player;
 
         List<Entity> entities = MainClass.poiManager.poiEntities.getLastScanResults()
                 .stream()

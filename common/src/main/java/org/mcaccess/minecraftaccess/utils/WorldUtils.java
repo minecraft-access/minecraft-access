@@ -4,7 +4,6 @@ import java.util.function.Predicate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
@@ -20,17 +19,8 @@ public final class WorldUtils {
     private WorldUtils() {
     }
 
-    public static BlockPos blockPosOf(Vec3 accuratePos) {
-        return BlockPos.containing(accuratePos);
-    }
-
-    public static BlockState getBlockState(BlockPos pos) {
-        ClientLevel world = getClientWorld();
-        return world.getBlockState(pos);
-    }
-
     public static BlockInfo getBlockInfo(BlockPos pos) {
-        ClientLevel world = getClientWorld();
+        ClientLevel world = Minecraft.getInstance().level;
 
         // Since Minecraft uses flyweight pattern for blocks and entities,
         // All same type of blocks share one singleton Block instance,
@@ -40,14 +30,6 @@ public final class WorldUtils {
         BlockEntity entity = world.getBlockEntity(pos);
 
         return new BlockInfo(pos, state, block, entity);
-    }
-
-    public static ClientLevel getClientWorld() {
-        return Minecraft.getInstance().level;
-    }
-
-    public static LocalPlayer getClientPlayer() {
-        return Minecraft.getInstance().player;
     }
 
     public static boolean checkAnyOfBlocks(Iterable<BlockPos> positions, Predicate<BlockState> expected) {
@@ -89,7 +71,7 @@ public final class WorldUtils {
 
     public static void playSoundAtPosition(SoundEvent sound, float volume, float pitch, Vec3 position) {
         // note that the useDistance param only works for positions 100 blocks away, check its code.
-        getClientWorld().playLocalSound(position.x, position.y, position.z, sound, SoundSource.BLOCKS, volume, pitch, true);
+        Minecraft.getInstance().level.playLocalSound(position.x, position.y, position.z, sound, SoundSource.BLOCKS, volume, pitch, true);
     }
 
     public record BlockInfo(BlockPos pos, BlockState state, Block type, BlockEntity entity) {
