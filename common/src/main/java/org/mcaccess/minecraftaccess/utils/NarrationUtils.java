@@ -20,6 +20,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Display;
@@ -75,6 +76,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -641,5 +643,15 @@ public final class NarrationUtils {
             log.error("Failed to get a valid translation of the {} name", type);
         }
         return translatedName;
+    }
+
+    @Contract(pure = true)
+    public static @NotNull String formattedCharSequenceToString(@NotNull FormattedCharSequence charSequence) {
+        StringBuilder builder = new StringBuilder();
+        charSequence.accept((index, style, codePoint) -> {
+            builder.appendCodePoint(codePoint);
+            return true;
+        });
+        return builder.toString();
     }
 }
