@@ -4,33 +4,37 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 
+import org.jetbrains.annotations.Nullable;
+
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.system.OsUtils;
 
 @Slf4j
 public final class ScreenReaderController {
     private ScreenReaderController() {
     }
 
-    public static ScreenReaderInterface getAvailable() {
-        if (OsUtils.isLinux()) {
-            ScreenReaderLinux screenReaderLinux = new ScreenReaderLinux();
-            screenReaderLinux.initializeScreenReader();
-            return screenReaderLinux;
-        }
+    public static @Nullable ScreenReaderInterface getAvailable() {
+        String osName = System.getProperty("os.name").toLowerCase();
 
-        if (OsUtils.isMacOS()) {
-            ScreenReaderMacOS screenReaderMacOS = new ScreenReaderMacOS();
-            screenReaderMacOS.initializeScreenReader();
-            return screenReaderMacOS;
-        }
-
-        if (OsUtils.isWindows()) {
+        if (osName.startsWith("windows")) {
             ScreenReaderWindows screenReaderWindows = new ScreenReaderWindows();
             screenReaderWindows.initializeScreenReader();
             return screenReaderWindows;
         }
 
+        if (osName.startsWith("mac")) {
+            ScreenReaderMacOS screenReaderMacOS = new ScreenReaderMacOS();
+            screenReaderMacOS.initializeScreenReader();
+            return screenReaderMacOS;
+        }
+
+        if (osName.startsWith("linux")) {
+            ScreenReaderLinux screenReaderLinux = new ScreenReaderLinux();
+            screenReaderLinux.initializeScreenReader();
+            return screenReaderLinux;
+        }
+
+        log.error("No valid ScreenReader interface found");
         return null;
     }
 
