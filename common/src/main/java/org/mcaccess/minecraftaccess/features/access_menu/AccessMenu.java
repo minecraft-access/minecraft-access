@@ -103,7 +103,7 @@ public class AccessMenu {
             }
 
             if (MENU_KEY.canOpenMenu() && !gameModeSwitcherActive) {
-                minecraftClient.setScreen(new AccessMenuGUI("access_menu"));
+                minecraftClient.setScreen(new AccessMenuGUI());
             }
         } else if (minecraftClient.screen instanceof AccessMenuGUI) {
             if (MENU_KEY.closeMenuIfMenuKeyPressing()) return;
