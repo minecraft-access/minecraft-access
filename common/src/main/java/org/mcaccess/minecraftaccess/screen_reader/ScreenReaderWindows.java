@@ -8,6 +8,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import lombok.extern.slf4j.Slf4j;
 
+import static org.mcaccess.minecraftaccess.utils.TextUtils.removeFormattingCodes;
+
 @Slf4j
 public class ScreenReaderWindows implements ScreenReaderInterface {
     TolkInterface mainInstance = null;
@@ -44,7 +46,7 @@ public class ScreenReaderWindows implements ScreenReaderInterface {
             return;
         }
 
-        String narration = formatNarration(text);
+        String narration = removeFormattingCodes(text);
 
         char[] ch = new char[narration.length() + 1];  // Last character must be null so NVDA decodes the text correctly
         for (int i = 0; i < narration.length(); i++) {

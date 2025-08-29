@@ -13,6 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.GameType;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.HypixelSkyblockUtils;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -67,6 +68,10 @@ public class PlayerStatus {
             GameType currentMode = client.gameMode.getPlayerMode();
 
             StringBuilder narration = new StringBuilder();
+
+            if (HypixelSkyblockUtils.isInServer() && !HypixelSkyblockUtils.lastStats.isEmpty()) {
+                narration.append(HypixelSkyblockUtils.lastStats).append(", ");
+            }
 
             if (currentMode == GameType.SURVIVAL || currentMode == GameType.ADVENTURE) {
                 if (!client.hasAltDown()) {

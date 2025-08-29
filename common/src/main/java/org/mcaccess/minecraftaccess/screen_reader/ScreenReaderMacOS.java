@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.mcaccess.minecraftaccess.Config;
 
+import static org.mcaccess.minecraftaccess.utils.TextUtils.removeFormattingCodes;
+
 @Slf4j
 public class ScreenReaderMacOS implements ScreenReaderInterface {
     private ObjcRuntimeInterface objcRuntimeInstance = null;
@@ -43,7 +45,7 @@ public class ScreenReaderMacOS implements ScreenReaderInterface {
             return;
         }
 
-        String narration = formatNarration(text);
+        String narration = removeFormattingCodes(text);
 
         if (interrupt) {
             // Stop speech immediately

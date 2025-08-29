@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.HypixelSkyblockUtils;
 import org.mcaccess.minecraftaccess.utils.NarratorDummy;
 
 @Mixin(GameNarrator.class)
@@ -23,6 +24,12 @@ abstract class GameNarratorMixin {
         if (MainClass.getScreenReader() == null || !MainClass.getScreenReader().isInitialized()) {
             return;
         }
+
+        if (HypixelSkyblockUtils.isInServer() && HypixelSkyblockUtils.checkForExclusion(text)) {
+            callbackInfo.cancel();
+            return;
+        }
+
         MainClass.getScreenReader().narrate(text, interrupt);
         callbackInfo.cancel();
     }
