@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
@@ -126,7 +127,7 @@ public class LockingHandler {
             boolean entriesOfLockedBlockNotChanged = entries.values() == entriesOfLockedOnBlock.values();
 
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears) {
-                PlayerUtils.lookAt(lockedOnBlockPos);
+                client.player.lookAt(EntityAnchorArgument.Anchor.EYES, lockedOnBlockPos.getAccuratePosition());
             } else {
                 // Unlock if the state of locked block is changed
                 unlock(true, true);
@@ -176,13 +177,13 @@ public class LockingHandler {
             Vec3 targetPosition = PlayerUtils.currentEntityLookingAtPosition;
 
             if (targetPosition != null) {
-                if (PlayerUtils.isPlayerCanSee(eyePosition, targetPosition, lockedOnEntity)) {
+                if (PlayerUtils.isVisibleToPlayer(eyePosition, targetPosition, lockedOnEntity)) {
                     if (lastAimAssistCue != 1 || bowState != lastBowState) {
-                        PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_PLING, config.aimAssistAudioCuesVolume, bowState);
+                        player.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), config.aimAssistAudioCuesVolume, bowState);
                         lastAimAssistCue = 1;
                     }
                 } else if (lastAimAssistCue != 0 || bowState != lastBowState) {
-                    PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_BASS, config.aimAssistAudioCuesVolume, bowState);
+                    player.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), config.aimAssistAudioCuesVolume, bowState);
                     lastAimAssistCue = 0;
                 }
 
@@ -204,7 +205,7 @@ public class LockingHandler {
 
         if (narrate) {
             if (config.unlockingSound) {
-                PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_BASEDRUM, 0.4f, 2.0f);
+                client.player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 0.4f, 2.0f);
             } else {
                 MainClass.narrate(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
             }

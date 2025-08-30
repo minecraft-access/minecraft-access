@@ -36,7 +36,7 @@ public class AccessMenu {
      * Much farther than the Read Crosshair feature (6 blocks).
      */
     public static final double RAY_CAST_DISTANCE = 20.0;
-    private static Minecraft minecraftClient;
+    private static Minecraft client;
     private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyBindingsHandler.ACCESS_MENU_KEY.mapping);
     private boolean gameModeSwitcherActive = false;
     /**
@@ -86,10 +86,10 @@ public class AccessMenu {
     }
 
     public void tick() {
-        minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return;
+        client = Minecraft.getInstance();
+        if (client.player == null) return;
 
-        if (minecraftClient.screen == null) {
+        if (client.screen == null) {
             if (Screen.hasAltDown()) {
                 handleInMenuActions();
                 return;
@@ -103,14 +103,14 @@ public class AccessMenu {
             }
 
             if (MENU_KEY.canOpenMenu() && !gameModeSwitcherActive) {
-                minecraftClient.setScreen(new AccessMenuGUI());
+                client.setScreen(new AccessMenuGUI());
             }
-        } else if (minecraftClient.screen instanceof AccessMenuGUI) {
+        } else if (client.screen instanceof AccessMenuGUI) {
             if (MENU_KEY.closeMenuIfMenuKeyPressing()) return;
             handleInMenuActions();
         }
 
-        if (minecraftClient.screen instanceof GameModeSwitcherScreen) {
+        if (client.screen instanceof GameModeSwitcherScreen) {
             gameModeSwitcherActive = true;
         } else if (!KeyUtils.isAnyPressed(InputConstants.KEY_F4)) {
             gameModeSwitcherActive = false;
@@ -121,7 +121,7 @@ public class AccessMenu {
         // With Access Menu opened or alt key pressed,
         // listen to number keys pressing for executing corresponding functions
         // for the little performance improvement, will not use KeyUtils here.
-        long handle = minecraftClient.getWindow().getWindow();
+        long handle = client.getWindow().getWindow();
         Stream.of(FUNCTIONS)
                 .filter(f -> InputConstants.isKeyDown(handle, f.number + InputConstants.KEY_0))
                 .findFirst()
@@ -160,30 +160,30 @@ public class AccessMenu {
     }
 
     public static void getLightLevel() {
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
 
-        minecraftClient.player.clientSideCloseContainer();
+        client.player.clientSideCloseContainer();
 
-        int light = minecraftClient.level.getMaxLocalRawBrightness(minecraftClient.player.blockPosition());
+        int light = client.level.getMaxLocalRawBrightness(client.player.blockPosition());
         MainClass.narrate(I18n.get("minecraft_access.access_menu.light_level", NarrationUtils.narrateNumber(light)), true);
     }
 
     public static void getBiome() {
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
 
-        minecraftClient.player.clientSideCloseContainer();
+        client.player.clientSideCloseContainer();
 
-        Holder<Biome> currentBiome = minecraftClient.level.getBiome(minecraftClient.player.blockPosition());
+        Holder<Biome> currentBiome = client.level.getBiome(client.player.blockPosition());
         NarrationUtils.getTranslatedName(currentBiome, "biome")
                 .ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true));
     }
 
     public static void getXP() {
-        if (minecraftClient.player == null) return;
+        if (client.player == null) return;
 
-        minecraftClient.player.clientSideCloseContainer();
+        client.player.clientSideCloseContainer();
 
         if (PlayerUtils.isSpectator()) {
             MainClass.narrate(I18n.get("gameMode.spectator"), true);
@@ -194,17 +194,17 @@ public class AccessMenu {
         }
 
         MainClass.narrate(I18n.get("minecraft_access.access_menu.xp",
-                        NarrationUtils.narrateNumber(PlayerUtils.getExperienceLevel()),
-                        NarrationUtils.narrateNumber(PlayerUtils.getExperienceProgress())),
+                        NarrationUtils.narrateNumber(client.player.experienceLevel),
+                        NarrationUtils.narrateNumber(client.player.experienceProgress*100)),
                 true);
     }
 
     public static void getTimeOfDay() {
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
 
-        minecraftClient.player.clientSideCloseContainer();
-        long daytime = minecraftClient.player.clientLevel.getDayTime() + 6000;
+        client.player.clientSideCloseContainer();
+        long daytime = client.player.clientLevel.getDayTime() + 6000;
         int hours = (int) (daytime / 1000) % 24;
         int minutes = (int) ((daytime % 1000) * 60 / 1000);
 

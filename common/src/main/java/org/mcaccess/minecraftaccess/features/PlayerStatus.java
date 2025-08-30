@@ -1,11 +1,14 @@
 package org.mcaccess.minecraftaccess.features;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.effect.MobEffectInstance;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -29,25 +32,32 @@ public class PlayerStatus {
             Interval.ms(3000));
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null) return;
+        if (client.screen != null) return;
 
         if (narrationKey.canBeTriggered()) {
             if (Screen.hasControlDown()) {
-                PlayerUtils.narrateCurrentPlayerEffects();
+                Collection<MobEffectInstance> effects = client.player.getActiveEffects();
+                if (effects.isEmpty()) {
+                    MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
+                    return;
+                }
+                String narration = effects.stream().map(NarrationUtils::narrateEffect)
+                        .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection")));
+                MainClass.narrate(narration, true);
                 return;
             }
 
-            double health = Math.round((minecraftClient.player.getHealth() / 2.0) * 10.0) / 10.0;
-            double maxHealth = Math.round((minecraftClient.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
-            double absorption = Math.round((minecraftClient.player.getAbsorptionAmount() / 2.0) * 10.0) / 10.0;
-            double hunger = Math.round((minecraftClient.player.getFoodData().getFoodLevel() / 2.0) * 10.0) / 10.0;
+            double health = Math.round((client.player.getHealth() / 2.0) * 10.0) / 10.0;
+            double maxHealth = Math.round((client.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
+            double absorption = Math.round((client.player.getAbsorptionAmount() / 2.0) * 10.0) / 10.0;
+            double hunger = Math.round((client.player.getFoodData().getFoodLevel() / 2.0) * 10.0) / 10.0;
             double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
-            double armor = Math.round((minecraftClient.player.getArmorValue() / 2.0) * 10.0) / 10.0;
-            double air = Math.round((minecraftClient.player.getAirSupply() / 20.0) * 10.0) / 10.0;
-            double maxAir = Math.round((minecraftClient.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
-            double frostExposurePercent = Math.round((minecraftClient.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
+            double armor = Math.round((client.player.getArmorValue() / 2.0) * 10.0) / 10.0;
+            double air = Math.round((client.player.getAirSupply() / 20.0) * 10.0) / 10.0;
+            double maxAir = Math.round((client.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
+            double frostExposurePercent = Math.round((client.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
 
             StringBuilder narration = new StringBuilder();
 
@@ -75,12 +85,12 @@ public class PlayerStatus {
                     }
                 }
 
-                if ((minecraftClient.player.isUnderWater() || minecraftClient.player.getAirSupply() < minecraftClient.player.getMaxAirSupply()) && !minecraftClient.player.canBreatheUnderwater()) {
+                if ((client.player.isUnderWater() || client.player.getAirSupply() < client.player.getMaxAirSupply()) && !client.player.canBreatheUnderwater()) {
                     air = Math.max(air, 0.0);
                     narration.append(I18n.get("minecraft_access.player_status.air", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir)));
                 }
 
-                if ((minecraftClient.player.isInPowderSnow || frostExposurePercent > 0) && minecraftClient.player.canFreeze()) {
+                if ((client.player.isInPowderSnow || frostExposurePercent > 0) && client.player.canFreeze()) {
                     narration.append(I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent)));
                 }
             }

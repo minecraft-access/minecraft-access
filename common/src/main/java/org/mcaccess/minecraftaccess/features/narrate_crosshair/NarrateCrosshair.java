@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
@@ -43,10 +42,10 @@ public class NarrateCrosshair {
     }
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.level == null) return;
+        if (client.player == null) return;
+        if (client.screen != null) return;
 
         loadConfig();
         if (!CONFIG.enabled) return;
@@ -64,7 +63,7 @@ public class NarrateCrosshair {
         HitResult hit = narrator.rayCast();
 
         if (CONFIG.relativePositionSoundCue.enabled) {
-            double rayCastDistance = PlayerUtils.getInteractionRange();
+            double rayCastDistance = Math.min(client.player.blockInteractionRange(), client.player.entityInteractionRange());
             Vec3 targetPosition = switch (hit) {
                 case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().getCenter();
                 case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();
@@ -82,7 +81,7 @@ public class NarrateCrosshair {
         if (CONFIG.filter.enabled) {
             ResourceLocation resourceLocation = switch (hit) {
                 case BlockHitResult blockHitResult ->
-                        BuiltInRegistries.BLOCK.getKey(minecraftClient.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
+                        BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
                 case EntityHitResult entityHitResult -> EntityType.getKey(entityHitResult.getEntity().getType());
                 default -> null;
             };

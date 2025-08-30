@@ -38,8 +38,8 @@ public class PlayerWarnings {
         double maxAir = Math.round((player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
         double frostExposurePercent = Math.round((player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
 
-        healthWarning(PlayerUtils.getHearts(), maxHealth);
-        hungerWarning(PlayerUtils.getHunger(), maxHunger);
+        healthWarning(player.getHealth()/2, maxHealth);
+        hungerWarning(player.getFoodData().getFoodLevel()/2, maxHunger);
         airWarning(Math.round((player.getAirSupply() / 20.0) * 10.0) / 10.0, maxAir);
         frostWarning(frostExposurePercent);
     }

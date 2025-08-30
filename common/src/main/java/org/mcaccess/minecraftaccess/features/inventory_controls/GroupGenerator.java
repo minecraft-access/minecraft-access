@@ -421,7 +421,7 @@ public final class GroupGenerator {
                         clueText.append(lapisCostText);
 
                         String xpCostText = cost == 1 ? I18n.get("container.enchant.level.one") : I18n.get("container.enchant.level.many", cost);
-                        if (PlayerUtils.getExperienceLevel() < cost) {
+                        if (Minecraft.getInstance().player.experienceLevel < cost) {
                             xpCostText = String.format("(%s) %s", I18n.get("minecraft_access.other.missing"), xpCostText);
                         }
                         clueText.append(xpCostText);

@@ -14,16 +14,12 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -34,31 +30,13 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.features.point_of_interest.BlockPos3d;
 
-/**
- * This class provides delegate calls to {@link LocalPlayer}.
- * The main reason for this class is that {@link LocalPlayer} cannot be mocked by Mockito. <p>
- * ({@link LocalPlayer} constructor requires -> {@link ClientLevel} constructor -> {@link Level} static init block -> {@link Registries},
- * somehow the {@link Registries} cannot finish its static assignments in class loading.
- * We can replace Mockito with more powerful PowerMock to resolve this problem, but PowerMock is sticking on Junit 4,
- * we can't go back to Junit 4 from 5 since some of the mechanisms currently used for unit testing have no alternatives in 4.
- * Forgive me for doing this, but it's the most economical way.)
- */
 public final class PlayerUtils {
     // A way to get exactly at what part of the entity the player is looking when locked on it
     public static Vec3 currentEntityLookingAtPosition = null;
     private static Minecraft client = Minecraft.getInstance();
 
     private PlayerUtils() {
-    }
-
-    public static void playSoundOnPlayer(Holder.Reference<SoundEvent> sound, float volume, float pitch) {
-        client.player.playSound(sound.value(), volume, pitch);
-    }
-
-    public static void lookAt(Vec3 position) {
-        client.player.lookAt(EntityAnchorArgument.Anchor.EYES, position);
     }
 
     /**
@@ -70,8 +48,8 @@ public final class PlayerUtils {
         // Try to look at entity's eyes or Enderman's stomach first.
         boolean targetIsEnderman = entity instanceof EnderMan;
         Vec3 firstPos = targetIsEnderman ? entity.blockPosition().getCenter() : entity.getEyePosition();
-        if (isPlayerCanSee(playerEyePos, firstPos, entity)) {
-            lookAt(firstPos);
+        if (isVisibleToPlayer(playerEyePos, firstPos, entity)) {
+            client.player.lookAt(EntityAnchorArgument.Anchor.EYES, firstPos);
             currentEntityLookingAtPosition = firstPos;
             return;
         }
@@ -86,7 +64,7 @@ public final class PlayerUtils {
         double initX = (1.0 - Math.floor(1.0 / stepX) * stepX) / 2.0;
         double initZ = (1.0 - Math.floor(1.0 / stepZ) * stepZ) / 2.0;
         if (stepX < 0.0 || stepY < 0.0 || stepZ < 0.0) {
-            lookAt(firstPos);
+            client.player.lookAt(EntityAnchorArgument.Anchor.EYES, firstPos);
             currentEntityLookingAtPosition = firstPos;
             return;
         }
@@ -101,8 +79,8 @@ public final class PlayerUtils {
                     double py = Mth.lerp(j, box.minY, maxY);
                     double pz = Mth.lerp(k, box.minZ, box.maxZ);
                     Vec3 vec3d = new Vec3(px + initX, py, pz + initZ);
-                    if (isPlayerCanSee(playerEyePos, vec3d, entity)) {
-                        lookAt(vec3d);
+                    if (isVisibleToPlayer(playerEyePos, vec3d, entity)) {
+                        client.player.lookAt(EntityAnchorArgument.Anchor.EYES, vec3d);
                         currentEntityLookingAtPosition = vec3d;
                         return;
                     }
@@ -111,35 +89,16 @@ public final class PlayerUtils {
         }
 
         // Make sure to look at entity even the player can't see it.
-        lookAt(firstPos);
+        client.player.lookAt(EntityAnchorArgument.Anchor.EYES, firstPos);
         currentEntityLookingAtPosition = firstPos;
     }
 
-    public static void lookAt(BlockPos position) {
-        lookAt(position.getCenter());
-    }
-
-    public static void lookAt(BlockPos3d position) {
-        lookAt(position.getAccuratePosition());
-    }
-
-    public static boolean isPlayerCanSee(Vec3 playerEyePos, Vec3 somewhereOnEntity, Entity entity) {
+    public static boolean isVisibleToPlayer(Vec3 playerEyePos, Vec3 somewhereOnEntity, Entity entity) {
         BlockHitResult hitResult = entity.level().clip(
                 new ClipContext(somewhereOnEntity, playerEyePos,
                         ClipContext.Block.COLLIDER,
                         ClipContext.Fluid.NONE, entity));
         return hitResult.getType() == HitResult.Type.MISS;
-    }
-
-    public static int getExperienceLevel() {
-        return client.player.experienceLevel;
-    }
-
-    /**
-     * @return percentage-based number
-     */
-    public static float getExperienceProgress() {
-        return client.player.experienceProgress * 100;
     }
 
     public static boolean isInFluid() {
@@ -185,63 +144,6 @@ public final class PlayerUtils {
         if (fluidState.isEmpty()) return missed;
 
         return (BlockHitResult) hit;
-    }
-
-    /**
-     * Players have dynamic interaction range since 1.20.6.
-     *
-     * @return minimum value between block range and entity range
-     */
-    public static double getInteractionRange() {
-        LocalPlayer player = client.player;
-        return Math.min(player.blockInteractionRange(), player.entityInteractionRange());
-    }
-
-    /**
-     * One full ham icon = two hunger points
-     * <a href="https://minecraft.wiki/w/Hunger">wiki</a>
-     *
-     * @return number of ham shank in HUD
-     */
-    public static double getHunger() {
-        LocalPlayer player = client.player;
-        double hungerPoints = player.getFoodData().getFoodLevel();
-        return hungerPoints / 2;
-    }
-
-    /**
-     * One full heart = two health points
-     * <a href="https://minecraft.wiki/w/Health">wiki</a>
-     *
-     * @return number of heart in HUD
-     */
-    public static double getHearts() {
-        LocalPlayer player = client.player;
-        double healthPoints = player.getHealth();
-        return healthPoints / 2;
-    }
-
-    /**
-     * Air supply value is keeping at 300 when player's head is in the air.
-     * <a href="https://minecraft.wiki/w/Damage#Drowning">wiki</a>
-     *
-     * @return number of bubble in HUD
-     */
-    public static long getAir() {
-        LocalPlayer player = client.player;
-        double air = player.getAirSupply();
-        return Math.round((air / 30) * 10) / 10;
-    }
-
-    public static void narrateCurrentPlayerEffects() {
-        Collection<MobEffectInstance> effects = client.player.getActiveEffects();
-        if (effects.isEmpty()) {
-            MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
-            return;
-        }
-        String narration = effects.stream().map(NarrationUtils::narrateEffect)
-                .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection")));
-        MainClass.narrate(narration, true);
     }
 
     public static boolean isPlayerTyping() {

@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
 /**
  * This feature narrates when the player xp level is increased or decreased.
@@ -23,7 +22,7 @@ public class XPIndicator {
         if (minecraftClient.player == null) return;
         if (minecraftClient.screen != null) return;
 
-        int currentXPLevel = PlayerUtils.getExperienceLevel();
+        int currentXPLevel = Minecraft.getInstance().player.experienceLevel;
         if (previousXPLevel == null) {
             previousXPLevel = currentXPLevel;
             return;

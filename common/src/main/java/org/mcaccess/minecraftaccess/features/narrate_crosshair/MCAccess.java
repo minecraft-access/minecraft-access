@@ -2,6 +2,8 @@ package org.mcaccess.minecraftaccess.features.narrate_crosshair;
 
 import java.util.Arrays;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -15,7 +17,8 @@ import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 public class MCAccess implements CrosshairNarrator {
     @Override
     public @NotNull HitResult rayCast() {
-        return PlayerUtils.crosshairTarget(PlayerUtils.getInteractionRange());
+        LocalPlayer player = Minecraft.getInstance().player;
+        return PlayerUtils.crosshairTarget(Math.min(player.blockInteractionRange(), player.entityInteractionRange()));
     }
 
     @Override

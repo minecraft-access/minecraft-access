@@ -34,7 +34,6 @@ public class FallDetector {
 
         if (!config.enabled) return;
 
-        if (minecraftClient == null) return;
         if (minecraftClient.player == null) return;
         if (minecraftClient.screen != null) return;
         if (!minecraftClient.player.onGround()) return;
