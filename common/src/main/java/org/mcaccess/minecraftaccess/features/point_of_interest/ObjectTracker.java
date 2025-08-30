@@ -14,13 +14,13 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
@@ -103,7 +103,16 @@ public class ObjectTracker {
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition()));
             }
             MainClass.narrate(narration.toString(), interrupt);
-            WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1.0f, entity.position());
+            Minecraft.getInstance().level.playLocalSound(
+                    entity.getX(),
+                    entity.getY(),
+                    entity.getZ(),
+                    SoundEvents.NOTE_BLOCK_BELL.value(),
+                    SoundSource.BLOCKS,
+                    1,
+                    1.0f,
+                    true
+            );
         }
 
         if (currentObject instanceof BlockPos blockPos) {
@@ -113,7 +122,14 @@ public class ObjectTracker {
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos));
             }
             MainClass.narrate(narration.toString(), interrupt);
-            WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1.0f, blockPos.getCenter());
+            Minecraft.getInstance().level.playLocalSound(
+                    blockPos,
+                    SoundEvents.NOTE_BLOCK_BELL.value(),
+                    SoundSource.BLOCKS,
+                    1,
+                    1.0f,
+                    true
+            );
         }
     }
 

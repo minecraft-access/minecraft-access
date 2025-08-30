@@ -62,16 +62,7 @@ public final class WorldUtils {
         double volumeDeltaPerBlock = (maxVolume - minVolume) / maxDistance;
         float volume = (float) (minVolume + (maxDistance - distance) * volumeDeltaPerBlock);
 
-        playSoundAtPosition(sound, volume, pitch, targetPosition);
-    }
-
-    public static void playSoundAtPosition(Holder.Reference<SoundEvent> sound, float volume, float pitch, Vec3 position) {
-        playSoundAtPosition(sound.value(), volume, pitch, position);
-    }
-
-    public static void playSoundAtPosition(SoundEvent sound, float volume, float pitch, Vec3 position) {
-        // note that the useDistance param only works for positions 100 blocks away, check its code.
-        Minecraft.getInstance().level.playLocalSound(position.x, position.y, position.z, sound, SoundSource.BLOCKS, volume, pitch, true);
+        Minecraft.getInstance().level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
     }
 
     public record BlockInfo(BlockPos pos, BlockState state, Block type, BlockEntity entity) {

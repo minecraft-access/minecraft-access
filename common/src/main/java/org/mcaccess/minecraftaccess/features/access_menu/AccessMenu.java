@@ -36,7 +36,7 @@ public class AccessMenu {
      * Much farther than the Read Crosshair feature (6 blocks).
      */
     public static final double RAY_CAST_DISTANCE = 20.0;
-    private static Minecraft client;
+    private static Minecraft client = Minecraft.getInstance().getInstance();
     private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyBindingsHandler.ACCESS_MENU_KEY.mapping);
     private boolean gameModeSwitcherActive = false;
     /**
@@ -86,7 +86,6 @@ public class AccessMenu {
     }
 
     public void tick() {
-        client = Minecraft.getInstance();
         if (client.player == null) return;
 
         if (client.screen == null) {

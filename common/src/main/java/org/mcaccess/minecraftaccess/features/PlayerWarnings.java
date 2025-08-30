@@ -10,7 +10,6 @@ import net.minecraft.sounds.SoundSource;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
 /**
  * Warns the player when the health, hunger or food reaches below a certain threshold.
