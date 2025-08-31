@@ -189,10 +189,10 @@ public final class MainClass {
 
         Minecraft client = Minecraft.getInstance();
         if (client.options.keyAdvancements.same(KeyBindingsHandler.CAMERA_CONTROLS_RIGHT.mapping)) {
-            client.options.keyAdvancements.setKey(InputConstants.UNKNOWN);
+            client.options.keyAdvancements.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_O));
             client.options.save();
             client.options.load();
-            log.info("Unbound advancements key");
+            log.info("Rebound advancements key");
         }
     }
 
