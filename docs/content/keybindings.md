@@ -129,6 +129,7 @@ See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [
 |-----------------------|--------------------|--------------------------------------------------------------------------------------------|
 | `Speak Player Status` | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
 | `Narrate Held Item`   | \`                 | Narrate the item the player currently holds in their main hand                             |
+| `Narrate Bossbars`    | U                  | Narrate the visible bossbars on screen (press multiple times to cycle)                     |
 
 | Key Combination                    | Description                                                                   |
 |------------------------------------|-------------------------------------------------------------------------------|
