@@ -30,7 +30,7 @@ public class HUDStatus {
                 bossbarKeyIsDown = true;
                 narrateBossBars();
             }
-        } else if (bossbarKeyIsDown) {
+        } else if (!KeyBindingsHandler.NARRATE_BOSSBARS_KEY.mapping.isDown()) {
             bossbarKeyIsDown = false;
         }
     }
