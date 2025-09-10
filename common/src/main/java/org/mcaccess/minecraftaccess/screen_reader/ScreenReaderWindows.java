@@ -8,7 +8,7 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.mcaccess.minecraftaccess.utils.TextUtils.removeFormattingCodes;
+import static org.mcaccess.minecraftaccess.utils.NarrationUtils.removeFormattingCodes;
 
 @Slf4j
 public class ScreenReaderWindows implements ScreenReaderInterface {

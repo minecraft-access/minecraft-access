@@ -708,4 +708,10 @@ public final class NarrationUtils {
         });
         return builder.toString();
     }
+
+    public static String removeFormattingCodes(String text) {
+        // Remove formatting codes
+        // ref: https://minecraft.wiki/w/Formatting_codes
+        return text.replaceAll("§.", "");
+    }
 }

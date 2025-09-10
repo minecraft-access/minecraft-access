@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.mcaccess.minecraftaccess.Config;
 
-import static org.mcaccess.minecraftaccess.utils.TextUtils.removeFormattingCodes;
+import static org.mcaccess.minecraftaccess.utils.NarrationUtils.removeFormattingCodes;
 
 @Slf4j
 public class ScreenReaderMacOS implements ScreenReaderInterface {

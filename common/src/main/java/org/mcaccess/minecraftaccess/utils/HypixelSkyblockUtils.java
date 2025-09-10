@@ -31,7 +31,7 @@ public final class HypixelSkyblockUtils {
     }
 
     public static boolean checkForExclusion(String text) {
-        String formattedText = TextUtils.removeFormattingCodes(text);
+        String formattedText = NarrationUtils.removeFormattingCodes(text);
         if (STATS_REGEX.matcher(formattedText).matches()) {
             lastStats = formattedText;
             return true;

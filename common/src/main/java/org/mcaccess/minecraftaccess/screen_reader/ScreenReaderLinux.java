@@ -12,7 +12,7 @@ import com.sun.jna.Native;
 import com.sun.jna.Structure;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.mcaccess.minecraftaccess.utils.TextUtils.removeFormattingCodes;
+import static org.mcaccess.minecraftaccess.utils.NarrationUtils.removeFormattingCodes;
 
 @Slf4j
 public class ScreenReaderLinux implements ScreenReaderInterface {
