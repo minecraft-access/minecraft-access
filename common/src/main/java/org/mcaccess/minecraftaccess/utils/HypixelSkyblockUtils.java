@@ -13,6 +13,9 @@ public final class HypixelSkyblockUtils {
     private static final Pattern LOCATION_REGEX = Pattern.compile(".*❤.*⏣(\\D*)\\d*/\\d*✎ Mana", Pattern.MULTILINE);
     private static final String LOCATION_REGEX_SUBSTITUTE = "$1";
 
+    private static String lastServerIp = null;
+    private static boolean lastServerIsHypixel = false;
+
     public static String lastStats = null;
     public static String lastLocation = null;
 
@@ -20,8 +23,11 @@ public final class HypixelSkyblockUtils {
     }
 
     public static boolean isInServer() {
-        return Minecraft.getInstance().getCurrentServer() != null
-                && Minecraft.getInstance().getCurrentServer().ip.equalsIgnoreCase("mc.hypixel.net");
+        if (Minecraft.getInstance().getCurrentServer() == null) return false;
+        if (Minecraft.getInstance().getCurrentServer().ip.equals(lastServerIp)) return lastServerIsHypixel;
+        lastServerIp = Minecraft.getInstance().getCurrentServer().ip;
+        lastServerIsHypixel = lastServerIp.endsWith("hypixel.net");
+        return lastServerIsHypixel;
     }
 
     public static boolean checkForExclusion(String text) {
