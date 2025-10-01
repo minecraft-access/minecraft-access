@@ -194,7 +194,7 @@ public class AccessMenu {
 
         MainClass.narrate(I18n.get("minecraft_access.access_menu.xp",
                         NarrationUtils.narrateNumber(client.player.experienceLevel),
-                        NarrationUtils.narrateNumber(client.player.experienceProgress*100)),
+                        NarrationUtils.narrateNumber(client.player.experienceProgress * 100)),
                 true);
     }
 

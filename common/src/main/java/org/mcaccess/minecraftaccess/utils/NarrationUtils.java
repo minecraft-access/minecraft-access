@@ -316,7 +316,7 @@ public final class NarrationUtils {
     }
 
     /**
-     * @param pos  block position (in the client world)
+     * @param blockPos  block position (in the client world)
      * @param side if side is provided, then the invoker is ReadCrosshair
      * @return (narration, currentQuery):
      * "narration" is the actual one to be narrated through Narrator,

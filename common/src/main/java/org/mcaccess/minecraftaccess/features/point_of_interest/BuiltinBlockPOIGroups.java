@@ -59,7 +59,7 @@ public enum BuiltinBlockPOIGroups {
             pos -> {
                 Block block = Minecraft.getInstance().level.getBlockState(pos).getBlock();
                 return block instanceof Portal || block instanceof EndPortalFrameBlock;
-        }
+            }
     )),
     LADDER(new POIGroup<>(
             "minecraft_access.point_of_interest.group.ladder",
