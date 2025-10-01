@@ -519,8 +519,8 @@ public final class NarrationUtils {
         if (connectedDirections.size() == 4) {
             // If two redstone wires are connected, they're at one of three relative positions: [side, side down, side up].
             // Take one sample relative position (x+1) then check if any block at [-1,0,1] height is also redstone wire.
-            Iterable<BlockPos> threePosAtSide = BlockPos.betweenClosed(pos.offset(1, -1, 0), pos.offset(1, 1, 0));
-            boolean result = WorldUtils.checkAnyOfBlocks(threePosAtSide, state -> state.getBlock() instanceof RedStoneWireBlock);
+            boolean result = BlockPos.betweenClosedStream(pos.offset(1, -1, 0), pos.offset(1, 1, 0))
+                    .anyMatch(blockPos -> Minecraft.getInstance().level.getBlockState(blockPos).getBlock() instanceof RedStoneWireBlock);
             // If there's no redstone wire on x+1 side,
             // then current wire is not connected to that side,
             // so it's not connected to all directions.

@@ -16,15 +16,6 @@ public final class WorldUtils {
     private WorldUtils() {
     }
 
-    public static boolean checkAnyOfBlocks(Iterable<BlockPos> positions, Predicate<BlockState> expected) {
-        for (BlockPos pos : positions) {
-            BlockState blockState = Minecraft.getInstance().level.getBlockState(pos);
-            if (blockState == null) return false;
-            if (expected.test(blockState)) return true;
-        }
-        return false;
-    }
-
     /**
      * To indicate relative location between player and target.
      */
