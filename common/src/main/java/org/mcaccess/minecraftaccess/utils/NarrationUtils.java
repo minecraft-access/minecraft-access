@@ -322,7 +322,7 @@ public final class NarrationUtils {
      * "narration" is the actual one to be narrated through Narrator,
      * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
-    public static Tuple<String, String> narrateBlockForContentChecking(BlockPos pos, String side) {
+    public static Tuple<String, String> narrateBlockForContentChecking(BlockPos blockPos, String side) {
         Minecraft client = Minecraft.getInstance();
         ClientLevel clientWorld = client.level;
         if (clientWorld == null) return new Tuple<>("", "");
@@ -330,11 +330,9 @@ public final class NarrationUtils {
         // Since Minecraft uses flyweight pattern for blocks and entities,
         // All same type of blocks share one singleton Block instance,
         // While every block keep their states with a BlockState instance.
-        WorldUtils.BlockInfo blockInfo = WorldUtils.getBlockInfo(pos);
-        BlockPos blockPos = blockInfo.pos();
-        BlockState blockState = blockInfo.state();
-        Block block = blockInfo.type();
-        BlockEntity blockEntity = blockInfo.entity();
+        BlockState blockState = clientWorld.getBlockState(blockPos);
+        Block block = blockState.getBlock();
+        BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
 
         // Difference between narration and currentQuery:
         // currentQuery is used for checking condition, narration is actually the one to be narrated.

@@ -3,13 +3,10 @@ package org.mcaccess.minecraftaccess.utils;
 import java.util.function.Predicate;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -19,24 +16,11 @@ public final class WorldUtils {
     private WorldUtils() {
     }
 
-    public static BlockInfo getBlockInfo(BlockPos pos) {
-        ClientLevel world = Minecraft.getInstance().level;
-
-        // Since Minecraft uses flyweight pattern for blocks and entities,
-        // All same type of blocks share one singleton Block instance,
-        // While every block keep their states with a BlockState instance.
-        BlockState state = world.getBlockState(pos);
-        Block block = state.getBlock();
-        BlockEntity entity = world.getBlockEntity(pos);
-
-        return new BlockInfo(pos, state, block, entity);
-    }
-
     public static boolean checkAnyOfBlocks(Iterable<BlockPos> positions, Predicate<BlockState> expected) {
         for (BlockPos pos : positions) {
-            BlockInfo info = getBlockInfo(pos);
-            if (info.state == null) return false;
-            if (expected.test(info.state)) return true;
+            BlockState blockState = Minecraft.getInstance().level.getBlockState(pos);
+            if (blockState == null) return false;
+            if (expected.test(blockState)) return true;
         }
         return false;
     }
@@ -63,8 +47,5 @@ public final class WorldUtils {
         float volume = (float) (minVolume + (maxDistance - distance) * volumeDeltaPerBlock);
 
         Minecraft.getInstance().level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
-    }
-
-    public record BlockInfo(BlockPos pos, BlockState state, Block type, BlockEntity entity) {
     }
 }

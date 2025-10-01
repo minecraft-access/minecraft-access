@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 public enum BuiltinBlockPOIGroups {
     ORE(new POIGroup<>(
@@ -46,23 +45,29 @@ public enum BuiltinBlockPOIGroups {
             "minecraft_access.point_of_interest.group.door",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                WorldUtils.BlockInfo block = WorldUtils.getBlockInfo(pos);
-                if (block.type() instanceof DoorBlock) {
+                BlockState doorState = Minecraft.getInstance().level.getBlockState(pos);
+                if (doorState.getBlock() instanceof DoorBlock) {
                     // Only match upper part of doors
-                    return block.state().getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER;
+                    return doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER;
                 } else {
-                    return block.type() instanceof TrapDoorBlock;
+                    return doorState.getBlock() instanceof TrapDoorBlock;
                 }
             }
     )),
     PORTAL(new POIGroup<>(
             "minecraft_access.point_of_interest.group.portal",
-            pos -> WorldUtils.getBlockInfo(pos).type() instanceof Portal || WorldUtils.getBlockInfo(pos).type() instanceof EndPortalFrameBlock
+            pos -> {
+                Block block = Minecraft.getInstance().level.getBlockState(pos).getBlock();
+                return block instanceof Portal || block instanceof EndPortalFrameBlock;
+        }
     )),
     LADDER(new POIGroup<>(
             "minecraft_access.point_of_interest.group.ladder",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
-            pos -> WorldUtils.getBlockInfo(pos).type() instanceof LadderBlock
+            pos -> {
+                Block block = Minecraft.getInstance().level.getBlockState(pos).getBlock();
+                return block instanceof LadderBlock;
+            }
     )),
     FLUID(new POIGroup<>(
             "minecraft_access.point_of_interest.group.fluid",
