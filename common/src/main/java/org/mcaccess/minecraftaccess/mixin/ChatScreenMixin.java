@@ -118,9 +118,7 @@ public class ChatScreenMixin {
         MainClass.narrate(messages.get(indexOffset).content().getString(), true);
     }
 
-    /**
-     * Since there is no text modifying narration, we want to manually narrate when the chat history is switched.
-     */
+    // Since there is no text modifying narration, we want to manually narrate when the chat history is switched.
     @Inject(at = @At("TAIL"), method = "moveInHistory")
     private void narrateSwitchedChatHistory(CallbackInfo ci) {
         MainClass.narrate(input.getValue(), true);

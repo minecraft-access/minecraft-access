@@ -58,7 +58,7 @@ abstract class EditBoxMixin extends AbstractWidget {
         }
     }
 
-    /**
+    /*
      * Prevents any character input if alt is held down.
      * This logic is for "alt + num key to repeat chat message" function in {@link ChatScreenMixin}
      */

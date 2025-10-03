@@ -43,6 +43,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 @Slf4j
 public final class MainClass {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     public static final String MOD_ID = "minecraft_access";
     @Getter
     private static ScreenReaderInterface screenReader = null;
@@ -187,11 +188,10 @@ public final class MainClass {
         poiManager = new POIManager();
         xpIndicator = new XPIndicator();
 
-        Minecraft client = Minecraft.getInstance();
-        if (client.options.keyAdvancements.same(KeyBindingsHandler.CAMERA_CONTROLS_RIGHT.mapping)) {
-            client.options.keyAdvancements.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_O));
-            client.options.save();
-            client.options.load();
+        if (CLIENT.options.keyAdvancements.same(KeyBindingsHandler.CAMERA_CONTROLS_RIGHT.mapping)) {
+            CLIENT.options.keyAdvancements.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_O));
+            CLIENT.options.save();
+            CLIENT.options.load();
             log.info("Rebound advancements key");
         }
     }
@@ -215,12 +215,12 @@ public final class MainClass {
     }
 
     public static void narrate(String text, boolean interrupt) {
-        if (Strings.isEmpty(text) || !Minecraft.getInstance().isWindowActive()) {
+        if (Strings.isEmpty(text) || !CLIENT.isWindowActive()) {
             log.warn("The narration of string \"{}\" with interrupt={} was suppressed", text, interrupt);
             return;
         }
-        if (Minecraft.getInstance().options.narrator().get() != NarratorStatus.OFF) {
-            ((GameNarratorAccessor) Minecraft.getInstance().getNarrator()).invokeNarrateMessage(text, interrupt);
+        if (CLIENT.options.narrator().get() != NarratorStatus.OFF) {
+            ((GameNarratorAccessor) CLIENT.getNarrator()).invokeNarrateMessage(text, interrupt);
         }
     }
 }
