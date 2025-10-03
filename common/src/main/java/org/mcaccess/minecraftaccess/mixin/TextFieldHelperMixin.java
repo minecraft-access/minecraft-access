@@ -94,7 +94,7 @@ public abstract class TextFieldHelperMixin {
     }
 
     @Inject(at = @At("RETURN"), method = "keyPressed")
-    private void narrateSelectedText(int keyCode, CallbackInfoReturnable<Boolean> cir) {
+    private void narrateSelectedText(CallbackInfoReturnable<Boolean> cir) {
         String selectedText = getSelected(getMessageFn.get());
         MainClass.narrate(selectedText, true);
     }

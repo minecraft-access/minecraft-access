@@ -41,7 +41,7 @@ public class OptionsMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "setCameraType")
-    void narratePerspectiveWhenSet(CameraType perspective, CallbackInfo ci) {
+    private void narratePerspectiveWhenSet(CameraType perspective, CallbackInfo ci) {
         String keyword = perspective.toString().toLowerCase();
         String translated = I18n.get("minecraft_access.perspective." + keyword);
         MainClass.narrate(I18n.get("minecraft_access.set_perspective", translated), true);

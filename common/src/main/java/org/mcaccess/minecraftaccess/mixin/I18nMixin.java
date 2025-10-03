@@ -48,5 +48,4 @@ public class I18nMixin {
         }
         return enLanguage.getOrDefault(key);
     }
-
 }

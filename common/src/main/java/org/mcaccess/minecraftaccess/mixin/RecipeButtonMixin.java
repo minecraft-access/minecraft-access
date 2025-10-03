@@ -34,7 +34,7 @@ public abstract class RecipeButtonMixin {
     public abstract ItemStack getDisplayStack();
 
     @Inject(at = @At("HEAD"), method = "updateWidgetNarration", cancellable = true)
-    private void updateWidgetNarrationsMixin(NarrationElementOutput builder, CallbackInfo callbackInfo) {
+    private void updateWidgetNarrationsMixin(CallbackInfo callbackInfo) {
         ItemStack itemStack = getDisplayStack();
         String itemName = itemStack.getHoverName().getString();
 

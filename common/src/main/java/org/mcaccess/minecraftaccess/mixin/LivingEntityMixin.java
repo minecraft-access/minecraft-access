@@ -20,7 +20,7 @@ import org.mcaccess.minecraftaccess.features.EffectNarrator;
 @Mixin(LivingEntity.class)
 abstract class LivingEntityMixin {
     @Inject(method = {"onEffectUpdated", "onEffectAdded"}, at = @At("TAIL"))
-    private void narrateEffectApplication(MobEffectInstance effectInstance, boolean forced, Entity entity, CallbackInfo ci) {
+    private void narrateEffectApplication(MobEffectInstance effectInstance, Entity entity, CallbackInfo ci) {
         if (Objects.equals(Minecraft.getInstance().player, this)) {
             EffectNarrator.narrateGained(effectInstance);
         }

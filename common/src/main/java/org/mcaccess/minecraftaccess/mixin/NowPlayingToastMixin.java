@@ -22,7 +22,7 @@ public abstract class NowPlayingToastMixin {
     }
 
     @Inject(at = @At("TAIL"), method = "showToast")
-    public void narrateSong(Options options, CallbackInfo ci) {
+    public void narrateSong(CallbackInfo ci) {
         String toastTextBuilder = I18n.get("minecraft_access.toast.shown")
                 + I18n.get("minecraft_access.other.words_connection")
                 + I18n.get("record.nowPlaying", getNowPlayingString(Minecraft.getInstance().getMusicManager().getCurrentMusicTranslationKey()).getString());
