@@ -33,7 +33,6 @@ import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
@@ -44,7 +43,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
  */
 @Slf4j
 public class LockingHandler {
-    private static Minecraft client = Minecraft.getInstance();
+    private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Locking config;
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlockPos = null;
@@ -69,13 +68,11 @@ public class LockingHandler {
     }
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-
         loadConfig();
         if (!interval.isReady()) return;
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.screen != null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
+        if (client.screen != null) return;
 
         handleLockingKeyPressing();
         if (isPlayerLocked()) {
@@ -92,7 +89,7 @@ public class LockingHandler {
                 interval.beReady();
             }
         } else if (isLockingKeyPressed) {
-            if (!PlayerUtils.isPlayerSpectating()) {
+            if (client.getCameraEntity().is(client.player)) {
                 relock();
             } else {
                 MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
@@ -104,7 +101,7 @@ public class LockingHandler {
     }
 
     private void lookAtLockedTarget() {
-        if (PlayerUtils.isPlayerSpectating()) {
+        if (!client.getCameraEntity().is(client.player)) {
             unlock(true, true);
             return;
         }
@@ -237,7 +234,7 @@ public class LockingHandler {
     private boolean unlockFromLadderIfClimbingOnIt(BlockState blockState) {
         if (Blocks.LADDER.equals(blockState.getBlock())) {
 
-            Vec3 playerPos = PlayerPositionUtils.getPlayerPosition().orElseThrow();
+            Vec3 playerPos = client.player.position();
             double distance = lockedOnBlockPos.getCenter().distanceTo(playerPos);
             if (distance <= 0.5) {
                 unlock(true, true);
@@ -273,7 +270,7 @@ public class LockingHandler {
      * @return true if unlocked
      */
     private boolean unlockFromAirBlock() {
-        Block currentBlock = Minecraft.getInstance().level.getBlockState(lockedOnBlockPos).getBlock();
+        Block currentBlock = client.level.getBlockState(lockedOnBlockPos).getBlock();
         if (!(currentBlock instanceof AirBlock)) return false;
         unlock(true, false);
         return true;

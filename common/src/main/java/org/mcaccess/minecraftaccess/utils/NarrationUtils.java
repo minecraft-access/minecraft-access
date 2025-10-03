@@ -89,6 +89,7 @@ import org.mcaccess.minecraftaccess.utils.position.Orientation;
  */
 @Slf4j
 public final class NarrationUtils {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     private static final Map<IntegerProperty, Integer> CROP_AGE_PROPERTIES = Map.of(
             BlockStateProperties.AGE_1, 1,
             BlockStateProperties.AGE_2, 2,
@@ -256,11 +257,10 @@ public final class NarrationUtils {
     }
 
     public static String narrateRelativePositionOfPlayerAnd(BlockPos blockPos) {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return "up";
+        if (CLIENT.player == null) return "up";
 
-        Direction dir = minecraftClient.player.getDirection();
-        Vec3 diff = new Vec3(minecraftClient.player.getX(), minecraftClient.player.getEyeY(), minecraftClient.player.getZ()).subtract(Vec3.atCenterOf(blockPos)); // pre 1.18
+        Direction dir = CLIENT.player.getDirection();
+        Vec3 diff = new Vec3(CLIENT.player.getX(), CLIENT.player.getEyeY(), CLIENT.player.getZ()).subtract(Vec3.atCenterOf(blockPos)); // pre 1.18
         BlockPos diffBlockPos = new BlockPos((int) diff.x, (int) diff.y, (int) diff.z); // post 1.20
 
         String diffXBlockPos = "";
@@ -323,8 +323,7 @@ public final class NarrationUtils {
      * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     public static Tuple<String, String> narrateBlockForContentChecking(BlockPos blockPos, String side) {
-        Minecraft client = Minecraft.getInstance();
-        ClientLevel clientWorld = client.level;
+        ClientLevel clientWorld = CLIENT.level;
         if (clientWorld == null) return new Tuple<>("", "");
 
         // Since Minecraft uses flyweight pattern for blocks and entities,
@@ -349,7 +348,7 @@ public final class NarrationUtils {
 
         if (blockEntity != null) {
             if (blockState.is(BlockTags.ALL_SIGNS)) {
-                narration = getSignInfo((SignBlockEntity) blockEntity, client.player, narration);
+                narration = getSignInfo((SignBlockEntity) blockEntity, CLIENT.player, narration);
             } else if (blockEntity instanceof BeehiveBlockEntity beehiveBlockEntity) {
                 Tuple<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, narration, currentQuery);
                 narration = beehiveInfo.getA();
@@ -520,7 +519,7 @@ public final class NarrationUtils {
             // If two redstone wires are connected, they're at one of three relative positions: [side, side down, side up].
             // Take one sample relative position (x+1) then check if any block at [-1,0,1] height is also redstone wire.
             boolean result = BlockPos.betweenClosedStream(pos.offset(1, -1, 0), pos.offset(1, 1, 0))
-                    .anyMatch(blockPos -> Minecraft.getInstance().level.getBlockState(blockPos).getBlock() instanceof RedStoneWireBlock);
+                    .anyMatch(blockPos -> CLIENT.level.getBlockState(blockPos).getBlock() instanceof RedStoneWireBlock);
             // If there's no redstone wire on x+1 side,
             // then current wire is not connected to that side,
             // so it's not connected to all directions.
@@ -593,7 +592,7 @@ public final class NarrationUtils {
      * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateFluidBlock(BlockPos pos) {
-        FluidState fluidState = Minecraft.getInstance().level.getFluidState(pos);
+        FluidState fluidState = CLIENT.level.getFluidState(pos);
         Optional<String> fluidName = getTranslatedName(fluidState.holder(), "block");
         int level = fluidState.getAmount();
         String levelString = level < 8 ? I18n.get("minecraft_access.read_crosshair.fluid_level", level) : "";

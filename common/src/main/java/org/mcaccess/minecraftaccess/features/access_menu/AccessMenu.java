@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -32,11 +33,8 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
  */
 @Slf4j
 public class AccessMenu {
-    /**
-     * Much farther than the Read Crosshair feature (6 blocks).
-     */
-    public static final double RAY_CAST_DISTANCE = 20.0;
-    private static Minecraft client = Minecraft.getInstance().getInstance();
+    private static final Minecraft CLIENT = Minecraft.getInstance();
+    public static final double RAY_CAST_DISTANCE = 20.0; // Much farther than the Read Crosshair feature (6 blocks).
     private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyBindingsHandler.ACCESS_MENU_KEY.mapping);
     private boolean gameModeSwitcherActive = false;
     /**
@@ -86,9 +84,9 @@ public class AccessMenu {
     }
 
     public void tick() {
-        if (client.player == null) return;
+        if (CLIENT.player == null) return;
 
-        if (client.screen == null) {
+        if (CLIENT.screen == null) {
             if (Screen.hasAltDown()) {
                 handleInMenuActions();
                 return;
@@ -102,14 +100,14 @@ public class AccessMenu {
             }
 
             if (MENU_KEY.canOpenMenu() && !gameModeSwitcherActive) {
-                client.setScreen(new AccessMenuGUI());
+                CLIENT.setScreen(new AccessMenuGUI());
             }
-        } else if (client.screen instanceof AccessMenuGUI) {
+        } else if (CLIENT.screen instanceof AccessMenuGUI) {
             if (MENU_KEY.closeMenuIfMenuKeyPressing()) return;
             handleInMenuActions();
         }
 
-        if (client.screen instanceof GameModeSwitcherScreen) {
+        if (CLIENT.screen instanceof GameModeSwitcherScreen) {
             gameModeSwitcherActive = true;
         } else if (!KeyUtils.isAnyPressed(InputConstants.KEY_F4)) {
             gameModeSwitcherActive = false;
@@ -120,7 +118,7 @@ public class AccessMenu {
         // With Access Menu opened or alt key pressed,
         // listen to number keys pressing for executing corresponding functions
         // for the little performance improvement, will not use KeyUtils here.
-        long handle = client.getWindow().getWindow();
+        long handle = CLIENT.getWindow().getWindow();
         Stream.of(FUNCTIONS)
                 .filter(f -> InputConstants.isKeyDown(handle, f.number + InputConstants.KEY_0))
                 .findFirst()
@@ -159,51 +157,51 @@ public class AccessMenu {
     }
 
     public static void getLightLevel() {
-        if (client.player == null) return;
-        if (client.level == null) return;
+        if (CLIENT.player == null) return;
+        if (CLIENT.level == null) return;
 
-        client.player.clientSideCloseContainer();
+        CLIENT.player.clientSideCloseContainer();
 
-        int light = client.level.getMaxLocalRawBrightness(client.player.blockPosition());
+        int light = CLIENT.level.getMaxLocalRawBrightness(CLIENT.player.blockPosition());
         MainClass.narrate(I18n.get("minecraft_access.access_menu.light_level", NarrationUtils.narrateNumber(light)), true);
     }
 
     public static void getBiome() {
-        if (client.player == null) return;
-        if (client.level == null) return;
+        if (CLIENT.player == null) return;
+        if (CLIENT.level == null) return;
 
-        client.player.clientSideCloseContainer();
+        CLIENT.player.clientSideCloseContainer();
 
-        Holder<Biome> currentBiome = client.level.getBiome(client.player.blockPosition());
+        Holder<Biome> currentBiome = CLIENT.level.getBiome(CLIENT.player.blockPosition());
         NarrationUtils.getTranslatedName(currentBiome, "biome")
                 .ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true));
     }
 
     public static void getXP() {
-        if (client.player == null) return;
+        if (CLIENT.player == null) return;
 
-        client.player.clientSideCloseContainer();
+        CLIENT.player.clientSideCloseContainer();
 
-        if (PlayerUtils.isSpectator()) {
+        if (CLIENT.gameMode.getPlayerMode() == GameType.SPECTATOR) {
             MainClass.narrate(I18n.get("gameMode.spectator"), true);
             return;
-        } else if (PlayerUtils.isCreative()) {
+        } else if (CLIENT.gameMode.getPlayerMode() == GameType.CREATIVE) {
             MainClass.narrate(I18n.get("gameMode.creative"), true);
             return;
         }
 
         MainClass.narrate(I18n.get("minecraft_access.access_menu.xp",
-                        NarrationUtils.narrateNumber(client.player.experienceLevel),
-                        NarrationUtils.narrateNumber(client.player.experienceProgress * 100)),
+                        NarrationUtils.narrateNumber(CLIENT.player.experienceLevel),
+                        NarrationUtils.narrateNumber(CLIENT.player.experienceProgress * 100)),
                 true);
     }
 
     public static void getTimeOfDay() {
-        if (client.player == null) return;
-        if (client.level == null) return;
+        if (CLIENT.player == null) return;
+        if (CLIENT.level == null) return;
 
-        client.player.clientSideCloseContainer();
-        long daytime = client.player.clientLevel.getDayTime() + 6000;
+        CLIENT.player.clientSideCloseContainer();
+        long daytime = CLIENT.player.clientLevel.getDayTime() + 6000;
         int hours = (int) (daytime / 1000) % 24;
         int minutes = (int) ((daytime % 1000) * 60 / 1000);
 

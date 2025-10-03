@@ -46,6 +46,7 @@ import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +60,6 @@ import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
 import org.mcaccess.minecraftaccess.mixin.SlotAccessor;
 import org.mcaccess.minecraftaccess.mixin.StonecutterScreenAccessor;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
 public final class GroupGenerator {
 
@@ -410,7 +410,7 @@ public final class GroupGenerator {
 
                 // this breaks when using I18n.get() for some reason so Component.translatable() is being used instead
                 StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(enchantment.get(), level)).getString());
-                if (!PlayerUtils.isCreative()) {
+                if (Minecraft.getInstance().gameMode.getPlayerMode() != GameType.CREATIVE) {
                     if (Minecraft.getInstance().player.experienceLevel < requiredLevel) {
                         clueText.append(I18n.get("container.enchant.level.requirement", requiredLevel));
                     } else {

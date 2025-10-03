@@ -13,14 +13,14 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
  */
 @Slf4j
 public class XPIndicator {
+    private final Minecraft client = Minecraft.getInstance();
     @Nullable
     private Integer previousXPLevel = null;
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+        if (client.level == null) return;
+        if (client.player == null) return;
+        if (client.screen != null) return;
 
         int currentXPLevel = Minecraft.getInstance().player.experienceLevel;
         if (previousXPLevel == null) {

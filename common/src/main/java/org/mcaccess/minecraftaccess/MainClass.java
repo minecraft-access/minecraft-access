@@ -9,7 +9,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
@@ -36,7 +39,6 @@ import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 @Slf4j
@@ -116,9 +118,11 @@ public final class MainClass {
         }
 
         narrateCrosshair.tick();
-
-        if (xpIndicator != null && config.features.xpIndicatorEnabled && (PlayerUtils.isAdventure() || PlayerUtils.isSurvival())) {
-            xpIndicator.tick();
+        GameType currentGameMode = client.gameMode.getPlayerMode();
+        if (config.features.xpIndicatorEnabled && currentGameMode != null && xpIndicator != null) {
+            if (currentGameMode == GameType.ADVENTURE || currentGameMode == GameType.SURVIVAL) {
+                xpIndicator.tick();
+            }
         }
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled) {
@@ -134,7 +138,7 @@ public final class MainClass {
                 playerStatus.tick();
             }
 
-            if (!PlayerUtils.isPlayerTyping()) {
+            if (client.screen == null || !(client.screen.getFocused() instanceof EditBox || client.screen instanceof KeyBindsScreen)) {
                 MouseKeySimulation.tick();
             }
 
@@ -144,15 +148,17 @@ public final class MainClass {
             }
         }
 
-        if (playerWarnings != null && config.playerWarnings.enabled && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure())) {
-            playerWarnings.tick();
+        if (playerWarnings != null && config.playerWarnings.enabled && currentGameMode != null) {
+            if (currentGameMode == GameType.SURVIVAL || currentGameMode == GameType.ADVENTURE) {
+                playerWarnings.tick();
+            }
         }
 
         if (accessMenu != null && config.accessMenu.enabled) {
             accessMenu.tick();
         }
 
-        if (!PlayerUtils.isSpectator()) {
+        if (currentGameMode != GameType.SPECTATOR) {
             narrateHeldItem.tick();
         }
 

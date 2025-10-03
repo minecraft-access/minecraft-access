@@ -26,6 +26,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 @Slf4j
 public class ObjectTracker {
+    private final Minecraft client = Minecraft.getInstance();
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
 
@@ -60,11 +61,9 @@ public class ObjectTracker {
     }
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.screen != null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
+        if (client.screen != null) return;
 
         updateGroups();
 

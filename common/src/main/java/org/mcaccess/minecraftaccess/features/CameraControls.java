@@ -10,7 +10,6 @@ import net.minecraft.world.phys.Vec3;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.DoubleClick;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
@@ -39,6 +38,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
  */
 @Slf4j
 public final class CameraControls {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     private static CameraConfig config;
     private static final Interval INTERVAL = Interval.defaultDelay();
 
@@ -183,7 +183,7 @@ public final class CameraControls {
         float verticalAngleDelta = angle * direction.verticalWight;
         log.debug("Rotating camera by x:{} y:{}", horizontalAngleDelta, verticalAngleDelta);
 
-        Minecraft.getInstance().player.turn(horizontalAngleDelta, verticalAngleDelta);
+        CLIENT.player.turn(horizontalAngleDelta, verticalAngleDelta);
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
@@ -203,7 +203,7 @@ public final class CameraControls {
      */
     private static void rotateCameraTo(Orientation direction) {
         if (handleLocking()) return;
-        LocalPlayer player = Minecraft.getInstance().player;
+        LocalPlayer player = CLIENT.player;
         Vec3 playerBlockPosition = player.position();
         Vec3 targetBlockPosition = playerBlockPosition.add(Vec3.atLowerCornerOf(direction.vector));
         player.lookAt(EntityAnchorArgument.Anchor.FEET, targetBlockPosition);
@@ -231,7 +231,7 @@ public final class CameraControls {
     }
 
     private static boolean handleLocking() {
-        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || PlayerUtils.isPlayerSpectating())) return false;
+        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || !CLIENT.getCameraEntity().is(CLIENT.player))) return false;
         MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
         return true;
     }

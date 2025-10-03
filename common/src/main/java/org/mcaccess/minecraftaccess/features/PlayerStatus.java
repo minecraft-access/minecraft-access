@@ -9,11 +9,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.level.GameType;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
@@ -30,9 +30,9 @@ public class PlayerStatus {
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
             Interval.ms(3000));
+    private final Minecraft client = Minecraft.getInstance();
 
     public void tick() {
-        Minecraft client = Minecraft.getInstance();
         if (client.player == null) return;
         if (client.screen != null) return;
 
@@ -58,10 +58,11 @@ public class PlayerStatus {
             double air = Math.round((client.player.getAirSupply() / 20.0) * 10.0) / 10.0;
             double maxAir = Math.round((client.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
             double frostExposurePercent = Math.round((client.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
+            GameType currentMode = client.gameMode.getPlayerMode();
 
             StringBuilder narration = new StringBuilder();
 
-            if (PlayerUtils.isSurvival() || PlayerUtils.isAdventure()) {
+            if (currentMode == GameType.SURVIVAL || currentMode == GameType.ADVENTURE) {
                 if (!Screen.hasAltDown()) {
                     if (absorption > 0) {
                         narration.append(I18n.get(
@@ -95,12 +96,12 @@ public class PlayerStatus {
                 }
             }
 
-            if (narration.isEmpty() && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure())) {
+            if (narration.isEmpty() && (currentMode == GameType.SURVIVAL || currentMode == GameType.ADVENTURE)) {
                 narration.append(I18n.get("minecraft_access.player_status.no_conditional_status"));
             }
 
             if (!Objects.equals(narration.toString(), I18n.get("minecraft_access.player_status.no_conditional_status"))) {
-                addGameMode(narration);
+                addGameMode(narration, currentMode);
             }
 
             MainClass.narrate(narration.toString(), true);
@@ -108,20 +109,20 @@ public class PlayerStatus {
         narrationKey.updateStateForNextTick();
     }
 
-    public void addGameMode(StringBuilder narration) {
+    public void addGameMode(StringBuilder narration, GameType playerMode) {
         if (!narration.isEmpty()) {
             narration.append(I18n.get("minecraft_access.other.words_connection"));
         }
 
-        narration.append(switch (Minecraft.getInstance().gameMode.getPlayerMode()) {
-            case SURVIVAL -> PlayerUtils.isHardCore() ? I18n.get("gameMode.hardcore") : I18n.get("gameMode.survival");
+        narration.append(switch (playerMode) {
+            case SURVIVAL -> client.level.getLevelData().isHardcore() ? I18n.get("gameMode.hardcore") : I18n.get("gameMode.survival");
             case CREATIVE -> I18n.get("gameMode.creative");
             case SPECTATOR -> I18n.get("gameMode.spectator");
             case ADVENTURE -> I18n.get("gameMode.adventure");
         });
 
         //  If the player is in a hard core world but a different game mode
-        if (PlayerUtils.isHardCore() && !PlayerUtils.isSurvival()) {
+        if (client.level.getLevelData().isHardcore() && playerMode != GameType.SURVIVAL) {
             narration.append(' ')
                     .append(I18n.get("options.difficulty.hardcore"));
         }
