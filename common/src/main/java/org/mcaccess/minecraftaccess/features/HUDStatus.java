@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.features;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.player.LocalPlayer;
@@ -46,7 +47,7 @@ public class HUDStatus {
     }
 
     private void attackCooldownStatus() {
-        boolean indicatorShowing = !hudWasHidden && client.options.attackIndicator().get().getId() != 0 && client.gameMode.getPlayerMode() != GameType.SPECTATOR;
+        boolean indicatorShowing = !hudWasHidden && client.options.attackIndicator().get() != AttackIndicatorStatus.OFF && client.gameMode.getPlayerMode() != GameType.SPECTATOR;
         if (!indicatorShowing) return;
 
         LocalPlayer player = client.player;
@@ -54,7 +55,7 @@ public class HUDStatus {
 
         float cooldownProgress = player.getAttackStrengthScale(1.0f);
         if (!attackCooldownPlayed && cooldownProgress == 1.0f) {
-            player.playNotifySound(SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON, SoundSource.PLAYERS, 1.0f, 1.0f);
+            player.playNotifySound(SoundEvents.NOTE_BLOCK_HAT.value(), SoundSource.PLAYERS, 0.6f, 1.0f);
             attackCooldownPlayed = true;
         } else if (attackCooldownPlayed && cooldownProgress < 1.0f) {
             attackCooldownPlayed = false;

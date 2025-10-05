@@ -47,11 +47,11 @@ Sounds can be played by pressing the play button.
 
 ## Misc Sounds
 
-| Description                                                                           | Sound                                                               |
-|---------------------------------------------------------------------------------------|---------------------------------------------------------------------|
-| Position with high drop-off                                                           | {{< wikiSound "Stone_dig1" >}} Foot stamping sound                  |
-| [Health], [hunger], [air], or [frost] reached the configured danger warning threshold | {{< wikiSound "Respawn_anchor_deplete1" >}} Shatter and woosh sound |
-| Plays when [attack indicator] is filled and is visible on screen                      | {{< wikiSound sound="Click" pitch=0.8 >}} Low pitched clunk sound   |
+| Description                                                                           | Sound                                                                       |
+|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| Position with high drop-off                                                           | {{< wikiSound "Stone_dig1" >}} Foot stamping sound                          |
+| [Health], [hunger], [air], or [frost] reached the configured danger warning threshold | {{< wikiSound "Respawn_anchor_deplete1" >}} Shatter and woosh sound         |
+| Plays when [attack indicator] is filled and is visible on screen                      | {{< wikiSound sound="Note_block_hat" pitch=1.0 >}} High pitched clack sound |
 
 ## Disclaimer
 
