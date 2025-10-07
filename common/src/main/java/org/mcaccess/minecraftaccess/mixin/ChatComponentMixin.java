@@ -15,6 +15,7 @@ import net.minecraft.sounds.SoundEvents;
 
 @Mixin(ChatComponent.class)
 public class ChatComponentMixin {
+    // Adds a sound whenever a chat message is sent or received if the option is enabled in the config
     @Inject(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", at = @At("HEAD"))
     public void addMessageMixin(Component chatComponent, MessageSignature headerSignature, GuiMessageTag tag, CallbackInfo ci) {
         if (Config.getInstance().features.playNewChatMessageSound) {
