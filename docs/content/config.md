@@ -221,7 +221,6 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybin
 | Always Speak Picked Up Items         | false         | Whether to speak any items you pick up (this will also enable speaking of fishing harvests)                                                      |
 | Report Held Items Count When Changed | true          | Whether to report the number of held items when it changed                                                                                       |
 | Play a sound for new chat messages   | true          | Whether to play a sound when sending or recieving a chat message                                                                                 |
-| Chat message sound volume            | 0.5           | Volume of the new chat message sound                                                                                                             |
 
 ## General
 

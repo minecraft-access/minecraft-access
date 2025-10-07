@@ -277,7 +277,7 @@ See also: [Keybindings]({{% relref "/keybindings#speak-chat-messages" %}})
 
 ### Play a sound for new chat messages
 
-By default, the mod | will play a sound when sending or recieving a message in chat.
+By default, the mod | will play a sound when sending or recieving a message in chat. The volume of this is controlled by the UI sounds slider in the game settings.
 
 ### Speak Action Bar Messages
 

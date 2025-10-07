@@ -100,7 +100,6 @@ public class Config implements ConfigData {
         public boolean alwaysNarratePickedUpItems = false;
         public boolean narrateHeldItemsCountWhenChanged = true;
         public boolean playNewChatMessageSound = true;
-        public float newChatMessageSoundVolume = 0.5f;
     }
 
     public static final class SpeechSettings {
