@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.Gui;
@@ -50,10 +49,10 @@ public class GuiMixin {
 
     @Unique
     private void onlyNarrateChangedParts(String msg) {
-        // Using only Assays.asList() will return an immutable array which throws "UnsupportedOperationException"
-        // https://stackoverflow.com/a/2965808
-        List<String> parts = new LinkedList<>(Arrays.asList(splitToParts(msg)));
-        List<String> previousParts = new LinkedList<>(Arrays.asList(splitToParts(previousActionBarContent)));
+        // Using only Arrays.asList() will return an immutable array which throws "UnsupportedOperationException"
+        // https://stackoverflow.com/a/2965808 (apparently LinkedList doesn't work either, ArrayList works though)
+        List<String> parts = new ArrayList<>(List.of(splitToParts(msg)));
+        List<String> previousParts = new ArrayList<>(List.of(splitToParts(previousActionBarContent)));
         parts.removeAll(previousParts);
         String narration = String.join(", ", parts);
         MainClass.narrate(narration, true);
