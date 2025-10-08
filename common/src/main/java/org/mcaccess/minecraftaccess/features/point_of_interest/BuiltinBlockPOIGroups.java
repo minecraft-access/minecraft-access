@@ -45,6 +45,7 @@ public enum BuiltinBlockPOIGroups {
             "minecraft_access.point_of_interest.group.door",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
+                assert Minecraft.getInstance().level != null;
                 BlockState doorState = Minecraft.getInstance().level.getBlockState(pos);
                 if (doorState.getBlock() instanceof DoorBlock) {
                     // Only match upper part of doors
@@ -57,6 +58,7 @@ public enum BuiltinBlockPOIGroups {
     PORTAL(new POIGroup<>(
             "minecraft_access.point_of_interest.group.portal",
             pos -> {
+                assert Minecraft.getInstance().level != null;
                 Block block = Minecraft.getInstance().level.getBlockState(pos).getBlock();
                 return block instanceof Portal || block instanceof EndPortalFrameBlock;
             }
@@ -65,6 +67,7 @@ public enum BuiltinBlockPOIGroups {
             "minecraft_access.point_of_interest.group.ladder",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
+                assert Minecraft.getInstance().level != null;
                 Block block = Minecraft.getInstance().level.getBlockState(pos).getBlock();
                 return block instanceof LadderBlock;
             }
@@ -75,6 +78,7 @@ public enum BuiltinBlockPOIGroups {
             pos -> {
                 Level world = Minecraft.getInstance().level;
                 boolean configEnabled = Config.getInstance().poi.blocks.detectFluidBlocks;
+                assert world != null;
                 boolean isSource = world.getFluidState(pos).getAmount() == 8;
                 boolean isLiquid = world.getBlockState(pos).getBlock() instanceof LiquidBlock;
                 return configEnabled && isLiquid && !PlayerUtils.isInFluid() && isSource;
@@ -106,6 +110,7 @@ public enum BuiltinBlockPOIGroups {
     }
 
     private static BlockState getBlockState(BlockPos pos) {
+        assert Minecraft.getInstance().level != null;
         return Minecraft.getInstance().level.getBlockState(pos);
     }
 

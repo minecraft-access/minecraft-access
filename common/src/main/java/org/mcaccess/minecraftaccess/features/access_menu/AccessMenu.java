@@ -182,6 +182,7 @@ public class AccessMenu {
 
         CLIENT.player.clientSideCloseContainer();
 
+        assert CLIENT.gameMode != null;
         if (CLIENT.gameMode.getPlayerMode() == GameType.SPECTATOR) {
             MainClass.narrate(I18n.get("gameMode.spectator"), true);
             return;

@@ -22,14 +22,17 @@ public final class PlayerPositionUtils {
     }
 
     public static String getNarratableXPos() {
+        assert CLIENT.player != null;
         return NarrationUtils.narrateNumber(CLIENT.player.position().x) + 'x';
     }
 
     public static String getNarratableYPos() {
+        assert CLIENT.player != null;
         return NarrationUtils.narrateNumber(CLIENT.player.position().y) + 'y';
     }
 
     public static String getNarratableZPos() {
+        assert CLIENT.player != null;
         return NarrationUtils.narrateNumber(CLIENT.player.position().z) + 'z';
     }
 
@@ -37,6 +40,7 @@ public final class PlayerPositionUtils {
      * @return -90 (head up) ~ 90 (head down)
      */
     public static int getVerticalFacingDirection() {
+        assert CLIENT.player != null;
         return (int) CLIENT.player.getRotationVector().x;
     }
 
@@ -67,6 +71,7 @@ public final class PlayerPositionUtils {
     }
 
     public static int getHorizontalFacingDirectionInDegrees() {
+        assert CLIENT.player != null;
         int angle = (int) CLIENT.player.getRotationVector().y;
         return angle % 360;
     }

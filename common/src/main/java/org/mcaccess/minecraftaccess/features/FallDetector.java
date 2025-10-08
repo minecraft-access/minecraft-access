@@ -51,6 +51,7 @@ public class FallDetector {
 
     private void searchNearbyPositions() {
         if (client.level == null) return;
+        assert client.player != null;
         BlockPos center = client.player.blockPosition();
 
         Queue<BlockPos> toSearch = new LinkedList<>();
@@ -95,6 +96,7 @@ public class FallDetector {
     }
 
     private void checkForFall(BlockPos toCheck) {
+        assert client.level != null;
         if (!(client.level.getBlockState(toCheck).isAir())) return;
 
         if (getDepth(toCheck, config.depth) < config.depth) return;
@@ -109,6 +111,7 @@ public class FallDetector {
             return 0;
         }
 
+        assert client.level != null;
         if (!(client.level.getBlockState(blockPos).isAir())) return 0;
 
         return 1 + getDepth(blockPos.below(), maxDepth - 1);

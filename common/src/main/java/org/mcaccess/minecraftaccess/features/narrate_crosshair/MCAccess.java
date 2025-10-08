@@ -18,6 +18,7 @@ public class MCAccess implements CrosshairNarrator {
     @Override
     public @NotNull HitResult rayCast() {
         LocalPlayer player = Minecraft.getInstance().player;
+        assert player != null;
         return PlayerUtils.crosshairTarget(Math.min(player.blockInteractionRange(), player.entityInteractionRange()));
     }
 

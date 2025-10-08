@@ -410,6 +410,7 @@ public final class GroupGenerator {
 
                 // this breaks when using I18n.get() for some reason so Component.translatable() is being used instead
                 StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(enchantment.get(), level)).getString());
+                assert Minecraft.getInstance().gameMode != null;
                 if (Minecraft.getInstance().gameMode.getPlayerMode() != GameType.CREATIVE) {
                     if (Minecraft.getInstance().player.experienceLevel < requiredLevel) {
                         clueText.append(I18n.get("container.enchant.level.requirement", requiredLevel));

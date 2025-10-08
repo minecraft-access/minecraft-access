@@ -134,6 +134,7 @@ public class NarrateCrosshair {
 
     // To indicate relative location between player and target.
     private static void playRelativePositionSoundCue(Vec3 targetPosition, double maxDistance, Holder.Reference<SoundEvent> sound, double minVolume, double maxVolume) {
+        assert Minecraft.getInstance().player != null;
         Vec3 playerPos = Minecraft.getInstance().player.position();
 
         // Use pitch to represent relative elevation, the higher the sound the higher the target.
@@ -151,6 +152,7 @@ public class NarrateCrosshair {
         double volumeDeltaPerBlock = (maxVolume - minVolume) / maxDistance;
         float volume = (float) (minVolume + (maxDistance - distance) * volumeDeltaPerBlock);
 
+        assert Minecraft.getInstance().level != null;
         Minecraft.getInstance().level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
     }
 }

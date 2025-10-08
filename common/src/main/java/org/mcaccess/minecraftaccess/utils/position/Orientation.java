@@ -89,6 +89,7 @@ public enum Orientation {
             return SOUTH_EAST;
         } else {
             // Cardinal Directions
+            assert Minecraft.getInstance().player != null;
             return of(Minecraft.getInstance().player.getDirection());
         }
     }

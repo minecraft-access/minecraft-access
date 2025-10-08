@@ -119,8 +119,9 @@ public final class MainClass {
         }
 
         narrateCrosshair.tick();
+        assert client.gameMode != null;
         GameType currentGameMode = client.gameMode.getPlayerMode();
-        if (config.features.xpIndicatorEnabled && currentGameMode != null && xpIndicator != null) {
+        if (config.features.xpIndicatorEnabled && xpIndicator != null) {
             if (currentGameMode == GameType.ADVENTURE || currentGameMode == GameType.SURVIVAL) {
                 xpIndicator.tick();
             }
@@ -149,7 +150,7 @@ public final class MainClass {
             }
         }
 
-        if (playerWarnings != null && config.playerWarnings.enabled && currentGameMode != null) {
+        if (playerWarnings != null && config.playerWarnings.enabled) {
             if (currentGameMode == GameType.SURVIVAL || currentGameMode == GameType.ADVENTURE) {
                 playerWarnings.tick();
             }

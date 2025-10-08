@@ -23,10 +23,11 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  */
 @Slf4j
 public class POIBlocks {
+    private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Blocks config;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
-    private ClientLevel world = Minecraft.getInstance().level;
+    private ClientLevel world = client.level;
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.markedBlock",
@@ -69,7 +70,6 @@ public class POIBlocks {
         if (!config.enabled) return;
         if (!interval.isReady()) return;
 
-        Minecraft client = Minecraft.getInstance();
         if (client.player == null) return;
         if (client.screen != null) return; //Prevent running if any screen is opened
 
@@ -97,7 +97,8 @@ public class POIBlocks {
         });
 
         // where player's leg be
-        BlockPos pos = Minecraft.getInstance().player.blockPosition();
+        assert client.player != null;
+        BlockPos pos = clinet.player.blockPosition();
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.below(), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos, config.range);

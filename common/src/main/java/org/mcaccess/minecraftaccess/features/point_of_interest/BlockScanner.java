@@ -31,6 +31,7 @@ public class BlockScanner {
         checked.add(blockPos);
 
         int nextStepRange = range - 1;
+        assert Minecraft.getInstance().level != null;
         if (Minecraft.getInstance().level.getBlockState(blockPos).isAir() && nextStepRange >= 0) {
             scanAndQualifyBlocksExposedInAirAround(blockPos.north(), nextStepRange);
             scanAndQualifyBlocksExposedInAirAround(blockPos.south(), nextStepRange);

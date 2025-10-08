@@ -80,8 +80,14 @@ public class POIGroup<T> {
     private double distanceBetweenPlayerAnd(T item) {
         LocalPlayer player = Minecraft.getInstance().player;
         return switch (item) {
-            case Entity entity -> player.distanceTo(entity);
-            case BlockPos blockPos -> player.getEyePosition().distanceTo(blockPos.getCenter());
+            case Entity entity -> {
+                assert player != null;
+                yield player.distanceTo(entity);
+            }
+            case BlockPos blockPos -> {
+                assert player != null;
+                yield player.getEyePosition().distanceTo(blockPos.getCenter());
+            }
             default -> Double.MAX_VALUE;
         };
     }
@@ -99,6 +105,7 @@ public class POIGroup<T> {
         public void play(Vec3 pos, float volume) {
             if (sound == null) return;
             log.debug("Play POI sound [{}] at [x:{} y:{} z{}]", sound, pos.x, pos.y, pos.z);
+            assert Minecraft.getInstance().level != null;
             Minecraft.getInstance().level.playLocalSound(pos.x, pos.y, pos.z, sound, SoundSource.BLOCKS, volume, pitch, true);
         }
     }

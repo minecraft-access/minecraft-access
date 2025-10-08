@@ -183,6 +183,7 @@ public final class CameraControls {
         float verticalAngleDelta = angle * direction.verticalWight;
         log.debug("Rotating camera by x:{} y:{}", horizontalAngleDelta, verticalAngleDelta);
 
+        assert CLIENT.player != null;
         CLIENT.player.turn(horizontalAngleDelta, verticalAngleDelta);
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
@@ -204,6 +205,7 @@ public final class CameraControls {
     private static void rotateCameraTo(Orientation direction) {
         if (handleLocking()) return;
         LocalPlayer player = CLIENT.player;
+        assert player != null;
         Vec3 playerBlockPosition = player.position();
         Vec3 targetBlockPosition = playerBlockPosition.add(Vec3.atLowerCornerOf(direction.vector));
         player.lookAt(EntityAnchorArgument.Anchor.FEET, targetBlockPosition);

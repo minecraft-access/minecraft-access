@@ -29,6 +29,7 @@ public enum BuiltinEntityPOIGroups {
                 if (entity instanceof Monster) return true;
                 if (entity instanceof NeutralMob mob) {
                     LocalPlayer player = Minecraft.getInstance().player;
+                    assert player != null;
                     boolean mobAttackedPlayer = mob.equals(player.getLastHurtByMob());
                     boolean mobAngryAtPlayer = player.getUUID().equals(mob.getPersistentAngerTarget());
                     return mobAttackedPlayer || mobAngryAtPlayer;

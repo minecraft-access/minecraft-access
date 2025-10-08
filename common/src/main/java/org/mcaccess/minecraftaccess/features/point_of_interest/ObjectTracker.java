@@ -102,7 +102,8 @@ public class ObjectTracker {
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition()));
             }
             MainClass.narrate(narration.toString(), interrupt);
-            Minecraft.getInstance().level.playLocalSound(
+            assert client.level != null;
+            client.level.playLocalSound(
                     entity.getX(),
                     entity.getY(),
                     entity.getZ(),
@@ -121,7 +122,8 @@ public class ObjectTracker {
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos));
             }
             MainClass.narrate(narration.toString(), interrupt);
-            Minecraft.getInstance().level.playLocalSound(
+            assert client.level != null;
+            client.level.playLocalSound(
                     blockPos,
                     SoundEvents.NOTE_BLOCK_BELL.value(),
                     SoundSource.BLOCKS,
@@ -193,7 +195,7 @@ public class ObjectTracker {
     }
 
     private void targetNearestObject() {
-        LocalPlayer player = Minecraft.getInstance().player;
+        LocalPlayer player = client.player;
 
         List<Entity> entities = MainClass.poiManager.poiEntities.getLastScanResults()
                 .stream()
@@ -202,7 +204,10 @@ public class ObjectTracker {
 
         List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults()
                 .stream()
-                .sorted(Comparator.comparingDouble(a -> player.getEyePosition().distanceTo(a.getCenter())))
+                .sorted(Comparator.comparingDouble(a -> {
+                    assert player != null;
+                    return player.getEyePosition().distanceTo(a.getCenter());
+                }))
                 .toList();
 
         if (Screen.hasControlDown() && !Screen.hasShiftDown()) {

@@ -18,6 +18,7 @@ public final class EffectNarrator {
     public static void narrateGained(MobEffectInstance effect) {
         // Don't narrate if the player already has the same effect
         // This will prevent duplicate narration of beacon, conduit power
+        assert Minecraft.getInstance().player != null;
         if (Minecraft.getInstance().player.hasEffect(effect.getEffect())) return;
         String effectName = NarrationUtils.narrateEffect(effect);
         MainClass.narrate(I18n.get(GAINED) + ' ' + effectName, false);

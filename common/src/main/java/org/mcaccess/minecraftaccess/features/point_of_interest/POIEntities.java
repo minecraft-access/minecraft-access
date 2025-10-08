@@ -78,7 +78,9 @@ public class POIEntities {
         }
 
         LocalPlayer player = client.player;
+        assert player != null;
         AABB scanBox = player.getBoundingBox().inflate(config.range, config.range, config.range);
+        assert client.level != null;
         List<Entity> entities = client.level.getEntities(player, scanBox);
 
         for (Entity entity : entities) {

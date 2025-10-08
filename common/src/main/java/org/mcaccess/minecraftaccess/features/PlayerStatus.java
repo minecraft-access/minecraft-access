@@ -58,6 +58,7 @@ public class PlayerStatus {
             double air = Math.round((client.player.getAirSupply() / 20.0) * 10.0) / 10.0;
             double maxAir = Math.round((client.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
             double frostExposurePercent = Math.round((client.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
+            assert client.gameMode != null;
             GameType currentMode = client.gameMode.getPlayerMode();
 
             StringBuilder narration = new StringBuilder();
@@ -115,13 +116,17 @@ public class PlayerStatus {
         }
 
         narration.append(switch (playerMode) {
-            case SURVIVAL -> client.level.getLevelData().isHardcore() ? I18n.get("gameMode.hardcore") : I18n.get("gameMode.survival");
+            case SURVIVAL -> {
+                assert client.level != null;
+                yield client.level.getLevelData().isHardcore() ? I18n.get("gameMode.hardcore") : I18n.get("gameMode.survival");
+            }
             case CREATIVE -> I18n.get("gameMode.creative");
             case SPECTATOR -> I18n.get("gameMode.spectator");
             case ADVENTURE -> I18n.get("gameMode.adventure");
         });
 
         //  If the player is in a hard core world but a different game mode
+        assert client.level != null;
         if (client.level.getLevelData().isHardcore() && playerMode != GameType.SURVIVAL) {
             narration.append(' ')
                     .append(I18n.get("options.difficulty.hardcore"));

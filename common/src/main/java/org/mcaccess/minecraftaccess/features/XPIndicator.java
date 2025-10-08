@@ -22,7 +22,7 @@ public class XPIndicator {
         if (client.player == null) return;
         if (client.screen != null) return;
 
-        int currentXPLevel = Minecraft.getInstance().player.experienceLevel;
+        int currentXPLevel = client.player.experienceLevel;
         if (previousXPLevel == null) {
             previousXPLevel = currentXPLevel;
             return;

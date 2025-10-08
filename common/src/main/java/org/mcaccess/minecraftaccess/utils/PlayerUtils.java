@@ -32,6 +32,7 @@ public final class PlayerUtils {
      * Let player looks at entity even the entity exposes a very small part of its body
      */
     public static void lookAt(Entity entity) {
+        assert CLIENT.player != null;
         Vec3 playerEyePos = CLIENT.player.getEyePosition();
 
         // Try to look at entity's eyes or Enderman's stomach first.
@@ -92,6 +93,7 @@ public final class PlayerUtils {
 
     public static boolean isInFluid() {
         LocalPlayer player = CLIENT.player;
+        assert player != null;
         return player.isSwimming()
                 || player.isUnderWater()
                 || player.isInWater()
@@ -125,6 +127,7 @@ public final class PlayerUtils {
         BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
         ClientLevel world = CLIENT.level;
 
+        assert world != null;
         BlockState blockState = world.getBlockState(blockPos);
         boolean thisBlockIsFluidBlock = blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA);
         if (!thisBlockIsFluidBlock) return missed;

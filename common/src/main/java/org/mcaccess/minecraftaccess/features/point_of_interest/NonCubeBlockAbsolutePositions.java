@@ -17,11 +17,12 @@ import org.jetbrains.annotations.NotNull;
  * we manually calculate the locking position of these blocks (which are usually not the center of the block) by these methods.
  */
 public final class NonCubeBlockAbsolutePositions {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     private NonCubeBlockAbsolutePositions() {
     }
 
     public static Vec3 getTrapDoorPos(Vec3 blockPos) {
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         String half = "";
         String facing = "";
@@ -64,7 +65,7 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getLeverPos(Vec3 blockPos) {
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         String face = "";
         String facing = "";
@@ -103,7 +104,7 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getLadderPos(Vec3 blockPos) {
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         String facing = "";
 
@@ -134,7 +135,7 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getButtonPos(Vec3 blockPos) {
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         double x = blockPos.x();
         double y = blockPos.y();
@@ -173,7 +174,7 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getDoorPos(Vec3 blockPos) {
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         String facing = "";
         String hinge = "";

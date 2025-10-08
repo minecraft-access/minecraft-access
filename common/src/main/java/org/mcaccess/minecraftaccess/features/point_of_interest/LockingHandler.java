@@ -89,6 +89,7 @@ public class LockingHandler {
                 interval.beReady();
             }
         } else if (isLockingKeyPressed) {
+            assert client.getCameraEntity() != null;
             if (client.getCameraEntity().is(client.player)) {
                 relock();
             } else {
@@ -101,6 +102,7 @@ public class LockingHandler {
     }
 
     private void lookAtLockedTarget() {
+        assert client.getCameraEntity() != null;
         if (!client.getCameraEntity().is(client.player)) {
             unlock(true, true);
             return;
@@ -113,6 +115,7 @@ public class LockingHandler {
 
         if (lockedOnBlockPos != null) {
             if (unlockFromAirBlock()) return;
+            assert client.level != null;
             BlockState blockState = client.level.getBlockState(BlockPos.containing(lockedOnBlockPos.getAccuratePosition()));
 
             if (unlockFromLadderIfClimbingOnIt(blockState)) return;
@@ -124,6 +127,7 @@ public class LockingHandler {
             boolean entriesOfLockedBlockNotChanged = entries.values() == entriesOfLockedOnBlock.values();
 
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears) {
+                assert client.player != null;
                 client.player.lookAt(EntityAnchorArgument.Anchor.EYES, lockedOnBlockPos.getAccuratePosition());
             } else {
                 // Unlock if the state of locked block is changed
@@ -202,6 +206,7 @@ public class LockingHandler {
 
         if (narrate) {
             if (config.unlockingSound) {
+                assert client.player != null;
                 client.player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 0.4f, 2.0f);
             } else {
                 MainClass.narrate(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
@@ -234,6 +239,7 @@ public class LockingHandler {
     private boolean unlockFromLadderIfClimbingOnIt(BlockState blockState) {
         if (Blocks.LADDER.equals(blockState.getBlock())) {
 
+            assert client.player != null;
             Vec3 playerPos = client.player.position();
             double distance = lockedOnBlockPos.getCenter().distanceTo(playerPos);
             if (distance <= 0.5) {
@@ -270,6 +276,7 @@ public class LockingHandler {
      * @return true if unlocked
      */
     private boolean unlockFromAirBlock() {
+        assert client.level != null;
         Block currentBlock = client.level.getBlockState(lockedOnBlockPos).getBlock();
         if (!(currentBlock instanceof AirBlock)) return false;
         unlock(true, false);
@@ -296,6 +303,7 @@ public class LockingHandler {
     }
 
     private void lockOnBlock(BlockPos position) {
+        assert client.level != null;
         BlockState blockState = client.level.getBlockState(position);
         entriesOfLockedOnBlock = blockState.getValues();
 
