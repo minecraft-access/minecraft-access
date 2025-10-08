@@ -24,12 +24,12 @@ import org.mcaccess.minecraftaccess.MainClass;
 
 @Slf4j
 @Mixin(ClientPacketListener.class)
-public abstract class ClientPacketListenerMixin implements TickablePacketListener, ClientGamePacketListener {
+abstract class ClientPacketListenerMixin implements TickablePacketListener, ClientGamePacketListener {
     @Shadow
     private ClientLevel level;
 
     @Inject(at = @At("HEAD"), method = "handleTakeItemEntity")
-    public void handleTakeItemEntity(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
+    private void handleTakeItemEntity(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.player;
         if (player == null) return;

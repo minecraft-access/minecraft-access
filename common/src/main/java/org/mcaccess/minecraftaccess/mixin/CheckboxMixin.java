@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Checkbox.class)
-public abstract class CheckboxMixin extends AbstractWidget {
+abstract class CheckboxMixin extends AbstractWidget {
     @Shadow
     private boolean selected;
 

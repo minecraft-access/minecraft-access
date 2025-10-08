@@ -18,9 +18,9 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 @Mixin(ToastManager.class)
-public class ToastManagerMixin {
+abstract class ToastManagerMixin {
     @Inject(at = @At("TAIL"), method = "addToast")
-    public void narrateToast(Toast toast, CallbackInfo ci) {
+    private void narrateToast(Toast toast, CallbackInfo ci) {
         StringBuilder toastTextBuilder = new StringBuilder();
         toastTextBuilder.append(I18n.get("minecraft_access.toast.shown"))
                 .append(I18n.get("minecraft_access.other.words_connection"));

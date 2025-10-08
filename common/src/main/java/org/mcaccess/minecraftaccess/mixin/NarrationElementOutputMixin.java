@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(targets = "net.minecraft.client.gui.narration.ScreenNarrationCollector$Output")
 abstract class NarrationElementOutputMixin {
     @Inject(method = "add", at = @At("HEAD"), cancellable = true)
-    public void removePositionAndUsageNarrations(NarratedElementType type, NarrationThunk<?> contents, CallbackInfo ci) {
+    private void removePositionAndUsageNarrations(NarratedElementType type, NarrationThunk<?> contents, CallbackInfo ci) {
         switch (type) {
             case TITLE:
             case HINT:

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(Options.class)
-public class OptionsMixin {
+abstract class OptionsMixin {
     @ModifyArg(
             method = "<init>",
             at = @At(

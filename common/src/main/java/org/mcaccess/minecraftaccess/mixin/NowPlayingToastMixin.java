@@ -15,14 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(NowPlayingToast.class)
-public abstract class NowPlayingToastMixin {
+abstract class NowPlayingToastMixin {
     @Shadow
     private static Component getNowPlayingString(@Nullable String string) {
         throw new AssertionError();
     }
 
     @Inject(at = @At("TAIL"), method = "showToast")
-    public void narrateSong(CallbackInfo ci) {
+    private void narrateSong(CallbackInfo ci) {
         String toastTextBuilder = I18n.get("minecraft_access.toast.shown")
                 + I18n.get("minecraft_access.other.words_connection")
                 + I18n.get("record.nowPlaying", getNowPlayingString(Minecraft.getInstance().getMusicManager().getCurrentMusicTranslationKey()).getString());

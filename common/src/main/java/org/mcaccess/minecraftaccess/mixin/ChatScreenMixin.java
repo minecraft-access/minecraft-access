@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(ChatScreen.class)
-public class ChatScreenMixin {
+abstract class ChatScreenMixin {
     @Unique
     private static int currentChatMessagePage;
 

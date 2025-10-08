@@ -17,7 +17,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 @Mixin(RecipeButton.class)
-public abstract class RecipeButtonMixin {
+abstract class RecipeButtonMixin {
     @Shadow
     private RecipeCollection collection;
 

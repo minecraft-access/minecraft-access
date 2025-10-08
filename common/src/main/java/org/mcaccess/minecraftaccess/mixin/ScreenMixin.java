@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Screen.class)
-public abstract class ScreenMixin {
+abstract class ScreenMixin {
     @Unique
     private static final Logger LOG = LoggerFactory.getLogger("org.mcaccess.minecraftaccess.mixin.ScreenMixin");
 

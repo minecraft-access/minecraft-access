@@ -21,7 +21,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 @Mixin(GuiGraphics.class)
-public class GuiGraphicsMixin {
+abstract class GuiGraphicsMixin {
     @Unique
     private static String previous;
 

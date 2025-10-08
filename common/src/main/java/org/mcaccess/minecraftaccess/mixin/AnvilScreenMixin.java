@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(AnvilScreen.class)
-public class AnvilScreenMixin {
+abstract class AnvilScreenMixin {
     @Unique
     private String previousText;
 
@@ -23,7 +23,7 @@ public class AnvilScreenMixin {
      * Let the original logic build the text, we don't want to repeat that.
      */
     @Inject(method = "renderLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
-    protected void narrateCost(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
+    private void narrateCost(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
         if (text instanceof Component component) {
             String textString = component.getString();
             if (!textString.equals(previousText)) {
@@ -34,7 +34,7 @@ public class AnvilScreenMixin {
     }
 
     @Inject(method = "renderLabels", at = @At("RETURN"))
-    protected void resetWhenCostDisappears(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 2) int cost) {
+    private void resetWhenCostDisappears(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 2) int cost) {
         if (cost <= 0) {
             previousText = null;
         }

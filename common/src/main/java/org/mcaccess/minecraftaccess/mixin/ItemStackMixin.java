@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = ItemStack.class, priority = 0)
-public class ItemStackMixin {
+abstract class ItemStackMixin {
     @Inject(at = @At("RETURN"), method = "getTooltipLines")
     private void getTooltipLinesMixin(CallbackInfoReturnable<List<Component>> info) {
         if (Minecraft.getInstance().level == null) return;
