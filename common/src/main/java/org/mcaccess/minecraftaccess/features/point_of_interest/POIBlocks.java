@@ -98,7 +98,7 @@ public class POIBlocks {
 
         // where player's leg be
         assert client.player != null;
-        BlockPos pos = clinet.player.blockPosition();
+        BlockPos pos = client.player.blockPosition();
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.below(), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos, config.range);

@@ -17,7 +17,7 @@ abstract class AnvilScreenMixin {
     @Unique
     private String previousText;
 
-    /**
+    /*
      * The "drawForeground" method is continually triggered when enchant cost changes,
      * so there is a repeat check before narrating.
      * Let the original logic build the text, we don't want to repeat that.
