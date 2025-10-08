@@ -45,17 +45,13 @@ Sounds can be played by pressing the play button.
 | Plays when target is visible, pitch indicates how much the bow is pulled  | {{< wikiSound "Note_block_pling" >}} Electric piano sound |
 | Plays when target is obscured, pitch indicates how much the bow is pulled | {{< wikiSound "Note_block_bass" >}} String bass sound     |
 
-## Fall Detector
+## Misc Sounds
 
-| Description                 | Sound                                              |
-|-----------------------------|----------------------------------------------------|
-| Position with high drop-off | {{< wikiSound "Stone_dig1" >}} Foot stamping sound |
-
-## Player Warnings
-
-| Description                                                                           | Sound                                                               |
-|---------------------------------------------------------------------------------------|---------------------------------------------------------------------|
-| [Health], [hunger], [air], or [frost] reached the configured danger warning threshold | {{< wikiSound "Respawn_anchor_deplete1" >}} Shatter and woosh sound |
+| Description                                                                           | Sound                                                                       |
+|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| Position with high drop-off                                                           | {{< wikiSound "Stone_dig1" >}} Foot stamping sound                          |
+| [Health], [hunger], [air], or [frost] reached the configured danger warning threshold | {{< wikiSound "Respawn_anchor_deplete1" >}} Shatter and woosh sound         |
+| Plays when [attack indicator] is filled and is visible on screen                      | {{< wikiSound sound="Note_block_hat" pitch=1.0 >}} High pitched clack sound |
 
 ## Disclaimer
 
@@ -74,4 +70,5 @@ the [Minecraft Usage Guidelines] apply.
 [hunger]: https://minecraft.wiki/w/Hunger
 [air]: https://minecraft.wiki/w/Damage#Drowning
 [frost]: https://minecraft.wiki/w/Powder_Snow#Freezing
+[attack indicator]: https://minecraft.wiki/Cooldown
 [Minecraft Usage Guidelines]: https://www.minecraft.net/en-us/usage-guidelines
