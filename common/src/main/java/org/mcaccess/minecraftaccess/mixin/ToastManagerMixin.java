@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.StringUtils;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 @Mixin(ToastManager.class)
-public class ToastManagerMixin {
+abstract class ToastManagerMixin {
     @Inject(at = @At("TAIL"), method = "addToast")
-    public void narrateToast(Toast toast, CallbackInfo ci) {
+    private void narrateToast(Toast toast, CallbackInfo ci) {
         StringBuilder toastTextBuilder = new StringBuilder();
         toastTextBuilder.append(I18n.get("minecraft_access.toast.shown"))
                 .append(I18n.get("minecraft_access.other.words_connection"));
@@ -37,10 +37,10 @@ public class ToastManagerMixin {
             case SystemToast systemToast -> toastTextBuilder.append(((SystemToastAccessor) systemToast).getTitle().getString())
                     .append(". ")
                     .append(((SystemToastAccessor) systemToast).getMessageLines().stream()
-                            .map(StringUtils::formattedCharSequenceToString)
+                            .map(NarrationUtils::formattedCharSequenceToString)
                             .collect(Collectors.joining(" ")));
             case TutorialToast tutorialToast -> toastTextBuilder.append(((TutorialToastAccessor) tutorialToast).getLines().stream()
-                    .map(StringUtils::formattedCharSequenceToString)
+                    .map(NarrationUtils::formattedCharSequenceToString)
                     .collect(Collectors.joining(" ")));
             default -> toastTextBuilder.append(I18n.get("minecraft_access.toast.unknown"));
         }

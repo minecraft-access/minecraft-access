@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.mcaccess.minecraftaccess.features.inventory_controls.GroupGenerator;
 
 @Mixin(RecipeBookPage.class)
-public abstract class RecipeBookPageMixin {
+abstract class RecipeBookPageMixin {
     @Inject(at = @At("HEAD"), method = "updateCollections")
     private void saveResultsForRecipeGroupGenerating(List<RecipeCollection> resultCollections, boolean resetCurrentPage, boolean filteringCraftable, CallbackInfo ci) {
         GroupGenerator.recipesOnTheScreen = resultCollections;

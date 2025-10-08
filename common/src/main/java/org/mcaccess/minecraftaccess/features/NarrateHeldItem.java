@@ -70,9 +70,11 @@ public class NarrateHeldItem {
 
         if (!hasAltDown) {
             hand = I18n.get("options.mainHand");
+            assert player != null;
             heldItem = player.getMainHandItem();
         } else {
             hand = I18n.get("minecraft_access.other.offhand");
+            assert player != null;
             heldItem = player.getOffhandItem();
         }
 

@@ -20,6 +20,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Display;
@@ -75,6 +76,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -87,6 +89,7 @@ import org.mcaccess.minecraftaccess.utils.position.Orientation;
  */
 @Slf4j
 public final class NarrationUtils {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     private static final Map<IntegerProperty, Integer> CROP_AGE_PROPERTIES = Map.of(
             BlockStateProperties.AGE_1, 1,
             BlockStateProperties.AGE_2, 2,
@@ -254,11 +257,10 @@ public final class NarrationUtils {
     }
 
     public static String narrateRelativePositionOfPlayerAnd(BlockPos blockPos) {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return "up";
+        if (CLIENT.player == null) return "up";
 
-        Direction dir = minecraftClient.player.getDirection();
-        Vec3 diff = new Vec3(minecraftClient.player.getX(), minecraftClient.player.getEyeY(), minecraftClient.player.getZ()).subtract(Vec3.atCenterOf(blockPos)); // pre 1.18
+        Direction dir = CLIENT.player.getDirection();
+        Vec3 diff = new Vec3(CLIENT.player.getX(), CLIENT.player.getEyeY(), CLIENT.player.getZ()).subtract(Vec3.atCenterOf(blockPos)); // pre 1.18
         BlockPos diffBlockPos = new BlockPos((int) diff.x, (int) diff.y, (int) diff.z); // post 1.20
 
         String diffXBlockPos = "";
@@ -314,25 +316,22 @@ public final class NarrationUtils {
     }
 
     /**
-     * @param pos  block position (in the client world)
+     * @param blockPos  block position (in the client world)
      * @param side if side is provided, then the invoker is ReadCrosshair
      * @return (narration, currentQuery):
      * "narration" is the actual one to be narrated through Narrator,
      * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
-    public static Tuple<String, String> narrateBlockForContentChecking(BlockPos pos, String side) {
-        Minecraft client = Minecraft.getInstance();
-        ClientLevel clientWorld = client.level;
+    public static Tuple<String, String> narrateBlockForContentChecking(BlockPos blockPos, String side) {
+        ClientLevel clientWorld = CLIENT.level;
         if (clientWorld == null) return new Tuple<>("", "");
 
         // Since Minecraft uses flyweight pattern for blocks and entities,
         // All same type of blocks share one singleton Block instance,
         // While every block keep their states with a BlockState instance.
-        WorldUtils.BlockInfo blockInfo = WorldUtils.getBlockInfo(pos);
-        BlockPos blockPos = blockInfo.pos();
-        BlockState blockState = blockInfo.state();
-        Block block = blockInfo.type();
-        BlockEntity blockEntity = blockInfo.entity();
+        BlockState blockState = clientWorld.getBlockState(blockPos);
+        Block block = blockState.getBlock();
+        BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
 
         // Difference between narration and currentQuery:
         // currentQuery is used for checking condition, narration is actually the one to be narrated.
@@ -349,7 +348,7 @@ public final class NarrationUtils {
 
         if (blockEntity != null) {
             if (blockState.is(BlockTags.ALL_SIGNS)) {
-                narration = getSignInfo((SignBlockEntity) blockEntity, client.player, narration);
+                narration = getSignInfo((SignBlockEntity) blockEntity, CLIENT.player, narration);
             } else if (blockEntity instanceof BeehiveBlockEntity beehiveBlockEntity) {
                 Tuple<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, narration, currentQuery);
                 narration = beehiveInfo.getA();
@@ -519,8 +518,11 @@ public final class NarrationUtils {
         if (connectedDirections.size() == 4) {
             // If two redstone wires are connected, they're at one of three relative positions: [side, side down, side up].
             // Take one sample relative position (x+1) then check if any block at [-1,0,1] height is also redstone wire.
-            Iterable<BlockPos> threePosAtSide = BlockPos.betweenClosed(pos.offset(1, -1, 0), pos.offset(1, 1, 0));
-            boolean result = WorldUtils.checkAnyOfBlocks(threePosAtSide, state -> state.getBlock() instanceof RedStoneWireBlock);
+            boolean result = BlockPos.betweenClosedStream(pos.offset(1, -1, 0), pos.offset(1, 1, 0))
+                    .anyMatch(blockPos -> {
+                        assert CLIENT.level != null;
+                        return CLIENT.level.getBlockState(blockPos).getBlock() instanceof RedStoneWireBlock;
+                    });
             // If there's no redstone wire on x+1 side,
             // then current wire is not connected to that side,
             // so it's not connected to all directions.
@@ -593,7 +595,8 @@ public final class NarrationUtils {
      * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateFluidBlock(BlockPos pos) {
-        FluidState fluidState = WorldUtils.getClientWorld().getFluidState(pos);
+        assert CLIENT.level != null;
+        FluidState fluidState = CLIENT.level.getFluidState(pos);
         Optional<String> fluidName = getTranslatedName(fluidState.holder(), "block");
         int level = fluidState.getAmount();
         String levelString = level < 8 ? I18n.get("minecraft_access.read_crosshair.fluid_level", level) : "";
@@ -641,5 +644,15 @@ public final class NarrationUtils {
             log.error("Failed to get a valid translation of the {} name", type);
         }
         return translatedName;
+    }
+
+    @Contract(pure = true)
+    public static @NotNull String formattedCharSequenceToString(@NotNull FormattedCharSequence charSequence) {
+        StringBuilder builder = new StringBuilder();
+        charSequence.accept((index, style, codePoint) -> {
+            builder.appendCodePoint(codePoint);
+            return true;
+        });
+        return builder.toString();
     }
 }

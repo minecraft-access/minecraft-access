@@ -9,7 +9,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
@@ -36,12 +39,11 @@ import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 @Slf4j
 public final class MainClass {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     public static final String MOD_ID = "minecraft_access";
     @Getter
     private static ScreenReaderInterface screenReader = null;
@@ -97,18 +99,18 @@ public final class MainClass {
     /**
      * This method gets called at the end of every tick
      *
-     * @param minecraftClient The current minecraft client object
+     * @param client The current minecraft client object
      */
-    public static void clientTickEventsMethod(Minecraft minecraftClient) {
+    public static void clientTickEventsMethod(Minecraft client) {
         Config config = Config.getInstance();
 
         changeLogLevelBaseOnDebugConfig();
 
         if (config.menuFixEnabled) {
-            MenuFix.tick(minecraftClient);
+            MenuFix.tick(client);
         }
 
-        if (minecraftClient.level == null) {
+        if (client.level == null) {
             return;
         }
 
@@ -117,9 +119,12 @@ public final class MainClass {
         }
 
         narrateCrosshair.tick();
-
-        if (xpIndicator != null && config.features.xpIndicatorEnabled && (PlayerUtils.isAdventure() || PlayerUtils.isSurvival())) {
-            xpIndicator.tick();
+        assert client.gameMode != null;
+        GameType currentGameMode = client.gameMode.getPlayerMode();
+        if (config.features.xpIndicatorEnabled && xpIndicator != null) {
+            if (currentGameMode == GameType.ADVENTURE || currentGameMode == GameType.SURVIVAL) {
+                xpIndicator.tick();
+            }
         }
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled) {
@@ -130,30 +135,32 @@ public final class MainClass {
 
         PositionNarrator.getINSTANCE().tick();
 
-        if (WorldUtils.getClientPlayer() != null) {
+        if (client.player != null) {
             if (playerStatus != null) {
                 playerStatus.tick();
             }
 
-            if (!PlayerUtils.isPlayerTyping()) {
+            if (client.screen == null || !(client.screen.getFocused() instanceof EditBox || client.screen instanceof KeyBindsScreen)) {
                 MouseKeySimulation.tick();
             }
 
-            if (minecraftClient.screen == null) {
+            if (client.screen == null) {
                 // These features are suppressed when there is any screen opening
                 CameraControls.tick();
             }
         }
 
-        if (playerWarnings != null && config.playerWarnings.enabled && (PlayerUtils.isSurvival() || PlayerUtils.isAdventure())) {
-            playerWarnings.tick();
+        if (playerWarnings != null && config.playerWarnings.enabled) {
+            if (currentGameMode == GameType.SURVIVAL || currentGameMode == GameType.ADVENTURE) {
+                playerWarnings.tick();
+            }
         }
 
         if (accessMenu != null && config.accessMenu.enabled) {
             accessMenu.tick();
         }
 
-        if (!PlayerUtils.isSpectator()) {
+        if (currentGameMode != GameType.SPECTATOR) {
             narrateHeldItem.tick();
         }
 
@@ -182,11 +189,10 @@ public final class MainClass {
         poiManager = new POIManager();
         xpIndicator = new XPIndicator();
 
-        Minecraft client = Minecraft.getInstance();
-        if (client.options.keyAdvancements.same(KeyBindingsHandler.CAMERA_CONTROLS_RIGHT.mapping)) {
-            client.options.keyAdvancements.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_O));
-            client.options.save();
-            client.options.load();
+        if (CLIENT.options.keyAdvancements.same(KeyBindingsHandler.CAMERA_CONTROLS_RIGHT.mapping)) {
+            CLIENT.options.keyAdvancements.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_O));
+            CLIENT.options.save();
+            CLIENT.options.load();
             log.info("Rebound advancements key");
         }
     }
@@ -210,12 +216,12 @@ public final class MainClass {
     }
 
     public static void narrate(String text, boolean interrupt) {
-        if (Strings.isEmpty(text) || !Minecraft.getInstance().isWindowActive()) {
+        if (Strings.isEmpty(text) || !CLIENT.isWindowActive()) {
             log.warn("The narration of string \"{}\" with interrupt={} was suppressed", text, interrupt);
             return;
         }
-        if (Minecraft.getInstance().options.narrator().get() != NarratorStatus.OFF) {
-            ((GameNarratorAccessor) Minecraft.getInstance().getNarrator()).invokeNarrateMessage(text, interrupt);
+        if (CLIENT.options.narrator().get() != NarratorStatus.OFF) {
+            ((GameNarratorAccessor) CLIENT.getNarrator()).invokeNarrateMessage(text, interrupt);
         }
     }
 }

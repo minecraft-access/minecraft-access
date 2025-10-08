@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(MouseHandler.class)
-public class MouseHandlerMixin {
+abstract class MouseHandlerMixin {
     @Inject(at = @At("HEAD"), method = "turnPlayer", cancellable = true)
-    private void lockCamera(double movementTime, CallbackInfo ci) {
+    private void lockCamera(CallbackInfo ci) {
         if (MainClass.poiManager.lockingHandler.isPlayerLocked()) {
             ci.cancel();
         }

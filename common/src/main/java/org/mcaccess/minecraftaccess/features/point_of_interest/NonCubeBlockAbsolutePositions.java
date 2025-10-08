@@ -3,13 +3,13 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 /**
  * The position of the block (blockPos.getCenter()) is generally considered to be the center of the block (x.5,y.5,z.5).
@@ -17,12 +17,12 @@ import org.mcaccess.minecraftaccess.utils.WorldUtils;
  * we manually calculate the locking position of these blocks (which are usually not the center of the block) by these methods.
  */
 public final class NonCubeBlockAbsolutePositions {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     private NonCubeBlockAbsolutePositions() {
     }
 
     public static Vec3 getTrapDoorPos(Vec3 blockPos) {
-        ClientLevel world = WorldUtils.getClientWorld();
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         String half = "";
         String facing = "";
@@ -65,8 +65,7 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getLeverPos(Vec3 blockPos) {
-        ClientLevel world = WorldUtils.getClientWorld();
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         String face = "";
         String facing = "";
@@ -105,8 +104,7 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getLadderPos(Vec3 blockPos) {
-        ClientLevel world = WorldUtils.getClientWorld();
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         String facing = "";
 
@@ -137,8 +135,7 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getButtonPos(Vec3 blockPos) {
-        ClientLevel world = WorldUtils.getClientWorld();
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         double x = blockPos.x();
         double y = blockPos.y();
@@ -177,8 +174,7 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getDoorPos(Vec3 blockPos) {
-        ClientLevel world = WorldUtils.getClientWorld();
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, world);
+        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, CLIENT.level);
 
         String facing = "";
         String hinge = "";
@@ -237,7 +233,7 @@ public final class NonCubeBlockAbsolutePositions {
 
     @NotNull
     private static Set<Map.Entry<Property<?>, Comparable<?>>> getEntries(Vec3 blockPos, ClientLevel world) {
-        BlockState blockState = world.getBlockState(WorldUtils.blockPosOf(blockPos));
+        BlockState blockState = world.getBlockState(BlockPos.containing(blockPos));
         return blockState.getValues().entrySet();
     }
 }

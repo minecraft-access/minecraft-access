@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.mcaccess.minecraftaccess.utils.NamedFormatter;
 
 @Mixin(I18n.class)
-public class I18nMixin {
+abstract class I18nMixin {
     @Unique
     private static Language enLanguage;
 
@@ -48,5 +48,4 @@ public class I18nMixin {
         }
         return enLanguage.getOrDefault(key);
     }
-
 }

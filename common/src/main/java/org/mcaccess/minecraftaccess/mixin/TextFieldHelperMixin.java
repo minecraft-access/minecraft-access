@@ -25,7 +25,7 @@ import org.mcaccess.minecraftaccess.MainClass;
  * Mixin the inner content manager of {@link AbstractSignEditScreen}, {@link BookEditScreen} to make text editing on these screens accessible.
  */
 @Mixin(TextFieldHelper.class)
-public abstract class TextFieldHelperMixin {
+abstract class TextFieldHelperMixin {
     @Final
     @Shadow
     private Supplier<String> getMessageFn;
@@ -38,7 +38,7 @@ public abstract class TextFieldHelperMixin {
     protected abstract String getSelected(String string);
 
     @Inject(at = @At("TAIL"), method = "setCursorToEnd()V")
-    public void narrateTextOfSwitchedLine(CallbackInfo ci) {
+    private void narrateTextOfSwitchedLine(CallbackInfo ci) {
         MainClass.narrate(getMessageFn.get(), true);
     }
 
@@ -94,7 +94,7 @@ public abstract class TextFieldHelperMixin {
     }
 
     @Inject(at = @At("RETURN"), method = "keyPressed")
-    private void narrateSelectedText(int keyCode, CallbackInfoReturnable<Boolean> cir) {
+    private void narrateSelectedText(CallbackInfoReturnable<Boolean> cir) {
         String selectedText = getSelected(getMessageFn.get());
         MainClass.narrate(selectedText, true);
     }

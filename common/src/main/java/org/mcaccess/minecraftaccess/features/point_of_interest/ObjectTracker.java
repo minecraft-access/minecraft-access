@@ -14,18 +14,19 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 @Slf4j
 public class ObjectTracker {
+    private final Minecraft client = Minecraft.getInstance();
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
 
@@ -60,11 +61,9 @@ public class ObjectTracker {
     }
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.screen != null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
+        if (client.screen != null) return;
 
         updateGroups();
 
@@ -103,7 +102,17 @@ public class ObjectTracker {
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition()));
             }
             MainClass.narrate(narration.toString(), interrupt);
-            WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1.0f, entity.position());
+            assert client.level != null;
+            client.level.playLocalSound(
+                    entity.getX(),
+                    entity.getY(),
+                    entity.getZ(),
+                    SoundEvents.NOTE_BLOCK_BELL.value(),
+                    SoundSource.BLOCKS,
+                    1,
+                    1.0f,
+                    true
+            );
         }
 
         if (currentObject instanceof BlockPos blockPos) {
@@ -113,7 +122,15 @@ public class ObjectTracker {
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos));
             }
             MainClass.narrate(narration.toString(), interrupt);
-            WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1.0f, blockPos.getCenter());
+            assert client.level != null;
+            client.level.playLocalSound(
+                    blockPos,
+                    SoundEvents.NOTE_BLOCK_BELL.value(),
+                    SoundSource.BLOCKS,
+                    1,
+                    1.0f,
+                    true
+            );
         }
     }
 
@@ -178,7 +195,7 @@ public class ObjectTracker {
     }
 
     private void targetNearestObject() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = client.player;
 
         List<Entity> entities = MainClass.poiManager.poiEntities.getLastScanResults()
                 .stream()
@@ -187,7 +204,10 @@ public class ObjectTracker {
 
         List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults()
                 .stream()
-                .sorted(Comparator.comparingDouble(a -> player.getEyePosition().distanceTo(a.getCenter())))
+                .sorted(Comparator.comparingDouble(a -> {
+                    assert player != null;
+                    return player.getEyePosition().distanceTo(a.getCenter());
+                }))
                 .toList();
 
         if (Screen.hasControlDown() && !Screen.hasShiftDown()) {

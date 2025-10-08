@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * See issue <a href="https://github.com/minecraft-access/minecraft-access/issues/310">#310</a> for details.
  */
 @Mixin(KeyMapping.class)
-public class KeyMappingMixin {
+abstract class KeyMappingMixin {
     @Unique
     private static final Multimap<InputConstants.Key, KeyMapping> KEY_TO_BINDINGS_LIST = ArrayListMultimap.create();
     @Final
@@ -61,7 +61,7 @@ public class KeyMappingMixin {
     }
 
     @Inject(at = @At("RETURN"), method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V")
-    void initMap(String translationKey, InputConstants.Type type, int code, String category, CallbackInfo ci) {
+    private void initMap(String translationKey, InputConstants.Type type, int code, String category, CallbackInfo ci) {
         KEY_TO_BINDINGS_LIST.put(key, (KeyMapping) (Object) this);
     }
 }

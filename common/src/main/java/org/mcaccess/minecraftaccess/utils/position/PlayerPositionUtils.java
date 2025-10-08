@@ -1,53 +1,20 @@
 package org.mcaccess.minecraftaccess.utils.position;
 
-import java.util.Optional;
-
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
 
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 /**
  * Functions about getting player entity's position, facing direction etc.
  */
 @Slf4j
 public final class PlayerPositionUtils {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     private static final String POSITION_FORMAT = "{x}, {y}, {z}";
 
     private PlayerPositionUtils() {
-    }
-
-    public static double getX() {
-        return getPlayerPosition().orElseThrow().x;
-    }
-
-    public static double getY() {
-        return getPlayerPosition().orElseThrow().y;
-    }
-
-    public static double getZ() {
-        return getPlayerPosition().orElseThrow().z;
-    }
-
-    /**
-     * Wrapper around {@link LocalPlayer#position()}
-     *
-     * @return Position of player's feet or {@link Optional#empty()} if {@link Minecraft#player} is null
-     */
-    public static Optional<Vec3> getPlayerPosition() {
-        return Optional.ofNullable(Minecraft.getInstance().player).map(LocalPlayer::position);
-    }
-
-    public static Optional<BlockPos> getPlayerBlockPosition() {
-        Optional<Vec3> op = getPlayerPosition();
-        if (op.isEmpty()) return Optional.empty();
-        Vec3 p = op.get();
-        return Optional.of(WorldUtils.blockPosOf(p));
     }
 
     public static String getNarratableXYZPosition() {
@@ -55,22 +22,26 @@ public final class PlayerPositionUtils {
     }
 
     public static String getNarratableXPos() {
-        return NarrationUtils.narrateNumber(getX()) + 'x';
+        assert CLIENT.player != null;
+        return NarrationUtils.narrateNumber(CLIENT.player.position().x) + 'x';
     }
 
     public static String getNarratableYPos() {
-        return NarrationUtils.narrateNumber(getY()) + 'y';
+        assert CLIENT.player != null;
+        return NarrationUtils.narrateNumber(CLIENT.player.position().y) + 'y';
     }
 
     public static String getNarratableZPos() {
-        return NarrationUtils.narrateNumber(getZ()) + 'z';
+        assert CLIENT.player != null;
+        return NarrationUtils.narrateNumber(CLIENT.player.position().z) + 'z';
     }
 
     /**
      * @return -90 (head up) ~ 90 (head down)
      */
     public static int getVerticalFacingDirection() {
-        return (int) WorldUtils.getClientPlayer().getRotationVector().x;
+        assert CLIENT.player != null;
+        return (int) CLIENT.player.getRotationVector().x;
     }
 
     /**
@@ -100,7 +71,8 @@ public final class PlayerPositionUtils {
     }
 
     public static int getHorizontalFacingDirectionInDegrees() {
-        int angle = (int) WorldUtils.getClientPlayer().getRotationVector().y;
+        assert CLIENT.player != null;
+        int angle = (int) CLIENT.player.getRotationVector().y;
         return angle % 360;
     }
 

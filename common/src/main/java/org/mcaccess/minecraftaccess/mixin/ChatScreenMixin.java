@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(ChatScreen.class)
-public class ChatScreenMixin {
+abstract class ChatScreenMixin {
     @Unique
     private static int currentChatMessagePage;
 
@@ -118,11 +118,9 @@ public class ChatScreenMixin {
         MainClass.narrate(messages.get(indexOffset).content().getString(), true);
     }
 
-    /**
-     * Since there is no text modifying narration, we want to manually narrate when the chat history is switched.
-     */
+    // Since there is no text modifying narration, we want to manually narrate when the chat history is switched.
     @Inject(at = @At("TAIL"), method = "moveInHistory")
-    private void narrateSwitchedChatHistory(int index, CallbackInfo ci) {
+    private void narrateSwitchedChatHistory(CallbackInfo ci) {
         MainClass.narrate(input.getValue(), true);
     }
 }

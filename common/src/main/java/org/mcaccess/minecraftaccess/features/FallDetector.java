@@ -18,13 +18,12 @@ import org.mcaccess.minecraftaccess.Config;
 public class FallDetector {
     private final Clock clock;
     private long previousTimeInMillis;
-    Minecraft minecraftClient;
+    private final Minecraft client = Minecraft.getInstance();
     private int count;
     private Config.FallDetector config;
 
     public FallDetector() {
         clock = Clock.systemDefaultZone();
-        minecraftClient = Minecraft.getInstance();
         previousTimeInMillis = clock.millis();
         config = Config.getInstance().fallDetector;
     }
@@ -34,13 +33,12 @@ public class FallDetector {
 
         if (!config.enabled) return;
 
-        if (minecraftClient == null) return;
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
-        if (!minecraftClient.player.onGround()) return;
-        if (minecraftClient.player.isUnderWater()) return;
-        if (minecraftClient.player.isSwimming()) return;
-        if (minecraftClient.player.isVisuallySwimming()) return;
+        if (client.player == null) return;
+        if (client.screen != null) return;
+        if (!client.player.onGround()) return;
+        if (client.player.isUnderWater()) return;
+        if (client.player.isSwimming()) return;
+        if (client.player.isVisuallySwimming()) return;
 
         long currentTimeInMillis = clock.millis();
         if (currentTimeInMillis - previousTimeInMillis < config.delay) return;
@@ -52,8 +50,9 @@ public class FallDetector {
     }
 
     private void searchNearbyPositions() {
-        if (minecraftClient.level == null) return;
-        BlockPos center = minecraftClient.player.blockPosition();
+        if (client.level == null) return;
+        assert client.player != null;
+        BlockPos center = client.player.blockPosition();
 
         Queue<BlockPos> toSearch = new LinkedList<>();
         Set<BlockPos> searched = new HashSet<>();
@@ -97,13 +96,14 @@ public class FallDetector {
     }
 
     private void checkForFall(BlockPos toCheck) {
-        if (!(minecraftClient.level.getBlockState(toCheck).isAir())) return;
+        assert client.level != null;
+        if (!(client.level.getBlockState(toCheck).isAir())) return;
 
         if (getDepth(toCheck, config.depth) < config.depth) return;
 
         ++count;
         log.debug("{}) Found qualified fall position: x:{} y:{} z:{}", count, toCheck.getX(), toCheck.getY(), toCheck.getZ());
-        minecraftClient.level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, config.volume, 1.0f, true);
+        client.level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, config.volume, 1.0f, true);
     }
 
     private int getDepth(BlockPos blockPos, int maxDepth) {
@@ -111,7 +111,8 @@ public class FallDetector {
             return 0;
         }
 
-        if (!(minecraftClient.level.getBlockState(blockPos).isAir())) return 0;
+        assert client.level != null;
+        if (!(client.level.getBlockState(blockPos).isAir())) return 0;
 
         return 1 + getDepth(blockPos.below(), maxDepth - 1);
     }

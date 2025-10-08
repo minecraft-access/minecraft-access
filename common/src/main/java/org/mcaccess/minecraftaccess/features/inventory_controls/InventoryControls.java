@@ -68,7 +68,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 public class InventoryControls {
     private Config.InventoryControls config;
     private final Interval interval = Interval.defaultDelay();
-    private Minecraft minecraftClient;
+    private final Minecraft client = Minecraft.getInstance();
 
     private AbstractContainerScreenAccessor previousScreen = null;
     private AbstractContainerScreenAccessor currentScreen = null;
@@ -95,7 +95,6 @@ public class InventoryControls {
         String getString() {
             return value;
         }
-
     }
 
     public InventoryControls() {
@@ -108,10 +107,9 @@ public class InventoryControls {
 
     public void tick() {
         if (!interval.isReady()) return;
-        minecraftClient = Minecraft.getInstance();
 
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen == null) {
+        if (client.player == null) return;
+        if (client.screen == null) {
             previousScreen = null;
             currentScreen = null;
             currentGroupIndex = 0;
@@ -119,11 +117,11 @@ public class InventoryControls {
             currentRecipeBookWidget = null;
             return;
         }
-        if (!(minecraftClient.screen instanceof AbstractContainerScreen)) return;
+        if (!(client.screen instanceof AbstractContainerScreen)) return;
 
         loadConfig();
-        currentScreen = (AbstractContainerScreenAccessor) minecraftClient.screen;
-        currentRecipeBookWidget = getRecipeBookWidget(minecraftClient.screen);
+        currentScreen = (AbstractContainerScreenAccessor) client.screen;
+        currentRecipeBookWidget = getRecipeBookWidget(client.screen);
         currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
 
         interval.adjustNextReadyTimeBy(keyListener());
@@ -296,7 +294,7 @@ public class InventoryControls {
                 setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getName(), true);
             } else if (recipeBookIsOpening()) {
                 // resolve can-not-enter-characters-issue https://github.com/minecraft-access/minecraft-access/issues/67
-                minecraftClient.screen.setFocused(currentRecipeBookWidget);
+                client.screen.setFocused(currentRecipeBookWidget);
                 setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), true);
             }
             return true;
@@ -501,7 +499,7 @@ public class InventoryControls {
 
         // <name> <description>
         StringBuilder toolTipString = new StringBuilder();
-        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, minecraftClient.player, TooltipFlag.NORMAL);
+        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, client.player, TooltipFlag.NORMAL);
         for (Component line : toolTipList) {
             toolTipString.append(line.getString()).append(' ');
         }

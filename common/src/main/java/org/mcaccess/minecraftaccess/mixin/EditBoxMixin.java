@@ -58,12 +58,12 @@ abstract class EditBoxMixin extends AbstractWidget {
         }
     }
 
-    /**
+    /*
      * Prevents any character input if alt is held down.
      * This logic is for "alt + num key to repeat chat message" function in {@link ChatScreenMixin}
      */
     @Inject(at = @At("HEAD"), method = "charTyped", cancellable = true)
-    private void charTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void charTyped(CallbackInfoReturnable<Boolean> cir) {
         if (!Screen.hasAltDown()) return;
 
         cir.setReturnValue(false);
@@ -113,7 +113,7 @@ abstract class EditBoxMixin extends AbstractWidget {
     }
 
     @Inject(at = @At("RETURN"), method = "keyPressed")
-    private void narrateSelectedText(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void narrateSelectedText(CallbackInfoReturnable<Boolean> cir) {
         if (!canConsumeInput()) {
             return;
         }

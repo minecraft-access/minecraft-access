@@ -21,7 +21,7 @@ import org.mcaccess.minecraftaccess.MainClass;
  */
 @Slf4j
 @Mixin(EyeOfEnder.class)
-public abstract class EyeOfEnderMixin extends Entity implements ItemSupplier {
+abstract class EyeOfEnderMixin extends Entity implements ItemSupplier {
     @Shadow
     private int life;
 

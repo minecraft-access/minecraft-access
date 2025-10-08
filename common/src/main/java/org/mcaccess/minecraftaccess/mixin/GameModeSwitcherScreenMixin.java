@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Coerce;
 import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(GameModeSwitcherScreen.class)
-public class GameModeSwitcherScreenMixin {
+abstract class GameModeSwitcherScreenMixin {
     @Unique
     private GameModeIconAccessor previous;
 

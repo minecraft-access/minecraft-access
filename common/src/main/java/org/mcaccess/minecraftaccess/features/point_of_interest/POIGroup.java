@@ -10,18 +10,18 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 @Slf4j
 public class POIGroup<T> {
@@ -78,10 +78,16 @@ public class POIGroup<T> {
     }
 
     private double distanceBetweenPlayerAnd(T item) {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = Minecraft.getInstance().player;
         return switch (item) {
-            case Entity entity -> player.distanceTo(entity);
-            case BlockPos blockPos -> player.getEyePosition().distanceTo(blockPos.getCenter());
+            case Entity entity -> {
+                assert player != null;
+                yield player.distanceTo(entity);
+            }
+            case BlockPos blockPos -> {
+                assert player != null;
+                yield player.getEyePosition().distanceTo(blockPos.getCenter());
+            }
             default -> Double.MAX_VALUE;
         };
     }
@@ -93,13 +99,14 @@ public class POIGroup<T> {
         }
     }
 
-    public record Sound(SoundEvent tone, float pitch) {
+    public record Sound(SoundEvent sound, float pitch) {
         static Logger log = LoggerFactory.getLogger(POIGroup.Sound.class);
 
         public void play(Vec3 pos, float volume) {
-            if (tone == null) return;
-            log.debug("Play POI sound [{}] at [x:{} y:{} z{}]", tone, pos.x, pos.y, pos.z);
-            WorldUtils.playSoundAtPosition(tone, volume, pitch, pos);
+            if (sound == null) return;
+            log.debug("Play POI sound [{}] at [x:{} y:{} z{}]", sound, pos.x, pos.y, pos.z);
+            assert Minecraft.getInstance().level != null;
+            Minecraft.getInstance().level.playLocalSound(pos.x, pos.y, pos.z, sound, SoundSource.BLOCKS, volume, pitch, true);
         }
     }
 }

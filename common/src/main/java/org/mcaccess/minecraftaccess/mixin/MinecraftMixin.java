@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 
 @Mixin(Minecraft.class)
-public class MinecraftMixin {
+abstract class MinecraftMixin {
     /**
      * {@link AccessMenu} allows menu functions to be triggered when
      * no screen opened and alt key with number key are pressed.

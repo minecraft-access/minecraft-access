@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.utils.system;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,7 @@ public final class MouseUtils {
     public static void moveAndLeftClick(int x, int y) {
         move(x, y);
         // fix the https://github.com/minecraft-access/minecraft-access/issues/65
-        if (OsUtils.isWindows()) {
+        if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
             try {
                 // with a little bit of waiting, everything is ok now.
                 // I've tried to set the value to 10, and it doesn't always work, 20 is fine.
@@ -64,10 +63,6 @@ public final class MouseUtils {
         int realX = (int) (x * scale);
         int realY = (int) (y * scale);
         return new Coordinates(realX, realY);
-    }
-
-    public static void performAt(int x, int y, Consumer<Coordinates> consumer) {
-        consumer.accept(calcRealPositionOfWidget(x, y));
     }
 
     private static MouseHandlerAccessor getMouseHandler() {

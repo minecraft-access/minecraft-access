@@ -18,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.StringUtils;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 @Mixin(GuiGraphics.class)
-public class GuiGraphicsMixin {
+abstract class GuiGraphicsMixin {
     @Unique
     private static String previous;
 
@@ -33,7 +33,7 @@ public class GuiGraphicsMixin {
         String combined = list.stream()
                 .flatMap(component -> component instanceof ClientTextTooltipAccessor text ? Stream.of(text) : Stream.empty())
                 .map(ClientTextTooltipAccessor::getText)
-                .map(StringUtils::formattedCharSequenceToString)
+                .map(NarrationUtils::formattedCharSequenceToString)
                 .collect(Collectors.joining("\n"));
         if (combined.equals(previous)) {
             return;

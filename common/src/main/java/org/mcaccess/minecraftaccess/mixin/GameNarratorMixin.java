@@ -12,7 +12,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarratorDummy;
 
 @Mixin(GameNarrator.class)
-public class GameNarratorMixin {
+abstract class GameNarratorMixin {
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/text2speech/Narrator;getNarrator()Lcom/mojang/text2speech/Narrator;"))
     private Narrator redirectGetNarrator() {
         return new NarratorDummy();

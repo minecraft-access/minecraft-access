@@ -3,10 +3,9 @@ package org.mcaccess.minecraftaccess.utils.position;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
 /**
  * The {@link Direction} is not enough for this mod.
@@ -90,7 +89,8 @@ public enum Orientation {
             return SOUTH_EAST;
         } else {
             // Cardinal Directions
-            return of(WorldUtils.getClientPlayer().getDirection());
+            assert Minecraft.getInstance().player != null;
+            return of(Minecraft.getInstance().player.getDirection());
         }
     }
 

@@ -17,7 +17,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 @Mixin(RecipeButton.class)
-public abstract class RecipeButtonMixin {
+abstract class RecipeButtonMixin {
     @Shadow
     private RecipeCollection collection;
 
@@ -34,7 +34,7 @@ public abstract class RecipeButtonMixin {
     public abstract ItemStack getDisplayStack();
 
     @Inject(at = @At("HEAD"), method = "updateWidgetNarration", cancellable = true)
-    private void updateWidgetNarrationsMixin(NarrationElementOutput builder, CallbackInfo callbackInfo) {
+    private void updateWidgetNarrationsMixin(CallbackInfo callbackInfo) {
         ItemStack itemStack = getDisplayStack();
         String itemName = itemStack.getHoverName().getString();
 

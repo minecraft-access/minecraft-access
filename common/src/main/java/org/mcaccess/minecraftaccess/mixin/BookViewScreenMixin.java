@@ -11,14 +11,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(BookViewScreen.class)
-public class BookViewScreenMixin {
+abstract class BookViewScreenMixin {
     @Shadow
     private int currentPage;
     @Shadow
     private BookViewScreen.BookAccess bookAccess;
 
     @Inject(at = @At("HEAD"), method = "keyPressed")
-    public void repeatPageContents(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void repeatPageContents(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (keyCode == InputConstants.KEY_R) {
             MainClass.narrate(bookAccess.getPage(currentPage).getString(), true);
         }

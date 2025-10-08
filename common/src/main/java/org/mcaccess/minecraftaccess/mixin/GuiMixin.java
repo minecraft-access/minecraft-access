@@ -14,14 +14,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.StringUtils;
 
 /**
  * Narrates the currently selected hotbar item's name and the action bar.
  * Narrates titles
  */
 @Mixin(Gui.class)
-public class GuiMixin {
+abstract class GuiMixin {
     @Shadow
     private Component title;
 
@@ -32,7 +31,7 @@ public class GuiMixin {
     private String previousActionBarContent = "";
 
     @Inject(at = @At("HEAD"), method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V")
-    public void narrateActionbar(Component message, boolean tinted, CallbackInfo ci) {
+    private void narrateActionbar(Component message, boolean tinted, CallbackInfo ci) {
         Config config = Config.getInstance();
         if (config.features.actionBarEnabled) {
             String msg = message.getString();
@@ -50,21 +49,30 @@ public class GuiMixin {
 
     @Unique
     private void onlyNarrateChangedParts(String msg) {
-        List<String> parts = Arrays.asList(StringUtils.splitToParts(msg));
-        List<String> previousParts = Arrays.asList(StringUtils.splitToParts(previousActionBarContent));
+        List<String> parts = Arrays.asList(splitToParts(msg));
+        List<String> previousParts = Arrays.asList(splitToParts(previousActionBarContent));
         parts.removeAll(previousParts);
         String narration = String.join(", ", parts);
         MainClass.narrate(narration, true);
     }
 
     @Inject(method = "setTitle", at = @At("TAIL"))
-    public void setTitleMixin(Component title, CallbackInfo ci) {
+    private void setTitleMixin(Component title, CallbackInfo ci) {
         MainClass.narrate(title.getString(), true);
         if (subtitle != null) MainClass.narrate(subtitle.getString(), false);
     }
 
     @Inject(method = "setSubtitle", at = @At("HEAD"))
-    public void setSubtitleMixin(Component subtitle, CallbackInfo ci) {
+    private void setSubtitleMixin(Component subtitle, CallbackInfo ci) {
         if (title != null && this.subtitle == null) MainClass.narrate(subtitle.getString(), false);
+    }
+
+    @Unique
+    private String[] splitToParts(String msg) {
+        if (msg.contains(",")) {
+            return msg.split(",");
+        } else {
+            return msg.split("\\s");
+        }
     }
 }

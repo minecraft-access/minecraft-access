@@ -6,9 +6,12 @@ import java.util.function.Predicate;
 
 import dev.architectury.platform.Platform;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -18,8 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
@@ -43,10 +44,10 @@ public class NarrateCrosshair {
     }
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.level == null) return;
+        if (client.player == null) return;
+        if (client.screen != null) return;
 
         loadConfig();
         if (!CONFIG.enabled) return;
@@ -64,14 +65,14 @@ public class NarrateCrosshair {
         HitResult hit = narrator.rayCast();
 
         if (CONFIG.relativePositionSoundCue.enabled) {
-            double rayCastDistance = PlayerUtils.getInteractionRange();
+            double rayCastDistance = Math.min(client.player.blockInteractionRange(), client.player.entityInteractionRange());
             Vec3 targetPosition = switch (hit) {
                 case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().getCenter();
                 case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();
                 default -> null;
             };
             if (targetPosition != null && !Objects.equals(targetPosition, previousSoundPos)) {
-                WorldUtils.playRelativePositionSoundCue(targetPosition, rayCastDistance,
+                playRelativePositionSoundCue(targetPosition, rayCastDistance,
                         SoundEvents.NOTE_BLOCK_HARP,
                         CONFIG.relativePositionSoundCue.minSoundVolume,
                         CONFIG.relativePositionSoundCue.maxSoundVolume);
@@ -82,7 +83,7 @@ public class NarrateCrosshair {
         if (CONFIG.filter.enabled) {
             ResourceLocation resourceLocation = switch (hit) {
                 case BlockHitResult blockHitResult ->
-                        BuiltInRegistries.BLOCK.getKey(minecraftClient.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
+                        BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
                 case EntityHitResult entityHitResult -> EntityType.getKey(entityHitResult.getEntity().getType());
                 default -> null;
             };
@@ -129,5 +130,29 @@ public class NarrateCrosshair {
         return CONFIG.filter.whitelist
                 ? Arrays.stream(CONFIG.filter.targets).noneMatch(p)
                 : Arrays.stream(CONFIG.filter.targets).anyMatch(p);
+    }
+
+    // To indicate relative location between player and target.
+    private static void playRelativePositionSoundCue(Vec3 targetPosition, double maxDistance, Holder.Reference<SoundEvent> sound, double minVolume, double maxVolume) {
+        assert Minecraft.getInstance().player != null;
+        Vec3 playerPos = Minecraft.getInstance().player.position();
+
+        // Use pitch to represent relative elevation, the higher the sound the higher the target.
+        // The range of pitch is [0.5, 2.0], calculated as: 2 ^ (x / 12), where x is [-12, 12].
+        // ref: https://minecraft.wiki/w/Note_Block#Notes
+        //
+        // Since we have a custom distance,
+        // the range of (targetY - playerY) is [-maxDistance, maxDistance],
+        // so let the maxDistance be the denominator to map to the original range.
+        float pitch = (float) Math.pow(2, (targetPosition.y() - playerPos.y) / maxDistance);
+
+        // Use volume to represent distance, the louder the sound the closer the distance.
+        double distance = Math.sqrt(targetPosition.distanceToSqr(playerPos.x, playerPos.y, playerPos.z));
+        // = base volume (minVolume) + the volume delta per block ((maxVolume - minVolume) / maxDistance)
+        double volumeDeltaPerBlock = (maxVolume - minVolume) / maxDistance;
+        float volume = (float) (minVolume + (maxDistance - distance) * volumeDeltaPerBlock);
+
+        assert Minecraft.getInstance().level != null;
+        Minecraft.getInstance().level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
     }
 }

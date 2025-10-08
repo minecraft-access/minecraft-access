@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
@@ -31,9 +32,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
@@ -44,6 +43,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
  */
 @Slf4j
 public class LockingHandler {
+    private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Locking config;
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlockPos = null;
@@ -68,13 +68,11 @@ public class LockingHandler {
     }
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-
         loadConfig();
         if (!interval.isReady()) return;
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.screen != null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
+        if (client.screen != null) return;
 
         handleLockingKeyPressing();
         if (isPlayerLocked()) {
@@ -91,7 +89,8 @@ public class LockingHandler {
                 interval.beReady();
             }
         } else if (isLockingKeyPressed) {
-            if (!PlayerUtils.isPlayerSpectating()) {
+            assert client.getCameraEntity() != null;
+            if (client.getCameraEntity().is(client.player)) {
                 relock();
             } else {
                 MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
@@ -103,7 +102,8 @@ public class LockingHandler {
     }
 
     private void lookAtLockedTarget() {
-        if (PlayerUtils.isPlayerSpectating()) {
+        assert client.getCameraEntity() != null;
+        if (!client.getCameraEntity().is(client.player)) {
             unlock(true, true);
             return;
         }
@@ -115,7 +115,8 @@ public class LockingHandler {
 
         if (lockedOnBlockPos != null) {
             if (unlockFromAirBlock()) return;
-            BlockState blockState = WorldUtils.getClientWorld().getBlockState(WorldUtils.blockPosOf(lockedOnBlockPos.getAccuratePosition()));
+            assert client.level != null;
+            BlockState blockState = client.level.getBlockState(BlockPos.containing(lockedOnBlockPos.getAccuratePosition()));
 
             if (unlockFromLadderIfClimbingOnIt(blockState)) return;
 
@@ -126,7 +127,8 @@ public class LockingHandler {
             boolean entriesOfLockedBlockNotChanged = entries.values() == entriesOfLockedOnBlock.values();
 
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears) {
-                PlayerUtils.lookAt(lockedOnBlockPos);
+                assert client.player != null;
+                client.player.lookAt(EntityAnchorArgument.Anchor.EYES, lockedOnBlockPos.getAccuratePosition());
             } else {
                 // Unlock if the state of locked block is changed
                 unlock(true, true);
@@ -138,7 +140,7 @@ public class LockingHandler {
      * Automatically locks on to the nearest hostile entity when the player is pulling a bow.
      */
     private void bowAimingAssist() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = client.player;
         if (player == null) return;
 
         // Check if player is using a bow
@@ -176,13 +178,13 @@ public class LockingHandler {
             Vec3 targetPosition = PlayerUtils.currentEntityLookingAtPosition;
 
             if (targetPosition != null) {
-                if (PlayerUtils.isPlayerCanSee(eyePosition, targetPosition, lockedOnEntity)) {
+                if (PlayerUtils.isVisibleToPlayer(eyePosition, targetPosition, lockedOnEntity)) {
                     if (lastAimAssistCue != 1 || bowState != lastBowState) {
-                        PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_PLING, config.aimAssistAudioCuesVolume, bowState);
+                        player.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), config.aimAssistAudioCuesVolume, bowState);
                         lastAimAssistCue = 1;
                     }
                 } else if (lastAimAssistCue != 0 || bowState != lastBowState) {
-                    PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_BASS, config.aimAssistAudioCuesVolume, bowState);
+                    player.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), config.aimAssistAudioCuesVolume, bowState);
                     lastAimAssistCue = 0;
                 }
 
@@ -204,7 +206,8 @@ public class LockingHandler {
 
         if (narrate) {
             if (config.unlockingSound) {
-                PlayerUtils.playSoundOnPlayer(SoundEvents.NOTE_BLOCK_BASEDRUM, 0.4f, 2.0f);
+                assert client.player != null;
+                client.player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 0.4f, 2.0f);
             } else {
                 MainClass.narrate(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
             }
@@ -236,7 +239,8 @@ public class LockingHandler {
     private boolean unlockFromLadderIfClimbingOnIt(BlockState blockState) {
         if (Blocks.LADDER.equals(blockState.getBlock())) {
 
-            Vec3 playerPos = PlayerPositionUtils.getPlayerPosition().orElseThrow();
+            assert client.player != null;
+            Vec3 playerPos = client.player.position();
             double distance = lockedOnBlockPos.getCenter().distanceTo(playerPos);
             if (distance <= 0.5) {
                 unlock(true, true);
@@ -272,7 +276,8 @@ public class LockingHandler {
      * @return true if unlocked
      */
     private boolean unlockFromAirBlock() {
-        Block currentBlock = Minecraft.getInstance().level.getBlockState(lockedOnBlockPos).getBlock();
+        assert client.level != null;
+        Block currentBlock = client.level.getBlockState(lockedOnBlockPos).getBlock();
         if (!(currentBlock instanceof AirBlock)) return false;
         unlock(true, false);
         return true;
@@ -298,7 +303,8 @@ public class LockingHandler {
     }
 
     private void lockOnBlock(BlockPos position) {
-        BlockState blockState = WorldUtils.getClientWorld().getBlockState(position);
+        assert client.level != null;
+        BlockState blockState = client.level.getBlockState(position);
         entriesOfLockedOnBlock = blockState.getValues();
 
         Vec3 absolutePosition = switch (blockState.getBlock()) {

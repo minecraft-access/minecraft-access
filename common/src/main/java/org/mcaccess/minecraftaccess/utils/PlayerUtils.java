@@ -1,76 +1,45 @@
 package org.mcaccess.minecraftaccess.utils;
 
-import java.util.Collection;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.features.point_of_interest.BlockPos3d;
-
-/**
- * This class provides delegate calls to {@link LocalPlayer}.
- * The main reason for this class is that {@link LocalPlayer} cannot be mocked by Mockito. <p>
- * ({@link LocalPlayer} constructor requires -> {@link ClientLevel} constructor -> {@link Level} static init block -> {@link Registries},
- * somehow the {@link Registries} cannot finish its static assignments in class loading.
- * We can replace Mockito with more powerful PowerMock to resolve this problem, but PowerMock is sticking on Junit 4,
- * we can't go back to Junit 4 from 5 since some of the mechanisms currently used for unit testing have no alternatives in 4.
- * Forgive me for doing this, but it's the most economical way.)
- */
 public final class PlayerUtils {
     // A way to get exactly at what part of the entity the player is looking when locked on it
     public static Vec3 currentEntityLookingAtPosition = null;
+    private static final Minecraft CLIENT = Minecraft.getInstance();
 
     private PlayerUtils() {
-    }
-
-    public static void playSoundOnPlayer(Holder.Reference<SoundEvent> sound, float volume, float pitch) {
-        WorldUtils.getClientPlayer().playSound(sound.value(), volume, pitch);
-    }
-
-    public static void lookAt(Vec3 position) {
-        WorldUtils.getClientPlayer().lookAt(EntityAnchorArgument.Anchor.EYES, position);
     }
 
     /**
      * Let player looks at entity even the entity exposes a very small part of its body
      */
     public static void lookAt(Entity entity) {
-        Vec3 playerEyePos = WorldUtils.getClientPlayer().getEyePosition();
+        assert CLIENT.player != null;
+        Vec3 playerEyePos = CLIENT.player.getEyePosition();
 
         // Try to look at entity's eyes or Enderman's stomach first.
         boolean targetIsEnderman = entity instanceof EnderMan;
         Vec3 firstPos = targetIsEnderman ? entity.blockPosition().getCenter() : entity.getEyePosition();
-        if (isPlayerCanSee(playerEyePos, firstPos, entity)) {
-            lookAt(firstPos);
+        if (isVisibleToPlayer(playerEyePos, firstPos, entity)) {
+            CLIENT.player.lookAt(EntityAnchorArgument.Anchor.EYES, firstPos);
             currentEntityLookingAtPosition = firstPos;
             return;
         }
@@ -85,7 +54,7 @@ public final class PlayerUtils {
         double initX = (1.0 - Math.floor(1.0 / stepX) * stepX) / 2.0;
         double initZ = (1.0 - Math.floor(1.0 / stepZ) * stepZ) / 2.0;
         if (stepX < 0.0 || stepY < 0.0 || stepZ < 0.0) {
-            lookAt(firstPos);
+            CLIENT.player.lookAt(EntityAnchorArgument.Anchor.EYES, firstPos);
             currentEntityLookingAtPosition = firstPos;
             return;
         }
@@ -100,8 +69,8 @@ public final class PlayerUtils {
                     double py = Mth.lerp(j, box.minY, maxY);
                     double pz = Mth.lerp(k, box.minZ, box.maxZ);
                     Vec3 vec3d = new Vec3(px + initX, py, pz + initZ);
-                    if (isPlayerCanSee(playerEyePos, vec3d, entity)) {
-                        lookAt(vec3d);
+                    if (isVisibleToPlayer(playerEyePos, vec3d, entity)) {
+                        CLIENT.player.lookAt(EntityAnchorArgument.Anchor.EYES, vec3d);
                         currentEntityLookingAtPosition = vec3d;
                         return;
                     }
@@ -110,19 +79,11 @@ public final class PlayerUtils {
         }
 
         // Make sure to look at entity even the player can't see it.
-        lookAt(firstPos);
+        CLIENT.player.lookAt(EntityAnchorArgument.Anchor.EYES, firstPos);
         currentEntityLookingAtPosition = firstPos;
     }
 
-    public static void lookAt(BlockPos position) {
-        lookAt(position.getCenter());
-    }
-
-    public static void lookAt(BlockPos3d position) {
-        lookAt(position.getAccuratePosition());
-    }
-
-    public static boolean isPlayerCanSee(Vec3 playerEyePos, Vec3 somewhereOnEntity, Entity entity) {
+    public static boolean isVisibleToPlayer(Vec3 playerEyePos, Vec3 somewhereOnEntity, Entity entity) {
         BlockHitResult hitResult = entity.level().clip(
                 new ClipContext(somewhereOnEntity, playerEyePos,
                         ClipContext.Block.COLLIDER,
@@ -130,24 +91,13 @@ public final class PlayerUtils {
         return hitResult.getType() == HitResult.Type.MISS;
     }
 
-    public static int getExperienceLevel() {
-        return WorldUtils.getClientPlayer().experienceLevel;
-    }
-
-    /**
-     * @return percentage-based number
-     */
-    public static float getExperienceProgress() {
-        return WorldUtils.getClientPlayer().experienceProgress * 100;
-    }
-
-    public static boolean isNotInFluid() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
-        boolean inFluid = player.isSwimming()
+    public static boolean isInFluid() {
+        LocalPlayer player = CLIENT.player;
+        assert player != null;
+        return player.isSwimming()
                 || player.isUnderWater()
                 || player.isInWater()
                 || player.isInLava();
-        return !inFluid;
     }
 
     /**
@@ -159,15 +109,15 @@ public final class PlayerUtils {
      */
     public static HitResult crosshairTarget(double rayCastDistance) {
         BlockHitResult fluidHitResult = crosshairFluidTarget(rayCastDistance);
-        if (fluidHitResult.getType() == HitResult.Type.BLOCK && isNotInFluid()) {
+        if (fluidHitResult.getType() == HitResult.Type.BLOCK && !isInFluid()) {
             return fluidHitResult;
         } else {
-            return Minecraft.getInstance().hitResult;
+            return CLIENT.hitResult;
         }
     }
 
     private static BlockHitResult crosshairFluidTarget(double rayCastDistance) {
-        Entity camera = Objects.requireNonNull(Minecraft.getInstance().getCameraEntity());
+        Entity camera = Objects.requireNonNull(CLIENT.getCameraEntity());
         HitResult hit = camera.pick(rayCastDistance, 0.0F, true);
         // Whatever the inner values are, they are not used.
         BlockHitResult missed = BlockHitResult.miss(Vec3.ZERO, Direction.UP, BlockPos.ZERO);
@@ -175,8 +125,9 @@ public final class PlayerUtils {
         if (hit.getType() != HitResult.Type.BLOCK) return missed;
 
         BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
-        ClientLevel world = WorldUtils.getClientWorld();
+        ClientLevel world = CLIENT.level;
 
+        assert world != null;
         BlockState blockState = world.getBlockState(blockPos);
         boolean thisBlockIsFluidBlock = blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA);
         if (!thisBlockIsFluidBlock) return missed;
@@ -185,106 +136,5 @@ public final class PlayerUtils {
         if (fluidState.isEmpty()) return missed;
 
         return (BlockHitResult) hit;
-    }
-
-    /**
-     * Players have dynamic interaction range since 1.20.6.
-     *
-     * @return minimum value between block range and entity range
-     */
-    public static double getInteractionRange() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
-        return Math.min(player.blockInteractionRange(), player.entityInteractionRange());
-    }
-
-    /**
-     * One full ham icon = two hunger points
-     * <a href="https://minecraft.wiki/w/Hunger">wiki</a>
-     *
-     * @return number of ham shank in HUD
-     */
-    public static double getHunger() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
-        double hungerPoints = player.getFoodData().getFoodLevel();
-        return hungerPoints / 2;
-    }
-
-    /**
-     * One full heart = two health points
-     * <a href="https://minecraft.wiki/w/Health">wiki</a>
-     *
-     * @return number of heart in HUD
-     */
-    public static double getHearts() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
-        double healthPoints = player.getHealth();
-        return healthPoints / 2;
-    }
-
-    /**
-     * Air supply value is keeping at 300 when player's head is in the air.
-     * <a href="https://minecraft.wiki/w/Damage#Drowning">wiki</a>
-     *
-     * @return number of bubble in HUD
-     */
-    public static long getAir() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
-        double air = player.getAirSupply();
-        return Math.round((air / 30) * 10) / 10;
-    }
-
-    public static void narrateCurrentPlayerEffects() {
-        Collection<MobEffectInstance> effects = WorldUtils.getClientPlayer().getActiveEffects();
-        if (effects.isEmpty()) {
-            MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
-            return;
-        }
-        String narration = effects.stream().map(NarrationUtils::narrateEffect)
-                .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection")));
-        MainClass.narrate(narration, true);
-    }
-
-    public static boolean isPlayerTyping() {
-        Screen currentScreen = Minecraft.getInstance().screen;
-        return currentScreen != null && (currentScreen.getFocused() instanceof EditBox || currentScreen instanceof KeyBindsScreen);
-    }
-
-    public static boolean isCreative() {
-        Minecraft client = Minecraft.getInstance();
-        if (client.gameMode == null) return false;
-        GameType currentGameMode = client.gameMode.getPlayerMode();
-        return currentGameMode == GameType.CREATIVE;
-    }
-
-    public static boolean isSpectator() {
-        Minecraft client = Minecraft.getInstance();
-        if (client.gameMode == null) return false;
-        GameType currentGameMode = client.gameMode.getPlayerMode();
-        return currentGameMode == GameType.SPECTATOR;
-    }
-
-    public static boolean isAdventure() {
-        Minecraft client = Minecraft.getInstance();
-        if (client.gameMode == null) return false;
-        GameType currentGameMode = client.gameMode.getPlayerMode();
-        return currentGameMode == GameType.ADVENTURE;
-    }
-
-    public static boolean isSurvival() {
-        Minecraft client = Minecraft.getInstance();
-        if (client.gameMode == null) return false;
-        GameType currentGameMode = client.gameMode.getPlayerMode();
-        return currentGameMode == GameType.SURVIVAL;
-    }
-
-    public static boolean isHardCore() {
-        Minecraft client = Minecraft.getInstance();
-        if (client.level == null) return false;
-        LevelData levelData = client.level.getLevelData();
-        return levelData.isHardcore();
-    }
-
-    public static boolean isPlayerSpectating() {
-        return !Minecraft.getInstance().getCameraEntity().is(Minecraft.getInstance().player);
     }
 }
