@@ -3,11 +3,11 @@
 # https://parchmentmc.org/docs/getting-started for version table
 
 [versions]
-architecturyApi = "17.0.8"
-clothConfig = "19.0.147"
+architecturyApi = "18.0.3"
+clothConfig = "20.0.148"
 jmh = "1.37"
-junitJupiter = "5.13.4"
-mockito = "5.19.0"
+junitJupiter = "6.0.0"
+mockito = "5.20.0"
 
 [libraries]
 architecturyApi = { module = "dev.architectury:architectury", version.ref = "architecturyApi" }
@@ -16,29 +16,29 @@ architecturyApiNeoForge = { module = "dev.architectury:architectury-neoforge", v
 clothConfig = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-fabricApi = "net.fabricmc.fabric-api:fabric-api:0.133.4+1.21.8"
-fabricLoader = "net.fabricmc:fabric-loader:0.17.2"
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.135.1+"
+fabricLoader = "net.fabricmc:fabric-loader:0.17.3"
 jadeFabric = "maven.modrinth:jade:19.3.0+fabric"
 jadeNeoForge = "maven.modrinth:jade:19.1.1+neoforge"
-lombok = "org.projectlombok:lombok:1.18.40"
+lombok = "org.projectlombok:lombok:1.18.42"
 minecraft = "com.mojang:minecraft:1.21.8"
 modMenu = "com.terraformersmc:modmenu:15.0.0"
-neoForge = "net.neoforged:neoforge:21.8.46"
-parchment = "org.parchmentmc.data:parchment-1.21.8:2025.07.20"
+neoForge = "net.neoforged:neoforge:21.8.47"
+parchment = "org.parchmentmc.data:parchment-1.21.8:2025.09.14"
 
-assertjCore = "org.assertj:assertj-core:3.27.4"
+assertjCore = "org.assertj:assertj-core:3.27.6"
 jmhCore = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmhGeneratorAnnprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 junitJupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiter" }
-junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.13.4"
+junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:6.0.0"
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:11.0.1"
+checkstyle = "com.puppycrawl.tools:checkstyle:12.0.0"
 
 [plugins]
-architecturyLoom = { id = "dev.architectury.loom", version = "1.11.440" }
+architecturyLoom = { id = "dev.architectury.loom", version = "1.11.454" }
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.162" }
 gitVersion = { id = "com.palantir.git-version", version = "4.0.0" }
-shadow = { id = "com.gradleup.shadow", version = "9.0.2" }
+shadow = { id = "com.gradleup.shadow", version = "9.2.2" }
