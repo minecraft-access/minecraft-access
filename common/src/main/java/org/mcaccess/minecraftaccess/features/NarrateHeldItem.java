@@ -23,7 +23,7 @@ public class NarrateHeldItem {
         if (player == null) return;
 
         while (KeyBindingsHandler.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
-            narrateHand(Screen.hasAltDown());
+            narrateHand(Minecraft.getInstance().hasAltDown());
         }
 
         ItemStack currentItemStack = player.getMainHandItem();

@@ -37,7 +37,7 @@ public class PlayerStatus {
         if (client.screen != null) return;
 
         if (narrationKey.canBeTriggered()) {
-            if (Screen.hasControlDown()) {
+            if (client.hasControlDown()) {
                 Collection<MobEffectInstance> effects = client.player.getActiveEffects();
                 if (effects.isEmpty()) {
                     MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
@@ -64,7 +64,7 @@ public class PlayerStatus {
             StringBuilder narration = new StringBuilder();
 
             if (currentMode == GameType.SURVIVAL || currentMode == GameType.ADVENTURE) {
-                if (!Screen.hasAltDown()) {
+                if (!client.hasAltDown()) {
                     if (absorption > 0) {
                         narration.append(I18n.get(
                                 "minecraft_access.player_status.base_with_absorption",

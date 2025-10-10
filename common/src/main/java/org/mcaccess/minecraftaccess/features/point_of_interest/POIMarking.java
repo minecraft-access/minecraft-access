@@ -35,8 +35,8 @@ public class POIMarking {
      */
     public void tick() {
         if (Config.getInstance().poi.marking.enabled) {
-            boolean controlPressed = Screen.hasControlDown();
-            boolean altPressed = Screen.hasAltDown();
+            boolean controlPressed = Minecraft.getInstance().hasControlDown();
+            boolean altPressed = Minecraft.getInstance().hasAltDown();
             boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping);
 
             if (lockingKeyPressed && altPressed && controlPressed) {

@@ -83,7 +83,7 @@ public class LockingHandler {
 
     private void handleLockingKeyPressing() {
         boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping);
-        if (isLockingKeyPressed && Screen.hasAltDown()) {
+        if (isLockingKeyPressed && client.hasAltDown()) {
             if (isPlayerLocked()) {
                 unlock(true, true);
                 interval.beReady();

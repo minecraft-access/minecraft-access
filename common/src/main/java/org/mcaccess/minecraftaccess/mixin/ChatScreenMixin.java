@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.mixin;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
@@ -63,24 +64,24 @@ abstract class ChatScreenMixin {
      */
     @Unique
     private static boolean repeatPreviousChatMessage(int keyCode) {
-        long window = Minecraft.getInstance().getWindow().getWindow();
+        Window window = Minecraft.getInstance().getWindow();
         int numMessages = ((ChatComponentAccessor) Minecraft.getInstance().gui.getChat()).getAllMessages().size();
         int newChatMessagePage = currentChatMessagePage;
-        if (Screen.hasAltDown()) {
+        if (Minecraft.getInstance().hasAltDown()) {
             if (InputConstants.isKeyDown(window, InputConstants.KEY_GRAVE) || InputConstants.isKeyDown(window, InputConstants.KEY_MULTIPLY)) {
-                if (Screen.hasControlDown()) {
+                if (Minecraft.getInstance().hasControlDown()) {
                     newChatMessagePage = numMessages / 10;
                 } else {
                     newChatMessagePage = 0;
                 }
             } else if (InputConstants.isKeyDown(window, InputConstants.KEY_EQUALS) || InputConstants.isKeyDown(window, InputConstants.KEY_ADD)) {
                 newChatMessagePage -= 1;
-                if (Screen.hasControlDown()) {
+                if (Minecraft.getInstance().hasControlDown()) {
                     newChatMessagePage -= 4;
                 }
             } else if (InputConstants.isKeyDown(window, InputConstants.KEY_MINUS) || InputConstants.isKeyDown(window, InputConstants.KEY_MINUS)) {
                 newChatMessagePage += 1;
-                if (Screen.hasControlDown()) {
+                if (Minecraft.getInstance().hasControlDown()) {
                     newChatMessagePage += 4;
                 }
             }

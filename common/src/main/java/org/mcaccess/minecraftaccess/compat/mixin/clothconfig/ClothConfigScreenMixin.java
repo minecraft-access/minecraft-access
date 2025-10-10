@@ -17,6 +17,7 @@ import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -91,12 +92,12 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
      * Use Control + Tab (and Control + Shift + Tab) to switch between tab buttons.
      */
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (hasControlDown() && keyCode == InputConstants.KEY_TAB) {
-            switchCategory(!hasShiftDown());
+    public boolean keyPressed(KeyEvent event) {
+        if (Minecraft.getInstance().hasControlDown() && event.key() == InputConstants.KEY_TAB) {
+            switchCategory(!Minecraft.getInstance().hasShiftDown());
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Unique

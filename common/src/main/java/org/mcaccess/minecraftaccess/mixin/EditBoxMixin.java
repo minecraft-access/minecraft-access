@@ -1,11 +1,11 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +64,7 @@ abstract class EditBoxMixin extends AbstractWidget {
      */
     @Inject(at = @At("HEAD"), method = "charTyped", cancellable = true)
     private void charTyped(CallbackInfoReturnable<Boolean> cir) {
-        if (!Screen.hasAltDown()) return;
+        if (!Minecraft.getInstance().hasAltDown()) return;
 
         cir.setReturnValue(false);
         cir.cancel();
@@ -76,13 +76,13 @@ abstract class EditBoxMixin extends AbstractWidget {
             return;
         }
         // is selecting, let the selecting text narrating method do the job instead
-        if (Screen.hasShiftDown()) {
+        if (Minecraft.getInstance().hasShiftDown()) {
             return;
         }
 
         switch (keyCode) {
             case InputConstants.KEY_LEFT -> {
-                if (Screen.hasControlDown()) {
+                if (Minecraft.getInstance().hasControlDown()) {
                     String hoveredText = getCursorHoverOverText(getWordPosition(-1));
                     MainClass.narrate(hoveredText, true);
                 } else {
@@ -91,7 +91,7 @@ abstract class EditBoxMixin extends AbstractWidget {
                 }
             }
             case InputConstants.KEY_RIGHT -> {
-                if (Screen.hasControlDown()) {
+                if (Minecraft.getInstance().hasControlDown()) {
                     String hoveredText = getCursorHoverOverText(getWordPosition(1));
                     MainClass.narrate(hoveredText, true);
                 } else {

@@ -14,6 +14,7 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -93,7 +94,7 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
          * it's this very widget's job to handle mouse operation.
          */
         @Override
-        public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        public boolean keyPressed(KeyEvent event) {
             if (KeyUtils.isSpaceOrEnterPressed()) {
                 mouseClicked(rectangle.x + 1, rectangle.y + 1, 0);
                 return true;

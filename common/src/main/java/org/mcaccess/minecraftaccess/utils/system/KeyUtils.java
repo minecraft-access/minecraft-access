@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 
@@ -19,8 +20,8 @@ public final class KeyUtils {
 
     public static boolean isOnePressed(int keyCode) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        long handle = minecraftClient.getWindow().getWindow();
-        return InputConstants.isKeyDown(handle, keyCode);
+        com.mojang.blaze3d.platform.Window window = minecraftClient.getWindow();
+        return InputConstants.isKeyDown(window, keyCode);
     }
 
     /**
@@ -28,8 +29,8 @@ public final class KeyUtils {
      */
     public static boolean isAnyPressed(int... keyCodes) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        long handle = minecraftClient.getWindow().getWindow();
-        return IntStream.of(keyCodes).anyMatch(c -> InputConstants.isKeyDown(handle, c));
+        Window window = minecraftClient.getWindow();
+        return IntStream.of(keyCodes).anyMatch(c -> InputConstants.isKeyDown(window, c));
     }
 
     /**

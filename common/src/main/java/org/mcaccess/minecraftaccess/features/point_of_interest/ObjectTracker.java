@@ -69,11 +69,11 @@ public class ObjectTracker {
 
         if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
-        if (nextItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(1);
-        if (previousItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(-1);
+        if (nextItemKeyPressed.canBeTriggered() && client.hasControlDown()) moveGroup(1);
+        if (previousItemKeyPressed.canBeTriggered() && client.hasControlDown()) moveGroup(-1);
 
-        if (nextItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(1);
-        if (previousItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(-1);
+        if (nextItemKeyPressed.canBeTriggered() && !client.hasControlDown()) moveObject(1);
+        if (previousItemKeyPressed.canBeTriggered() && !client.hasControlDown()) moveObject(-1);
 
         if (targetNearestObjectKeyPressed.canBeTriggered()) targetNearestObject();
     }
@@ -210,14 +210,14 @@ public class ObjectTracker {
                 }))
                 .toList();
 
-        if (Screen.hasControlDown() && !Screen.hasShiftDown()) {
+        if (client.hasControlDown() && !client.hasShiftDown()) {
             if (entities.isEmpty()) {
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.entity"), true);
             } else {
                 currentObject = entities.getFirst();
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest.entity"), true);
             }
-        } else if (Screen.hasShiftDown() && !Screen.hasControlDown()) {
+        } else if (client.hasShiftDown() && !client.hasControlDown()) {
             if (blocks.isEmpty()) {
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.block"), true);
             } else {

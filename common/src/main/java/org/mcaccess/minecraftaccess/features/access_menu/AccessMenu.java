@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import lombok.extern.slf4j.Slf4j;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -87,7 +87,7 @@ public class AccessMenu {
         if (CLIENT.player == null) return;
 
         if (CLIENT.screen == null) {
-            if (Screen.hasAltDown()) {
+            if (Minecraft.getInstance().hasAltDown()) {
                 handleInMenuActions();
                 return;
             }
@@ -118,9 +118,9 @@ public class AccessMenu {
         // With Access Menu opened or alt key pressed,
         // listen to number keys pressing for executing corresponding functions
         // for the little performance improvement, will not use KeyUtils here.
-        long handle = CLIENT.getWindow().getWindow();
+        Window window = CLIENT.getWindow();
         Stream.of(FUNCTIONS)
-                .filter(f -> InputConstants.isKeyDown(handle, f.number + InputConstants.KEY_0))
+                .filter(f -> InputConstants.isKeyDown(window, f.number + InputConstants.KEY_0))
                 .findFirst()
                 .ifPresent(f -> {
                     if (FUNCTION_INTERVALS[f.number].isReady()) {
@@ -202,7 +202,7 @@ public class AccessMenu {
         if (CLIENT.level == null) return;
 
         CLIENT.player.clientSideCloseContainer();
-        long daytime = CLIENT.player.clientLevel.getDayTime() + 6000;
+        long daytime = CLIENT.player.level().getDayTime() + 6000;
         int hours = (int) (daytime / 1000) % 24;
         int minutes = (int) ((daytime % 1000) * 60 / 1000);
 
