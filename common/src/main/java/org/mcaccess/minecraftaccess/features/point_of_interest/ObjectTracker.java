@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -30,10 +29,10 @@ public class ObjectTracker {
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
 
-    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.OBJECT_TRACKER_NEXT_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.OBJECT_TRACKER_PREVIOUS_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.TARGET_NEAREST_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_NEXT_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_PREVIOUS_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.TARGET_NEAREST_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
 
     @Getter
     private Object currentObject = null;
@@ -69,11 +68,11 @@ public class ObjectTracker {
 
         if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
-        if (nextItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(1);
-        if (previousItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(-1);
+        if (nextItemKeyPressed.canBeTriggered() && client.hasControlDown()) moveGroup(1);
+        if (previousItemKeyPressed.canBeTriggered() && client.hasControlDown()) moveGroup(-1);
 
-        if (nextItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(1);
-        if (previousItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(-1);
+        if (nextItemKeyPressed.canBeTriggered() && !client.hasControlDown()) moveObject(1);
+        if (previousItemKeyPressed.canBeTriggered() && !client.hasControlDown()) moveObject(-1);
 
         if (targetNearestObjectKeyPressed.canBeTriggered()) targetNearestObject();
     }
@@ -210,14 +209,14 @@ public class ObjectTracker {
                 }))
                 .toList();
 
-        if (Screen.hasControlDown() && !Screen.hasShiftDown()) {
+        if (client.hasControlDown() && !client.hasShiftDown()) {
             if (entities.isEmpty()) {
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.entity"), true);
             } else {
                 currentObject = entities.getFirst();
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest.entity"), true);
             }
-        } else if (Screen.hasShiftDown() && !Screen.hasControlDown()) {
+        } else if (client.hasShiftDown() && !client.hasControlDown()) {
             if (blocks.isEmpty()) {
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.block"), true);
             } else {

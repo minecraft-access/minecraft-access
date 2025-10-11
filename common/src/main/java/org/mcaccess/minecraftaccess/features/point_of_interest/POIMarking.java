@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -35,9 +34,9 @@ public class POIMarking {
      */
     public void tick() {
         if (Config.getInstance().poi.marking.enabled) {
-            boolean controlPressed = Screen.hasControlDown();
-            boolean altPressed = Screen.hasAltDown();
-            boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping);
+            boolean controlPressed = Minecraft.getInstance().hasControlDown();
+            boolean altPressed = Minecraft.getInstance().hasAltDown();
+            boolean lockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.LOCKING_HANDLER_KEY.mapping);
 
             if (lockingKeyPressed && altPressed && controlPressed) {
                 unmark();

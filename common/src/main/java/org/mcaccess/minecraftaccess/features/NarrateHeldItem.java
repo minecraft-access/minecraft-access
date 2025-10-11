@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.features;
 import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
@@ -22,8 +21,8 @@ public class NarrateHeldItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        while (KeyBindingsHandler.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
-            narrateHand(Screen.hasAltDown());
+        while (KeyBindingsHandler.Keys.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
+            narrateHand(Minecraft.getInstance().hasAltDown());
         }
 
         ItemStack currentItemStack = player.getMainHandItem();

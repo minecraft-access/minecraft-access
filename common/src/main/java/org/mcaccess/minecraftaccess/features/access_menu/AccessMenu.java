@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import lombok.extern.slf4j.Slf4j;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -35,7 +35,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 public class AccessMenu {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     public static final double RAY_CAST_DISTANCE = 20.0; // Much farther than the Read Crosshair feature (6 blocks).
-    private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyBindingsHandler.ACCESS_MENU_KEY.mapping);
+    private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyBindingsHandler.Keys.ACCESS_MENU_KEY.mapping);
     private boolean gameModeSwitcherActive = false;
     /**
      * Access Menu function direct keys (configured in keybinding settings)
@@ -48,25 +48,25 @@ public class AccessMenu {
      * Should be same order as {@link AccessMenuGUI#init()}
      */
     private static final MenuFunction[] FUNCTIONS = new MenuFunction[]{
-            new MenuFunction(0, new IntervalKeystroke(KeyBindingsHandler.OPEN_CONFIG_MENU.mapping),
+            new MenuFunction(0, new IntervalKeystroke(KeyBindingsHandler.Keys.OPEN_CONFIG_MENU.mapping),
                     () -> Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, null).get())),
-            new MenuFunction(1, new IntervalKeystroke(KeyBindingsHandler.NARRATE_TARGET.mapping),
+            new MenuFunction(1, new IntervalKeystroke(KeyBindingsHandler.Keys.NARRATE_TARGET.mapping),
                     AccessMenu::getBlockAndFluidTargetInformation),
-            new MenuFunction(2, new IntervalKeystroke(KeyBindingsHandler.TARGET_POSITION.mapping),
+            new MenuFunction(2, new IntervalKeystroke(KeyBindingsHandler.Keys.TARGET_POSITION.mapping),
                     AccessMenu::getBlockAndFluidTargetPosition),
-            new MenuFunction(3, new IntervalKeystroke(KeyBindingsHandler.LIGHT_LEVEL.mapping),
+            new MenuFunction(3, new IntervalKeystroke(KeyBindingsHandler.Keys.LIGHT_LEVEL.mapping),
                     AccessMenu::getLightLevel),
-            new MenuFunction(4, new IntervalKeystroke(KeyBindingsHandler.CLOSEST_WATER_SOURCE.mapping),
+            new MenuFunction(4, new IntervalKeystroke(KeyBindingsHandler.Keys.CLOSEST_WATER_SOURCE.mapping),
                     () -> MainClass.fluidDetector.findClosestWaterSource(true)),
-            new MenuFunction(5, new IntervalKeystroke(KeyBindingsHandler.CLOSEST_LAVA_SOURCE.mapping),
+            new MenuFunction(5, new IntervalKeystroke(KeyBindingsHandler.Keys.CLOSEST_LAVA_SOURCE.mapping),
                     () -> MainClass.fluidDetector.findClosestLavaSource(true)),
-            new MenuFunction(6, new IntervalKeystroke(KeyBindingsHandler.CURRENT_BIOME.mapping),
+            new MenuFunction(6, new IntervalKeystroke(KeyBindingsHandler.Keys.CURRENT_BIOME.mapping),
                     AccessMenu::getBiome),
-            new MenuFunction(7, new IntervalKeystroke(KeyBindingsHandler.TIME_OF_DAY.mapping),
+            new MenuFunction(7, new IntervalKeystroke(KeyBindingsHandler.Keys.TIME_OF_DAY.mapping),
                     AccessMenu::getTimeOfDay),
-            new MenuFunction(8, new IntervalKeystroke(KeyBindingsHandler.XP_LEVEL.mapping),
+            new MenuFunction(8, new IntervalKeystroke(KeyBindingsHandler.Keys.XP_LEVEL.mapping),
                     AccessMenu::getXP),
-            new MenuFunction(9, new IntervalKeystroke(KeyBindingsHandler.REFRESH_SCREEN_READER.mapping),
+            new MenuFunction(9, new IntervalKeystroke(KeyBindingsHandler.Keys.REFRESH_SCREEN_READER.mapping),
                     () -> ScreenReaderController.refreshScreenReader(true)),
     };
 
@@ -87,7 +87,7 @@ public class AccessMenu {
         if (CLIENT.player == null) return;
 
         if (CLIENT.screen == null) {
-            if (Screen.hasAltDown()) {
+            if (Minecraft.getInstance().hasAltDown()) {
                 handleInMenuActions();
                 return;
             }
@@ -118,9 +118,9 @@ public class AccessMenu {
         // With Access Menu opened or alt key pressed,
         // listen to number keys pressing for executing corresponding functions
         // for the little performance improvement, will not use KeyUtils here.
-        long handle = CLIENT.getWindow().getWindow();
+        Window window = CLIENT.getWindow();
         Stream.of(FUNCTIONS)
-                .filter(f -> InputConstants.isKeyDown(handle, f.number + InputConstants.KEY_0))
+                .filter(f -> InputConstants.isKeyDown(window, f.number + InputConstants.KEY_0))
                 .findFirst()
                 .ifPresent(f -> {
                     if (FUNCTION_INTERVALS[f.number].isReady()) {
@@ -202,7 +202,7 @@ public class AccessMenu {
         if (CLIENT.level == null) return;
 
         CLIENT.player.clientSideCloseContainer();
-        long daytime = CLIENT.player.clientLevel.getDayTime() + 6000;
+        long daytime = CLIENT.player.level().getDayTime() + 6000;
         int hours = (int) (daytime / 1000) % 24;
         int minutes = (int) ((daytime % 1000) * 60 / 1000);
 

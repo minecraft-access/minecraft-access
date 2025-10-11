@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.InputQuirks;
+import net.minecraft.client.input.MouseButtonInfo;
 import org.lwjgl.glfw.GLFW;
 
 import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
@@ -71,7 +73,7 @@ public final class MouseUtils {
 
     private static long getWindowPointer() {
         if (windowPointer == 0) {
-            windowPointer = Minecraft.getInstance().getWindow().getWindow();
+            windowPointer = Minecraft.getInstance().getWindow().handle();
         }
         return windowPointer;
     }
@@ -108,8 +110,9 @@ public final class MouseUtils {
             // basing on MouseHandler.onPress():
             // if Minecraft.ON_OSX && button == 0
             // run macOS related logic
-            int modifiers = Minecraft.ON_OSX ? 0 : 1;
-            getMouseHandler().invokeOnPress(getWindowPointer(), key.id, action, modifiers);
+            int modifiers = InputQuirks.REPLACE_CTRL_KEY_WITH_CMD_KEY ? 0 : 1;
+            MouseButtonInfo mouseButtonInfo = new MouseButtonInfo(key.id, modifiers);
+            getMouseHandler().invokeOnButton(getWindowPointer(), mouseButtonInfo, action);
         }
     }
 

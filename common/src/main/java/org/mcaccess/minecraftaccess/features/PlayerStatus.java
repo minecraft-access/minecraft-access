@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.GameType;
@@ -26,7 +25,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 @Slf4j
 public class PlayerStatus {
     IntervalKeystroke narrationKey = new IntervalKeystroke(
-            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.NARRATE_PLAYER_STATUS_KEY.mapping),
+            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping),
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
             Interval.ms(3000));
@@ -37,7 +36,7 @@ public class PlayerStatus {
         if (client.screen != null) return;
 
         if (narrationKey.canBeTriggered()) {
-            if (Screen.hasControlDown()) {
+            if (client.hasControlDown()) {
                 Collection<MobEffectInstance> effects = client.player.getActiveEffects();
                 if (effects.isEmpty()) {
                     MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
@@ -64,7 +63,7 @@ public class PlayerStatus {
             StringBuilder narration = new StringBuilder();
 
             if (currentMode == GameType.SURVIVAL || currentMode == GameType.ADVENTURE) {
-                if (!Screen.hasAltDown()) {
+                if (!client.hasAltDown()) {
                     if (absorption > 0) {
                         narration.append(I18n.get(
                                 "minecraft_access.player_status.base_with_absorption",

@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DirectJoinServerScreen;
-import net.minecraft.client.gui.screens.EditServerScreen;
+import net.minecraft.client.gui.screens.ManageServerScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
@@ -57,7 +57,7 @@ public final class MenuFix {
             EditWorldScreen.class,
             JoinMultiplayerScreen.class,
             DirectJoinServerScreen.class,
-            EditServerScreen.class
+            ManageServerScreen.class
     );
 
     private MenuFix() {
