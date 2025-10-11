@@ -6,6 +6,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.Nullable;
@@ -71,7 +72,7 @@ abstract class EditBoxMixin extends AbstractWidget {
     }
 
     @Inject(at = @At("HEAD"), method = "keyPressed")
-    private void narrateCursorHoverOverText(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void narrateCursorHoverOverText(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (!canConsumeInput()) {
             return;
         }
@@ -80,7 +81,7 @@ abstract class EditBoxMixin extends AbstractWidget {
             return;
         }
 
-        switch (keyCode) {
+        switch (event.key()) {
             case InputConstants.KEY_LEFT -> {
                 if (Minecraft.getInstance().hasControlDown()) {
                     String hoveredText = getCursorHoverOverText(getWordPosition(-1));

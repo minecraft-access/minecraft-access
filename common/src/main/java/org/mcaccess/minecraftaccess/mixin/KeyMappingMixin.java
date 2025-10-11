@@ -28,7 +28,7 @@ abstract class KeyMappingMixin {
     private static Map<String, KeyMapping> ALL;
 
     @Shadow
-    private InputConstants.Key key;
+    protected InputConstants.Key key;
 
     @Inject(at = @At("HEAD"), method = "click", cancellable = true)
     private static void clickMixin(InputConstants.Key key, CallbackInfo ci) {
@@ -60,8 +60,8 @@ abstract class KeyMappingMixin {
         ci.cancel();
     }
 
-    @Inject(at = @At("RETURN"), method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V")
-    private void initMap(String translationKey, InputConstants.Type type, int code, String category, CallbackInfo ci) {
-        KEY_TO_BINDINGS_LIST.put(key, (KeyMapping) (Object) this);
+    @Inject(at = @At("RETURN"), method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILnet/minecraft/client/KeyMapping$Category;)V")
+    private void initMap(String name, InputConstants.Type type, int key, KeyMapping.Category category, CallbackInfo ci) {
+        KEY_TO_BINDINGS_LIST.put(this.key, (KeyMapping) (Object) this);
     }
 }

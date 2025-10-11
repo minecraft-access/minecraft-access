@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.resources.language.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,8 +44,8 @@ abstract class ChatScreenMixin {
      * Add custom keystroke handling for chat screen.
      */
     @Inject(at = @At("HEAD"), method = "keyPressed", cancellable = true)
-    private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (!repeatPreviousChatMessage(keyCode)) return;
+    private void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
+        if (!repeatPreviousChatMessage(event.key())) return;
 
         // Method executes to here means one of custom keystroke handling above is triggered,
         // so we want to cancel the logic in injected original method,

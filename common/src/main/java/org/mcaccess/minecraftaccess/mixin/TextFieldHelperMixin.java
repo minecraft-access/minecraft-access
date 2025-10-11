@@ -10,6 +10,7 @@ import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
+import net.minecraft.client.input.KeyEvent;
 import org.apache.logging.log4j.util.Strings;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,13 +45,13 @@ abstract class TextFieldHelperMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "keyPressed")
-    private void narrateCursorHoverOverText(int keyCode, CallbackInfoReturnable<Boolean> cir) {
+    private void narrateCursorHoverOverText(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         // is selecting, let the selecting text narrating method do the job instead
         if (Minecraft.getInstance().hasShiftDown()) {
             return;
         }
 
-        switch (keyCode) {
+        switch (event.key()) {
             case InputConstants.KEY_LEFT -> {
                 if (Minecraft.getInstance().hasControlDown()) {
                     String hoveredText = getCursorHoveredOverText(getCursorPosByWordsWithOffset(-1));
