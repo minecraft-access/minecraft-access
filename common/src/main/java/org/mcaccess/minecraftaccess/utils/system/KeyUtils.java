@@ -20,7 +20,7 @@ public final class KeyUtils {
 
     public static boolean isOnePressed(int keyCode) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        com.mojang.blaze3d.platform.Window window = minecraftClient.getWindow();
+        Window window = minecraftClient.getWindow();
         return InputConstants.isKeyDown(window, keyCode);
     }
 

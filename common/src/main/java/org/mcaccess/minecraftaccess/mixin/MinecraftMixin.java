@@ -24,7 +24,7 @@ abstract class MinecraftMixin {
             method = "handleKeybinds",
             cancellable = true)
     private void suppressHotbarSlotSelecting(CallbackInfo ci) {
-        if (this.hasAltDown()) {
+        if (hasAltDown()) {
             ci.cancel();
         }
     }
