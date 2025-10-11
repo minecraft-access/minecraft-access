@@ -34,7 +34,7 @@ abstract class ClientPacketListenerMixin implements TickablePacketListener, Clie
         LocalPlayer player = client.player;
         if (player == null) return;
 
-        PacketUtils.ensureRunningOnSameThread(packet, this, client);
+        PacketUtils.ensureRunningOnSameThread(packet, this, client.packetProcessor());
         Config.Features config = Config.getInstance().features;
         if (config.alwaysNarratePickedUpItems || config.fishingHarvestEnabled && player.getMainHandItem().getItem() instanceof FishingRodItem) {
             int cId = packet.getPlayerId();

@@ -18,6 +18,8 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -112,13 +114,13 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
 
         if (tabButton.isMouseOver(tabButton.getX() + 1, tabButton.getY() + 1)) {
             // the tab button is visible, click it
-            tabButton.mouseClicked(tabButton.getX() + 1, tabButton.getY() + 1, 0);
+            tabButton.mouseClicked(new MouseButtonEvent(tabButton.getX() + 1, tabButton.getY() + 1, new MouseButtonInfo(0, 0)), false);
         } else {
             // the tab button is invisible, scroll tab menu
             AbstractWidget arrowButton = forward ? buttonRightTab : buttonLeftTab;
-            arrowButton.mouseClicked(arrowButton.getX() + 1, arrowButton.getY() + 1, 0);
+            arrowButton.mouseClicked(new MouseButtonEvent(arrowButton.getX() + 1, arrowButton.getY() + 1, new MouseButtonInfo(0, 0)), false);
             // but the scroll needs ticking to be finished, so directly trigger the tab button by calling onPress
-            tabButton.onPress();
+            tabButton.onPress(new MouseButtonInfo(0, 0));
         }
     }
 

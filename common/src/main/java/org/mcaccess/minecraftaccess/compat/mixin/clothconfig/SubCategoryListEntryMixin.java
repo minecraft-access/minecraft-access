@@ -15,6 +15,8 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -84,10 +86,6 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         @Final
         private Rectangle rectangle;
 
-        @Shadow
-        @Override
-        public abstract boolean mouseClicked(double mouseX, double mouseY, int i);
-
         /**
          * Make the label widget expandable through keyboard.
          * Although this widget is treated as one of {@link SubCategoryListEntry#children()},
@@ -96,7 +94,7 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         @Override
         public boolean keyPressed(KeyEvent event) {
             if (KeyUtils.isSpaceOrEnterPressed()) {
-                mouseClicked(rectangle.x + 1, rectangle.y + 1, 0);
+                mouseClicked(new MouseButtonEvent(rectangle.x + 1, rectangle.y + 1, new MouseButtonInfo(0, 0)), false);
                 return true;
             }
             return false;
