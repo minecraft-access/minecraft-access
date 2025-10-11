@@ -11,12 +11,17 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.animal.coppergolem.CopperGolem;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
@@ -50,12 +55,13 @@ public enum BuiltinEntityPOIGroups {
     BOSS(new POIGroup<>(
             "minecraft_access.point_of_interest.group.boss",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_PLING.value(), 2.0f),
-            entity -> entity instanceof EnderDragon || entity instanceof WitherBoss
+            entity -> entity instanceof EnderDragon || entity instanceof WitherBoss || entity instanceof ElderGuardian || entity instanceof Warden
     )),
     PASSIVE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.passive",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0.0f),
-            entity -> (entity instanceof AgeableMob || entity instanceof WaterAnimal || entity instanceof NeutralMob || entity instanceof Allay)
+            entity -> (entity instanceof AgeableMob || entity instanceof WaterAnimal || entity instanceof NeutralMob
+                    || entity instanceof Allay || entity instanceof CopperGolem || entity instanceof SnowGolem)
                     && !(entity.getPassengers().contains(Minecraft.getInstance().player))
     )),
     PLAYER(new POIGroup<>(// Players
