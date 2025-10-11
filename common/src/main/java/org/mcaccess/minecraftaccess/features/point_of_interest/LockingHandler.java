@@ -6,7 +6,6 @@ import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -82,7 +81,7 @@ public class LockingHandler {
     }
 
     private void handleLockingKeyPressing() {
-        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.LOCKING_HANDLER_KEY.mapping);
+        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.LOCKING_HANDLER_KEY.mapping);
         if (isLockingKeyPressed && client.hasAltDown()) {
             if (isPlayerLocked()) {
                 unlock(true, true);

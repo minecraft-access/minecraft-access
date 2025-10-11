@@ -81,7 +81,7 @@ public final class MainClass {
             getScreenReader().narrate(startupMessage, true);
         }
 
-        for (KeyBindingsHandler key : KeyBindingsHandler.values()) {
+        for (KeyBindingsHandler.Keys key : KeyBindingsHandler.Keys.values()) {
             KeyMappingRegistry.register(key.mapping);
         }
 
@@ -189,7 +189,7 @@ public final class MainClass {
         poiManager = new POIManager();
         xpIndicator = new XPIndicator();
 
-        if (CLIENT.options.keyAdvancements.same(KeyBindingsHandler.CAMERA_CONTROLS_RIGHT.mapping)) {
+        if (CLIENT.options.keyAdvancements.same(KeyBindingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping)) {
             CLIENT.options.keyAdvancements.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_O));
             CLIENT.options.save();
             CLIENT.options.load();

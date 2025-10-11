@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -30,10 +29,10 @@ public class ObjectTracker {
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
 
-    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.OBJECT_TRACKER_NEXT_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.OBJECT_TRACKER_PREVIOUS_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.TARGET_NEAREST_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_NEXT_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_PREVIOUS_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.TARGET_NEAREST_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
 
     @Getter
     private Object currentObject = null;

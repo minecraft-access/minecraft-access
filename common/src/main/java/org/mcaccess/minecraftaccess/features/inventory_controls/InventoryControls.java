@@ -179,13 +179,13 @@ public class InventoryControls {
      * Handles the key inputs.
      */
     private boolean keyListener() {
-        boolean isGroupKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_GROUP_KEY.mapping);
-        boolean isUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_UP_KEY.mapping);
-        boolean isRightKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
-        boolean isDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_DOWN_KEY.mapping);
-        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_LEFT_KEY.mapping);
-        boolean isSwitchTabKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
-        boolean isToggleCraftableKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
+        boolean isGroupKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping);
+        boolean isUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping);
+        boolean isRightKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
+        boolean isDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_DOWN_KEY.mapping);
+        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_LEFT_KEY.mapping);
+        boolean isSwitchTabKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
+        boolean isToggleCraftableKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
         boolean isLeftShiftPressed = KeyUtils.isLeftShiftPressed();
         boolean isEnterPressed = KeyUtils.isEnterPressed();
         boolean isTPressed = KeyUtils.isAnyPressed(InputConstants.KEY_T);

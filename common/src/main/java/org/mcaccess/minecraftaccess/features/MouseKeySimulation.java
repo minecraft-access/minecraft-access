@@ -18,9 +18,9 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  */
 public final class MouseKeySimulation {
     private static final Keystroke[] MOUSE_CLICKS = new Keystroke[]{
-            new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.MOUSE_SIMULATION_LEFT_MOUSE_KEY.mapping)),
-            new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.MOUSE_SIMULATION_MIDDLE_MOUSE_KEY.mapping)),
-            new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.MOUSE_SIMULATION_RIGHT_MOUSE_KEY.mapping)),
+            new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.MOUSE_SIMULATION_LEFT_MOUSE_KEY.mapping)),
+            new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.MOUSE_SIMULATION_MIDDLE_MOUSE_KEY.mapping)),
+            new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.MOUSE_SIMULATION_RIGHT_MOUSE_KEY.mapping)),
     };
     public static final Set<Triple<Keystroke, Runnable, Runnable>> MOUSE_CLICK_ACTIONS = Set.of(
             Triple.of(MOUSE_CLICKS[0], MouseUtils.Key.LEFT::press, MouseUtils.Key.LEFT::release),
@@ -28,8 +28,8 @@ public final class MouseKeySimulation {
             Triple.of(MOUSE_CLICKS[2], MouseUtils.Key.RIGHT::press, MouseUtils.Key.RIGHT::release)
     );
     private static final IntervalKeystroke[] MOUSE_SCROLLS = new IntervalKeystroke[]{
-            new IntervalKeystroke(KeyBindingsHandler.MOUSE_SIMULATION_SCROLL_UP_KEY.mapping),
-            new IntervalKeystroke(KeyBindingsHandler.MOUSE_SIMULATION_SCROLL_DOWN_KEY.mapping),
+            new IntervalKeystroke(KeyBindingsHandler.Keys.MOUSE_SIMULATION_SCROLL_UP_KEY.mapping),
+            new IntervalKeystroke(KeyBindingsHandler.Keys.MOUSE_SIMULATION_SCROLL_DOWN_KEY.mapping),
     };
     public static final Set<Tuple<IntervalKeystroke, Runnable>> MOUSE_SCROLL_ACTIONS = Set.of(
             new Tuple<IntervalKeystroke, Runnable>(MOUSE_SCROLLS[0], MouseUtils.Wheel.UP::scroll),

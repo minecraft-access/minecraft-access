@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.GameType;
@@ -26,7 +25,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 @Slf4j
 public class PlayerStatus {
     IntervalKeystroke narrationKey = new IntervalKeystroke(
-            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.NARRATE_PLAYER_STATUS_KEY.mapping),
+            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping),
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
             Interval.ms(3000));

@@ -20,7 +20,7 @@ public class FacingDirection {
         if (minecraftClient.player == null) return;
         if (minecraftClient.screen != null) return;
 
-        boolean isDirectionNarrationKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.DIRECTION_NARRATION_KEY.mapping);
+        boolean isDirectionNarrationKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.DIRECTION_NARRATION_KEY.mapping);
         if (!isDirectionNarrationKeyPressed) return;
 
         boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();

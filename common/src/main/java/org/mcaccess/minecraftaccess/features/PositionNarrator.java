@@ -26,7 +26,7 @@ public final class PositionNarrator {
     public static Keystroke keyX = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_X));
     public static Keystroke keyC = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_C));
     public static Keystroke keyZ = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_Z));
-    public static Keystroke positionNarrationKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.POSITION_NARRATION_KEY.mapping));
+    public static Keystroke positionNarrationKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.POSITION_NARRATION_KEY.mapping));
 
     private PositionNarrator() {
     }

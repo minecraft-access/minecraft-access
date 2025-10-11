@@ -27,12 +27,12 @@ public class HUDStatus {
         hudVisibilityStatus();
         attackCooldownStatus();
 
-        if (KeyBindingsHandler.NARRATE_BOSSBARS_KEY.mapping.consumeClick()) {
+        if (KeyBindingsHandler.Keys.NARRATE_BOSSBARS_KEY.mapping.consumeClick()) {
             if (!bossbarKeyIsDown) {
                 bossbarKeyIsDown = true;
                 narrateBossBars();
             }
-        } else if (!KeyBindingsHandler.NARRATE_BOSSBARS_KEY.mapping.isDown()) {
+        } else if (!KeyBindingsHandler.Keys.NARRATE_BOSSBARS_KEY.mapping.isDown()) {
             bossbarKeyIsDown = false;
         }
     }
