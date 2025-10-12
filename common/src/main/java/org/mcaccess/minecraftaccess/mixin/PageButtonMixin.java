@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;

@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.client.resources.language.I18n;
