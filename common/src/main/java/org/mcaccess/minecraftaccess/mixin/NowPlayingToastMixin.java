@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.toasts.NowPlayingToast;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
