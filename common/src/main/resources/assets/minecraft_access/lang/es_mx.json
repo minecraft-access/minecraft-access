@@ -1,7 +1,7 @@
 {
     "block.minecraft.flowing_lava": "lava fluyendo",
     "block.minecraft.flowing_water": "agua fluyendo",
-    "minecraft_access.access_menu.biome": "bioma",
+    "minecraft_access.access_menu.biome": "%s bioma",
     "minecraft_access.access_menu.gui.button.biome": "bioma actual",
     "minecraft_access.access_menu.gui.button.block_and_fluid_target_info": "Información de objetivos de bloque y fluido",
     "minecraft_access.access_menu.gui.button.block_and_fluid_target_position": "posición de bloque y material",
@@ -20,6 +20,7 @@
     "minecraft_access.access_menu.time_of_day_am": "son las, %s A.M.",
     "minecraft_access.access_menu.time_of_day_pm": "son las, %s P.M.",
     "minecraft_access.access_menu.xp": "El nivel de experiencia es %s con %s de progreso",
+    "minecraft_access.air.format": "Aire es %s.",
     "minecraft_access.axolotl_variant.blue": "azul",
     "minecraft_access.axolotl_variant.cyan": "Cian",
     "minecraft_access.axolotl_variant.gold": "oro",
