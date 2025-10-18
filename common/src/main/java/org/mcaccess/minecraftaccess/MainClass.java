@@ -110,67 +110,57 @@ public final class MainClass {
             MenuFix.tick(client);
         }
 
-        if (client.level == null) {
+        if (client.level == null || client.player == null) {
+            Keystroke.updateInstances();
             return;
+        }
+
+        narrateCrosshair.tick();
+        facingDirection.tick();
+        PositionNarrator.getINSTANCE().tick();
+        poiManager.tick();
+        fallDetector.tick();
+        hudStatus.tick();
+        if (client.screen == null || !(client.screen.getFocused() instanceof EditBox || client.screen instanceof KeyBindsScreen)) {
+            MouseKeySimulation.tick();
         }
 
         if (inventoryControls != null && config.inventoryControls.enabled) {
             inventoryControls.tick();
         }
 
-        narrateCrosshair.tick();
         assert client.gameMode != null;
-        GameType currentGameMode = client.gameMode.getPlayerMode();
-        if (config.features.xpIndicatorEnabled && xpIndicator != null) {
-            if (currentGameMode == GameType.ADVENTURE || currentGameMode == GameType.SURVIVAL) {
-                xpIndicator.tick();
-            }
+        GameType mode = client.gameMode.getPlayerMode();
+
+        if (xpIndicator != null && config.features.xpIndicatorEnabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {
+            xpIndicator.tick();
         }
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled) {
             biomeIndicator.tick();
         }
 
-        facingDirection.tick();
-
-        PositionNarrator.getINSTANCE().tick();
-
-        if (client.player != null) {
             if (playerStatus != null) {
                 playerStatus.tick();
             }
 
-            if (client.screen == null || !(client.screen.getFocused() instanceof EditBox || client.screen instanceof KeyBindsScreen)) {
-                MouseKeySimulation.tick();
-            }
-
             if (client.screen == null) {
-                // These features are suppressed when there is any screen opening
                 CameraControls.tick();
             }
-        }
 
-        if (playerWarnings != null && config.playerWarnings.enabled) {
-            if (currentGameMode == GameType.SURVIVAL || currentGameMode == GameType.ADVENTURE) {
+        if (playerWarnings != null && config.playerWarnings.enabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {
                 playerWarnings.tick();
             }
-        }
 
         if (accessMenu != null && config.accessMenu.enabled) {
             accessMenu.tick();
         }
 
-        if (currentGameMode != GameType.SPECTATOR) {
+        if (mode != GameType.SPECTATOR) {
             narrateHeldItem.tick();
         }
 
-        poiManager.tick();
-
-        fallDetector.tick();
-
-        hudStatus.tick();
-
-        // This should always be at the bottom
+        // Must always remain at the end of client tick
         Keystroke.updateInstances();
     }
 

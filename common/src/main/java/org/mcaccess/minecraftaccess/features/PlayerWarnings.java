@@ -6,6 +6,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.ItemStack;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
@@ -16,34 +17,49 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
  */
 @Slf4j
 public class PlayerWarnings {
+    private final Minecraft client = Minecraft.getInstance();
     private LocalPlayer player;
 
     private boolean isHealthBelowFirstThreshold;
     private boolean isHealthBelowSecondThreshold;
+
     private boolean isFoodBelowThreshold;
     private boolean isAirBelowThreshold;
     private boolean isFrostAboveThreshold;
 
+    private boolean isHelmetDurabilityBelowFirstThreshold;
+    private boolean isHelmetDurabilityBelowSecondThreshold;
+
+    private boolean isChestplateDurabilityBelowFirstThreshold;
+    private boolean isChestplateDurabilityBelowSecondThreshold;
+
+    private boolean isLeggingsDurabilityBelowFirstThreshold;
+    private boolean isLeggingsDurabilityBelowSecondThreshold;
+
+    private boolean isBootsDurabilityBelowFirstThreshold;
+    private boolean isBootsDurabilityBelowSecondThreshold;
+
+    private boolean isMainHandDurabilityBelowFirstThreshold;
+    private boolean isMainHandDurabilityBelowSecondThreshold;
+
+    private boolean isOffHandDurabilityBelowFirstThreshold;
+    private boolean isOffHandDurabilityBelowSecondThreshold;
+
     private static final Config.PlayerWarnings CONFIG = Config.getInstance().playerWarnings;
 
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
-        player = minecraftClient.player;
+        player = client.player;
 
-        double maxHealth = Math.round((player.getMaxHealth() / 2.0) * 10.0) / 10.0;
-        double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
-        double maxAir = Math.round((player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
-        double frostExposurePercent = Math.round((player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
-
-        healthWarning(player.getHealth() / 2, maxHealth);
-        hungerWarning(player.getFoodData().getFoodLevel() / 2, maxHunger);
-        airWarning(Math.round((player.getAirSupply() / 20.0) * 10.0) / 10.0, maxAir);
-        frostWarning(frostExposurePercent);
+        healthWarning();
+        hungerWarning();
+        airWarning();
+        frostWarning();
     }
 
-    private void healthWarning(double health, double maxHealth) {
+    private void healthWarning() {
+        double health = player.getHealth() / 2;
+        double maxHealth = Math.round((player.getMaxHealth() / 2.0) * 10.0) / 10.0;
+
         if (health <= CONFIG.firstHealthThreshold && health > CONFIG.secondHealthThreshold && !isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowFirstThreshold = true;
             MainClass.narrate(I18n.get("minecraft_access.player_warnings.health_low", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth)), true);
@@ -60,7 +76,10 @@ public class PlayerWarnings {
         if (isHealthBelowSecondThreshold && health > CONFIG.secondHealthThreshold) isHealthBelowSecondThreshold = false;
     }
 
-    private void hungerWarning(double hunger, double maxHunger) {
+    private void hungerWarning() {
+        double hunger = player.getFoodData().getFoodLevel() / 2;
+        double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
+
         if (hunger <= CONFIG.hungerThreshold && hunger > 0 && !isFoodBelowThreshold) {
             isFoodBelowThreshold = true;
             MainClass.narrate(I18n.get("minecraft_access.player_warnings.hunger_low", NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger)), true);
@@ -70,9 +89,11 @@ public class PlayerWarnings {
         if (isFoodBelowThreshold && hunger > CONFIG.hungerThreshold) isFoodBelowThreshold = false;
     }
 
-    private void airWarning(double air, double maxAir) {
-        air = Math.max(air, 0.0);
+    private void airWarning() {
+        double air = Math.max(player.getAirSupply() / 20.0, 0.0);
+        double maxAir = Math.round((player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
         if (air <= CONFIG.airThreshold && air > 0 && !isAirBelowThreshold) {
+
             isAirBelowThreshold = true;
             MainClass.narrate(I18n.get("minecraft_access.player_warnings.air_low", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir)), true);
             playWarningSound();
@@ -81,7 +102,9 @@ public class PlayerWarnings {
         if (isAirBelowThreshold && air > CONFIG.airThreshold) isAirBelowThreshold = false;
     }
 
-    private void frostWarning(double frostExposurePercent) {
+    private void frostWarning() {
+        double frostExposurePercent = Math.round((player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
+
         if (frostExposurePercent >= CONFIG.frostThreshold && frostExposurePercent < 100 && !isFrostAboveThreshold) {
             isFrostAboveThreshold = true;
             MainClass.narrate(I18n.get("minecraft_access.player_warnings.frost_low", NarrationUtils.narrateNumber(frostExposurePercent)), true);
@@ -95,5 +118,30 @@ public class PlayerWarnings {
         if (CONFIG.playSound) {
             player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.PLAYERS, 1.0f, 1.0f);
         }
+    }
+
+    public void durabilityWarnings() {
+
+    }
+
+    private DurabilityWarningStatus isBelowDurabilityWarning(ItemStack itemStack) {
+        if (!itemStack.isDamageableItem() || !itemStack.isDamaged()) return DurabilityWarningStatus.NONE;
+
+        int currentDurability = itemStack.getDamageValue();
+        int maxDurability = itemStack.getMaxDamage();
+        double durabilityPercent = (currentDurability / maxDurability) * 100;
+
+        if (itemStack.nextDamageWillBreak()) return DurabilityWarningStatus.NEXT_WILL_BREAK;
+        if (durabilityPercent < 5) return DurabilityWarningStatus.FIRST;
+        if (durabilityPercent < 15) return DurabilityWarningStatus.SECOND;
+
+        return DurabilityWarningStatus.NONE;
+}
+
+    private enum DurabilityWarningStatus {
+        NONE,
+        FIRST,
+        SECOND,
+        NEXT_WILL_BREAK
     }
 }
