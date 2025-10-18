@@ -309,6 +309,7 @@
     "text.autoconfig.minecraft-access.option.features.fishingHarvestEnabled": "Narrate fishing harvest",
     "text.autoconfig.minecraft-access.option.features.narrateHeldItemsCountWhenChanged": "Narrate held items count when changed",
     "text.autoconfig.minecraft-access.option.features.onlyNarrateActionBarUpdates": "Only narrate the changed part of the action bar",
+    "text.autoconfig.minecraft-access.option.features.playNewChatMessageSound": "Play a sound for new chat messages",
     "text.autoconfig.minecraft-access.option.features.xpIndicatorEnabled": "Enable XP indicator",
     "text.autoconfig.minecraft-access.option.inventoryControls.autoOpenRecipeBook": "Automatically open recipe book",
     "text.autoconfig.minecraft-access.option.inventoryControls.delayMilliseconds": "Delay (milliseconds)",

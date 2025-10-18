@@ -17,6 +17,7 @@
         "BossHealthOverlayAccessor",
         "ButtonMixin",
         "ChatComponentAccessor",
+        "ChatComponentMixin",
         "ChatScreenMixin",
         "CheckboxMixin",
         "ClientPacketListenerMixin",

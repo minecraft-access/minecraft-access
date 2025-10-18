@@ -94,6 +94,7 @@ public final class Config implements ConfigData {
         public boolean fishingHarvestEnabled = true;
         public boolean alwaysNarratePickedUpItems = false;
         public boolean narrateHeldItemsCountWhenChanged = true;
+        public boolean playNewChatMessageSound = true;
 
         private Features() {
         }
