@@ -1,27 +1,22 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.client.GuiMessageTag;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ChatComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MessageSignature;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import org.mcaccess.minecraftaccess.Config;
 
 @Mixin(ChatComponent.class)
-public class ChatComponentMixin {
-    // Adds a sound whenever a chat message is sent or received if the option is enabled in the config
+abstract class ChatComponentMixin {
     @Inject(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", at = @At("HEAD"))
-    public void addMessageMixin(Component chatComponent, MessageSignature headerSignature, GuiMessageTag tag, CallbackInfo ci) {
+    private void playChatSound(CallbackInfo ci) {
         if (Config.getInstance().features.playNewChatMessageSound) {
-            WorldUtils.getClientPlayer().playNotifySound(SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.UI, Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.UI), 1);
+            Minecraft.getInstance().player.playNotifySound(SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.UI, 1.0F, 1.0F);
         }
     }
 }

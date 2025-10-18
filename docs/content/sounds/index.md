@@ -55,8 +55,8 @@ Sounds can be played by pressing the play button.
 
 ### Chat
 
-| Description | Sound |
-|-|-|
+| Description                                    | Sound                                         |
+|------------------------------------------------|-----------------------------------------------|
 | Plays when sending or recieving a chat message | {{< wikiSound "Successful_hit" >}} Ding sound |
 
 ## Disclaimer
