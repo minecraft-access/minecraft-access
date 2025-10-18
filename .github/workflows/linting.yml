@@ -1,0 +1,76 @@
+name: Linting
+on:
+  push:
+  pull_request_target:
+
+jobs:
+  checkstyle:
+    name: Checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: dbelyaev/action-checkstyle@v2
+        with:
+          checkstyle_config: ./config/checkstyle/checkstyle.xml
+          properties_file: ./config/checkstyle/checkstyle.properties
+          reporter: ${{ github.event_name == 'push' && 'github-check' || 'github-pr-check' }}
+          filter_mode: ${{ github.event_name == 'push' && 'nofilter' || 'added' }}
+          fail_level: error
+
+  translation-sorting:
+    name: Translation File Sorting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Check Translation Sorting
+        # language=bash
+        run: |
+          result=0
+          for f in ./common/src/main/resources/assets/minecraft_access/lang/*.json
+          do
+            if jq -e "keys != keys_unsorted" $f
+            then
+              echo "::error file=$f,line=1,title=Translation File Sorting::Missorted translation file."
+              result=1
+            fi
+          done
+          exit $result
+
+  weblate-merge:
+    name: Weblate Mergeability
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Setup Git
+        # language=bash
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      - name: Check Weblate Mergeability
+        # language=bash
+        run: |
+          rev=$(git rev-parse HEAD)
+          git remote add weblate https://hosted.weblate.org/git/minecraft-access/mod/
+          git fetch weblate
+          git checkout weblate
+          if ! git rebase $rev
+          then
+            for f in $(git diff --name-only --diff-filter=U)
+            do
+                echo "::error file=$f,line=1,title=Weblate Mergeability::This file has merge conflicts with Weblate. "\
+                    "Please run \`git pull https://hosted.weblate.org/git/minecraft-access/mod\` and resolve them."
+            done
+            exit 1
+          fi

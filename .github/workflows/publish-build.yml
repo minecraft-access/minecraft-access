@@ -32,7 +32,7 @@ jobs:
     name: Publish Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
       - name: Send to Discord
         env:
           TITLE: ${{ inputs.title }}
@@ -78,5 +78,5 @@ jobs:
             }' \
           | curl --fail-with-body -X POST ${{ secrets.SNAPSHOT_WEBHOOK }} \
             -F "payload_json=<-;type=application/json" \
-            -F files[0]=@$(ls -1 ./minecraft-access/*+fabric.jar | head -n 1) \
-            -F files[1]=@$(ls -1 ./minecraft-access/*+neoforge.jar | head -n 1)
+            -F files[0]=@$(ls -1 ./*+fabric.jar | head -n 1) \
+            -F files[1]=@$(ls -1 ./*+neoforge.jar | head -n 1)

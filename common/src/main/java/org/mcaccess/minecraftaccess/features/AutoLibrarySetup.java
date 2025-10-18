@@ -1,17 +1,18 @@
 package org.mcaccess.minecraftaccess.features;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.SystemUtils;
-import org.mcaccess.minecraftaccess.utils.UnzipUtility;
-
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.SystemUtils;
+
+import org.mcaccess.minecraftaccess.utils.UnzipUtility;
 
 /**
  * Automatically installs the required libraries for client's operating system.
@@ -36,32 +37,31 @@ public class AutoLibrarySetup {
      */
     private void downloadAndInstall() throws IOException {
         if (SystemUtils.IS_OS_WINDOWS) {
-           log.info("Downloading latest tolk build...");
+            log.info("Downloading latest tolk build...");
             File tolkLatestBuildZip = new File(Paths.get("tolk-latest-build.zip").toAbsolutePath().toString());
-            FileUtils.copyURLToFile(new URL("https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip"), tolkLatestBuildZip);
+            FileUtils.copyURLToFile(URI.create("https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip").toURL(), tolkLatestBuildZip);
 
             UnzipUtility unzipUtility = new UnzipUtility();
             File tempDirectoryPath = Paths.get("temp-tolk-latest").toAbsolutePath().toFile();
-            try {
-                unzipUtility.unzip(tolkLatestBuildZip.getAbsolutePath(), tempDirectoryPath.getAbsolutePath());
-            } catch (Exception e) {
-                log.error("An error occurred while extracting tolk-latest-build.zip", e);
-            }
+            unzipUtility.unzip(tolkLatestBuildZip.getAbsolutePath(), tempDirectoryPath.getAbsolutePath());
 
-           log.info("Moving files...");
+            log.info("Moving files...");
             String sourceDir = "x64";
             if (SystemUtils.OS_ARCH.equalsIgnoreCase("X86")) sourceDir = "x86";
             FileUtils.copyDirectory(Paths.get(tempDirectoryPath.getAbsolutePath(), sourceDir).toFile(),
                     tempDirectoryPath.getParentFile());
 
-           log.info("Deleting temp files...");
+            log.info("Deleting temp files...");
             FileUtils.delete(tolkLatestBuildZip);
             FileUtils.deleteDirectory(tempDirectoryPath);
-           log.info("tolk library downloaded and installed.");
+            log.info("tolk library downloaded and installed.");
         } else if (SystemUtils.IS_OS_LINUX) {
-           log.info("Downloading libspeechdwrapper.so ...");
-            FileUtils.copyURLToFile(new URL("https://github.com/khanshoaib3/libspeechdwrapper/releases/download/v1.0.0/libspeechdwrapper.so"), new File(Paths.get("libspeechdwrapper.so").toAbsolutePath().toString()));
-           log.info("libspeechdwrapper.so downloaded and installed.");
+            log.info("Downloading libspeechdwrapper.so ...");
+            FileUtils.copyURLToFile(
+                    URI.create("https://github.com/khanshoaib3/libspeechdwrapper/releases/download/v1.0.0/libspeechdwrapper.so").toURL(),
+                    new File(Paths.get("libspeechdwrapper.so").toAbsolutePath().toString())
+            );
+            log.info("libspeechdwrapper.so downloaded and installed.");
         }
     }
 
@@ -71,17 +71,17 @@ public class AutoLibrarySetup {
      * @return Returns true if all files are installed otherwise false.
      */
     private boolean checkInstalled() {
-       log.info("Checking for installed files...");
+        log.info("Checking for installed files...");
 
         for (String libraryName : getRequiredLibraryNames()) {
-           log.debug("Checking for " + libraryName);
+            log.debug("Checking for {}", libraryName);
             if (!Files.exists(Paths.get(libraryName).toAbsolutePath())) {
-               log.error(libraryName + " file not found.");
+                log.error("{} file not found.", libraryName);
                 return false;
             }
         }
 
-       log.info("All files are installed.");
+        log.info("All files are installed.");
         return true;
     }
 

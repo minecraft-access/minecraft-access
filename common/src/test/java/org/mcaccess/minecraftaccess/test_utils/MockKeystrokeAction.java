@@ -1,11 +1,12 @@
 package org.mcaccess.minecraftaccess.test_utils;
 
-import org.junit.platform.commons.util.ReflectionUtils;
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
-
 import java.lang.reflect.Field;
 import java.util.function.BooleanSupplier;
+
+import org.junit.platform.commons.util.ReflectionUtils;
+
+import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
+import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 
 /**
  * Combining a changeable boolean variable with supplier.
@@ -15,21 +16,21 @@ public class MockKeystrokeAction {
     public BooleanSupplier supplier;
     public Keystroke mockTarget;
 
-    public void revertKeystrokeResult() {
-        this.pressed = !this.pressed;
+    public MockKeystrokeAction(boolean initPressed) {
+        pressed = initPressed;
+        supplier = () -> pressed;
     }
 
-    public MockKeystrokeAction(boolean initPressed) {
-        this.pressed = initPressed;
-        this.supplier = () -> this.pressed;
+    public void revertKeystrokeResult() {
+        pressed = !pressed;
     }
 
     public void press() {
-        this.pressed = true;
+        pressed = true;
     }
 
     public void release() {
-        this.pressed = false;
+        pressed = false;
     }
 
     public static MockKeystrokeAction pressed() {
@@ -48,7 +49,7 @@ public class MockKeystrokeAction {
     public static MockKeystrokeAction mock(Class<?> clazz, String keyFieldName) {
         try {
             Field keyField = clazz.getDeclaredField(keyFieldName);
-            return MockKeystrokeAction.mock((Keystroke) ReflectionUtils.tryToReadFieldValue(keyField).get());
+            return mock((Keystroke) ReflectionUtils.tryToReadFieldValue(keyField).get());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +62,7 @@ public class MockKeystrokeAction {
      */
     public static MockKeystrokeAction mock(Keystroke fieldValue) {
         try {
-            MockKeystrokeAction action = MockKeystrokeAction.released();
+            MockKeystrokeAction action = released();
             action.mockTarget = fieldValue;
             Field conditionField = Keystroke.class.getDeclaredField("condition");
             conditionField.setAccessible(true);
@@ -76,12 +77,12 @@ public class MockKeystrokeAction {
      * Reset target field's inner state to avoid test cases from affecting each other.
      */
     public void resetTargetInnerState() {
-        this.pressed = false;
+        pressed = false;
         try {
-            if (this.mockTarget instanceof MenuKeystroke) {
+            if (mockTarget instanceof MenuKeystroke) {
                 Field justClosed = MenuKeystroke.class.getDeclaredField("isMenuJustClosed");
                 justClosed.setAccessible(true);
-                justClosed.set(this.mockTarget, false);
+                justClosed.set(mockTarget, false);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

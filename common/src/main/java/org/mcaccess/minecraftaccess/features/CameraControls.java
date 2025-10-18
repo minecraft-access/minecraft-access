@@ -1,19 +1,20 @@
 package org.mcaccess.minecraftaccess.features;
 
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.phys.Vec3;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 import org.mcaccess.minecraftaccess.utils.condition.DoubleClick;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This feature adds the following key binds to control the camera.<br><br>
@@ -35,32 +36,21 @@ import org.slf4j.LoggerFactory;
  * 15) Right Alt + double Look Up Key or Look Straight Up Key (default: Keypad 0): Snaps the camera to the look above head direction.<br>
  * 16) Right Alt + double Look Down Key or Look Straight Down Key (default: Keypad .): Snaps the camera to the look down at feet direction.
  */
-public class CameraControls {
-    private static final Logger log = LoggerFactory.getLogger(CameraControls.class);
-
+@Slf4j
+public final class CameraControls {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     private static CameraConfig config;
-    private static final Interval interval = Interval.defaultDelay();
+    private static final Interval INTERVAL = Interval.defaultDelay();
 
-    private static final DoubleClick straightUpDoubleClick;
-    private static final DoubleClick straightDownDoubleClick;
+    // config keystroke conditions
+    private static final DoubleClick straightUpDoubleClick = new DoubleClick(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_UP.mapping));
+    private static final DoubleClick straightDownDoubleClick = new DoubleClick(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping));
 
-    static {
-        // config keystroke conditions
-        straightUpDoubleClick = new DoubleClick(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().cameraControlsUp));
-        straightDownDoubleClick = new DoubleClick(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.getInstance().cameraControlsDown));
-    }
-
-    record CameraConfig(float normalRotatingAngle, float modifiedRotatingAngle) {
-        static final float DELTA_90_DEGREES = 600f; // 90 / 0.15
-
-        public CameraConfig(Config.CameraControls config) {
-            this(DELTA_90_DEGREES / (90 / config.normalRotatingAngle),
-                    DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle));
-        }
+    private CameraControls() {
     }
 
     public static void tick() {
-        if (!interval.isReady()) return;
+        if (!INTERVAL.isReady()) return;
         loadConfigurations();
         keyListener();
     }
@@ -71,7 +61,7 @@ public class CameraControls {
     private static void loadConfigurations() {
         Config.CameraControls config = Config.getInstance().cameraControls;
         CameraControls.config = new CameraConfig(config);
-        interval.setDelay(config.delayMilliseconds, Interval.Unit.Millisecond);
+        INTERVAL.setDelay(config.delayMilliseconds, Interval.Unit.MILLISECOND);
     }
 
     /**
@@ -81,26 +71,24 @@ public class CameraControls {
         boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
         boolean isRightAltPressed = KeyUtils.isRightAltPressed();
 
-        KeyBindingsHandler kbh = KeyBindingsHandler.getInstance();
+        boolean isUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_UP.mapping, KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_UP.mapping);
+        boolean isRightKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping, KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_RIGHT.mapping);
+        boolean isDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping, KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_DOWN.mapping);
+        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_LEFT.mapping, KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_LEFT.mapping);
 
-        boolean isUpKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsUp, kbh.cameraControlsAlternateUp);
-        boolean isRightKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsRight, kbh.cameraControlsAlternateRight);
-        boolean isDownKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsDown, kbh.cameraControlsAlternateDown);
-        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsLeft, kbh.cameraControlsAlternateLeft);
+        boolean isNorthKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_NORTH.mapping)
+                || isUpKeyPressed && isRightAltPressed && !isLeftAltPressed;
+        boolean isEastKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_EAST.mapping)
+                || isRightKeyPressed && isRightAltPressed && !isLeftAltPressed;
+        boolean isWestKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_WEST.mapping)
+                || isLeftKeyPressed && isRightAltPressed && !isLeftAltPressed;
+        boolean isSouthKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_SOUTH.mapping)
+                || isDownKeyPressed && isRightAltPressed && !isLeftAltPressed;
+        boolean isCenterCameraKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_CENTER_CAMERA.mapping);
 
-        boolean isNorthKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsNorth)
-                || (isUpKeyPressed && isRightAltPressed && !isLeftAltPressed);
-        boolean isEastKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsEast)
-                || (isRightKeyPressed && isRightAltPressed && !isLeftAltPressed);
-        boolean isWestKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsWest)
-                || (isLeftKeyPressed && isRightAltPressed && !isLeftAltPressed);
-        boolean isSouthKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsSouth)
-                || (isDownKeyPressed && isRightAltPressed && !isLeftAltPressed);
-        boolean isCenterCameraKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsCenterCamera);
-
-        boolean isStraightUpKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsStraightUp);
+        boolean isStraightUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_UP.mapping);
         boolean isUpKeyDoublePressedWithRightAlt = isRightAltPressed && straightUpDoubleClick.canBeTriggered();
-        boolean isStraightDownKeyPressed = KeyUtils.isAnyPressed(kbh.cameraControlsStraightDown);
+        boolean isStraightDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_DOWN.mapping);
         boolean isDownKeyDoublePressedWithRightAlt = isRightAltPressed && straightDownDoubleClick.canBeTriggered();
 
         boolean anyFunctionTriggered = false;
@@ -163,7 +151,7 @@ public class CameraControls {
             centerCamera(isLeftAltPressed);
         }
 
-        interval.adjustNextReadyTimeBy(anyFunctionTriggered);
+        INTERVAL.adjustNextReadyTimeBy(anyFunctionTriggered);
     }
 
     private enum RotatingDirection {
@@ -179,7 +167,7 @@ public class CameraControls {
         RotatingDirection(int horizontalWight, int verticalWight) {
             this.horizontalWight = horizontalWight;
             this.verticalWight = verticalWight;
-            this.isRotatingHorizontal = horizontalWight != 0;
+            isRotatingHorizontal = horizontalWight != 0;
         }
     }
 
@@ -190,19 +178,22 @@ public class CameraControls {
      * @param direction on given direction
      */
     private static void rotateCameraBy(float angle, RotatingDirection direction) {
+        if (handleLocking()) return;
         float horizontalAngleDelta = angle * direction.horizontalWight;
         float verticalAngleDelta = angle * direction.verticalWight;
         log.debug("Rotating camera by x:{} y:{}", horizontalAngleDelta, verticalAngleDelta);
 
-        WorldUtils.getClientPlayer().turn(horizontalAngleDelta, verticalAngleDelta);
+        assert CLIENT.player != null;
+        CLIENT.player.turn(horizontalAngleDelta, verticalAngleDelta);
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
         if (Config.getInstance().features.facingDirectionEnabled) {
-            if (direction.isRotatingHorizontal)
+            if (direction.isRotatingHorizontal) {
                 MainClass.narrate(horizontalDirection, true);
-            else if (verticalDirection != null)
+            } else if (verticalDirection != null) {
                 MainClass.narrate(verticalDirection, true);
+            }
         }
     }
 
@@ -212,7 +203,9 @@ public class CameraControls {
      * @param direction to given direction
      */
     private static void rotateCameraTo(Orientation direction) {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        if (handleLocking()) return;
+        LocalPlayer player = CLIENT.player;
+        assert player != null;
         Vec3 playerBlockPosition = player.position();
         Vec3 targetBlockPosition = playerBlockPosition.add(Vec3.atLowerCornerOf(direction.vector));
         player.lookAt(EntityAnchorArgument.Anchor.FEET, targetBlockPosition);
@@ -220,7 +213,7 @@ public class CameraControls {
         log.debug("Rotating camera to: {}", direction.name());
 
         if (Config.getInstance().features.facingDirectionEnabled) {
-            if (direction.in(Orientation.LAYER.MIDDLE)) {
+            if (direction.in(Orientation.Layer.MIDDLE)) {
                 MainClass.narrate(PlayerPositionUtils.getHorizontalFacingDirectionInWords(), true);
             } else {
                 MainClass.narrate(PlayerPositionUtils.getVerticalFacingDirectionInWords(), true);
@@ -234,7 +227,22 @@ public class CameraControls {
      * @param lookOpposite Whether to snap the opposite cardinal direction or not and centers it.
      */
     private static void centerCamera(boolean lookOpposite) {
+        if (handleLocking()) return;
         Orientation o = PlayerPositionUtils.getHorizontalFacing();
         rotateCameraTo(lookOpposite ? o.getOpposite() : o);
+    }
+
+    private static boolean handleLocking() {
+        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || !CLIENT.getCameraEntity().is(CLIENT.player))) return false;
+        MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
+        return true;
+    }
+
+    private record CameraConfig(float normalRotatingAngle, float modifiedRotatingAngle) {
+        static final float DELTA_90_DEGREES = 600.0f; // 90 / 0.15
+
+        private CameraConfig(Config.CameraControls config) {
+            this(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle));
+        }
     }
 }

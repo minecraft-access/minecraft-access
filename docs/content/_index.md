@@ -15,17 +15,15 @@ This mod supports:
 * On [Pojav Launcher](https://pojavlauncher.app) on iOS (Android is not supported yet)
 * Works despite the language setting of the game (though the mod-specific narration will [fall back to English]({{% relref "/features#i18n-fallback-mechanism" %}}) if the mod does not support the language yet)
 
-Each version of this mod will be pre-released on [GitHub](https://github.com/khanshoaib3/minecraft-access/releases) and announced in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) first as a beta testing stage, after one week of feedback collection, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions) and [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files).
+Each version of this mod will be pre-released on [GitHub](https://github.com/minecraft-access/minecraft-access/releases) and announced in the [Playability Discord server](https://discord.mcaccess.org/) first as a beta testing stage, after one week of feedback collection, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions) and [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files).
 
 ## Useful Links
 
-* [Playability Discord server](https://discord.gg/yQjjsDqWQX) - Join our Discord server if you want to chat with this mod's users and developers.
-* [Primary developer's X account](https://x.com/shoaib_mk0) - You can follow the developer on X to get notified when a new update drops.
-* [Patreon](https://www.patreon.com/shoaibkhan)
+* [Playability Discord server](https://discord.mcaccess.org/) - Join our Discord server if you want to chat with this mod's users and developers.
 
 ## Known Issues
 
-Check [GitHub issues](https://github.com/minecraft-access/minecraft-access/issues) for known issues. If you are having problems with the mod, it is probably best to ask in the [Playability Discord server](https://discord.gg/yQjjsDqWQX) before creating an issue, unless you know for sure that it is a bug in the mod.
+Check [GitHub issues](https://github.com/minecraft-access/minecraft-access/issues) for known issues. If you are having problems with the mod, it is probably best to ask in the [Playability Discord server](https://discord.mcaccess.org/) before creating an issue, unless you know for sure that it is a bug in the mod.
 
 ## Contributions
 
@@ -36,4 +34,4 @@ Any type of contribution is welcome:
 * Help us [translate](https://mcaccess.org/faq#how-can-i-contribute-to-i18n) this mod into other languages.
 * Create more text or video tutorials about how to play the game with this mod ([examples]({{% relref "/good-resources#gameplay-with-this-mod" %}})).
 * Make sound effects for this mod.
-* For development contributions, please read [CONTRIBUTING.md](https://github.com/khanshoaib3/minecraft-access/blob/1.21/CONTRIBUTING.md) for more details.
+* For development contributions, please read [CONTRIBUTING.md](https://github.com/minecraft-access/minecraft-access/blob/1.21/CONTRIBUTING.md) for more details.

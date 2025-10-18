@@ -3,30 +3,37 @@ package org.mcaccess.minecraftaccess.screen_reader;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import org.jetbrains.annotations.Nullable;
+
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.system.OsUtils;
 
 @Slf4j
-public class ScreenReaderController {
-    public static ScreenReaderInterface getAvailable() {
-        if (OsUtils.isLinux()) {
-            ScreenReaderLinux screenReaderLinux = new ScreenReaderLinux();
-            screenReaderLinux.initializeScreenReader();
-            return screenReaderLinux;
-        }
+public final class ScreenReaderController {
+    private ScreenReaderController() {
+    }
 
-        if (OsUtils.isMacOS()) {
-            ScreenReaderMacOS screenReaderMacOS = new ScreenReaderMacOS();
-            screenReaderMacOS.initializeScreenReader();
-            return screenReaderMacOS;
-        }
+    public static @Nullable ScreenReaderInterface getAvailable() {
+        String osName = System.getProperty("os.name").toLowerCase();
 
-        if (OsUtils.isWindows()) {
+        if (osName.startsWith("windows")) {
             ScreenReaderWindows screenReaderWindows = new ScreenReaderWindows();
             screenReaderWindows.initializeScreenReader();
             return screenReaderWindows;
         }
 
+        if (osName.startsWith("mac")) {
+            ScreenReaderMacOS screenReaderMacOS = new ScreenReaderMacOS();
+            screenReaderMacOS.initializeScreenReader();
+            return screenReaderMacOS;
+        }
+
+        if (osName.startsWith("linux")) {
+            ScreenReaderLinux screenReaderLinux = new ScreenReaderLinux();
+            screenReaderLinux.initializeScreenReader();
+            return screenReaderLinux;
+        }
+
+        log.error("No valid ScreenReader interface found");
         return null;
     }
 
@@ -36,16 +43,11 @@ public class ScreenReaderController {
 
     public static void refreshScreenReader(boolean closeOpenedScreen) {
         log.info("Refreshing screen reader");
-        try {
-            MainClass.setScreenReader(getAvailable());
+        MainClass.setScreenReader(getAvailable());
 
-            if (!closeOpenedScreen) return;
-            if (Minecraft.getInstance() == null) return;
-            if (Minecraft.getInstance().player == null) return;
-            Minecraft.getInstance().player.clientSideCloseContainer();
-            MainClass.narrate(I18n.get("minecraft_access.access_menu.screen_reader_refreshed"), true);
-        } catch (Exception e) {
-            log.error("An error while refreshing screen reader", e);
-        }
+        if (!closeOpenedScreen) return;
+        if (Minecraft.getInstance().player == null) return;
+        Minecraft.getInstance().player.clientSideCloseContainer();
+        MainClass.narrate(I18n.get("minecraft_access.access_menu.screen_reader_refreshed"), true);
     }
 }

@@ -1,13 +1,15 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import java.util.List;
+
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.resources.language.I18n;
-import org.mcaccess.minecraftaccess.MainClass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,19 +19,19 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
+import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(ChatScreen.class)
-public class ChatScreenMixin {
+abstract class ChatScreenMixin {
     @Unique
-    private static int minecraft_access$currentChatMessagePage;
+    private static int currentChatMessagePage;
 
     @Shadow
     protected EditBox input;
 
     @Inject(at = @At("HEAD"), method = "init")
     private void init(CallbackInfo ci) {
-        minecraft_access$currentChatMessagePage = 0;
+        currentChatMessagePage = 0;
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;getValue()Ljava/lang/String;"), method = "updateNarrationState")
@@ -41,8 +43,8 @@ public class ChatScreenMixin {
      * Add custom keystroke handling for chat screen.
      */
     @Inject(at = @At("HEAD"), method = "keyPressed", cancellable = true)
-    private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (!minecraft_access$repeatPreviousChatMessage(keyCode)) return;
+    private void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
+        if (!repeatPreviousChatMessage(event.key())) return;
 
         // Method executes to here means one of custom keystroke handling above is triggered,
         // so we want to cancel the logic in injected original method,
@@ -54,51 +56,51 @@ public class ChatScreenMixin {
     /**
      * This method checks if the key code corresponds to a numeric key or numeric keypad key between 0 and 9,
      * while Alt key is pressed too.
-     * If it does, it calls the {@link #minecraft_access$narratePreviousChatAtIndex(int)}
+     * If it does, it calls the {@link #narratePreviousChatAtIndex(int)}
      * method with the corresponding index and returns true.
      *
      * @param keyCode the key code of the input event.
      * @return true if the input was handled, false otherwise.
      */
     @Unique
-    private static boolean minecraft_access$repeatPreviousChatMessage(int keyCode) {
-        long window = Minecraft.getInstance().getWindow().getWindow();
+    private static boolean repeatPreviousChatMessage(int keyCode) {
+        Window window = Minecraft.getInstance().getWindow();
         int numMessages = ((ChatComponentAccessor) Minecraft.getInstance().gui.getChat()).getAllMessages().size();
-        int newChatMessagePage = minecraft_access$currentChatMessagePage;
-        if (Screen.hasAltDown()) {
+        int newChatMessagePage = currentChatMessagePage;
+        if (Minecraft.getInstance().hasAltDown()) {
             if (InputConstants.isKeyDown(window, InputConstants.KEY_GRAVE) || InputConstants.isKeyDown(window, InputConstants.KEY_MULTIPLY)) {
-                if (Screen.hasControlDown()) {
+                if (Minecraft.getInstance().hasControlDown()) {
                     newChatMessagePage = numMessages / 10;
                 } else {
                     newChatMessagePage = 0;
                 }
             } else if (InputConstants.isKeyDown(window, InputConstants.KEY_EQUALS) || InputConstants.isKeyDown(window, InputConstants.KEY_ADD)) {
                 newChatMessagePage -= 1;
-                if (Screen.hasControlDown()) {
+                if (Minecraft.getInstance().hasControlDown()) {
                     newChatMessagePage -= 4;
                 }
             } else if (InputConstants.isKeyDown(window, InputConstants.KEY_MINUS) || InputConstants.isKeyDown(window, InputConstants.KEY_MINUS)) {
                 newChatMessagePage += 1;
-                if (Screen.hasControlDown()) {
+                if (Minecraft.getInstance().hasControlDown()) {
                     newChatMessagePage += 4;
                 }
             }
 
             newChatMessagePage = Math.clamp(newChatMessagePage, 0, numMessages / 10);
 
-            if (newChatMessagePage != minecraft_access$currentChatMessagePage) {
-                minecraft_access$currentChatMessagePage = newChatMessagePage;
+            if (newChatMessagePage != currentChatMessagePage) {
+                currentChatMessagePage = newChatMessagePage;
                 MainClass.narrate(I18n.get("minecraft_access.gui.chat_screen.showing_message_range", (newChatMessagePage * 10) + 1, (newChatMessagePage + 1) * 10), true);
             }
 
             for (int i = 1; i <= 9; i++) {
                 if (keyCode == InputConstants.KEY_0 + i || keyCode == InputConstants.KEY_NUMPAD0 + i) {
-                    minecraft_access$narratePreviousChatAtIndex(i + minecraft_access$currentChatMessagePage * 10 - 1);
+                    narratePreviousChatAtIndex(i + currentChatMessagePage * 10 - 1);
                     return true;
                 }
             }
             if (InputConstants.isKeyDown(window, InputConstants.KEY_0) || InputConstants.isKeyDown(window, InputConstants.KEY_NUMPAD0)) {
-                minecraft_access$narratePreviousChatAtIndex(10 + minecraft_access$currentChatMessagePage * 10 - 1);
+                narratePreviousChatAtIndex(10 + currentChatMessagePage * 10 - 1);
             }
         }
         return false;
@@ -110,18 +112,16 @@ public class ChatScreenMixin {
      * @param indexOffset the index offset from the most recent chat message to narrate.
      */
     @Unique
-    private static void minecraft_access$narratePreviousChatAtIndex(int indexOffset) {
+    private static void narratePreviousChatAtIndex(int indexOffset) {
         List<GuiMessage> messages = ((ChatComponentAccessor) Minecraft.getInstance().gui.getChat()).getAllMessages();
         if ((messages.size() - indexOffset) <= 0) return;
 
         MainClass.narrate(messages.get(indexOffset).content().getString(), true);
     }
 
-    /**
-     * Since there is no text modifying narration, we want to manually narrate when the chat history is switched.
-     */
+    // Since there is no text modifying narration, we want to manually narrate when the chat history is switched.
     @Inject(at = @At("TAIL"), method = "moveInHistory")
-    private void narrateSwitchedChatHistory(int index, CallbackInfo ci) {
-        MainClass.narrate(this.input.getValue(), true);
+    private void narrateSwitchedChatHistory(CallbackInfo ci) {
+        MainClass.narrate(input.getValue(), true);
     }
 }

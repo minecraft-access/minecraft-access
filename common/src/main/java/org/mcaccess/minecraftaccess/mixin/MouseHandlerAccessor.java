@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.MouseHandler;
+import net.minecraft.client.input.MouseButtonInfo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
@@ -10,7 +11,7 @@ public interface MouseHandlerAccessor {
     void invokeOnMove(long windowPointer, double x, double y);
 
     @Invoker
-    void invokeOnPress(long windowPointer, int button, int action, int modifiers);
+    void invokeOnButton(long window, MouseButtonInfo buttonInfo, int action);
 
     @Invoker
     void invokeOnScroll(long windowPointer, double xOffset, double yOffset);

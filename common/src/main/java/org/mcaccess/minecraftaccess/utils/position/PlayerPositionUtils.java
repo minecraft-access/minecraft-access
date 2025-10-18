@@ -2,48 +2,19 @@ package org.mcaccess.minecraftaccess.utils.position;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
 
-import java.util.Optional;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 /**
  * Functions about getting player entity's position, facing direction etc.
  */
 @Slf4j
-public class PlayerPositionUtils {
+public final class PlayerPositionUtils {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     private static final String POSITION_FORMAT = "{x}, {y}, {z}";
 
-    public static double getX() {
-        return getPlayerPosition().orElseThrow().x;
-    }
-
-    public static double getY() {
-        return getPlayerPosition().orElseThrow().y;
-    }
-
-    public static double getZ() {
-        return getPlayerPosition().orElseThrow().z;
-    }
-
-    /**
-     * Wrapper around {@link ClientPlayer#position()}
-     *
-     * @return Position of player's feet or {@link Optional#empty()} if {@link Minecraft#player} is null
-     */
-    public static Optional<Vec3> getPlayerPosition() {
-        return Optional.ofNullable(Minecraft.getInstance().player).map(LocalPlayer::position);
-    }
-
-    public static Optional<BlockPos> getPlayerBlockPosition() {
-        Optional<Vec3> op = getPlayerPosition();
-        if (op.isEmpty()) return Optional.empty();
-        Vec3 p = op.get();
-        return Optional.of(WorldUtils.blockPosOf(p));
+    private PlayerPositionUtils() {
     }
 
     public static String getNarratableXYZPosition() {
@@ -51,22 +22,26 @@ public class PlayerPositionUtils {
     }
 
     public static String getNarratableXPos() {
-        return NarrationUtils.narrateNumber(getX()) + "x";
+        assert CLIENT.player != null;
+        return NarrationUtils.narrateNumber(CLIENT.player.position().x) + 'x';
     }
 
     public static String getNarratableYPos() {
-        return NarrationUtils.narrateNumber(getY()) + "y";
+        assert CLIENT.player != null;
+        return NarrationUtils.narrateNumber(CLIENT.player.position().y) + 'y';
     }
 
     public static String getNarratableZPos() {
-        return NarrationUtils.narrateNumber(getZ()) + "z";
+        assert CLIENT.player != null;
+        return NarrationUtils.narrateNumber(CLIENT.player.position().z) + 'z';
     }
 
     /**
      * @return -90 (head up) ~ 90 (head down)
      */
     public static int getVerticalFacingDirection() {
-        return (int) WorldUtils.getClientPlayer().getRotationVector().x;
+        assert CLIENT.player != null;
+        return (int) CLIENT.player.getRotationVector().x;
     }
 
     /**
@@ -79,14 +54,16 @@ public class PlayerPositionUtils {
         if (isBetween(angle, -90, -88)) {
             return I18n.get("minecraft_access.direction.up");
         } else if (isBetween(angle, -87, -3)) {
-            return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(-angle)) + " " + I18n.get("minecraft_access.direction.up");
+            return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(-angle)) + ' ' + I18n.get("minecraft_access.direction.up");
         } else if (isBetween(angle, -2, 2)) {
             return I18n.get("minecraft_access.direction.straight");
-        } else if (isBetween(angle, 3, 97)) {
-            return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(angle)) + " " + I18n.get("minecraft_access.direction.down");
+        } else if (isBetween(angle, 3, 87)) {
+            return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(angle)) + ' ' + I18n.get("minecraft_access.direction.down");
         } else if (isBetween(angle, 88, 90)) {
             return I18n.get("minecraft_access.direction.down");
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     public static boolean isBetween(int x, int lower, int upper) {
@@ -94,7 +71,8 @@ public class PlayerPositionUtils {
     }
 
     public static int getHorizontalFacingDirectionInDegrees() {
-        int angle = (int) WorldUtils.getClientPlayer().getRotationVector().y;
+        assert CLIENT.player != null;
+        int angle = (int) CLIENT.player.getRotationVector().y;
         return angle % 360;
     }
 

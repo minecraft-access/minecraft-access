@@ -1,0 +1,27 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 4
+ij_continuation_indent_size = 8
+trim_trailing_whitespace = true
+max_line_length = 160
+
+[*.md]
+max_line_length = 120
+ij_markdown_min_lines_around_header = 0
+
+[*.java]
+ij_java_use_single_class_imports = true
+ij_java_insert_inner_class_imports = false
+ij_java_layout_static_imports_separately = true
+ij_java_class_count_to_use_import_on_demand = 25
+ij_java_names_count_to_use_import_on_demand = 25
+ij_java_imports_layout = @*, |, java.**, javax.**, |, *, |, org.mcaccess.**, |, $*
+ij_java_visibility = EscalateVisible
+
+[{*.yml,*.yaml}]
+indent_size = 2

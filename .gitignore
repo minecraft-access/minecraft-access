@@ -1,24 +1,24 @@
 # gradle
-
 .factorypath
 .gradle/
 build/
 out/
 classes/
+run/
+/common/logs/
+
+# Java
+replay_pid*.log
 
 # eclipse
-
 *.launch
 
 # idea
-
-.idea/
 *.iml
 *.ipr
 *.iws
 
 # vscode
-
 .settings/
 .vscode/
 bin/
@@ -26,23 +26,12 @@ bin/
 .project
 
 # macos
-
 *.DS_Store
-
-# fabric
-
-run/
-
-# Ignore Gradle project-specific cache directory
-.gradle
-
-# Ignore Gradle build output directory
-build
-
-# Ignore Gragle test report logs
-/common/logs/
 
 # Hugo
 /docs/public/
 /docs/resources/
 /docs/.hugo_build.lock
+
+# Direnv
+/.direnv/

@@ -1,8 +1,21 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.google.common.base.CaseFormat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.*;
+import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.inventory.LoomScreen;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
+import net.minecraft.client.gui.screens.inventory.StonecutterScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
@@ -12,25 +25,51 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractFurnaceMenu;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.inventory.BeaconMenu;
+import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.inventory.CartographyTableMenu;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.DispenserMenu;
+import net.minecraft.world.inventory.EnchantmentMenu;
+import net.minecraft.world.inventory.FurnaceResultSlot;
+import net.minecraft.world.inventory.GrindstoneMenu;
+import net.minecraft.world.inventory.HopperMenu;
+import net.minecraft.world.inventory.LoomMenu;
+import net.minecraft.world.inventory.MerchantMenu;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.SmithingMenu;
+import net.minecraft.world.inventory.StonecutterMenu;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mcaccess.minecraftaccess.mixin.*;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
-import java.util.*;
+import org.mcaccess.minecraftaccess.mixin.AbstractContainerScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.AbstractRecipeBookScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.CreativeModeInventoryScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.LoomScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
+import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
+import org.mcaccess.minecraftaccess.mixin.SlotAccessor;
+import org.mcaccess.minecraftaccess.mixin.StonecutterScreenAccessor;
 
-public class GroupGenerator {
+public final class GroupGenerator {
 
     /**
      * Saved by RecipeBookPageMixin
      */
     public static List<RecipeCollection> recipesOnTheScreen;
+
+    private GroupGenerator() {
+    }
 
     public static List<SlotsGroup> generateGroupsFromSlots(AbstractContainerScreenAccessor screen) {
         if (screen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
@@ -173,7 +212,7 @@ public class GroupGenerator {
 
             //<editor-fold desc="Group anvil screen slot items">
             if (screen.getMenu() instanceof AnvilMenu && (index == 0 || index == 1)) {
-                    itemInputGroup.slotItems.add(new SlotItem(s));
+                itemInputGroup.slotItems.add(new SlotItem(s));
                 continue;
             }
 
@@ -183,7 +222,7 @@ public class GroupGenerator {
             }
             //</editor-fold>
 
-                        //<editor-fold desc="Group smithing table screen slot items">
+            //<editor-fold desc="Group smithing table screen slot items">
             if (screen.getMenu() instanceof SmithingMenu) {
                 switch (index) {
                     case 0:
@@ -195,14 +234,14 @@ public class GroupGenerator {
                     case 2:
                         materialInputGroup.slotItems.add(new SlotItem(s));
                         break;
-                        case 3:
+                    case 3:
                         itemOutputGroup.slotItems.add(new SlotItem(s));
                         break;
                 }
 
                 continue;
             }
-                        //</editor-fold>
+            //</editor-fold>
 
             //<editor-fold desc="Group brewing stand screen slot items">
             if (screen.getMenu() instanceof BrewingStandMenu && index >= 0 && index <= 2) {
@@ -363,11 +402,16 @@ public class GroupGenerator {
                 int level = enchantmentScreenHandler.levelClue[i];
                 int cost = i + 1;
 
-                Optional<Holder.Reference<Enchantment>> enchantment = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(enchantmentId);
+                Optional<Holder.Reference<Enchantment>> enchantment = Minecraft.getInstance().level
+                        .registryAccess()
+                        .lookupOrThrow(Registries.ENCHANTMENT)
+                        .get(enchantmentId);
                 if (enchantment.isEmpty()) break;
 
-                StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(enchantment.get(), level)).getString()); // this breaks when using I18n.get() for some reason so Component.translatable() is being used instead
-                if (!PlayerUtils.isCreative()) {
+                // this breaks when using I18n.get() for some reason so Component.translatable() is being used instead
+                StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(enchantment.get(), level)).getString());
+                assert Minecraft.getInstance().gameMode != null;
+                if (Minecraft.getInstance().gameMode.getPlayerMode() != GameType.CREATIVE) {
                     if (Minecraft.getInstance().player.experienceLevel < requiredLevel) {
                         clueText.append(I18n.get("container.enchant.level.requirement", requiredLevel));
                     } else {
@@ -378,7 +422,7 @@ public class GroupGenerator {
                         clueText.append(lapisCostText);
 
                         String xpCostText = cost == 1 ? I18n.get("container.enchant.level.one") : I18n.get("container.enchant.level.many", cost);
-                        if (PlayerUtils.getExperienceLevel() < cost) {
+                        if (Minecraft.getInstance().player.experienceLevel < cost) {
                             xpCostText = String.format("(%s) %s", I18n.get("minecraft_access.other.missing"), xpCostText);
                         }
                         clueText.append(xpCostText);
@@ -415,12 +459,13 @@ public class GroupGenerator {
         //<editor-fold desc="Add Normal Inventory Groups to foundGroups">
         // Container inventory first (you open a container for items inside it)
         if (!blockInventoryGroup.slotItems.isEmpty()) {
-            if (screen.getMenu() instanceof DispenserMenu)
+            if (screen.getMenu() instanceof DispenserMenu) {
                 blockInventoryGroup.mapTheGroupList(3);
-            else if (screen.getMenu() instanceof ChestMenu)
+            } else if (screen.getMenu() instanceof ChestMenu) {
                 blockInventoryGroup.mapTheGroupList(9);
-            else if (screen.getMenu() instanceof HopperMenu)
+            } else if (screen.getMenu() instanceof HopperMenu) {
                 blockInventoryGroup.mapTheGroupList(5);
+            }
             foundGroups.add(blockInventoryGroup);
         }
 
@@ -648,7 +693,7 @@ public class GroupGenerator {
         SlotsGroup recipesGroup = new SlotsGroup("recipes", null);
         List<RecipeButton> slots = ((RecipeBookPageAccessor) recipeBookComponentAccessor.getRecipeBookPage()).getButtons();
 
-        for (int i = 0; i < slots.size() && i < GroupGenerator.recipesOnTheScreen.size(); i++) {
+        for (int i = 0; i < slots.size() && i < recipesOnTheScreen.size(); i++) {
             RecipeButton animatedResultButton = slots.get(i);
             int realX = animatedResultButton.getX() - screen.getLeftPos() + 10;
             int realY = animatedResultButton.getY() - screen.getTopPos() + 10;

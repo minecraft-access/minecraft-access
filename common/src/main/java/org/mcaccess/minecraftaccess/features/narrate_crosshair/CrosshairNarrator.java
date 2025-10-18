@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.features.narrate_crosshair;
 
+import java.util.Objects;
+
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +17,7 @@ public interface CrosshairNarrator {
      * and thus {@link #narrate(boolean)} MUST NOT be called.
      *
      * @param narrateSide Whether the block side the player is pointing at should be narrated
-     * @return Any object comparable with {@link java.util.Objects#equals(Object, Object)} or null
+     * @return Any object comparable with {@link Objects#equals(Object, Object)} or null
      */
     @Nullable Object deduplication(boolean narrateSide, boolean narrateConsecutiveBlocks);
 

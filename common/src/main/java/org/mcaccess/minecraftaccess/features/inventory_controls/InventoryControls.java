@@ -1,12 +1,21 @@
 package org.mcaccess.minecraftaccess.features.inventory_controls;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.*;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
+import net.minecraft.client.gui.screens.inventory.AnvilScreen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.SearchRecipeBookCategory;
 import net.minecraft.client.resources.language.I18n;
@@ -22,23 +31,26 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.ExtendedRecipeBookCategory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.mixin.*;
+import org.mcaccess.minecraftaccess.mixin.AbstractContainerScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.AbstractRecipeBookScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.AnvilScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.CreativeModeInventoryScreenAccessor;
+import org.mcaccess.minecraftaccess.mixin.EditBoxAccessor;
+import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
+import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
-import java.util.Optional;
-
 /**
  * This features lets us use keyboard in inventory screens. Works with all default minecraft screens.
  * <p>
- * Key binds and combinations: (all key binds are re-mappable(except two keys) from the game's controls menu and these key binds do not interrupt with any other key with same key.)<br>
+ * Key binds and combinations:
+ * (all key binds are re-mappable(except two keys) from the game's controls menu and these key binds do not interrupt with any other key with same key.)<br>
  * 1) Up Key (default: I) = Focus to slot above.<br>
  * 2) Right Key (default: L) = Focus to slot right.<br>
  * 3) Down Key (default: K) = Focus to slot down.<br>
@@ -56,7 +68,7 @@ import java.util.Optional;
 public class InventoryControls {
     private Config.InventoryControls config;
     private final Interval interval = Interval.defaultDelay();
-    private Minecraft minecraftClient;
+    private final Minecraft client = Minecraft.getInstance();
 
     private AbstractContainerScreenAccessor previousScreen = null;
     private AbstractContainerScreenAccessor currentScreen = null;
@@ -81,9 +93,8 @@ public class InventoryControls {
         }
 
         String getString() {
-            return this.value;
+            return value;
         }
-
     }
 
     public InventoryControls() {
@@ -96,10 +107,9 @@ public class InventoryControls {
 
     public void tick() {
         if (!interval.isReady()) return;
-        this.minecraftClient = Minecraft.getInstance();
 
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen == null) {
+        if (client.player == null) return;
+        if (client.screen == null) {
             previousScreen = null;
             currentScreen = null;
             currentGroupIndex = 0;
@@ -107,51 +117,46 @@ public class InventoryControls {
             currentRecipeBookWidget = null;
             return;
         }
-        if (!(minecraftClient.screen instanceof AbstractContainerScreen)) return;
+        if (!(client.screen instanceof AbstractContainerScreen)) return;
 
-        try {
-            loadConfig();
-            currentScreen = (AbstractContainerScreenAccessor) minecraftClient.screen;
-            currentRecipeBookWidget = getRecipeBookWidget(minecraftClient.screen);
-            currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
+        loadConfig();
+        currentScreen = (AbstractContainerScreenAccessor) client.screen;
+        currentRecipeBookWidget = getRecipeBookWidget(client.screen);
+        currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
 
-            interval.adjustNextReadyTimeBy(keyListener());
+        interval.adjustNextReadyTimeBy(keyListener());
 
-            // On screen open
-            if (previousScreen != currentScreen) {
-                previousScreen = currentScreen;
-                if (currentScreen instanceof AnvilScreen anvilScreen) {
-                    setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getName(), false);
-                }
-                if (currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
-                    EditBox searchBox = ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox();
-                    if (searchBox.canConsumeInput()) {
-                        setSearchBoxFocus(searchBox, false);
-                    }
-                }
-
-                //<editor-fold desc="Always open recipe book on screen open">
-                if (config.autoOpenRecipeBook && currentRecipeBookWidget != null) {
-                    if (!currentRecipeBookWidget.isVisible()) currentRecipeBookWidget.toggleVisibility();
-                    setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), false);
-                }
-                //</editor-fold>
-
-                refreshGroupListAndSelectFirstGroup(false); // Interrupt is false to let it narrate the screen's name
+        // On screen open
+        if (previousScreen != currentScreen) {
+            previousScreen = currentScreen;
+            if (currentScreen instanceof AnvilScreen anvilScreen) {
+                setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getName(), false);
             }
-
-            if (currentSlotsGroupList.isEmpty()) return;
-
-            if (config.narrateFocusedSlotChanges) {
-                String slotNarrationText = getCurrentSlotNarrationText();
-                if (!previousSlotText.equals(slotNarrationText)) {
-                    previousSlotText = slotNarrationText;
-                    MainClass.narrate(previousSlotText, true);
+            if (currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
+                EditBox searchBox = ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox();
+                if (searchBox.canConsumeInput()) {
+                    setSearchBoxFocus(searchBox, false);
                 }
             }
 
-        } catch (Exception e) {
-            log.error("Error encountered in Inventory Controls feature.", e);
+            //<editor-fold desc="Always open recipe book on screen open">
+            if (config.autoOpenRecipeBook && currentRecipeBookWidget != null) {
+                if (!currentRecipeBookWidget.isVisible()) currentRecipeBookWidget.toggleVisibility();
+                setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), false);
+            }
+            //</editor-fold>
+
+            refreshGroupListAndSelectFirstGroup(false); // Interrupt is false to let it narrate the screen's name
+        }
+
+        if (currentSlotsGroupList.isEmpty()) return;
+
+        if (config.narrateFocusedSlotChanges) {
+            String slotNarrationText = getCurrentSlotNarrationText();
+            if (!previousSlotText.equals(slotNarrationText)) {
+                previousSlotText = slotNarrationText;
+                MainClass.narrate(previousSlotText, true);
+            }
         }
     }
 
@@ -167,21 +172,20 @@ public class InventoryControls {
      */
     private void loadConfig() {
         config = Config.getInstance().inventoryControls;
-        interval.setDelay(config.delayMilliseconds, Interval.Unit.Millisecond);
+        interval.setDelay(config.delayMilliseconds, Interval.Unit.MILLISECOND);
     }
 
     /**
      * Handles the key inputs.
      */
     private boolean keyListener() {
-        KeyBindingsHandler kbh = KeyBindingsHandler.getInstance();
-        boolean isGroupKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsGroupKey);
-        boolean isUpKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsUpKey);
-        boolean isRightKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsRightKey);
-        boolean isDownKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsDownKey);
-        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsLeftKey);
-        boolean isSwitchTabKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsSwitchTabKey);
-        boolean isToggleCraftableKeyPressed = KeyUtils.isAnyPressed(kbh.inventoryControlsToggleCraftableKey);
+        boolean isGroupKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping);
+        boolean isUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping);
+        boolean isRightKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
+        boolean isDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_DOWN_KEY.mapping);
+        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_LEFT_KEY.mapping);
+        boolean isSwitchTabKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
+        boolean isToggleCraftableKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
         boolean isLeftShiftPressed = KeyUtils.isLeftShiftPressed();
         boolean isEnterPressed = KeyUtils.isEnterPressed();
         boolean isTPressed = KeyUtils.isAnyPressed(InputConstants.KEY_T);
@@ -234,10 +238,11 @@ public class InventoryControls {
         }
         if (isSwitchTabKeyPressed) {
             log.debug("Switch Tab key pressed");
-            if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen)
+            if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen) {
                 changeRecipeTab(!isLeftShiftPressed);
-            else if (currentScreen instanceof CreativeModeInventoryScreen)
+            } else if (currentScreen instanceof CreativeModeInventoryScreen) {
                 changeCreativeInventoryTab(!isLeftShiftPressed);
+            }
 
             return true;
         }
@@ -288,8 +293,8 @@ public class InventoryControls {
             } else if (currentScreen instanceof AnvilScreen anvilScreen) {
                 setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getName(), true);
             } else if (recipeBookIsOpening()) {
-                // resolve can-not-enter-characters-issue https://github.com/khanshoaib3/minecraft-access/issues/67
-                minecraftClient.screen.setFocused(currentRecipeBookWidget);
+                // resolve can-not-enter-characters-issue https://github.com/minecraft-access/minecraft-access/issues/67
+                client.screen.setFocused(currentRecipeBookWidget);
                 setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), true);
             }
             return true;
@@ -489,18 +494,19 @@ public class InventoryControls {
 
         ItemStack itemStack = slot.getItem();
         // <slot row col prefix> <count>
-        String info = "%s %d".formatted(currentGroup.getSlotPrefix(slot), itemStack.getCount());
+        String info = "%s %s".formatted(currentGroup.getSlotPrefix(slot),
+                (itemStack.getCount() != 1 && !itemStack.isEmpty()) ? String.valueOf(itemStack.getCount()) : "");
 
         // <name> <description>
         StringBuilder toolTipString = new StringBuilder();
-        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, minecraftClient.player, TooltipFlag.NORMAL);
+        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, client.player, TooltipFlag.NORMAL);
         for (Component line : toolTipList) {
-            toolTipString.append(line.getString()).append(" ");
+            toolTipString.append(line.getString()).append(' ');
         }
 
         Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
                 .flatMap(jukeboxPlayable -> jukeboxPlayable.song().key())
-                .ifPresent(discNumber -> toolTipString.append(" ").append(I18n.get("jukebox_song.minecraft." + discNumber.location().getPath())));
+                .ifPresent(discNumber -> toolTipString.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.location().getPath())));
 
         // <slot row col prefix> <count> <name> <description>
         return "%s %s".formatted(info, toolTipString.toString());
@@ -546,25 +552,17 @@ public class InventoryControls {
      *
      * @param goForward Whether to switch to next tab or previous tab.
      */
-    @SuppressWarnings("ConstantValue")
     private void changeCreativeInventoryTab(boolean goForward) {
         if (!(currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen)) return;
 
-        ListIterator<CreativeModeTab> nextTab = CreativeModeTabs.tabs().listIterator();
+        int tab = CreativeModeTabs.tabs().indexOf(CreativeModeInventoryScreenAccessor.getSelectedTab());
 
-        //noinspection StatementWithEmptyBody
-        while (nextTab.hasNext() && nextTab.next() != CreativeModeInventoryScreenAccessor.getSelectedTab()) {
-        }
-
-        if (goForward && nextTab.hasNext()) {
-            ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).invokeSelectTab(nextTab.next());
+        if (goForward && tab + 1 < CreativeModeTabs.tabs().size()) {
+            ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).invokeSelectTab(CreativeModeTabs.tabs().get(tab + 1));
             refreshGroupListAndSelectFirstGroup(false);
-        } else if (!goForward) {
-            nextTab.previous();
-            if (nextTab.hasPrevious()) {
-                ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).invokeSelectTab(nextTab.previous());
-                refreshGroupListAndSelectFirstGroup(false);
-            }
+        } else if (!goForward && tab - 1 >= 0) {
+            ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).invokeSelectTab(CreativeModeTabs.tabs().get(tab - 1));
+            refreshGroupListAndSelectFirstGroup(false);
         }
     }
 
@@ -607,7 +605,6 @@ public class InventoryControls {
             boolean origin = ((EditBoxAccessor) w).getCanLoseFocus();
             w.setCanLoseFocus(true);
             w.setFocused(false);
-            // set origin value back since we don't know what it is and don't want to screw up the inner state.
             w.setCanLoseFocus(origin);
         }
     }

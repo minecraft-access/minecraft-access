@@ -1,39 +1,48 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.Entity;
-import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+
+import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 @Slf4j
 public class ObjectTracker {
+    private final Minecraft client = Minecraft.getInstance();
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
 
-    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerNextItem), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerPreviousItem), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.objectTrackerNarrateCurrentObject), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.targetNearestObject), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_NEXT_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_PREVIOUS_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.TARGET_NEAREST_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
+
+    @Getter
+    private Object currentObject = null;
+    @Getter
+    private POIGroup<?> currentGroup = null;
 
     private List<POIGroup<?>> groups = new ArrayList<>();
+
+    ObjectTracker() {
+    }
 
     private List<POIGroup<?>> getPOIGroups() {
         List<POIGroup<?>> groupList = Stream.concat(
@@ -50,30 +59,20 @@ public class ObjectTracker {
         return result;
     }
 
-    @Getter
-    private Object currentObject = null;
-    @Getter
-    private POIGroup<?> currentGroup = null;
-
-    ObjectTracker() {
-    }
-
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.screen != null) return;
+        if (client.player == null) return;
+        if (client.level == null) return;
+        if (client.screen != null) return;
 
         updateGroups();
 
         if (narrateCurrentObjectKeyPressed.canBeTriggered()) narrateCurrentObject(true);
 
-        if (nextItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(1);
-        if (previousItemKeyPressed.canBeTriggered() && Screen.hasControlDown()) moveGroup(-1);
+        if (nextItemKeyPressed.canBeTriggered() && client.hasControlDown()) moveGroup(1);
+        if (previousItemKeyPressed.canBeTriggered() && client.hasControlDown()) moveGroup(-1);
 
-        if (nextItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(1);
-        if (previousItemKeyPressed.canBeTriggered() && !Screen.hasControlDown()) moveObject(-1);
+        if (nextItemKeyPressed.canBeTriggered() && !client.hasControlDown()) moveObject(1);
+        if (previousItemKeyPressed.canBeTriggered() && !client.hasControlDown()) moveObject(-1);
 
         if (targetNearestObjectKeyPressed.canBeTriggered()) targetNearestObject();
     }
@@ -96,18 +95,41 @@ public class ObjectTracker {
         boolean narrateDistance = Config.getInstance().poi.narrateDistance;
 
         if (currentObject instanceof Entity entity) {
-            String narration = NarrationUtils.narrateEntity(entity);
-            if (narrateDistance)
-                narration += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition());
-            MainClass.narrate(narration, interrupt);
-            WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, entity.position());
+            StringBuilder narration = new StringBuilder(NarrationUtils.narrateEntity(entity));
+            if (narrateDistance) {
+                narration.append(' ')
+                        .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition()));
+            }
+            MainClass.narrate(narration.toString(), interrupt);
+            assert client.level != null;
+            client.level.playLocalSound(
+                    entity.getX(),
+                    entity.getY(),
+                    entity.getZ(),
+                    SoundEvents.NOTE_BLOCK_BELL.value(),
+                    SoundSource.BLOCKS,
+                    1,
+                    1.0f,
+                    true
+            );
         }
 
         if (currentObject instanceof BlockPos blockPos) {
-            String narration = NarrationUtils.narrateBlock(blockPos, null);
-            if (narrateDistance) narration += " " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
-            MainClass.narrate(narration, interrupt);
-            WorldUtils.playSoundAtPosition(SoundEvents.NOTE_BLOCK_BELL, 1, 1f, blockPos.getCenter());
+            StringBuilder narration = new StringBuilder(NarrationUtils.narrateBlock(blockPos, null));
+            if (narrateDistance) {
+                narration.append(' ')
+                        .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos));
+            }
+            MainClass.narrate(narration.toString(), interrupt);
+            assert client.level != null;
+            client.level.playLocalSound(
+                    blockPos,
+                    SoundEvents.NOTE_BLOCK_BELL.value(),
+                    SoundSource.BLOCKS,
+                    1,
+                    1.0f,
+                    true
+            );
         }
     }
 
@@ -142,7 +164,7 @@ public class ObjectTracker {
 
         if (currentObjectIndex == -1) {
             MainClass.narrate(I18n.get(START_OF_LIST), true);
-            currentObject = objects.get(0);
+            currentObject = objects.getFirst();
             narrateCurrentObject(false);
             return;
         }
@@ -172,26 +194,29 @@ public class ObjectTracker {
     }
 
     private void targetNearestObject() {
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = client.player;
 
         List<Entity> entities = MainClass.poiManager.poiEntities.getLastScanResults()
-            .stream()
-            .sorted(Comparator.comparingDouble(a -> a.distanceTo(player)))
-            .toList();
+                .stream()
+                .sorted(Comparator.comparingDouble(a -> a.distanceTo(player)))
+                .toList();
 
         List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults()
-            .stream()
-            .sorted(Comparator.comparingDouble(a -> player.getEyePosition().distanceTo(a.getCenter())))
-            .toList();
+                .stream()
+                .sorted(Comparator.comparingDouble(a -> {
+                    assert player != null;
+                    return player.getEyePosition().distanceTo(a.getCenter());
+                }))
+                .toList();
 
-        if (Screen.hasControlDown() && !Screen.hasShiftDown()) {
+        if (client.hasControlDown() && !client.hasShiftDown()) {
             if (entities.isEmpty()) {
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.entity"), true);
             } else {
                 currentObject = entities.getFirst();
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest.entity"), true);
             }
-        } else if (Screen.hasShiftDown() && !Screen.hasControlDown()) {
+        } else if (client.hasShiftDown() && !client.hasControlDown()) {
             if (blocks.isEmpty()) {
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.block"), true);
             } else {
@@ -208,7 +233,7 @@ public class ObjectTracker {
                 currentObject = entities.getFirst();
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
             } else {
-                if (player.getEyePosition().distanceTo(blocks.getFirst().getCenter()) < (double) player.distanceTo(entities.getFirst())) {
+                if (player.getEyePosition().distanceTo(blocks.getFirst().getCenter()) < player.distanceTo(entities.getFirst())) {
                     currentObject = blocks.getFirst();
                 } else {
                     currentObject = entities.getFirst();

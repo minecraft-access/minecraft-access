@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+    <suppress files="\.(?:png|mp3|ogg|jar|gz)$" checks=".*"/>
+    <suppress files="/\.git/" checks=".*"/>
+    <suppress files="/\.gradle/" checks=".*"/>
+    <suppress files="/\.direnv/" checks=".*"/>
+    <suppress files="/\.idea/(?!inspectionProfiles|runConfigurations/(?!Minecraft_)|.gitignore|checkstyle-idea.xml|externalDependencies.xml)" checks=".*"/>
+    <suppress files="/build/" checks=".*"/>
+    <suppress files="/(?:common|fabric|neoforge)/run/" checks=".*"/>
+    <suppress files="/gradlew(?:\.bat)?$" checks=".*"/>
+    <suppress files="/common/src/main/resources/assets/minecraft_access/lang/.+\.json$" checks="LineLength"/>
+    <suppress files="/docs/themes/" checks=".*"/>
+</suppressions>

@@ -1,20 +1,21 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import java.util.Map;
+
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.locale.Language;
-import org.mcaccess.minecraftaccess.utils.NamedFormatter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Map;
+import org.mcaccess.minecraftaccess.utils.NamedFormatter;
 
 @Mixin(I18n.class)
-public class I18nMixin {
+abstract class I18nMixin {
     @Unique
-    private static Language minecraft_access$enLanguage;
+    private static Language enLanguage;
 
     /**
      * Use NamedFormat.format() instead of String.format() (in original logic)
@@ -31,7 +32,7 @@ public class I18nMixin {
 
             // fallback to English
             if (result.startsWith("minecraft_access")) {
-                pattern = minecraft_access$getEnglishI18Nof(key);
+                pattern = getEnglishI18Nof(key);
                 result = NamedFormatter.format(pattern, params);
             }
 
@@ -41,11 +42,10 @@ public class I18nMixin {
     }
 
     @Unique
-    private static String minecraft_access$getEnglishI18Nof(String key) {
-        if (minecraft_access$enLanguage == null) {
-            minecraft_access$enLanguage = Language.getInstance();
+    private static String getEnglishI18Nof(String key) {
+        if (enLanguage == null) {
+            enLanguage = Language.getInstance();
         }
-        return minecraft_access$enLanguage.getOrDefault(key);
+        return enLanguage.getOrDefault(key);
     }
-
 }

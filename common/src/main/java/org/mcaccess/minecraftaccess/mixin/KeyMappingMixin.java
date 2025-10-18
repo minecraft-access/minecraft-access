@@ -1,5 +1,8 @@
 package org.mcaccess.minecraftaccess.mixin;
 
+import java.util.Collection;
+import java.util.Map;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -12,15 +15,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collection;
-import java.util.Map;
-
 /**
  * This class is for making one {@link InputConstants.Key} being multiple {@link KeyMapping}'s "boundKey".
- * See issue <a href="https://github.com/khanshoaib3/minecraft-access/issues/310">#310</a> for details.
+ * See issue <a href="https://github.com/minecraft-access/minecraft-access/issues/310">#310</a> for details.
  */
 @Mixin(KeyMapping.class)
-public class KeyMappingMixin {
+abstract class KeyMappingMixin {
     @Unique
     private static final Multimap<InputConstants.Key, KeyMapping> KEY_TO_BINDINGS_LIST = ArrayListMultimap.create();
     @Final
@@ -28,7 +28,7 @@ public class KeyMappingMixin {
     private static Map<String, KeyMapping> ALL;
 
     @Shadow
-    private InputConstants.Key key;
+    protected InputConstants.Key key;
 
     @Inject(at = @At("HEAD"), method = "click", cancellable = true)
     private static void clickMixin(InputConstants.Key key, CallbackInfo ci) {
@@ -60,8 +60,8 @@ public class KeyMappingMixin {
         ci.cancel();
     }
 
-    @Inject(at = @At("RETURN"), method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V")
-    void initMap(String translationKey, InputConstants.Type type, int code, String category, CallbackInfo ci) {
+    @Inject(at = @At("RETURN"), method = "<init>(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILnet/minecraft/client/KeyMapping$Category;)V")
+    private void initMap(String name, InputConstants.Type type, int key, KeyMapping.Category category, CallbackInfo ci) {
         KEY_TO_BINDINGS_LIST.put(this.key, (KeyMapping) (Object) this);
     }
 }

@@ -25,7 +25,7 @@ abstract class AbstractConfigListEntryMixin<T> extends AbstractConfigEntry<T> {
     public void updateNarration(NarrationElementOutput builder) {
         //noinspection ConstantValue
         if (!SubCategoryListEntry.class.isInstance(this)) {
-            builder.add(NarratedElementType.TITLE, this.fieldName);
+            builder.add(NarratedElementType.TITLE, fieldName);
         }
         super.updateNarration(builder);
     }
@@ -35,6 +35,6 @@ abstract class AbstractConfigListEntryMixin<T> extends AbstractConfigEntry<T> {
      */
     @Override
     public String toString() {
-        return this.getClass() + ": " + this.fieldName.getString();
+        return getClass() + ": " + fieldName.getString();
     }
 }

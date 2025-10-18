@@ -202,7 +202,7 @@ This project has an automatic test-build-release pipeline.
 ### Tell Us What You Intend To Do Before Doing
 
 When you decide to make contributions, we expect you to comment in the corresponding issue,
-make a new issue, or talk in the `mc-dev` channel of our [Discord server](https://discord.gg/yQjjsDqWQX).
+make a new issue, or talk in the `mc-dev` channel of our [Discord server](https://discord.mcaccess.org/).
 Industry experience tells us that shift-left checks and discussions are good for software development —
 for example, we can provide more relevant knowledge, project details, and advice to help you do things better.
 It only can be done if we know what you want to do, though.
@@ -216,4 +216,4 @@ If you feel that your changes will also benefit the upstream, you can submit a P
 and only then does the `contributing` begin.
 
 [Weblate]: https://hosted.weblate.org/engage/minecraft-access/
-[Discord]: https://discord.gg/yQjjsDqWQX
+[Discord]: https://discord.mcaccess.org/

@@ -1,12 +1,11 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
-
-import net.minecraft.core.BlockPos;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 
 /**
  * @implNote uses DFS algorithm
@@ -32,7 +31,8 @@ public class BlockScanner {
         checked.add(blockPos);
 
         int nextStepRange = range - 1;
-        if (WorldUtils.getBlockState(blockPos).isAir() && nextStepRange >= 0) {
+        assert Minecraft.getInstance().level != null;
+        if (Minecraft.getInstance().level.getBlockState(blockPos).isAir() && nextStepRange >= 0) {
             scanAndQualifyBlocksExposedInAirAround(blockPos.north(), nextStepRange);
             scanAndQualifyBlocksExposedInAirAround(blockPos.south(), nextStepRange);
             scanAndQualifyBlocksExposedInAirAround(blockPos.west(), nextStepRange);

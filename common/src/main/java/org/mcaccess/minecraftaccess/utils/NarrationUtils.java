@@ -1,5 +1,14 @@
 package org.mcaccess.minecraftaccess.utils;
 
+import java.text.DecimalFormat;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -11,9 +20,16 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Leashable;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.Panda;
@@ -21,13 +37,36 @@ import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.animal.wolf.Wolf;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BeehiveBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.ComparatorBlock;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.EndPortalFrameBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.GlowLichenBlock;
+import net.minecraft.world.level.block.HopperBlock;
+import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.ObserverBlock;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.level.block.RedstoneLampBlock;
+import net.minecraft.world.level.block.RedstoneTorchBlock;
+import net.minecraft.world.level.block.RepeaterBlock;
+import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.CampfireBlockEntity;
+import net.minecraft.world.level.block.entity.ListBackedContainer;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
@@ -35,29 +74,26 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ComparatorMode;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.mixin.WolfAccessor;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
-import java.text.DecimalFormat;
-import java.time.Duration;
-import java.util.*;
-import java.util.stream.Collectors;
-
 /**
  * Translate input objects to narration text.
  */
 @Slf4j
-public class NarrationUtils {
-    private static final Map<IntegerProperty, Integer> cropAgeProperties = Map.of(
+public final class NarrationUtils {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
+    private static final Map<IntegerProperty, Integer> CROP_AGE_PROPERTIES = Map.of(
             BlockStateProperties.AGE_1, 1,
             BlockStateProperties.AGE_2, 2,
             BlockStateProperties.AGE_3, 3,
@@ -68,13 +104,17 @@ public class NarrationUtils {
             BlockStateProperties.AGE_25, 25
     );
 
+    private NarrationUtils() {
+    }
+
     public static String narrateEntity(Entity entity) {
         // When the entity is named, this value is its custom name,
         // otherwise it is its type.
         String nameOrType = entity.getName().getString();
         boolean entityIsSitting = false;
         String type = entity.hasCustomName() ? I18n.get(entity.getType().getDescriptionId()) : nameOrType;
-        boolean isDroppedItem = entity instanceof ItemEntity itemEntity && itemEntity.onGround() || entity instanceof AbstractArrow abstractArrow && abstractArrow.pickup.equals(AbstractArrow.Pickup.ALLOWED);
+        boolean isDroppedItem = entity instanceof ItemEntity itemEntity && itemEntity.onGround()
+                || entity instanceof AbstractArrow abstractArrow && abstractArrow.pickup == AbstractArrow.Pickup.ALLOWED;
 
         String variant = getVariantInfo(entity);
         if (!Strings.isBlank(variant)) {
@@ -86,7 +126,7 @@ public class NarrationUtils {
         // so even if there are two different types of entities that named the same name,
         // the mod can make the player tell the difference:
         // "Cat Neko", "Dog Neko"... where "Neko" is the entity's name and "Cat" or "Dog" is its type
-        String text = entity.hasCustomName() ? type + " " + nameOrType : type;
+        String text = entity.hasCustomName() ? type + ' ' + nameOrType : type;
 
         List<String> equipments = new ArrayList<>();
 
@@ -110,9 +150,7 @@ public class NarrationUtils {
                 case USING_TONGUE -> text = I18n.get("minecraft_access.read_crosshair.using_tongue", text);
                 case STANDING -> {
                 }
-                default -> {
-                    log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", entity.getPose().name());
-                }
+                default -> log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", entity.getPose().name());
             }
         }
 
@@ -127,15 +165,17 @@ public class NarrationUtils {
             }
         }
 
-        if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame())
+        if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) {
             text = I18n.get("minecraft_access.read_crosshair.tamed", text);
+        }
 
         if (entityIsSitting) text = I18n.get("minecraft_access.read_crosshair.sitting", text);
 
         if (entity instanceof Mob mob && mob.isBaby()) text = I18n.get("minecraft_access.read_crosshair.baby", text);
 
-        if (entity instanceof Leashable leashable && leashable.isLeashed())
+        if (entity instanceof Leashable leashable && leashable.isLeashed()) {
             text = I18n.get("minecraft_access.read_crosshair.leashed", text);
+        }
 
         text = switch (entity) {
             case Sheep sheep -> getSheepInfo(sheep, text);
@@ -154,6 +194,14 @@ public class NarrationUtils {
                 @SuppressWarnings("DataFlowIssue")
                 Block ghostBlock = blockDisplay.blockRenderState().blockState().getBlock();
                 yield I18n.get("minecraft_access.point_of_interest.locking.display_block", ghostBlock.getName().getString());
+            }
+            case ItemFrame frame -> {
+                ItemStack item = frame.getItem();
+                if (!item.isEmpty()) {
+                    String itemName = item.getItemName().getString();
+                    yield I18n.get("minecraft_access.other.entity_with_equipments", Map.of("entity", text, "equipments", itemName));
+                }
+                yield text;
             }
             default -> {
                 if (isDroppedItem) {
@@ -186,19 +234,27 @@ public class NarrationUtils {
      */
     private static String getVariantInfo(Entity animal) {
         return switch (animal) {
-            case Cat cat ->
-                    I18n.get(String.format("minecraft_access.cat_variant.%s", cat.getVariant().unwrapKey().map(ResourceKey::location).map(ResourceLocation::toShortLanguageKey).orElse("other")));
-            case Wolf wolf ->
-                    I18n.get(String.format("minecraft_access.wolf_variant.%s", ((WolfAccessor) wolf).callGetVariant().unwrapKey().map(ResourceKey::location).map(ResourceLocation::toShortLanguageKey).orElse("other")));
-            case Axolotl axolotl -> I18n.get("minecraft_access.axolotl_variant." + axolotl.getVariant().getName());
+            case Cat cat -> I18n.get(String.format("minecraft_access.cat_variant.%s",
+                    cat.getVariant().unwrapKey()
+                            .map(ResourceKey::location)
+                            .map(ResourceLocation::toShortLanguageKey)
+                            .orElse("other")
+            ));
+            case Wolf wolf -> I18n.get(String.format("minecraft_access.wolf_variant.%s",
+                    ((WolfAccessor) wolf).callGetVariant().unwrapKey()
+                            .map(ResourceKey::location)
+                            .map(ResourceLocation::toShortLanguageKey)
+                            .orElse("other")
+            ));
+            case Axolotl axolotl -> I18n.get(String.format("minecraft_access.axolotl_variant.%s", axolotl.getVariant().getName()));
             default -> "";
         };
     }
 
     private static String getSheepInfo(Sheep sheep, String currentQuery) {
         String color = I18n.get("color.minecraft." + sheep.getColor().getName());
-        String shearable = sheep.readyForShearing() ? I18n.get("minecraft_access.read_crosshair.shearable", currentQuery) : I18n.get("minecraft_access.read_crosshair.not_shearable", currentQuery);
-        return color + " " + shearable;
+        String shearable = I18n.get(sheep.readyForShearing() ? "minecraft_access.read_crosshair.shearable" : "minecraft_access.read_crosshair.not_shearable", currentQuery);
+        return color + ' ' + shearable;
     }
 
     public static String narrateNumber(double num) {
@@ -212,12 +268,10 @@ public class NarrationUtils {
     }
 
     public static String narrateRelativePositionOfPlayerAnd(BlockPos blockPos) {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient == null) return "up";
-        if (minecraftClient.player == null) return "up";
+        if (CLIENT.player == null) return "up";
 
-        Direction dir = minecraftClient.player.getDirection();
-        Vec3 diff = new Vec3(minecraftClient.player.getX(), minecraftClient.player.getEyeY(), minecraftClient.player.getZ()).subtract(Vec3.atCenterOf(blockPos)); // pre 1.18
+        Direction dir = CLIENT.player.getDirection();
+        Vec3 diff = new Vec3(CLIENT.player.getX(), CLIENT.player.getEyeY(), CLIENT.player.getZ()).subtract(Vec3.atCenterOf(blockPos)); // pre 1.18
         BlockPos diffBlockPos = new BlockPos((int) diff.x, (int) diff.y, (int) diff.z); // post 1.20
 
         String diffXBlockPos = "";
@@ -253,9 +307,11 @@ public class NarrationUtils {
         }
 
         String text;
-        if (dir == Direction.NORTH || dir == Direction.SOUTH)
+        if (dir == Direction.NORTH || dir == Direction.SOUTH) {
             text = String.format("%s  %s  %s", diffZBlockPos, diffYBlockPos, diffXBlockPos);
-        else text = String.format("%s  %s  %s", diffXBlockPos, diffYBlockPos, diffZBlockPos);
+        } else {
+            text = String.format("%s  %s  %s", diffXBlockPos, diffYBlockPos, diffZBlockPos);
+        }
         return text;
     }
 
@@ -271,69 +327,72 @@ public class NarrationUtils {
     }
 
     /**
-     * @param pos  block position (in the client world)
-     * @param side if side is provided, then the invoker is ReadCrosshair
+     * @param blockPos block position (in the client world)
+     * @param side     if side is provided, then the invoker is ReadCrosshair
      * @return (narration, currentQuery):
      * "narration" is the actual one to be narrated through Narrator,
      * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
-    public static Tuple<String, String> narrateBlockForContentChecking(BlockPos pos, String side) {
-        Minecraft client = Minecraft.getInstance();
-        if (Objects.isNull(client)) return new Tuple<>("", "");
-        ClientLevel clientWorld = client.level;
+    public static Tuple<String, String> narrateBlockForContentChecking(BlockPos blockPos, String side) {
+        ClientLevel clientWorld = CLIENT.level;
         if (clientWorld == null) return new Tuple<>("", "");
 
-        // Since Minecraft uses flyweight pattern for blocks and entities,
-        // All same type of blocks share one singleton Block instance,
-        // While every block keep their states with a BlockState instance.
-        WorldUtils.BlockInfo blockInfo = WorldUtils.getBlockInfo(pos);
-        BlockPos blockPos = blockInfo.pos();
-        BlockState blockState = blockInfo.state();
-        Block block = blockInfo.type();
-        BlockEntity blockEntity = blockInfo.entity();
+        BlockState blockState = clientWorld.getBlockState(blockPos);
+        Block block = blockState.getBlock();
+        BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
 
-        // Difference between narration and currentQuery:
-        // currentQuery is used for checking condition, narration is actually the one to be narrated.
-        // currentQuery is checked to not narrate the same block repeatedly, two blocks can have same name.
         String name = block.getName().getString();
-        String narration = Strings.isBlank(side) ? name : name + " " + side;
+        String narration = Strings.isBlank(side) ? name : name + ' ' + side;
         String currentQuery = name + side;
 
-        // Different special narration (narration) about different type of blocks
         if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
-            narration = NarrationUtils.narrateFluidBlock(blockPos);
+            narration = narrateFluidBlock(blockPos);
             return new Tuple<>(narration, narration);
         }
 
         if (blockEntity != null) {
             if (blockState.is(BlockTags.ALL_SIGNS)) {
-                narration = getSignInfo((SignBlockEntity) blockEntity, client.player, narration);
-            } else if (blockEntity instanceof BeehiveBlockEntity beehiveBlockEntity) {
-                Tuple<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, narration, currentQuery);
-                narration = beehiveInfo.getA();
-                currentQuery = beehiveInfo.getB();
-            } else
-                // Narrate monster spawner mob type
-                if (blockEntity instanceof SpawnerBlockEntity spawner) {
-                    // Will not support non-vanilla custom configured multiple-mob spawner (like generated with command)
-                    Entity entity = ((BaseSpawnerAccessor) spawner.getSpawner()).getDisplayEntity();
-                    // Monster spawners that are gotten from the creative inventory are empty.
-                    String entityName = I18n.get("minecraft_access.read_crosshair.spawner_empty");
-                    if (entity != null) {
-                        entityName = Objects.requireNonNull(entity.getDisplayName()).getString();
+                narration = getSignInfo((SignBlockEntity) blockEntity, CLIENT.player, narration);
+            } else {
+                switch (blockEntity) {
+                    case BeehiveBlockEntity beehiveBlockEntity -> {
+                        Tuple<String, String> beehiveInfo = getBeehiveInfo(beehiveBlockEntity, blockState, narration, currentQuery);
+                        narration = beehiveInfo.getA();
+                        currentQuery = beehiveInfo.getB();
                     }
-                    narration = entityName + " " + narration;
-                    currentQuery = entityName + currentQuery;
+                    case SpawnerBlockEntity spawner -> {
+                        Entity entity = ((BaseSpawnerAccessor) spawner.getSpawner()).getDisplayEntity();
+                        String entityName = I18n.get("minecraft_access.read_crosshair.spawner_empty");
+                        if (entity != null) {
+                            entityName = Objects.requireNonNull(entity.getDisplayName()).getString();
+                        }
+                        narration = entityName + ' ' + narration;
+                        currentQuery = entityName + currentQuery;
+                    }
+                    case CampfireBlockEntity campfire -> {
+                        Tuple<String, String> result = getVisibleItems(campfire.getItems(), currentQuery, narration);
+                        currentQuery = result.getA();
+                        narration = result.getB();
+                    }
+                    case ListBackedContainer listBacked -> {
+                        Tuple<String, String> result = getVisibleItems(listBacked.getItems(), currentQuery, narration);
+                        currentQuery = result.getA();
+                        narration = result.getB();
+                    }
+                    default -> {
+                    }
                 }
+            }
         }
 
         Tuple<String, String> cropsInfo = getCropsInfo(block, blockState, narration, currentQuery);
         narration = cropsInfo.getA();
         currentQuery = cropsInfo.getB();
+
         if (block instanceof FarmBlock && blockState.getValue(FarmBlock.MOISTURE) == FarmBlock.MAX_MOISTURE) {
             narration = I18n.get("minecraft_access.crop.wet_farmland", narration);
             currentQuery = "wet" + currentQuery;
-        } else if (block instanceof EndPortalFrameBlock endPortalFrame) {
+        } else if (block instanceof EndPortalFrameBlock) {
             if (blockState.getValue(EndPortalFrameBlock.HAS_EYE)) {
                 narration = I18n.get("minecraft_access.read_crosshair.end_portal_frame_with_eye", narration);
             } else {
@@ -341,7 +400,6 @@ public class NarrationUtils {
             }
         }
 
-        // Redstone related
         Tuple<String, String> redstoneRelatedInfo = getRedstoneRelatedInfo(clientWorld, blockPos, block, blockState, narration, currentQuery);
         narration = redstoneRelatedInfo.getA();
         currentQuery = redstoneRelatedInfo.getB();
@@ -366,85 +424,119 @@ public class NarrationUtils {
         String[] lines = new String[4];
 
         for (int i = 0; i < 4; i++) {
-//            lines[i] = signEntity.getTextOnRow(i, false).getString(); // Pre 1.20.x
             lines[i] = signEntity.getText(signEntity.isFacingFrontText(player)).getMessage(i, false).getString();
         }
         String content = String.join(", ", lines);
         return I18n.get("minecraft_access.read_crosshair.sign_" + (signEntity.isFacingFrontText(player) ? "front" : "back") + "_content", narration, content);
     }
 
-    private static @NotNull Tuple<String, String> getRedstoneRelatedInfo(ClientLevel world, BlockPos blockPos, Block block, BlockState blockState, String narration, String currentQuery) {
+    private static Tuple<String, String> getVisibleItems(List<ItemStack> itemList, String currentQuery, String narration) {
+        String items = "";
+        for (ItemStack item : itemList) {
+            if (!item.isEmpty()) {
+                String itemName = item.getItemName().getString();
+                items += itemName + I18n.get("minecraft_access.other.words_connection");
+                currentQuery += " " + itemName + " ";
+            }
+        }
+        if (!items.isBlank()) {
+            narration = I18n.get("minecraft_access.other.entity_with_equipments", Map.of("entity", narration, "equipments", items));
+        }
+        return new Tuple<>(currentQuery, narration);
+    }
+
+    private static @NotNull Tuple<String, String> getRedstoneRelatedInfo(
+            ClientLevel world,
+            BlockPos blockPos,
+            Block block,
+            BlockState blockState,
+            String narration,
+            String currentQuery
+    ) {
         boolean isEmittingPower = world.hasSignal(blockPos, Direction.DOWN);
         boolean isReceivingPower = world.hasNeighborSignal(blockPos);
 
-        if (block instanceof PistonBaseBlock) {
-            String facing = blockState.getValue(PistonBaseBlock.FACING).getName();
-            narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + facing));
-            currentQuery += "facing " + facing;
-            if (isReceivingPower) {
-                narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
-                currentQuery += "powered";
+        switch (block) {
+            case PistonBaseBlock piston -> {
+                String facing = blockState.getValue(PistonBaseBlock.FACING).getName();
+                narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + facing));
+                currentQuery += "facing " + facing;
+                if (isReceivingPower) {
+                    narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
+                    currentQuery += "powered";
+                }
             }
-        } else if ((block instanceof GlowLichenBlock || block instanceof RedstoneLampBlock) && (isReceivingPower || isEmittingPower)) {
-            narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
-            currentQuery += "powered";
-//        } else if ((block instanceof RedstoneTorchBlock || block instanceof LeverBlock || block instanceof AbstractButtonBlock) && isEmittingPower) { // pre 1.19.3
-        } else if (block instanceof RedStoneWireBlock) {
-            Tuple<String, String> p = getRedstoneWireInfo(blockState, blockPos, narration, currentQuery);
-            narration = p.getA();
-            currentQuery = p.getB();
-        } else if ((block instanceof RedstoneTorchBlock || block instanceof LeverBlock || block instanceof ButtonBlock) && isEmittingPower) { // From 1.19.3
-            narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
-            currentQuery += "powered";
-        } else if ((block instanceof DoorBlock doorBlock && doorBlock.isOpen(blockState)) || (block instanceof FenceGateBlock && blockState.getValue(FenceGateBlock.OPEN))) {
-            narration = I18n.get("minecraft_access.read_crosshair.opened", narration);
-            currentQuery += "open";
-        } else if (block instanceof HopperBlock) {
-            narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + blockState.getValue(HopperBlock.FACING).getName()));
-            currentQuery += "facing " + blockState.getValue(HopperBlock.FACING).getName();
-            if (isReceivingPower) {
-                narration = I18n.get("minecraft_access.read_crosshair.locked", narration);
-                currentQuery += "locked";
+            case RedStoneWireBlock wire -> {
+                Tuple<String, String> p = getRedstoneWireInfo(blockState, blockPos, narration, currentQuery);
+                narration = p.getA();
+                currentQuery = p.getB();
             }
-        } else if (block instanceof ObserverBlock) {
-            narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + blockState.getValue(ObserverBlock.FACING).getName()));
-            currentQuery += "facing " + blockState.getValue(ObserverBlock.FACING).getName();
-            if (isEmittingPower) {
-                narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
-                currentQuery += "powered";
+            case HopperBlock hopper -> {
+                String facing = blockState.getValue(HopperBlock.FACING).getName();
+                narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + facing));
+                currentQuery += "facing " + facing;
+                if (isReceivingPower) {
+                    narration = I18n.get("minecraft_access.read_crosshair.locked", narration);
+                    currentQuery += "locked";
+                }
             }
-        } else if (block instanceof DispenserBlock) {
-            narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + blockState.getValue(DispenserBlock.FACING).getName()));
-            currentQuery += "facing " + blockState.getValue(DispenserBlock.FACING).getName();
-            if (isReceivingPower) {
-                narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
-                currentQuery += "powered";
+            case ObserverBlock observer -> {
+                String facing = blockState.getValue(ObserverBlock.FACING).getName();
+                narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + facing));
+                currentQuery += "facing " + facing;
+                if (isEmittingPower) {
+                    narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
+                    currentQuery += "powered";
+                }
             }
-        } else if (block instanceof ComparatorBlock) {
-            ComparatorMode mode = blockState.getValue(ComparatorBlock.MODE);
-            Direction facing = blockState.getValue(ComparatorBlock.FACING);
-            String correctFacing = I18n.get("minecraft_access.direction." + Orientation.getOppositeDirectionKey(facing.getName()).toLowerCase());
-            narration = I18n.get("minecraft_access.read_crosshair.comparator_info", narration, correctFacing, mode);
-            if (isReceivingPower) {
-                narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
-                currentQuery += "powered";
+            case DispenserBlock dispenser -> {
+                String facing = blockState.getValue(DispenserBlock.FACING).getName();
+                narration = I18n.get("minecraft_access.read_crosshair.facing", narration, I18n.get("minecraft_access.direction." + facing));
+                currentQuery += "facing " + facing;
+                if (isReceivingPower) {
+                    narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
+                    currentQuery += "powered";
+                }
             }
-            currentQuery += "mode:" + mode + " facing:" + correctFacing;
-        } else if (block instanceof RepeaterBlock) {
-            boolean locked = blockState.getValue(RepeaterBlock.LOCKED);
-            int delay = blockState.getValue(RepeaterBlock.DELAY);
-            Direction facing = blockState.getValue(ComparatorBlock.FACING);
-            String correctFacing = I18n.get("minecraft_access.direction." + Orientation.getOppositeDirectionKey(facing.getName()).toLowerCase());
-
-            narration = I18n.get("minecraft_access.read_crosshair.repeater_info", narration, correctFacing, delay);
-            currentQuery += "delay:" + delay + " facing:" + correctFacing;
-            if (locked) {
-                narration = I18n.get("minecraft_access.read_crosshair.locked", narration);
-                currentQuery += "locked";
+            case ComparatorBlock comparator -> {
+                ComparatorMode mode = blockState.getValue(ComparatorBlock.MODE);
+                Direction facing = blockState.getValue(ComparatorBlock.FACING);
+                String correctFacing = I18n.get("minecraft_access.direction." + Orientation.getOppositeDirectionKey(facing.getName()).toLowerCase());
+                narration = I18n.get("minecraft_access.read_crosshair.comparator_info", narration, correctFacing, mode);
+                if (isReceivingPower) {
+                    narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
+                    currentQuery += "powered";
+                }
+                currentQuery += "mode:" + mode + " facing:" + correctFacing;
             }
-        } else if (isReceivingPower) { // For all the other blocks
-            narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
-            currentQuery += "powered";
+            case RepeaterBlock repeater -> {
+                boolean locked = blockState.getValue(RepeaterBlock.LOCKED);
+                int delay = blockState.getValue(RepeaterBlock.DELAY);
+                Direction facing = blockState.getValue(RepeaterBlock.FACING);
+                String correctFacing = I18n.get("minecraft_access.direction." + Orientation.getOppositeDirectionKey(facing.getName()).toLowerCase());
+                narration = I18n.get("minecraft_access.read_crosshair.repeater_info", narration, correctFacing, delay);
+                currentQuery += "delay:" + delay + " facing:" + correctFacing;
+                if (locked) {
+                    narration = I18n.get("minecraft_access.read_crosshair.locked", narration);
+                    currentQuery += "locked";
+                }
+            }
+            default -> {
+                if ((block instanceof GlowLichenBlock || block instanceof RedstoneLampBlock) && (isReceivingPower || isEmittingPower)) {
+                    narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
+                    currentQuery += "powered";
+                } else if ((block instanceof RedstoneTorchBlock || block instanceof LeverBlock || block instanceof ButtonBlock) && isEmittingPower) {
+                    narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
+                    currentQuery += "powered";
+                } else if ((block instanceof DoorBlock doorBlock && doorBlock.isOpen(blockState))
+                        || (block instanceof FenceGateBlock && blockState.getValue(FenceGateBlock.OPEN))) {
+                    narration = I18n.get("minecraft_access.read_crosshair.opened", narration);
+                    currentQuery += "open";
+                } else if (isReceivingPower) {
+                    narration = I18n.get("minecraft_access.read_crosshair.powered", narration);
+                    currentQuery += "powered";
+                }
+            }
         }
 
         return new Tuple<>(narration, currentQuery);
@@ -462,7 +554,7 @@ public class NarrationUtils {
 
             switch (blockState.getValue(RedStoneWireBlock.PROPERTY_BY_DIRECTION.get(direction))) {
                 case UP -> {
-                    return directionName + " " + I18n.get("minecraft_access.direction.up");
+                    return directionName + ' ' + I18n.get("minecraft_access.direction.up");
                 }
                 case SIDE -> {
                     return directionName;
@@ -479,8 +571,11 @@ public class NarrationUtils {
         if (connectedDirections.size() == 4) {
             // If two redstone wires are connected, they're at one of three relative positions: [side, side down, side up].
             // Take one sample relative position (x+1) then check if any block at [-1,0,1] height is also redstone wire.
-            Iterable<BlockPos> threePosAtSide = BlockPos.betweenClosed(pos.offset(1, -1, 0), pos.offset(1, 1, 0));
-            boolean result = WorldUtils.checkAnyOfBlocks(threePosAtSide, state -> state.getBlock() instanceof RedStoneWireBlock);
+            boolean result = BlockPos.betweenClosedStream(pos.offset(1, -1, 0), pos.offset(1, 1, 0))
+                    .anyMatch(blockPos -> {
+                        assert CLIENT.level != null;
+                        return CLIENT.level.getBlockState(blockPos).getBlock() instanceof RedStoneWireBlock;
+                    });
             // If there's no redstone wire on x+1 side,
             // then current wire is not connected to that side,
             // so it's not connected to all directions.
@@ -522,7 +617,7 @@ public class NarrationUtils {
 
         // There are some growable blocks that are not crop blocks like the Torch Flower crop
         if (block instanceof BonemealableBlock || block instanceof VegetationBlock) {
-            Optional<Map.Entry<IntegerProperty, Integer>> ageProperty = cropAgeProperties.entrySet().stream()
+            Optional<Map.Entry<IntegerProperty, Integer>> ageProperty = CROP_AGE_PROPERTIES.entrySet().stream()
                     .filter(entry -> blockState.hasProperty(entry.getKey()))
                     .findFirst();
 
@@ -540,7 +635,10 @@ public class NarrationUtils {
             return new Tuple<>(I18n.get("minecraft_access.crop.mature", narration), I18n.get("minecraft_access.crop.mature", currentQuery));
         }
         float growth = (float) age / maxAge;
-        return new Tuple<>(I18n.get("minecraft_access.crop.percent", (int) (growth * 100), narration), I18n.get("minecraft_access.crop.percent", (int) (growth * 100), currentQuery));
+        return new Tuple<>(
+                I18n.get("minecraft_access.crop.percent", (int) (growth * 100), narration),
+                I18n.get("minecraft_access.crop.percent", (int) (growth * 100), currentQuery)
+        );
     }
 
     /**
@@ -550,16 +648,12 @@ public class NarrationUtils {
      * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateFluidBlock(BlockPos pos) {
-        FluidState fluidState = WorldUtils.getClientWorld().getFluidState(pos);
-        String name = getFluidI18NName(fluidState.holder());
+        assert CLIENT.level != null;
+        FluidState fluidState = CLIENT.level.getFluidState(pos);
+        Optional<String> fluidName = getTranslatedName(fluidState.holder(), "block");
         int level = fluidState.getAmount();
         String levelString = level < 8 ? I18n.get("minecraft_access.read_crosshair.fluid_level", level) : "";
-        return name + " " + levelString;
-    }
-
-    private static String getFluidI18NName(Holder<Fluid> fluid) {
-        String translationKey = fluid.unwrap().map((fluidKey) -> "block." + fluidKey.location().getNamespace() + "." + fluidKey.location().getPath(), (fluidValue) -> "[unregistered " + fluidValue + "]");
-        return I18n.get(translationKey);
+        return fluidName.map(name -> String.format("%s %s", name, levelString)).orElse(levelString);
     }
 
     /**
@@ -567,11 +661,11 @@ public class NarrationUtils {
      */
     public static String narrateEffect(MobEffectInstance effect) {
         StringBuilder result = new StringBuilder();
-        result.append(I18n.get(effect.getDescriptionId())).append(" ");
+        result.append(I18n.get(effect.getDescriptionId())).append(' ');
 
         int amplifier = effect.getAmplifier();
         if (amplifier > 1) {
-            result.append(amplifier).append(" ");
+            result.append(amplifier).append(' ');
         }
 
         if (effect.isInfiniteDuration()) {
@@ -588,5 +682,30 @@ public class NarrationUtils {
         }
 
         return result.toString();
+    }
+
+    /**
+     * Gets the translated name from registry entry.
+     *
+     * @param holder the holder's registry entry
+     * @param type   the type of holder you want the translated name for
+     * @return the holder's human readable name as an Optional
+     */
+    public static Optional<String> getTranslatedName(Holder<?> holder, String type) {
+        Optional<String> translatedName = holder.unwrapKey().map(key -> I18n.get(key.location().toLanguageKey(type)));
+        if (translatedName.isEmpty()) {
+            log.error("Failed to get a valid translation of the {} name", type);
+        }
+        return translatedName;
+    }
+
+    @Contract(pure = true)
+    public static @NotNull String formattedCharSequenceToString(@NotNull FormattedCharSequence charSequence) {
+        StringBuilder builder = new StringBuilder();
+        charSequence.accept((index, style, codePoint) -> {
+            builder.appendCodePoint(codePoint);
+            return true;
+        });
+        return builder.toString();
     }
 }

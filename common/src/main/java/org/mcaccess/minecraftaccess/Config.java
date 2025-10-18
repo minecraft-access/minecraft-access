@@ -1,55 +1,23 @@
 package org.mcaccess.minecraftaccess;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.Getter;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import org.jetbrains.annotations.NotNull;
+
 @me.shedaniel.autoconfig.annotation.Config(name = "minecraft-access")
-public class Config implements ConfigData {
+public final class Config implements ConfigData {
     @ConfigEntry.Gui.Excluded
     private static final Pattern FORMAT_STRING_PLACEHOLDER = Pattern.compile("%(?<type>[^%])");
+    @Getter
     @ConfigEntry.Gui.Excluded
     private static Config instance;
-
-    private Config() {}
-
-    @Contract(pure = true)
-    public static Config getInstance() {
-        return instance;
-    }
-
-    static void init() {
-        AutoConfig.register(Config.class, GsonConfigSerializer::new);
-        instance = AutoConfig.getConfigHolder(Config.class).get();
-    }
-
-    @Override
-    public void validatePostLoad() throws ValidationException {
-        validateFormatString(commandSuggestionNarratorFormat, 'd', 'd', 's');
-        validateFormatString(inventoryControls.rowAndColumnFormat, 'd', 'd');
-    }
-
-    private void validateFormatString(String string, char @NotNull ... placeholders) throws ValidationException {
-        Matcher matcher = FORMAT_STRING_PLACEHOLDER.matcher(string);
-        for (char type : placeholders) {
-            if (!matcher.find()) {
-                throw new ValidationException(String.format("Too few placeholders in string '%s'. Expected %d", string, placeholders.length));
-            }
-            if (!Objects.equals(matcher.group("type"), String.valueOf(type))) {
-                throw new ValidationException(String.format("Invalid placeholder type in string '%s'. Expected %%%s, found %%%s", string, type, matcher.group("type")));
-            }
-        }
-        if (matcher.find()) {
-            throw new ValidationException(String.format("Too many placeholders in string '%s'. Expected %d", string, placeholders.length));
-        }
-    }
 
     public boolean menuFixEnabled = true;
     public String commandSuggestionNarratorFormat = "%dx%d %s";
@@ -88,9 +56,36 @@ public class Config implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     public SpeechSettings speechSettings = new SpeechSettings();
 
-    public static final class Features {
-        private Features() {}
+    private Config() {
+    }
 
+    static void init() {
+        AutoConfig.register(Config.class, GsonConfigSerializer::new);
+        instance = AutoConfig.getConfigHolder(Config.class).get();
+    }
+
+    @Override
+    public void validatePostLoad() throws ValidationException {
+        validateFormatString(commandSuggestionNarratorFormat, 'd', 'd', 's');
+        validateFormatString(inventoryControls.rowAndColumnFormat, 'd', 'd');
+    }
+
+    private void validateFormatString(String string, char @NotNull ... placeholders) throws ValidationException {
+        Matcher matcher = FORMAT_STRING_PLACEHOLDER.matcher(string);
+        for (char type : placeholders) {
+            if (!matcher.find()) {
+                throw new ValidationException(String.format("Too few placeholders in string '%s'. Expected %d", string, placeholders.length));
+            }
+            if (!Objects.equals(matcher.group("type"), String.valueOf(type))) {
+                throw new ValidationException(String.format("Invalid placeholder type in string '%s'. Expected %%%s, found %%%s", string, type, matcher.group("type")));
+            }
+        }
+        if (matcher.find()) {
+            throw new ValidationException(String.format("Too many placeholders in string '%s'. Expected %d", string, placeholders.length));
+        }
+    }
+
+    public static final class Features {
         public boolean actionBarEnabled = true;
         public boolean onlyNarrateActionBarUpdates = false;
         public boolean biomeIndicatorEnabled = true;
@@ -100,39 +95,46 @@ public class Config implements ConfigData {
         public boolean alwaysNarratePickedUpItems = false;
         public boolean narrateHeldItemsCountWhenChanged = true;
         public boolean playNewChatMessageSound = true;
+
+        private Features() {
+        }
     }
 
     public static final class SpeechSettings {
-        private SpeechSettings() {}
-
         public float speechRate = 50;
+
+        private SpeechSettings() {
+        }
     }
 
     public static final class CameraControls {
-        private CameraControls() {}
         public float normalRotatingAngle = 22.5f;
         public float modifiedRotatingAngle = 11.25f;
         public int delayMilliseconds = 250;
+
+        private CameraControls() {
+        }
     }
 
     public static final class InventoryControls {
-        private InventoryControls() {}
-
         public boolean enabled = true;
         public boolean autoOpenRecipeBook = true;
         public String rowAndColumnFormat = "%dx%d";
         public boolean narrateFocusedSlotChanges = true;
         public int delayMilliseconds = 150;
+
+        private InventoryControls() {
+        }
     }
 
     public static final class MouseSimulation {
-        private MouseSimulation() {}
         public int scrollDelayMilliseconds = 150;
+
+        private MouseSimulation() {
+        }
     }
 
     public static final class POI {
-        private POI() {}
-
         public boolean narrateDistance = true;
         @ConfigEntry.Gui.CollapsibleObject
         public Blocks blocks = new Blocks();
@@ -143,9 +145,10 @@ public class Config implements ConfigData {
         @ConfigEntry.Gui.CollapsibleObject
         public Marking marking = new Marking();
 
-        public static final class Blocks {
-            private Blocks() {}
+        private POI() {
+        }
 
+        public static final class Blocks {
             public boolean enabled = true;
             public boolean detectFluidBlocks = true;
             public int range = 24;
@@ -153,39 +156,44 @@ public class Config implements ConfigData {
             public float volume = 0.25f;
             public boolean playSoundForOtherBlocks = true;
             public int delay = 3000;
+
+            private Blocks() {
+            }
         }
 
         public static final class Entities {
-            private Entities() {}
-
             public boolean enabled = true;
             public int range = 24;
             public boolean playSound = true;
             public float volume = 0.25f;
             public int delay = 3000;
+
+            private Entities() {
+            }
         }
 
         public static final class Locking {
-            private Locking() {}
-
             public boolean unlockingSound = false;
             public boolean autoLockEyeOfEnderEntity = true;
             public int delay = 100;
             public boolean aimAssistEnabled = true;
             public boolean aimAssistAudioCuesEnabled = true;
             public float aimAssistAudioCuesVolume = 0.5f;
+
+            private Locking() {
+            }
         }
 
         public static final class Marking {
-            private Marking() {}
-
             public boolean enabled = true;
             public boolean suppressOtherWhenEnabled = true;
+
+            private Marking() {
+            }
         }
     }
 
     public static final class PlayerWarnings {
-        private PlayerWarnings() {}
 
         public boolean enabled = true;
         public boolean playSound = true;
@@ -194,21 +202,23 @@ public class Config implements ConfigData {
         public double hungerThreshold = 3;
         public double airThreshold = 5;
         public double frostThreshold = 30;
+
+        private PlayerWarnings() {
+        }
     }
 
     public static final class FallDetector {
-        private FallDetector() {}
-
         public boolean enabled = true;
         public int range = 6;
         public int depth = 4;
         public float volume = 0.25f;
         public int delay = 2500;
+
+        private FallDetector() {
+        }
     }
 
     public static final class NarrateCrosshair {
-        private NarrateCrosshair() {}
-
         public boolean enabled = true;
         public boolean useJade = true;
         public boolean narrateBlockFace = true;
@@ -221,23 +231,28 @@ public class Config implements ConfigData {
         @ConfigEntry.Gui.CollapsibleObject
         public Filter filter = new Filter();
 
-        public static final class RelativePositionSoundCue {
-            private RelativePositionSoundCue() {}
+        private NarrateCrosshair() {
+        }
 
+        public static final class RelativePositionSoundCue {
             public boolean enabled = true;
             public float minSoundVolume = 0.25f;
             public float maxSoundVolume = 0.4f;
+
+            private RelativePositionSoundCue() {
+            }
         }
 
         public static final class Filter {
-            private Filter() {}
-
             public boolean enabled = false;
             public boolean whitelist = true;
             public boolean fuzzy = true;
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
             public TargetMode targetMode = TargetMode.BLOCK;
-            public String[] targets = new String[] {"slab", "planks", "block", "stone", "sign"};
+            public String[] targets = new String[]{"slab", "planks", "block", "stone", "sign"};
+
+            private Filter() {
+            }
 
             public enum TargetMode {
                 ALL,
@@ -248,18 +263,20 @@ public class Config implements ConfigData {
     }
 
     public static final class AccessMenu {
-        private AccessMenu() {}
-
         public boolean enabled = true;
 
         @ConfigEntry.Gui.CollapsibleObject
         public FluidDetector fluidDetector = new FluidDetector();
 
-        public static final class FluidDetector {
-            private FluidDetector() {}
+        private AccessMenu() {
+        }
 
+        public static final class FluidDetector {
             public float volume = 0.25f;
             public int range = 10;
+
+            private FluidDetector() {
+            }
         }
     }
 }

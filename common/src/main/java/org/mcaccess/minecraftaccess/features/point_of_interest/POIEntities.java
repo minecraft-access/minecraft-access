@@ -1,5 +1,12 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
@@ -9,22 +16,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.utils.WorldUtils;
-import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
  * Scans the area for entities, groups them and plays a sound at their location.
  */
 @Slf4j
 public class POIEntities {
+    private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Entities config;
     private final Interval interval = Interval.defaultDelay();
 
@@ -32,7 +33,7 @@ public class POIEntities {
 
     private final POIGroup<Entity> markedGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.markedEntity",
-            new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5f),
+            new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
             e -> marked != null && marked.isInstance(e)
     );
 
@@ -59,10 +60,9 @@ public class POIEntities {
         if (!config.enabled) return;
         if (!interval.isReady()) return;
 
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.screen != null) return; //Prevent running if any screen is opened
+        if (client.player == null) return;
+        if (client.level == null) return;
+        if (client.screen != null) return; //Prevent running if any screen is opened
 
         log.trace("POIEntities started");
         scanEntitiesAroundPlayer();
@@ -77,9 +77,11 @@ public class POIEntities {
             group.clear();
         }
 
-        LocalPlayer player = WorldUtils.getClientPlayer();
+        LocalPlayer player = client.player;
+        assert player != null;
         AABB scanBox = player.getBoundingBox().inflate(config.range, config.range, config.range);
-        List<Entity> entities = WorldUtils.getClientWorld().getEntities(player, scanBox);
+        assert client.level != null;
+        List<Entity> entities = client.level.getEntities(player, scanBox);
 
         for (Entity entity : entities) {
             for (POIGroup<Entity> group : groups) {
@@ -94,7 +96,7 @@ public class POIEntities {
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (config.volume == 0f) return;
+        if (config.volume == 0.0f) return;
         Function<Entity, Vec3> mapper = e -> e.blockPosition().getCenter();
         if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
             markedGroup.playSoundForGroupItems(mapper, config.volume);
@@ -110,7 +112,7 @@ public class POIEntities {
      */
     private void loadConfig() {
         config = Config.getInstance().poi.entities;
-        interval.setDelay(config.delay, Interval.Unit.Millisecond);
+        interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
     }
 
     private void setMarked(@Nullable Entity entity) {

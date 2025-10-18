@@ -1,12 +1,13 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.gui.narration.NarrationThunk;
-import org.mcaccess.minecraftaccess.duck.NarrationThunkExt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import org.mcaccess.minecraftaccess.duck.NarrationThunkExt;
 
 @Mixin(NarrationThunk.class)
 abstract class NarrationThunkMixin implements NarrationThunkExt {

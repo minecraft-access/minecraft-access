@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Validate Input
         id: version
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           # language=javascript
           script: |
@@ -82,7 +82,7 @@ jobs:
           result-encoding: string
       - name: Collate Changelog
         id: changelog
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           # language=javascript
           script: |
@@ -98,7 +98,7 @@ jobs:
             });
             const sections = {};
             for (const issue of issues.data) {
-                const inPrerelease = issue.labels.find(({name}) => name === "in-prerelease") !== undefined; 
+                const inPrerelease = issue.labels.find(({name}) => name === "in-prerelease") !== undefined;
                 if (prerelease && inPrerelease || issue.state_reason === "not_planned" || issue.pull_request?.merged_at === null) {
                     continue;
                 }
@@ -152,7 +152,7 @@ jobs:
             core.summary.write();
             return changelog.trim();
           result-encoding: string
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }}
@@ -176,7 +176,9 @@ jobs:
           changelog=${changelog//## /### }
           sed "/<!-- INSERT CHANGELOG HERE -->/a\\\\n## Release v${{ steps.version.outputs.result }} ($(date +%Y-%m))\n${changelog}" -i ./docs/content/changelog.md
           git add ./docs/content/changelog.md
-          git commit -m "Updated changelog for v${{ steps.version.outputs.result }}" --trailer "Co-authored-by=${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>"
+          git commit -m "Updated changelog for v${{ steps.version.outputs.result }}" \
+              --trailer "Co-authored-by=${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>" \
+              --trailer CI=no-publish
       - name: Tag
         env:
           CHANGELOG: ${{ steps.changelog.outputs.result }}
@@ -208,7 +210,7 @@ jobs:
           - name: NeoForge
             slug: neoforge
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: ${{ vars.MODRINTH_ID }}
@@ -218,7 +220,7 @@ jobs:
           github-tag: v${{ needs.prepare.outputs.version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-name: Minecraft Access v${{ needs.prepare.outputs.version }}
-          files: ./minecraft-access/*+${{ matrix.loader.slug }}.jar
+          files: ./*+${{ matrix.loader.slug }}.jar
           name: Minecraft Access v${{ needs.prepare.outputs.version }} for ${{ matrix.loader.name }}
           version: ${{ needs.prepare.outputs.version }}+${{ matrix.loader.slug }}
           changelog: ${{ needs.prepare.outputs.changelog }}

@@ -1,14 +1,15 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
-import net.minecraft.client.KeyMapping;
-import org.jetbrains.annotations.Contract;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
+
+import net.minecraft.client.KeyMapping;
+import org.jetbrains.annotations.Contract;
+
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * A state machine that helps with complex keystroke condition checking.
@@ -16,7 +17,7 @@ import java.util.function.Function;
  */
 public class Keystroke {
 
-    protected static final List<Keystroke> instances = new ArrayList<>();
+    protected static final List<Keystroke> INSTANCES = new ArrayList<>();
 
     /**
      * Save the state of keystroke at the previous tick.
@@ -66,8 +67,8 @@ public class Keystroke {
     public Keystroke(BooleanSupplier condition, TriggeredAt timing) {
         this.condition = condition;
         this.timing = Optional.ofNullable(timing).orElse(TriggeredAt.PRESSING);
-        this.triggeredCount = 0;
-        instances.add(this);
+        triggeredCount = 0;
+        INSTANCES.add(this);
     }
 
     /**
@@ -76,9 +77,9 @@ public class Keystroke {
      */
     public void updateStateForNextTick() {
         hasKeyPressed = isPressing();
-        if (this.timing.happen(this)) this.triggeredCount += 1;
+        if (timing.happen(this)) triggeredCount += 1;
         // reset triggeredCount
-        if (this.timing.aboutToHappen(this)) this.triggeredCount = 0;
+        if (timing.aboutToHappen(this)) triggeredCount = 0;
     }
 
     public boolean isPressing() {
@@ -106,7 +107,7 @@ public class Keystroke {
      */
     @Contract(pure = true)
     public boolean canBeTriggered() {
-        boolean correctKeystrokeState = this.timing.happen(this);
+        boolean correctKeystrokeState = timing.happen(this);
         return correctKeystrokeState && otherTriggerConditions();
     }
 
@@ -114,7 +115,7 @@ public class Keystroke {
      * Additional conditions for subclasses to extend.
      */
     protected boolean otherTriggerConditions() {
-        return this.triggeredCount == 0;
+        return triggeredCount == 0;
     }
 
     /**
@@ -127,8 +128,7 @@ public class Keystroke {
         PRESSING(Keystroke::isPressing, Keystroke::isNotPressing),
         NOT_PRESSING(Keystroke::isNotPressing, Keystroke::isPressing),
         PRESSED(Keystroke::isPressed, Keystroke::isNotPressing),
-        RELEASED(Keystroke::isReleased, Keystroke::isPressing),
-        ;
+        RELEASED(Keystroke::isReleased, Keystroke::isPressing);
 
         private final Function<Keystroke, Boolean> triggerCondition;
         /**
@@ -142,11 +142,11 @@ public class Keystroke {
         }
 
         public boolean happen(Keystroke keystroke) {
-            return this.triggerCondition.apply(keystroke);
+            return triggerCondition.apply(keystroke);
         }
 
         public boolean aboutToHappen(Keystroke keystroke) {
-            return this.preCondition.apply(keystroke);
+            return preCondition.apply(keystroke);
         }
     }
 
@@ -155,6 +155,6 @@ public class Keystroke {
      * no need to manually call the update method in every feature.
      */
     public static void updateInstances() {
-        instances.forEach(Keystroke::updateStateForNextTick);
+        INSTANCES.forEach(Keystroke::updateStateForNextTick);
     }
 }

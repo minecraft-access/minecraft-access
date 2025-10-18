@@ -1,9 +1,10 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
-import net.minecraft.client.KeyMapping;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
-
 import java.util.function.BooleanSupplier;
+
+import net.minecraft.client.KeyMapping;
+
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * For keys that you can keep pressing and the function executes at intervals.
