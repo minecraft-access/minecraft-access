@@ -47,11 +47,12 @@ Sounds can be played by pressing the play button.
 
 ## Misc Sounds
 
-| Description                                                                           | Sound                                                                       |
-|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Position with high drop-off                                                           | {{< wikiSound "Stone_dig1" >}} Foot stamping sound                          |
-| [Health], [hunger], [air], or [frost] reached the configured danger warning threshold | {{< wikiSound "Respawn_anchor_deplete1" >}} Shatter and woosh sound         |
-| Plays when [attack indicator] is filled and is visible on screen                      | {{< wikiSound sound="Note_block_hat" pitch=1.0 >}} High pitched clack sound |
+| Description                                                                                                | Sound                                                                       |
+|------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| Position with high drop-off                                                                                | {{< wikiSound "Stone_dig1" >}} Foot stamping sound                          |
+| A first player warning threshold was reached (less evere in the case of warnings with multiple thresholds) | {{< wikiSound "Respawn_anchor_deplete1" >}} Shatter and woosh sound         |
+| A severe player warning threshold was reached                                                              | {{< wikiSound "Anvil_land" >}} Metal clang sound                            |
+| Plays when [attack indicator] is filled and is visible on screen                                           | {{< wikiSound sound="Note_block_hat" pitch=1.0 >}} High pitched clack sound |
 
 ### Chat
 
@@ -72,9 +73,5 @@ the [Minecraft Usage Guidelines] apply.
 [dropped items]: https://minecraft.wiki/w/Item_(entity)
 [passive mobs]: https://minecraft.wiki/w/Mob?so=search#Passive_mobs
 [hostile mobs]: https://minecraft.wiki/w/Mob?so=search#Hostile_mobs
-[health]: https://minecraft.wiki/w/Health
-[hunger]: https://minecraft.wiki/w/Hunger
-[air]: https://minecraft.wiki/w/Damage#Drowning
-[frost]: https://minecraft.wiki/w/Powder_Snow#Freezing
 [attack indicator]: https://minecraft.wiki/Cooldown
 [Minecraft Usage Guidelines]: https://www.minecraft.net/en-us/usage-guidelines
