@@ -150,12 +150,12 @@ public final class MainClass {
             }
 
         if (playerWarnings != null) {
-            if (config.playerWarnings.durabilityWarnings.enableHeldItems || config.playerWarnings.durabilityWarnings.enableWornArmor) {
-                playerWarnings.durabilityWarnings();
-            }
-
             if (config.playerWarnings.enabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {
                 playerWarnings.tick();
+            }
+
+            if (config.playerWarnings.durabilityWarnings.enableHeldItems || config.playerWarnings.durabilityWarnings.enableWornArmor) {
+                playerWarnings.durabilityWarnings();
             }
         }
 

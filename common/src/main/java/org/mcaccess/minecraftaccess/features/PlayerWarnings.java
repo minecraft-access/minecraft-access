@@ -6,6 +6,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -27,23 +28,13 @@ public class PlayerWarnings {
     private boolean isAirBelowThreshold;
     private boolean isFrostAboveThreshold;
 
-    private boolean isHelmetDurabilityBelowFirstThreshold;
-    private boolean isHelmetDurabilityBelowSecondThreshold;
+    private DurabilityWarningStatus lastMainHandStatus = DurabilityWarningStatus.NONE;
+    private DurabilityWarningStatus lastOffHandStatus = DurabilityWarningStatus.NONE;
 
-    private boolean isChestplateDurabilityBelowFirstThreshold;
-    private boolean isChestplateDurabilityBelowSecondThreshold;
-
-    private boolean isLeggingsDurabilityBelowFirstThreshold;
-    private boolean isLeggingsDurabilityBelowSecondThreshold;
-
-    private boolean isBootsDurabilityBelowFirstThreshold;
-    private boolean isBootsDurabilityBelowSecondThreshold;
-
-    private boolean isMainHandDurabilityBelowFirstThreshold;
-    private boolean isMainHandDurabilityBelowSecondThreshold;
-
-    private boolean isOffHandDurabilityBelowFirstThreshold;
-    private boolean isOffHandDurabilityBelowSecondThreshold;
+    private DurabilityWarningStatus lastHelmitStatus = DurabilityWarningStatus.NONE;
+    private DurabilityWarningStatus lastChestplateStatus = DurabilityWarningStatus.NONE;
+    private DurabilityWarningStatus lastLeggingsStatus = DurabilityWarningStatus.NONE;
+    private DurabilityWarningStatus lastBootsStatus = DurabilityWarningStatus.NONE;
 
     private static final Config.PlayerWarnings CONFIG = Config.getInstance().playerWarnings;
 
@@ -121,23 +112,47 @@ public class PlayerWarnings {
     }
 
     public void durabilityWarnings() {
+        if (player == null) return;
 
+        if (CONFIG.durabilityWarnings.enableHeldItems) {
+            DurabilityWarningStatus mainHandStatus = checkDurabilityLevel(player.getMainHandItem());
+            DurabilityWarningStatus offHandStatus = checkDurabilityLevel(player.getOffHandItem());
+
+            if (mainHandStatus.ordinal() > lastMainHandStatus.ordinal()) {
+                playWarningSound();
+            }
+
+            if (offHandStatus.ordinal() > lastOffHandStatus.ordinal()) {
+                playWarningSound();
+            }
+
+            lastMainHandStatus = mainHandStatus;
+            lastOffHandStatus = offHandStatus;
+        }
+
+        if (CONFIG.durabilityWarnings.enableWornArmor) {
+            Inventory inventory = player.getInventory();
+
+            //DurabilityWarningStatus helmitStatus = checkDurabilityLevel();
+            //DurabilityWarningStatus chestplateStatus = checkDurabilityLevel();
+            //DurabilityWarningStatus leggingsStatus = checkDurabilityLevel();
+            //DurabilityWarningStatus bootsStatus = checkDurabilityLevel();
+        }
     }
 
-    private DurabilityWarningStatus isBelowDurabilityWarning(ItemStack itemStack) {
-        if (!itemStack.isDamageableItem() || !itemStack.isDamaged()) return DurabilityWarningStatus.NONE;
+    private DurabilityWarningStatus checkDurabilityLevel(ItemStack itemStack) {
+        if (itemStack == null || !itemStack.isDamageableItem() || !itemStack.isDamaged()) return DurabilityWarningStatus.NONE;
 
         int currentDurability = itemStack.getDamageValue();
         int maxDurability = itemStack.getMaxDamage();
         double durabilityPercent = (currentDurability / maxDurability) * 100;
-        Config.DurabilityWarnings config = Config.getInstance().playerWarnings.durabilityWarnings;
 
         if (itemStack.nextDamageWillBreak()) return DurabilityWarningStatus.NEXT_WILL_BREAK;
-        if (durabilityPercent < config.firstPercentageThreshold) return DurabilityWarningStatus.FIRST;
-        if (durabilityPercent < config.secondPercentageThreshold) return DurabilityWarningStatus.SECOND;
+        if (durabilityPercent < CONFIG.durabilityWarnings.firstPercentageThreshold) return DurabilityWarningStatus.FIRST;
+        if (durabilityPercent < CONFIG.durabilityWarnings.secondPercentageThreshold) return DurabilityWarningStatus.SECOND;
 
         return DurabilityWarningStatus.NONE;
-}
+    }
 
     private enum DurabilityWarningStatus {
         NONE,
