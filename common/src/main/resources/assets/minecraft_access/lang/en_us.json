@@ -151,6 +151,7 @@
     "minecraft_access.player_status.frost": ", %1$f%% Frost Exposure",
     "minecraft_access.player_status.no_conditional_status": "No conditional statuses to narrate",
     "minecraft_access.player_warnings.air_low": "Warning, %1$.1f out of %2$.1f Air",
+    "minecraft_access.player_warnings.durability_warning": "Warning! %1$s durability is %2$d / %3$d",
     "minecraft_access.player_warnings.frost_low": "Warning, %1$f%% Frost Exposure",
     "minecraft_access.player_warnings.health_low": "Warning, %1$.1f out of %2$.1f Health",
     "minecraft_access.player_warnings.hunger_low": "Warning, %1$.1f out of %2$.1f Hunger",

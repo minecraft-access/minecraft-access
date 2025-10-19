@@ -32,10 +32,10 @@ public class PlayerWarnings {
     private DurabilityWarningStatus lastMainHandStatus = DurabilityWarningStatus.NONE;
     private DurabilityWarningStatus lastOffHandStatus = DurabilityWarningStatus.NONE;
 
-    private DurabilityWarningStatus lastHelmitStatus = DurabilityWarningStatus.NONE;
-    private DurabilityWarningStatus lastChestplateStatus = DurabilityWarningStatus.NONE;
-    private DurabilityWarningStatus lastLeggingsStatus = DurabilityWarningStatus.NONE;
-    private DurabilityWarningStatus lastBootsStatus = DurabilityWarningStatus.NONE;
+    private DurabilityWarningStatus lastHeadStatus = DurabilityWarningStatus.NONE;
+    private DurabilityWarningStatus lastChestStatus = DurabilityWarningStatus.NONE;
+    private DurabilityWarningStatus lastLegsStatus = DurabilityWarningStatus.NONE;
+    private DurabilityWarningStatus lastFeetStatus = DurabilityWarningStatus.NONE;
 
     private static final Config.PlayerWarnings CONFIG = Config.getInstance().playerWarnings;
 
@@ -125,10 +125,12 @@ public class PlayerWarnings {
             DurabilityWarningStatus offHandStatus = checkDurabilityLevel(player.getOffhandItem());
 
             if (mainHandStatus.ordinal() > lastMainHandStatus.ordinal()) {
+                narrateDurability(player.getMainHandItem());
                 playWarningSound(mainHandStatus);
             }
 
             if (offHandStatus.ordinal() > lastOffHandStatus.ordinal()) {
+                narrateDurability(player.getOffhandItem());
                 playWarningSound(offHandStatus);
             }
 
@@ -139,10 +141,35 @@ public class PlayerWarnings {
         if (CONFIG.durabilityWarnings.enableWornArmor) {
             Inventory inventory = player.getInventory();
 
-            //DurabilityWarningStatus helmitStatus = checkDurabilityLevel();
-            //DurabilityWarningStatus chestplateStatus = checkDurabilityLevel();
-            //DurabilityWarningStatus leggingsStatus = checkDurabilityLevel();
-            //DurabilityWarningStatus bootsStatus = checkDurabilityLevel();
+            DurabilityWarningStatus headStatus = checkDurabilityLevel(inventory.getItem(36));
+            DurabilityWarningStatus chestStatus = checkDurabilityLevel(inventory.getItem(37));
+            DurabilityWarningStatus legsStatus = checkDurabilityLevel(inventory.getItem(38));
+            DurabilityWarningStatus feetStatus = checkDurabilityLevel(inventory.getItem(39));
+
+            if (headStatus.ordinal() > lastHeadStatus.ordinal()) {
+                narrateDurability(inventory.getItem(36));
+                playWarningSound(headStatus);
+            }
+
+            if (chestStatus.ordinal() > lastChestStatus.ordinal()) {
+                narrateDurability(inventory.getItem(37));
+                playWarningSound(chestStatus);
+            }
+
+            if (legsStatus.ordinal() > lastLegsStatus.ordinal()) {
+                narrateDurability(inventory.getItem(38));
+                playWarningSound(legsStatus);
+            }
+
+            if (feetStatus.ordinal() > lastFeetStatus.ordinal()) {
+                narrateDurability(inventory.getItem(39));
+                playWarningSound(feetStatus);
+            }
+
+            lastHeadStatus = headStatus;
+            lastChestStatus = chestStatus;
+            lastLegsStatus = legsStatus;
+            lastFeetStatus = feetStatus;
         }
     }
 
@@ -156,6 +183,14 @@ public class PlayerWarnings {
         if (durability <= CONFIG.durabilityWarnings.firstThreshold) return DurabilityWarningStatus.FIRST;
 
         return DurabilityWarningStatus.NONE;
+    }
+
+    private void narrateDurability(ItemStack item) {
+        String itemName = item.getItemName().getString();
+        int maxDamage = item.getMaxDamage();
+        int durability = maxDamage - item.getDamageValue();
+
+        MainClass.narrate(I18n.get("minecraft_access.player_warnings.durability_warning", itemName, durability, maxDamage), false);
     }
 
     private enum DurabilityWarningStatus {
