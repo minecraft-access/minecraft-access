@@ -222,6 +222,9 @@ You'll hear something like `Warning, Health is {current health}`.
 If you enable the `Play Sound` config, you'll also hear a sound cue along with the warning words.
 You may also want to learn about [the various damage types](https://minecraft.wiki/w/Damage) in the game.
 
+#### Durability Warnings
+This feature warns you when the durability value of your held items or worn armor reaches set thresholds.
+
 See also: [Configuration]({{% relref "/config#player-warnings" %}})
 
 ## Speak Text Editing

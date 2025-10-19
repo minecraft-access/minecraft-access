@@ -179,6 +179,16 @@ See also: [Feature Description]({{% relref "/features#player-status" %}}), [keyb
 | Hunger Threshold        | 3             | The threshold for hunger/food                               |
 | Air Threshold           | 3             | The threshold for air when you're submerged in water        |
 
+### Durability Warnings
+
+| Configuration    | Default Value | Description                                                            |
+|------------------|---------------|------------------------------------------------------------------------|
+| EnableHeldItems  | true          | Whether to check the durability of main and off hand items             |
+| EnableWornArmor  | true          | Whether to check the durability of armor that the player is wearing    |
+| First Threshold  | 10            | The durability number that you want the less severe warning to play at |
+| Second Threshold | 3             | The durability number that you want the more severe warning to play at |
+
+
 See also: [Feature Description]({{% relref "/features#player-warnings" %}})
 
 ## Fall Detector
