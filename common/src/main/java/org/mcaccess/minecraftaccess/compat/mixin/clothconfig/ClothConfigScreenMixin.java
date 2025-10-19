@@ -66,7 +66,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
      * @implNote enable remap since this is a vanilla method from {@link Screen#init()}
      */
     @Inject(at = @At("TAIL"), method = "init", remap = true)
-    void addComponentsAsNarratables(CallbackInfo ci) {
+    private void addComponentsAsNarratables(CallbackInfo ci) {
         List<NarratableEntry> narratables = ((ScreenAccessor) this).getNarratables();
         if (listWidget != null) {
             narratables.addAll(listWidget.children());

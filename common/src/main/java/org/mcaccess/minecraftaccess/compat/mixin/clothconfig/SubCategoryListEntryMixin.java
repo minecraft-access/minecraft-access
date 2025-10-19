@@ -101,7 +101,7 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         }
 
         @Inject(method = "narrationPriority", at = @At("TAIL"), remap = true, cancellable = true)
-        public void neverNarrateLabel(CallbackInfoReturnable<NarrationPriority> cir) {
+        private void neverNarrateLabel(CallbackInfoReturnable<NarrationPriority> cir) {
             cir.setReturnValue(NarrationPriority.NONE);
         }
     }
