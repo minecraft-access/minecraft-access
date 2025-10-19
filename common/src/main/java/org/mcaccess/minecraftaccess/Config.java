@@ -213,8 +213,8 @@ public final class Config implements ConfigData {
     public static final class DurabilityWarnings {
         public boolean enableHeldItems = true;
         public boolean enableWornArmor = true;
-        public int firstPercentageThreshold = 10;
-        public int secondPercentageThreshold = 3;
+        public int firstThreshold = 10;
+        public int secondThreshold = 3;
 
         private DurabilityWarnings() {
         }

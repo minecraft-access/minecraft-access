@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
@@ -54,13 +55,13 @@ public class PlayerWarnings {
         if (health <= CONFIG.firstHealthThreshold && health > CONFIG.secondHealthThreshold && !isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowFirstThreshold = true;
             MainClass.narrate(I18n.get("minecraft_access.player_warnings.health_low", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth)), true);
-            playWarningSound();
+            playWarningSound(false);
         }
 
         if (health <= CONFIG.secondHealthThreshold && health > 0 && isHealthBelowFirstThreshold && !isHealthBelowSecondThreshold) {
             isHealthBelowSecondThreshold = true;
             MainClass.narrate(I18n.get("minecraft_access.player_warnings.health_low", NarrationUtils.narrateNumber(health), NarrationUtils.narrateNumber(maxHealth)), true);
-            playWarningSound();
+            playWarningSound(true);
         }
 
         if (isHealthBelowFirstThreshold && health > CONFIG.firstHealthThreshold) isHealthBelowFirstThreshold = false;
@@ -74,7 +75,7 @@ public class PlayerWarnings {
         if (hunger <= CONFIG.hungerThreshold && hunger > 0 && !isFoodBelowThreshold) {
             isFoodBelowThreshold = true;
             MainClass.narrate(I18n.get("minecraft_access.player_warnings.hunger_low", NarrationUtils.narrateNumber(hunger), NarrationUtils.narrateNumber(maxHunger)), true);
-            playWarningSound();
+            playWarningSound(false);
         }
 
         if (isFoodBelowThreshold && hunger > CONFIG.hungerThreshold) isFoodBelowThreshold = false;
@@ -87,7 +88,7 @@ public class PlayerWarnings {
 
             isAirBelowThreshold = true;
             MainClass.narrate(I18n.get("minecraft_access.player_warnings.air_low", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir)), true);
-            playWarningSound();
+            playWarningSound(false);
         }
 
         if (isAirBelowThreshold && air > CONFIG.airThreshold) isAirBelowThreshold = false;
@@ -99,16 +100,21 @@ public class PlayerWarnings {
         if (frostExposurePercent >= CONFIG.frostThreshold && frostExposurePercent < 100 && !isFrostAboveThreshold) {
             isFrostAboveThreshold = true;
             MainClass.narrate(I18n.get("minecraft_access.player_warnings.frost_low", NarrationUtils.narrateNumber(frostExposurePercent)), true);
-            playWarningSound();
+            playWarningSound(false);
         }
 
         if (isFrostAboveThreshold && frostExposurePercent < CONFIG.frostThreshold) isFrostAboveThreshold = false;
     }
 
-    private void playWarningSound() {
+    private void playWarningSound(boolean severe) {
         if (CONFIG.playSound) {
-            player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.PLAYERS, 1.0f, 1.0f);
+            SoundEvent soundToPlay = severe ? SoundEvents.ANVIL_PLACE : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value();
+            player.playNotifySound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
         }
+    }
+
+    private void playWarningSound(DurabilityWarningStatus status) {
+        playWarningSound(status.ordinal() > DurabilityWarningStatus.FIRST.ordinal());
     }
 
     public void durabilityWarnings() {
@@ -116,14 +122,14 @@ public class PlayerWarnings {
 
         if (CONFIG.durabilityWarnings.enableHeldItems) {
             DurabilityWarningStatus mainHandStatus = checkDurabilityLevel(player.getMainHandItem());
-            DurabilityWarningStatus offHandStatus = checkDurabilityLevel(player.getOffHandItem());
+            DurabilityWarningStatus offHandStatus = checkDurabilityLevel(player.getOffhandItem());
 
             if (mainHandStatus.ordinal() > lastMainHandStatus.ordinal()) {
-                playWarningSound();
+                playWarningSound(mainHandStatus);
             }
 
             if (offHandStatus.ordinal() > lastOffHandStatus.ordinal()) {
-                playWarningSound();
+                playWarningSound(offHandStatus);
             }
 
             lastMainHandStatus = mainHandStatus;
@@ -143,13 +149,11 @@ public class PlayerWarnings {
     private DurabilityWarningStatus checkDurabilityLevel(ItemStack itemStack) {
         if (itemStack == null || !itemStack.isDamageableItem() || !itemStack.isDamaged()) return DurabilityWarningStatus.NONE;
 
-        int currentDurability = itemStack.getDamageValue();
-        int maxDurability = itemStack.getMaxDamage();
-        double durabilityPercent = (currentDurability / maxDurability) * 100;
+        int durability = itemStack.getMaxDamage() - itemStack.getDamageValue();
 
         if (itemStack.nextDamageWillBreak()) return DurabilityWarningStatus.NEXT_WILL_BREAK;
-        if (durabilityPercent < CONFIG.durabilityWarnings.firstPercentageThreshold) return DurabilityWarningStatus.FIRST;
-        if (durabilityPercent < CONFIG.durabilityWarnings.secondPercentageThreshold) return DurabilityWarningStatus.SECOND;
+        if (durability <= CONFIG.durabilityWarnings.secondThreshold) return DurabilityWarningStatus.SECOND;
+        if (durability <= CONFIG.durabilityWarnings.firstThreshold) return DurabilityWarningStatus.FIRST;
 
         return DurabilityWarningStatus.NONE;
     }
