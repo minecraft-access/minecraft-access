@@ -130,10 +130,11 @@ public class PlayerWarnings {
         int currentDurability = itemStack.getDamageValue();
         int maxDurability = itemStack.getMaxDamage();
         double durabilityPercent = (currentDurability / maxDurability) * 100;
+        Config.DurabilityWarnings config = Config.getInstance().playerWarnings.durabilityWarnings;
 
         if (itemStack.nextDamageWillBreak()) return DurabilityWarningStatus.NEXT_WILL_BREAK;
-        if (durabilityPercent < 5) return DurabilityWarningStatus.FIRST;
-        if (durabilityPercent < 15) return DurabilityWarningStatus.SECOND;
+        if (durabilityPercent < config.firstPercentageThreshold) return DurabilityWarningStatus.FIRST;
+        if (durabilityPercent < config.secondPercentageThreshold) return DurabilityWarningStatus.SECOND;
 
         return DurabilityWarningStatus.NONE;
 }

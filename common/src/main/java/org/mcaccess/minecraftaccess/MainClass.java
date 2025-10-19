@@ -121,6 +121,7 @@ public final class MainClass {
         poiManager.tick();
         fallDetector.tick();
         hudStatus.tick();
+
         if (client.screen == null || !(client.screen.getFocused() instanceof EditBox || client.screen instanceof KeyBindsScreen)) {
             MouseKeySimulation.tick();
         }
@@ -148,9 +149,15 @@ public final class MainClass {
                 CameraControls.tick();
             }
 
-        if (playerWarnings != null && config.playerWarnings.enabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {
+        if (playerWarnings != null) {
+            if (config.playerWarnings.durabilityWarnings.enableHeldItems || config.playerWarnings.durabilityWarnings.enableWornArmor) {
+                playerWarnings.durabilityWarnings();
+            }
+
+            if (config.playerWarnings.enabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {
                 playerWarnings.tick();
             }
+        }
 
         if (accessMenu != null && config.accessMenu.enabled) {
             accessMenu.tick();

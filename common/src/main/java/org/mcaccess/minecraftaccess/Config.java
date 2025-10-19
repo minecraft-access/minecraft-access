@@ -203,7 +203,20 @@ public final class Config implements ConfigData {
         public double airThreshold = 5;
         public double frostThreshold = 30;
 
+        @ConfigEntry.Gui.CollapsibleObject
+        public DurabilityWarnings durabilityWarnings = new DurabilityWarnings();
+
         private PlayerWarnings() {
+        }
+    }
+
+    public static final class DurabilityWarnings {
+        public boolean enableHeldItems = true;
+        public boolean enableWornArmor = true;
+        public int firstPercentageThreshold = 10;
+        public int secondPercentageThreshold = 3;
+
+        private DurabilityWarnings() {
         }
     }
 
