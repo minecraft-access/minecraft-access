@@ -10,7 +10,7 @@
         "clothconfig.ClothConfigScreenMixin",
         "clothconfig.ClothConfigScreenMixin$ListWidgetMixin",
         "clothconfig.ClothConfigTabButtonMixin",
-        "clothconfig.ContainerEventHandlerAccessor",
+        "clothconfig.ContainerEventHandlerMixin",
         "clothconfig.ScreenNarrationCollectorOutputMixin",
         "clothconfig.SubCategoryListEntryMixin",
         "clothconfig.SubCategoryListEntryMixin$CategoryLabelWidgetMixin"

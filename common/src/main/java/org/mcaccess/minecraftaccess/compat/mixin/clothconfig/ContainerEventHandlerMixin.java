@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ContainerEventHandler.class)
-public interface ContainerEventHandlerAccessor {
+abstract class ContainerEventHandlerMixin {
     @WrapOperation(method = "handleTabNavigation",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/events/ContainerEventHandler;children()Ljava/util/List;"))
-    default List<? extends GuiEventListener> modifyNavigationCandidates(ContainerEventHandler instance, Operation<List<? extends GuiEventListener>> original) {
+    private List<? extends GuiEventListener> modifyNavigationCandidates(ContainerEventHandler instance, Operation<List<? extends GuiEventListener>> original) {
         if (instance instanceof SubCategoryListEntry subcategory && subcategory.isExpanded()) {
             // respect search filter
             return subcategory.filteredEntries();
