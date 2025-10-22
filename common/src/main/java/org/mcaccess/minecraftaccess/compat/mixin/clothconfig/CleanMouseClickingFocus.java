@@ -19,7 +19,7 @@ import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
 @Mixin({DynamicElementListWidget.ElementEntry.class, DynamicEntryListWidget.class})
 abstract class CleanMouseClickingFocus implements ContainerEventHandler {
     @Inject(method = "setFocused", at = @At("TAIL"))
-    public void cleanPeerFocusStatesOnFocusChanging(GuiEventListener guiEventListener, CallbackInfo ci) {
+    private void cleanPeerFocusStatesOnFocusChanging(GuiEventListener guiEventListener, CallbackInfo ci) {
         children().stream().filter(c -> c != guiEventListener).forEach(NavigationUtils::clearFocus);
     }
 }
