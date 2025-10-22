@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
+import java.util.List;
+
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
 import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
@@ -9,14 +11,11 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-
-import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
-
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.List;
+import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
 
 @SuppressWarnings("rawtypes")
 @Mixin(value = ClothConfigScreen.ListWidget.class, remap = false)
