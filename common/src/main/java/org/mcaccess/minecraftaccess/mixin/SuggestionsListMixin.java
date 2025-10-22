@@ -26,7 +26,7 @@ import org.mcaccess.minecraftaccess.MainClass;
  * manually narrate (command) suggestions (in {@link AbstractCommandBlockEditScreen} and {@link ChatScreen}).
  */
 @Mixin(CommandSuggestions.SuggestionsList.class)
-abstract class CommandSuggestionsSuggestionsListMixin {
+abstract class SuggestionsListMixin {
     @Shadow
     private int lastNarratedEntry;
     @Shadow
