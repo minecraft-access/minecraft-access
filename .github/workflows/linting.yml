@@ -20,6 +20,7 @@ jobs:
           reporter: ${{ github.event_name == 'push' && 'github-check' || 'github-pr-check' }}
           filter_mode: ${{ github.event_name == 'push' && 'nofilter' || 'added' }}
           fail_level: error
+          reviewdog_flags: "--name=Checkstyle Report"
 
   translation-sorting:
     name: Translation File Sorting
