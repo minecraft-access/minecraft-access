@@ -60,6 +60,14 @@ Sounds can be played by pressing the play button.
 |------------------------------------------------|-----------------------------------------------|
 | Plays when sending or recieving a chat message | {{< wikiSound "Successful_hit" >}} Ding sound |
 
+### Movement Sounds
+
+| Description                        | Sound                                                                                        |
+|------------------------------------|----------------------------------------------------------------------------------------------|
+| Player begins to sneak             | {{< wikiSound sound="Shovel_flatten2" pitch=0.5 >}} Low pitched dirt crunch sound            |
+| Player stops sneaking or sprinting | {{< wikiSound sound="Shovel_flatten2" pitch=0.9 >}} Medium pitched dirt chrunch sound        |
+| Player begins sprinting            | {{< wikiSound sound="Shovel_flatten2" pitch=2.0 >}} High pitched and quick dirt crunch sound |
+
 ## Disclaimer
 
 Most sounds are taken from Minecraft and are property of Mojang,
