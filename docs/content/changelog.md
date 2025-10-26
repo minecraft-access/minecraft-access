@@ -4,6 +4,33 @@ title: "Changelog"
 
 <!-- INSERT CHANGELOG HERE -->
 
+## Release v1.11.0 (2025-10)
+### New Features
+- The attack cooldown indicator is now represented by a low-pitched clicking sound when it fills. This sound only plays if the indicator is visible on screen; to suppress it, either hide the HUD entirely or set the attack indicator to “Off” in the options menu.
+- A sound will now play when sending or receiving chat messages
+- The U key now narrates bossbars in a cycling list, including those added via a server or adventure map
+- 1.21.10 support
+- The contents of shelves, campfires, and item frames are now narrated
+- Added optional warnings for armor and tools when the durability falls below the two configured percentages
+- There is now a new sound when you sneak, sprint, or start moving normally after canceling sneak/sprint
+
+### Bug Fixes
+- Fixed a bug where the credits tip was being read after the credits concluded instead of immediately when the screen opened
+- Automatic biome narration will no longer trigger when the game's language is changed
+- If a chunk is not fully loaded in, the automatic biome narration will no longer narrate the default biome for the dimention
+- The special degrees status for looking straight down is now spoken instead of -89 degrees to match the behavior for looking straight up
+- Snow and Copper Golems are now categorized as Passive in the Object Tracker
+- Fixed some unreliability on the NeoForge platform, and made the mod initialize after the client is fully ready.
+- Air and dying entities will now no longer appear in the Object Tracker.
+
+### Feature Updates
+- Camera control keys are now disabled when the user is locked onto something or they are spectating to prevent confusion
+- Mouse camera control is now disabled while locked onto a target
+- In speak facing direction, only the center of each direction is now considered as cardinal, otherwise the nearest ordinal direction is spoken
+- It is now no longer possible to have a locked target while spectating another entity, as this behavior didn't actually work, since camera movement in spectating is locked by the game
+- The advancements key is now bound to O by default, instead of being unbound
+- If a warning has two thresholds, as is the case for durability and health, the more severe threshold will play a metal clang sound instead of the normal shatter whoosh sound.
+
 ## Release v1.10.3 (2025-07)
 ### New Features
 - Update to 1.21.8
