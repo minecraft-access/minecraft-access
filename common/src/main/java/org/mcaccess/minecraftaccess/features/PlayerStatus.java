@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.GameType;
 
@@ -24,16 +26,20 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
  */
 @Slf4j
 public class PlayerStatus {
+    private final Minecraft client = Minecraft.getInstance();
     IntervalKeystroke narrationKey = new IntervalKeystroke(
             () -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping),
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
             Interval.ms(3000));
-    private final Minecraft client = Minecraft.getInstance();
+    private boolean wasSneaking = false;
+    private boolean wasSprinting = false;
 
     public void tick() {
         if (client.player == null) return;
         if (client.screen != null) return;
+
+        movementTypeStatus();
 
         if (narrationKey.canBeTriggered()) {
             if (client.hasControlDown()) {
@@ -107,6 +113,22 @@ public class PlayerStatus {
             MainClass.narrate(narration.toString(), true);
         }
         narrationKey.updateStateForNextTick();
+    }
+
+    private void movementTypeStatus() {
+        boolean isSneaking = client.player.isCrouching();
+        boolean isSprinting = client.player.isSprinting() && !isSneaking;
+
+        if (!wasSneaking && isSneaking) {
+            client.player.playNotifySound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.5f);
+        } else if (isSprinting && !wasSprinting) {
+            client.player.playNotifySound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 2.0f);
+        } else if (!isSneaking && wasSneaking || !isSprinting && wasSprinting) {
+            client.player.playNotifySound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.9f);
+        }
+
+        wasSneaking = isSneaking;
+        wasSprinting = isSprinting;
     }
 
     public void addGameMode(StringBuilder narration, GameType playerMode) {
