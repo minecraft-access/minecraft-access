@@ -23,6 +23,8 @@ import org.jetbrains.annotations.UnmodifiableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.mcaccess.minecraftaccess.MainClass;
+
 @Slf4j
 public class POIGroup<T> {
     private final String nameTranslateKey;
@@ -49,6 +51,8 @@ public class POIGroup<T> {
      * @return true if item was added
      */
     public boolean addIfQualified(T item) {
+        if (!MainClass.poiManager.objectTracker.isObjectValid(item)) return false;
+
         if (predicate.test(item)) {
             log.debug("[{}] Add POI item [{}]", getTranslatedName(), item);
             items.add(item);
