@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.input.InputQuirks;
 import net.minecraft.client.input.MouseButtonInfo;
 import org.lwjgl.glfw.GLFW;
 
@@ -30,7 +30,7 @@ public final class MouseUtils {
     public static void moveAndLeftClick(int x, int y) {
         move(x, y);
         // fix the https://github.com/minecraft-access/minecraft-access/issues/65
-        if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+        if (Util.getPlatform() == Util.OS.WINDOWS) {
             try {
                 // with a little bit of waiting, everything is ok now.
                 // I've tried to set the value to 10, and it doesn't always work, 20 is fine.
@@ -110,7 +110,7 @@ public final class MouseUtils {
             // basing on MouseHandler.onPress():
             // if Minecraft.ON_OSX && button == 0
             // run macOS related logic
-            int modifiers = InputQuirks.REPLACE_CTRL_KEY_WITH_CMD_KEY ? 0 : 1;
+            int modifiers = Minecraft.getInstance().hasShiftDown() ? 1 : 0;
             MouseButtonInfo mouseButtonInfo = new MouseButtonInfo(key.id, modifiers);
             getMouseHandler().invokeOnButton(getWindowPointer(), mouseButtonInfo, action);
         }
