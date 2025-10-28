@@ -38,33 +38,33 @@ public class AutoLibrarySetup {
     private void downloadAndInstall() throws IOException {
         switch (Util.getPlatform()) {
             case WINDOWS -> {
-            log.info("Downloading latest tolk build...");
-            File tolkLatestBuildZip = new File(Paths.get("tolk-latest-build.zip").toAbsolutePath().toString());
-            FileUtils.copyURLToFile(URI.create("https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip").toURL(), tolkLatestBuildZip);
+                log.info("Downloading latest tolk build...");
+                File tolkLatestBuildZip = new File(Paths.get("tolk-latest-build.zip").toAbsolutePath().toString());
+                FileUtils.copyURLToFile(URI.create("https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip").toURL(), tolkLatestBuildZip);
 
-            UnzipUtility unzipUtility = new UnzipUtility();
-            File tempDirectoryPath = Paths.get("temp-tolk-latest").toAbsolutePath().toFile();
-            unzipUtility.unzip(tolkLatestBuildZip.getAbsolutePath(), tempDirectoryPath.getAbsolutePath());
+                UnzipUtility unzipUtility = new UnzipUtility();
+                File tempDirectoryPath = Paths.get("temp-tolk-latest").toAbsolutePath().toFile();
+                unzipUtility.unzip(tolkLatestBuildZip.getAbsolutePath(), tempDirectoryPath.getAbsolutePath());
 
-            log.info("Moving files...");
-            String sourceDir = "x64";
-            if (System.getProperty("os.arch").equalsIgnoreCase("X86")) sourceDir = "x86";
-            FileUtils.copyDirectory(Paths.get(tempDirectoryPath.getAbsolutePath(), sourceDir).toFile(),
-                    tempDirectoryPath.getParentFile());
+                log.info("Moving files...");
+                String sourceDir = "x64";
+                if (System.getProperty("os.arch").equalsIgnoreCase("X86")) sourceDir = "x86";
+                FileUtils.copyDirectory(Paths.get(tempDirectoryPath.getAbsolutePath(), sourceDir).toFile(),
+                        tempDirectoryPath.getParentFile());
 
-            log.info("Deleting temp files...");
-            FileUtils.delete(tolkLatestBuildZip);
-            FileUtils.deleteDirectory(tempDirectoryPath);
-            log.info("tolk library downloaded and installed.");
+                log.info("Deleting temp files...");
+                FileUtils.delete(tolkLatestBuildZip);
+                FileUtils.deleteDirectory(tempDirectoryPath);
+                log.info("tolk library downloaded and installed.");
             }
             case LINUX -> {
-            log.info("Downloading libspeechdwrapper.so ...");
-            FileUtils.copyURLToFile(
-                    URI.create("https://github.com/khanshoaib3/libspeechdwrapper/releases/download/v1.0.0/libspeechdwrapper.so").toURL(),
-                    new File(Paths.get("libspeechdwrapper.so").toAbsolutePath().toString())
-            );
-            log.info("libspeechdwrapper.so downloaded and installed.");
-        }
+                log.info("Downloading libspeechdwrapper.so ...");
+                FileUtils.copyURLToFile(
+                        URI.create("https://github.com/khanshoaib3/libspeechdwrapper/releases/download/v1.0.0/libspeechdwrapper.so").toURL(),
+                        new File(Paths.get("libspeechdwrapper.so").toAbsolutePath().toString())
+                );
+                log.info("libspeechdwrapper.so downloaded and installed.");
+            }
             default -> {
             }
         }
@@ -112,7 +112,8 @@ public class AutoLibrarySetup {
             case LINUX -> {
                 requiredFiles.add("libspeechdwrapper.so");
             }
-            default -> {}
+            default -> {
+            }
         }
 
         return requiredFiles;
