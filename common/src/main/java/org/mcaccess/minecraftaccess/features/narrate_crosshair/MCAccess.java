@@ -5,12 +5,19 @@ import java.util.Arrays;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.features.redstoneDetails.DetailModesR;
+import org.mcaccess.minecraftaccess.features.redstoneDetails.RedstoneEnhancer;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
@@ -30,11 +37,23 @@ public class MCAccess implements CrosshairNarrator {
         }
         return switch (hit) {
             case BlockHitResult blockHitResult -> {
+                LocalPlayer player = Minecraft.getInstance().player;
+                Level world = player.level();
+                BlockState state = world.getBlockState(blockHitResult.getBlockPos());
+                Block block = state.getBlock();
+
+                if (block instanceof RedStoneWireBlock) {
+                    RedstoneEnhancer.describe(world, block, state, blockHitResult.getBlockPos());
+                }
                 String side = narrateSide ? blockHitResult.getDirection().getName() : "";
                 yield Arrays.asList(
+
                         NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getB(),
                         narrateConsecutiveBlocks ? blockHitResult.getBlockPos() : null
                 );
+
+
+
             }
             case EntityHitResult entityHitResult -> NarrationUtils.narrateEntity(entityHitResult.getEntity());
             default -> null;

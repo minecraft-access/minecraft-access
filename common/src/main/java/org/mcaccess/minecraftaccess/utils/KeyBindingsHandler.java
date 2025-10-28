@@ -313,11 +313,18 @@ public final class KeyBindingsHandler {
                 InputConstants.KEY_HOME,
                 Categories.OBJECT_TRACKER
         ),
+
         TARGET_NEAREST_OBJECT(
                 "minecraft_access.keys.object_tracker.target_nearest",
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_END,
                 Categories.OBJECT_TRACKER
+        ),
+        WEATHER(
+                "minecraft_access.keys.other.weather",
+                InputConstants.Type.KEYSYM,
+                InputConstants.KEY_X,
+                Categories.OTHER
         );
 
         public final KeyMapping mapping;

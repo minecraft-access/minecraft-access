@@ -20,6 +20,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.features.CameraControls;
+import org.mcaccess.minecraftaccess.features.DayAndWeatherIndicator;
 import org.mcaccess.minecraftaccess.features.FacingDirection;
 import org.mcaccess.minecraftaccess.features.FallDetector;
 import org.mcaccess.minecraftaccess.features.FluidDetector;
@@ -35,21 +36,29 @@ import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import org.mcaccess.minecraftaccess.features.narrate_crosshair.NarrateCrosshair;
 import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
+import org.mcaccess.minecraftaccess.features.structure.StructureDetector;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Slf4j
 public final class MainClass {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     public static final String MOD_ID = "minecraft_access";
+    private static final Logger log = LoggerFactory.getLogger(MainClass.class);
     @Getter
     private static ScreenReaderInterface screenReader = null;
 
     public static AccessMenu accessMenu = null;
+    public static StructureDetector structureDetector = null;
     public static BiomeIndicator biomeIndicator = null;
+    public static DayAndWeatherIndicator dayAndWeatherIndicator = null;
+
     public static FacingDirection facingDirection = null;
     public static FallDetector fallDetector = null;
     public static FluidDetector fluidDetector = null;
@@ -126,6 +135,10 @@ public final class MainClass {
             MouseKeySimulation.tick();
         }
 
+        if (structureDetector != null) {
+            structureDetector.tick();
+        }
+
         if (inventoryControls != null && config.inventoryControls.enabled) {
             inventoryControls.tick();
         }
@@ -138,8 +151,15 @@ public final class MainClass {
         }
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled) {
-            biomeIndicator.tick();
+        biomeIndicator.tick();
         }
+
+        if (dayAndWeatherIndicator != null) {
+            dayAndWeatherIndicator.tick();
+            log.info("se inició el detector dia noche");
+        }
+
+
 
             if (playerStatus != null) {
                 playerStatus.tick();
@@ -174,12 +194,15 @@ public final class MainClass {
     private static void initWorldState(LocalPlayer player) {
         accessMenu = new AccessMenu();
         biomeIndicator = new BiomeIndicator();
+        dayAndWeatherIndicator = new DayAndWeatherIndicator();
+
         facingDirection = new FacingDirection();
         fallDetector = new FallDetector();
         fluidDetector = new FluidDetector();
         hudStatus = new HUDStatus();
         inventoryControls = new InventoryControls();
         narrateCrosshair = new NarrateCrosshair();
+        structureDetector = new StructureDetector();
         narrateHeldItem = new NarrateHeldItem();
         playerStatus = new PlayerStatus();
         playerWarnings = new PlayerWarnings();
