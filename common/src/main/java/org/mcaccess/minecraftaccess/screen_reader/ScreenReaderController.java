@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.screen_reader;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.Nullable;
@@ -13,28 +14,27 @@ public final class ScreenReaderController {
     }
 
     public static @Nullable ScreenReaderInterface getAvailable() {
-        String osName = System.getProperty("os.name").toLowerCase();
-
-        if (osName.startsWith("windows")) {
-            ScreenReaderWindows screenReaderWindows = new ScreenReaderWindows();
-            screenReaderWindows.initializeScreenReader();
-            return screenReaderWindows;
+        switch (Util.getPlatform()) {
+            case WINDOWS -> {
+                ScreenReaderWindows screenReaderWindows = new ScreenReaderWindows();
+                screenReaderWindows.initializeScreenReader();
+                return screenReaderWindows;
+            }
+            case OSX -> {
+                ScreenReaderMacOS screenReaderMacOS = new ScreenReaderMacOS();
+                screenReaderMacOS.initializeScreenReader();
+                return screenReaderMacOS;
+            }
+            case LINUX -> {
+                ScreenReaderLinux screenReaderLinux = new ScreenReaderLinux();
+                screenReaderLinux.initializeScreenReader();
+                return screenReaderLinux;
+            }
+            default -> {
+                log.error("No valid ScreenReader interface found");
+                return null;
+            }
         }
-
-        if (osName.startsWith("mac")) {
-            ScreenReaderMacOS screenReaderMacOS = new ScreenReaderMacOS();
-            screenReaderMacOS.initializeScreenReader();
-            return screenReaderMacOS;
-        }
-
-        if (osName.startsWith("linux")) {
-            ScreenReaderLinux screenReaderLinux = new ScreenReaderLinux();
-            screenReaderLinux.initializeScreenReader();
-            return screenReaderLinux;
-        }
-
-        log.error("No valid ScreenReader interface found");
-        return null;
     }
 
     public static void refreshScreenReader() {

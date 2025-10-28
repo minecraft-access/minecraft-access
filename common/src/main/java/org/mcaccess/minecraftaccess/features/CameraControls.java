@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -14,7 +15,6 @@ import org.mcaccess.minecraftaccess.utils.condition.DoubleClick;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * This feature adds the following key binds to control the camera.<br><br>
@@ -43,8 +43,8 @@ public final class CameraControls {
     private static final Interval INTERVAL = Interval.defaultDelay();
 
     // config keystroke conditions
-    private static final DoubleClick straightUpDoubleClick = new DoubleClick(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_UP.mapping));
-    private static final DoubleClick straightDownDoubleClick = new DoubleClick(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping));
+    private static final DoubleClick straightUpDoubleClick = new DoubleClick(() -> KeyBindingsHandler.Keys.CAMERA_CONTROLS_UP.mapping.isDown());
+    private static final DoubleClick straightDownDoubleClick = new DoubleClick(() -> KeyBindingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping.isDown());
 
     private CameraControls() {
     }
@@ -68,27 +68,27 @@ public final class CameraControls {
      * Handles the key inputs
      */
     private static void keyListener() {
-        boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-        boolean isRightAltPressed = KeyUtils.isRightAltPressed();
+        boolean isLeftAltPressed = InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_LALT);
+        boolean isRightAltPressed = InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_RALT);
 
-        boolean isUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_UP.mapping, KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_UP.mapping);
-        boolean isRightKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping, KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_RIGHT.mapping);
-        boolean isDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping, KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_DOWN.mapping);
-        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_LEFT.mapping, KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_LEFT.mapping);
+        boolean isUpKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_UP.mapping.isDown() || KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_UP.mapping.isDown();
+        boolean isRightKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping.isDown() || KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_RIGHT.mapping.isDown();
+        boolean isDownKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping.isDown() || KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_DOWN.mapping.isDown();
+        boolean isLeftKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_LEFT.mapping.isDown() || KeyBindingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_LEFT.mapping.isDown();
 
-        boolean isNorthKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_NORTH.mapping)
+        boolean isNorthKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_NORTH.mapping.isDown()
                 || isUpKeyPressed && isRightAltPressed && !isLeftAltPressed;
-        boolean isEastKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_EAST.mapping)
+        boolean isEastKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_EAST.mapping.isDown()
                 || isRightKeyPressed && isRightAltPressed && !isLeftAltPressed;
-        boolean isWestKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_WEST.mapping)
+        boolean isWestKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_WEST.mapping.isDown()
                 || isLeftKeyPressed && isRightAltPressed && !isLeftAltPressed;
-        boolean isSouthKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_SOUTH.mapping)
+        boolean isSouthKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_SOUTH.mapping.isDown()
                 || isDownKeyPressed && isRightAltPressed && !isLeftAltPressed;
-        boolean isCenterCameraKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_CENTER_CAMERA.mapping);
+        boolean isCenterCameraKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_CENTER_CAMERA.mapping.isDown();
 
-        boolean isStraightUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_UP.mapping);
+        boolean isStraightUpKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_UP.mapping.isDown();
         boolean isUpKeyDoublePressedWithRightAlt = isRightAltPressed && straightUpDoubleClick.canBeTriggered();
-        boolean isStraightDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_DOWN.mapping);
+        boolean isStraightDownKeyPressed = KeyBindingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_DOWN.mapping.isDown();
         boolean isDownKeyDoublePressedWithRightAlt = isRightAltPressed && straightDownDoubleClick.canBeTriggered();
 
         boolean anyFunctionTriggered = false;

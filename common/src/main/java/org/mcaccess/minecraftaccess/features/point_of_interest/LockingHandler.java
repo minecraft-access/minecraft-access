@@ -30,7 +30,7 @@ import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 
 /**
  * Locks on to the nearest entity or block.<br><br>
@@ -79,7 +79,7 @@ public class LockingHandler {
     }
 
     private void handleLockingKeyPressing() {
-        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.LOCKING_HANDLER_KEY.mapping);
+        boolean isLockingKeyPressed = KeyBindingsHandler.Keys.LOCKING_HANDLER_KEY.mapping.isDown();
         if (isLockingKeyPressed && client.hasAltDown()) {
             if (isPlayerLocked()) {
                 unlock(true, true);
