@@ -7,7 +7,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Contract;
 
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * After experimentation, there is only one valid combination for opening and closing a menu with single key:
@@ -25,7 +24,7 @@ public class MenuKeystroke extends Keystroke {
     boolean isMenuJustClosed = false;
 
     public MenuKeystroke(KeyMapping singleKey) {
-        this(() -> KeyUtils.isAnyPressed(singleKey));
+        this(() -> singleKey.isDown());
     }
 
     public MenuKeystroke(BooleanSupplier condition) {

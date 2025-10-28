@@ -43,7 +43,6 @@ import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
@@ -179,16 +178,16 @@ public class InventoryControls {
      * Handles the key inputs.
      */
     private boolean keyListener() {
-        boolean isGroupKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping);
-        boolean isUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping);
-        boolean isRightKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
-        boolean isDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_DOWN_KEY.mapping);
-        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_LEFT_KEY.mapping);
-        boolean isSwitchTabKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
-        boolean isToggleCraftableKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
-        boolean isLeftShiftPressed = KeyUtils.isLeftShiftPressed();
-        boolean isEnterPressed = KeyUtils.isEnterPressed();
-        boolean isTPressed = KeyUtils.isAnyPressed(InputConstants.KEY_T);
+        boolean isGroupKeyPressed = KeyBindingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping.isDown();
+        boolean isUpKeyPressed = KeyBindingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping.isDown();
+        boolean isRightKeyPressed = KeyBindingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping.isDown();
+        boolean isDownKeyPressed = KeyBindingsHandler.Keys.INVENTORY_CONTROLS_DOWN_KEY.mapping.isDown();
+        boolean isLeftKeyPressed = KeyBindingsHandler.Keys.INVENTORY_CONTROLS_LEFT_KEY.mapping.isDown();
+        boolean isSwitchTabKeyPressed = KeyBindingsHandler.Keys.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping.isDown();
+        boolean isToggleCraftableKeyPressed = KeyBindingsHandler.Keys.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping.isDown();
+        boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
+                || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
+        boolean isTPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_T);
         boolean disableInputForSearchBox = false;
 
         //<editor-fold desc="When using a search box">
@@ -233,15 +232,15 @@ public class InventoryControls {
 
         if (isGroupKeyPressed) {
             log.debug("Group key pressed");
-            changeGroup(!isLeftShiftPressed);
+            changeGroup(!client.hasShiftDown());
             return true;
         }
         if (isSwitchTabKeyPressed) {
             log.debug("Switch Tab key pressed");
             if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen) {
-                changeRecipeTab(!isLeftShiftPressed);
+                changeRecipeTab(!client.hasShiftDown());
             } else if (currentScreen instanceof CreativeModeInventoryScreen) {
-                changeCreativeInventoryTab(!isLeftShiftPressed);
+                changeCreativeInventoryTab(!client.hasShiftDown());
             }
 
             return true;
@@ -249,7 +248,7 @@ public class InventoryControls {
 
         if (isUpKeyPressed) {
             log.debug("Up key pressed");
-            if (isLeftShiftPressed && currentGroup.isScrollable) {
+            if (client.hasShiftDown() && currentGroup.isScrollable) {
                 if (recipeBookIsOpening()) {
                     clickPreviousRecipeBookPage();
                 } else {
@@ -269,7 +268,7 @@ public class InventoryControls {
 
         if (isDownKeyPressed) {
             log.debug("Down key pressed");
-            if (isLeftShiftPressed && currentGroup.isScrollable) {
+            if (client.hasShiftDown() && currentGroup.isScrollable) {
                 if (recipeBookIsOpening()) {
                     clickNextRecipeBookPage();
                 } else {

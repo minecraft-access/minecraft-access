@@ -7,7 +7,7 @@ import net.minecraft.client.resources.language.I18n;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 
 /**
  * Adds key binding to narrate the player's facing direction.<br>
@@ -16,17 +16,15 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 @Slf4j
 public class FacingDirection {
     public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null) return;
+        if (client.screen != null) return;
 
-        boolean isDirectionNarrationKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.DIRECTION_NARRATION_KEY.mapping);
+        boolean isDirectionNarrationKeyPressed = KeyBindingsHandler.Keys.DIRECTION_NARRATION_KEY.mapping.isDown();
         if (!isDirectionNarrationKeyPressed) return;
 
-        boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-
         String narration;
-        if (isLeftAltPressed) {
+        if (client.hasAltDown()) {
             String t = PlayerPositionUtils.getVerticalFacingDirectionInWords();
             narration = I18n.get("minecraft_access.other.facing_direction", t);
         } else {

@@ -4,7 +4,6 @@ import java.util.function.BooleanSupplier;
 
 import net.minecraft.client.KeyMapping;
 
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * For keys that you can keep pressing and the function executes at intervals.
@@ -14,7 +13,7 @@ public class IntervalKeystroke extends TimedKeystroke {
      * Single key, {@link TriggeredAt#PRESSING}
      */
     public IntervalKeystroke(KeyMapping singleKey) {
-        this(() -> KeyUtils.isAnyPressed(singleKey), TriggeredAt.PRESSING);
+        this(() -> singleKey.isDown(), TriggeredAt.PRESSING);
     }
 
     /**

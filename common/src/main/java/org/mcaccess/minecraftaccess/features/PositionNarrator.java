@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.features;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
@@ -9,7 +10,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 
 /**
  * Adds key bindings to narrate the player's position.<br><br>
@@ -23,10 +24,11 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 public final class PositionNarrator {
     @Getter
     private static final PositionNarrator INSTANCE = new PositionNarrator();
-    public static Keystroke keyX = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_X));
-    public static Keystroke keyC = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_C));
-    public static Keystroke keyZ = new Keystroke(() -> KeyUtils.isAnyPressed(InputConstants.KEY_Z));
-    public static Keystroke positionNarrationKey = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.POSITION_NARRATION_KEY.mapping));
+    private static Window window = Minecraft.getInstance().getWindow();
+    public static Keystroke keyX = new Keystroke(() -> InputConstants.isKeyDown(window, InputConstants.KEY_X));
+    public static Keystroke keyC = new Keystroke(() -> InputConstants.isKeyDown(window, InputConstants.KEY_C));
+    public static Keystroke keyZ = new Keystroke(() -> InputConstants.isKeyDown(window, InputConstants.KEY_Z));
+    public static Keystroke positionNarrationKey = new Keystroke(() -> KeyBindingsHandler.Keys.POSITION_NARRATION_KEY.mapping.isDown());
 
     private PositionNarrator() {
     }
@@ -36,8 +38,7 @@ public final class PositionNarrator {
         if (minecraftClient.player == null) return;
         if (minecraftClient.screen != null) return;
 
-        boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-        if (isLeftAltPressed) {
+        if (Minecraft.getInstance().hasAltDown()) {
             if (keyX.canBeTriggered()) {
                 MainClass.narrate(PlayerPositionUtils.getNarratableXPos(), true);
             } else if (keyC.canBeTriggered()) {

@@ -9,7 +9,6 @@ import java.util.function.Function;
 import net.minecraft.client.KeyMapping;
 import org.jetbrains.annotations.Contract;
 
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * A state machine that helps with complex keystroke condition checking.
@@ -44,7 +43,7 @@ public class Keystroke {
      * Single key, {@link TriggeredAt#PRESSING}
      */
     public Keystroke(KeyMapping singleKey) {
-        this(() -> KeyUtils.isAnyPressed(singleKey), TriggeredAt.PRESSING);
+        this(() -> singleKey.isDown(), TriggeredAt.PRESSING);
     }
 
     /**
