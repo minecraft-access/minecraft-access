@@ -156,7 +156,7 @@ public final class MainClass {
 
         if (dayAndWeatherIndicator != null) {
             dayAndWeatherIndicator.tick();
-            log.info("se inició el detector dia noche");
+
         }
 
 
