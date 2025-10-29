@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.data.Main;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
 
@@ -20,16 +21,24 @@ import java.util.List;
 @Slf4j
 public class StructureDetector {
     private int tickCounter = 0;
-    private int hasReported = 1;
+
+    private int villagers = 0;
+    private int cats = 0;
+    private int golems = 0;
+    private boolean isPlayerInside = false;
 
     public void tick() {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         Level world = mc.level;
         if (player == null || world == null) return;
+
         tickCounter ++;
         if (tickCounter >= 150) {
+            reset();
         find(world, player);
+
+        tickCounter = 0;
         }
     }
 
@@ -38,26 +47,38 @@ public class StructureDetector {
         BlockPos playerPos = player.blockPosition();
         List<Entity> entities = world.getEntities(player, player.getBoundingBox().inflate(50D));
 
-        int villagers = 0;
-        int cats = 0;
+
 
         for (Entity e : entities) {
             if (e instanceof Villager) villagers ++;
             if (e instanceof Cat) cats ++;
+            if (e instanceof IronGolem) golems ++;
         }
 
 
 
 
-        if (hasReported == 1 && villagers >= 2 && cats >= 1) {
-            MainClass.narrate(I18n.get("minecraft_access.structuredetec.near"), false);
-            hasReported = 2;
-        }
+        if (!isPlayerInside && villagers >= 3 && cats >= 1) {
+            MainClass.narrate(I18n.get("minecraft_access.structuredetect.near"), false);
 
-        if (villagers == 0 && cats == 0 && hasReported == 2) {
-            hasReported = 1;
+            isPlayerInside = true;
 
         }
+
+
+        if (isPlayerInside && villagers == 0) {
+            MainClass.narrate(I18n.get("minecraft_access.structuredetect.out"), false);
+            isPlayerInside = false;
+            reset();
+            return;
+        }
+
     }
+
+    private void reset() {
+        cats = 0;
+        villagers = 0;
+    }
+
 
 }
