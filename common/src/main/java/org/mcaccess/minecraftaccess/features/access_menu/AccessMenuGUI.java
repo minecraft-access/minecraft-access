@@ -6,12 +6,14 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
+import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 
 /**
  * GUI screen for the access menu.
@@ -74,5 +76,14 @@ public class AccessMenuGUI extends Screen {
         rowHelper.addChild(Button.builder(label, pressAction)
                 .width(Math.min(250, width / 2 - 15))
                 .build());
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (KeyBindingsHandler.Keys.ACCESS_MENU_KEY.mapping.matches(event)) {
+            Minecraft.getInstance().player.clientSideCloseContainer();
+            return true;
+        }
+        return super.keyPressed(event);
     }
 }

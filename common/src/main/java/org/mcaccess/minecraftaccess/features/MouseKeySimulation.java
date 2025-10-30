@@ -2,10 +2,14 @@ package org.mcaccess.minecraftaccess.features;
 
 import java.util.Set;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Tuple;
 import org.apache.commons.lang3.tuple.Triple;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
@@ -17,9 +21,9 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  */
 public final class MouseKeySimulation {
     private static final Keystroke[] MOUSE_CLICKS = new Keystroke[]{
-            new Keystroke(() -> KeyBindingsHandler.Keys.MOUSE_SIMULATION_LEFT_MOUSE_KEY.mapping.isDown()),
-            new Keystroke(() -> KeyBindingsHandler.Keys.MOUSE_SIMULATION_MIDDLE_MOUSE_KEY.mapping.isDown()),
-            new Keystroke(() -> KeyBindingsHandler.Keys.MOUSE_SIMULATION_RIGHT_MOUSE_KEY.mapping.isDown()),
+            new Keystroke(() -> isKeyPressed(KeyBindingsHandler.Keys.MOUSE_SIMULATION_LEFT_MOUSE_KEY.mapping)),
+            new Keystroke(() -> isKeyPressed(KeyBindingsHandler.Keys.MOUSE_SIMULATION_MIDDLE_MOUSE_KEY.mapping)),
+            new Keystroke(() -> isKeyPressed(KeyBindingsHandler.Keys.MOUSE_SIMULATION_RIGHT_MOUSE_KEY.mapping)),
     };
     public static final Set<Triple<Keystroke, Runnable, Runnable>> MOUSE_CLICK_ACTIONS = Set.of(
             Triple.of(MOUSE_CLICKS[0], MouseUtils.Key.LEFT::press, MouseUtils.Key.LEFT::release),
@@ -59,5 +63,11 @@ public final class MouseKeySimulation {
                 t.getRight().run();
             }
         });
+    }
+
+    private static boolean isKeyPressed(KeyMapping keyMapping) {
+        if (keyMapping.isUnbound()) return false;
+
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), ((KeyMappingAccessor) keyMapping).getKey().getValue());
     }
 }
