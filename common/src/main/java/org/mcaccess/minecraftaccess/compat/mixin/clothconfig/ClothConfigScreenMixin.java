@@ -4,13 +4,18 @@ import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
+import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
 import me.shedaniel.clothconfig2.gui.AbstractTabbedConfigScreen;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
 import me.shedaniel.clothconfig2.gui.ClothConfigTabButton;
+import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -29,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.ScreenAccessor;
+import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
 
 /**
  * remap=false: suppress warnings since cloth isn't part of original game
@@ -60,7 +66,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
      * @implNote enable remap since this is a vanilla method from {@link Screen#init()}
      */
     @Inject(at = @At("TAIL"), method = "init", remap = true)
-    private void addComponentsAsNarratables(CallbackInfo ci) {
+    void addComponentsAsNarratables(CallbackInfo ci) {
         List<NarratableEntry> narratables = ((ScreenAccessor) this).getNarratables();
         if (listWidget != null) {
             narratables.addAll(listWidget.children());
@@ -115,6 +121,40 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
             arrowButton.mouseClicked(new MouseButtonEvent(arrowButton.getX() + 1, arrowButton.getY() + 1, new MouseButtonInfo(0, 0)), false);
             // but the scroll needs ticking to be finished, so directly trigger the tab button by calling onPress
             tabButton.onPress(new MouseButtonInfo(0, 0));
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Mixin(value = ClothConfigScreen.ListWidget.class, remap = false)
+    abstract static class ListWidgetMixin extends DynamicElementListWidget {
+        @Shadow
+        @Final
+        private AbstractConfigScreen screen;
+
+        protected ListWidgetMixin(Minecraft client, int width, int height, int top, int bottom, ResourceLocation backgroundLocation) {
+            super(client, width, height, top, bottom, backgroundLocation);
+        }
+
+        @Override
+        @Shadow
+        public abstract @NotNull List<GuiEventListener> children();
+
+        /**
+         * Focus on the last option if navigating backward from cancel button
+         */
+        @Override
+        public ComponentPath nextFocusPath(FocusNavigationEvent event) {
+            List<GuiEventListener> children = children();
+            if (!isFocused() && !children.isEmpty() && NavigationUtils.isDirectionBackward(event)) {
+                setFocused(null);
+                return ComponentPath.path(this, NavigationUtils.getFocusPathStartFrom(children.getLast(), event));
+            }
+            return super.nextFocusPath(event);
+        }
+
+        @Override
+        public boolean isFocused() {
+            return screen.getFocused() == this;
         }
     }
 }

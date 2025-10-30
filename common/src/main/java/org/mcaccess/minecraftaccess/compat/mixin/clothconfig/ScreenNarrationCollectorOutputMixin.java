@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.mcaccess.minecraftaccess.mixin.NarrationThunkAccessor;
 
 @Mixin(targets = "net.minecraft.client.gui.narration.ScreenNarrationCollector$Output")
-abstract class ScreenNarrationCollectorOutputMixin {
+public class ScreenNarrationCollectorOutputMixin {
     @Shadow
     @Final
     private int depth;
@@ -24,7 +24,7 @@ abstract class ScreenNarrationCollectorOutputMixin {
     private static int whiteSpaceCount = 0;
 
     @ModifyVariable(method = "add", at = @At("HEAD"), argsOnly = true)
-    private NarrationThunk<?> makeSameOptionValuesBeingNarrated(NarrationThunk<?> contents) {
+    public NarrationThunk<?> makeSameOptionValuesBeingNarrated(NarrationThunk<?> contents) {
         boolean clothScreenOpening = Minecraft.getInstance().screen instanceof ClothConfigScreen;
         boolean mightBeValueDepth = depth > 1;
         if (clothScreenOpening && mightBeValueDepth && ((NarrationThunkAccessor) contents).getContents() instanceof String content) {

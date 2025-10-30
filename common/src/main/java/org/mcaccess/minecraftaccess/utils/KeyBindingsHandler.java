@@ -313,7 +313,6 @@ public final class KeyBindingsHandler {
                 InputConstants.KEY_HOME,
                 Categories.OBJECT_TRACKER
         ),
-
         TARGET_NEAREST_OBJECT(
                 "minecraft_access.keys.object_tracker.target_nearest",
                 InputConstants.Type.KEYSYM,

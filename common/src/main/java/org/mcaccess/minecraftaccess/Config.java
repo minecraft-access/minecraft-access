@@ -11,9 +11,6 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.features.redstoneDetails.DetailModesR;
-import org.mcaccess.minecraftaccess.features.redstoneDetails.RedstoneEnhancer;
-
 @me.shedaniel.autoconfig.annotation.Config(name = "minecraft-access")
 public final class Config implements ConfigData {
     @ConfigEntry.Gui.Excluded
@@ -49,9 +46,6 @@ public final class Config implements ConfigData {
     @ConfigEntry.Category("fallDetector")
     @ConfigEntry.Gui.TransitiveObject
     public FallDetector fallDetector = new FallDetector();
-    @ConfigEntry.Category("redstoneDetails")
-    @ConfigEntry.Gui.TransitiveObject
-    public RedstoneEnhancer redstoneDetails = new RedstoneEnhancer();
     @ConfigEntry.Category("narrateCrosshair")
     @ConfigEntry.Gui.TransitiveObject
     public NarrateCrosshair narrateCrosshair = new NarrateCrosshair();
@@ -101,7 +95,6 @@ public final class Config implements ConfigData {
         public boolean alwaysNarratePickedUpItems = false;
         public boolean narrateHeldItemsCountWhenChanged = true;
         public boolean playNewChatMessageSound = true;
-
 
         private Features() {
         }
@@ -298,16 +291,5 @@ public final class Config implements ConfigData {
             private FluidDetector() {
             }
         }
-
-
     }
-    public static final class RedstoneDetails {
-        @ConfigEntry.Gui.Tooltip(count = 3)
-        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public DetailModesR mode = DetailModesR.DISABLE;
-
-        private RedstoneDetails() {}
-
-    }
-
 }

@@ -3,21 +3,31 @@ package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
+import me.shedaniel.math.Rectangle;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.ui.NavigationUtils;
 
 @SuppressWarnings("rawtypes")
@@ -68,5 +78,31 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         String translationKey = isExpanded() ? "minecraft_access.gui.subcategory_expanded" : "minecraft_access.gui.subcategory_unexpanded";
         builder.add(NarratedElementType.TITLE, Component.translatable(translationKey, getFieldName()));
         super.updateNarration(builder);
+    }
+
+    @Mixin(value = SubCategoryListEntry.CategoryLabelWidget.class, remap = false)
+    abstract static class CategoryLabelWidgetMixin implements GuiEventListener, NarratableEntry {
+        @Shadow
+        @Final
+        private Rectangle rectangle;
+
+        /**
+         * Make the label widget expandable through keyboard.
+         * Although this widget is treated as one of {@link SubCategoryListEntry#children()},
+         * it's this very widget's job to handle mouse operation.
+         */
+        @Override
+        public boolean keyPressed(KeyEvent event) {
+            if (KeyUtils.isSpaceOrEnterPressed()) {
+                mouseClicked(new MouseButtonEvent(rectangle.x + 1, rectangle.y + 1, new MouseButtonInfo(0, 0)), false);
+                return true;
+            }
+            return false;
+        }
+
+        @Inject(method = "narrationPriority", at = @At("TAIL"), remap = true, cancellable = true)
+        public void neverNarrateLabel(CallbackInfoReturnable<NarrationPriority> cir) {
+            cir.setReturnValue(NarrationPriority.NONE);
+        }
     }
 }

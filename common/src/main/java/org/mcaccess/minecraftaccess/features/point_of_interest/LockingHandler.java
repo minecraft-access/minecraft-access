@@ -109,9 +109,7 @@ public class LockingHandler {
 
         if (lockedOnEntity != null) {
             if (unlockFromDeadEntity()) return;
-
             PlayerUtils.lookAt(lockedOnEntity);
-
         }
 
         if (lockedOnBlockPos != null) {

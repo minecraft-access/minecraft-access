@@ -23,13 +23,12 @@ public class StructureDetector {
 
     public void tick() {
         Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = mc.player;
-        Level world = mc.level;
-        if (player == null || world == null) return;
+
+        if (mc.level == null || mc.player == null) return;
         tickCounter++;
         if (tickCounter >= 150) {
             reset();
-            find(world, player);
+            find(mc.level, mc.player);
             tickCounter = 0;
         }
     }

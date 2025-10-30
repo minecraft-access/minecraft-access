@@ -17,7 +17,7 @@ import org.mcaccess.minecraftaccess.mixin.BossHealthOverlayAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 
 public class HUDStatus {
-    private final Minecraft client = Minecraft.getInstance();
+    private final Minecraft client = Minecraft.getInstance().getInstance();
     private Boolean hudWasHidden = Minecraft.getInstance().options.hideGui;
     private boolean attackCooldownPlayed = false;
     private boolean bossbarKeyIsDown = false;
