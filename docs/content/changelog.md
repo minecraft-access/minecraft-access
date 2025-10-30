@@ -4,6 +4,10 @@ title: "Changelog"
 
 <!-- INSERT CHANGELOG HERE -->
 
+## Release v1.11.1 (2025-10)
+### Bug Fixes
+- Fixed a bug which caused you to always or never shift click items in inventories
+
 ## Release v1.11.0 (2025-10)
 ### New Features
 - The attack cooldown indicator is now represented by a low-pitched clicking sound when it fills. This sound only plays if the indicator is visible on screen; to suppress it, either hide the HUD entirely or set the attack indicator to “Off” in the options menu.
