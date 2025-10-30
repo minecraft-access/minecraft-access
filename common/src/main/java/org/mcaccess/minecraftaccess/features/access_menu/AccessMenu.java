@@ -86,7 +86,7 @@ public class AccessMenu {
         if (CLIENT.player == null) return;
 
         if (CLIENT.screen == null) {
-            if (Minecraft.getInstance().hasAltDown()) {
+            if (CLIENT.hasAltDown()) {
                 handleInMenuActions();
                 return;
             }
@@ -102,7 +102,6 @@ public class AccessMenu {
                 CLIENT.setScreen(new AccessMenuGUI());
             }
         } else if (CLIENT.screen instanceof AccessMenuGUI) {
-            if (MENU_KEY.closeMenuIfMenuKeyPressing()) return;
             handleInMenuActions();
         }
 
