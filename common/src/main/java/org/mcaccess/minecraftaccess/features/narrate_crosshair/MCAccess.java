@@ -14,9 +14,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.features.redstoneDetails.DetailModesR;
 import org.mcaccess.minecraftaccess.features.redstoneDetails.RedstoneEnhancer;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;

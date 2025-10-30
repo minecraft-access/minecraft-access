@@ -1,11 +1,11 @@
-plugins {
+ plugins {
     alias(libs.plugins.architecturyPlugin)
     alias(libs.plugins.architecturyLoom) apply false
     alias(libs.plugins.gitVersion)
 }
 
 def git = versionDetails()
-def tag = git.lastTag.substring(1)
+def         tag = git.lastTag.substring(1)
 if (System.getenv("GITHUB_ACTIONS") == "true") {
     if (System.getenv("GITHUB_WORKFLOW") == "Release") {
         version = tag

@@ -1,22 +1,16 @@
 package org.mcaccess.minecraftaccess.features.structure;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
-import net.minecraft.data.Main;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
-
-import net.minecraft.world.level.block.Blocks;
-
 import org.mcaccess.minecraftaccess.MainClass;
-
-import java.util.List;
 
 @Slf4j
 public class StructureDetector {
@@ -32,39 +26,27 @@ public class StructureDetector {
         LocalPlayer player = mc.player;
         Level world = mc.level;
         if (player == null || world == null) return;
-
-        tickCounter ++;
+        tickCounter++;
         if (tickCounter >= 150) {
             reset();
-        find(world, player);
-
-        tickCounter = 0;
+            find(world, player);
+            tickCounter = 0;
         }
     }
 
     private void find(Level world, LocalPlayer player) {
-        int radius = 50;
-        BlockPos playerPos = player.blockPosition();
         List<Entity> entities = world.getEntities(player, player.getBoundingBox().inflate(50D));
 
-
-
         for (Entity e : entities) {
-            if (e instanceof Villager) villagers ++;
-            if (e instanceof Cat) cats ++;
-            if (e instanceof IronGolem) golems ++;
+            if (e instanceof Villager) villagers++;
+            if (e instanceof Cat) cats++;
+            if (e instanceof IronGolem) golems++;
         }
-
-
-
 
         if (!isPlayerInside && villagers >= 3 && cats >= 1) {
             MainClass.narrate(I18n.get("minecraft_access.structuredetect.near"), false);
-
             isPlayerInside = true;
-
         }
-
 
         if (isPlayerInside && villagers == 0) {
             MainClass.narrate(I18n.get("minecraft_access.structuredetect.out"), false);
@@ -72,13 +54,11 @@ public class StructureDetector {
             reset();
             return;
         }
-
     }
 
     private void reset() {
         cats = 0;
         villagers = 0;
     }
-
 
 }

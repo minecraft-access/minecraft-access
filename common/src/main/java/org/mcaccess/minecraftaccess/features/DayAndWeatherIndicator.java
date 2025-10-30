@@ -1,16 +1,15 @@
 package org.mcaccess.minecraftaccess.features;
 
-import io.netty.handler.codec.spdy.SpdyHttpResponseStreamIdHandler;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.Holder;
 import net.minecraft.world.level.Level;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 
 @Slf4j
 public class DayAndWeatherIndicator {
@@ -61,23 +60,22 @@ public class DayAndWeatherIndicator {
         }
     }
 
-private void getWeatherFromKey() {
-    if (KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.WEATHER.mapping)) {
-        interpreteWeather(weather, true);
+    private void getWeatherFromKey() {
+        if (KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.WEATHER.mapping)) {
+            interpreteWeather(weather, true);
+        }
     }
 
+    private void interpreteWeather(int i, boolean b) {
+        if (i == 1) {
+            MainClass.narrate(I18n.get("minecraft_access.weather.clear"), b);
+        }
+        if (i == 2) {
+            MainClass.narrate(I18n.get("minecraft_access.weather.rain"), b);
+        }
+        if (i == 3) {
+            MainClass.narrate(I18n.get("minecraft_access.weather.thunder"), b);
+        }
+    }
 
-}
-
-private void interpreteWeather(int i, boolean b) {
-    if (i == 1) {
-        MainClass.narrate(I18n.get("minecraft_access.weather.clear"), b);
-    }
-    if (i == 2) {
-        MainClass.narrate(I18n.get("minecraft_access.weather.rain"), b);
-    }
-    if (i == 3) {
-        MainClass.narrate(I18n.get("minecraft_access.weather.thunder"), b);
-    }
-}
 }

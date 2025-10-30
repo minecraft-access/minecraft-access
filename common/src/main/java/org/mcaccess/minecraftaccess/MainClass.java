@@ -151,7 +151,7 @@ public final class MainClass {
         }
 
         if (biomeIndicator != null && config.features.biomeIndicatorEnabled) {
-        biomeIndicator.tick();
+            biomeIndicator.tick();
         }
 
         if (dayAndWeatherIndicator != null) {
@@ -159,15 +159,13 @@ public final class MainClass {
 
         }
 
+        if (playerStatus != null) {
+            playerStatus.tick();
+        }
 
-
-            if (playerStatus != null) {
-                playerStatus.tick();
-            }
-
-            if (client.screen == null) {
-                CameraControls.tick();
-            }
+        if (client.screen == null) {
+            CameraControls.tick();
+        }
 
         if (playerWarnings != null) {
             if (config.playerWarnings.enabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {

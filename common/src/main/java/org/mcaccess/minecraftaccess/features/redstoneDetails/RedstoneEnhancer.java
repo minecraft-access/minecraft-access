@@ -2,9 +2,7 @@ package org.mcaccess.minecraftaccess.features.redstoneDetails;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-
 import net.minecraft.world.level.block.Block;
-
 import net.minecraft.world.level.block.CrafterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.DropperBlock;
@@ -15,9 +13,7 @@ import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.level.block.ComparatorBlock;
 import net.minecraft.world.level.block.TripWireHookBlock;
 import net.minecraft.world.level.block.ObserverBlock;
-
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.mcaccess.minecraftaccess.MainClass;
 
 public class RedstoneEnhancer {
@@ -70,7 +66,5 @@ public class RedstoneEnhancer {
 
         MainClass.narrate(finalText, false);
     }
-
-
 
 }
