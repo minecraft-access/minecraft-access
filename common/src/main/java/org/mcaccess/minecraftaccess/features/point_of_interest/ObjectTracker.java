@@ -15,13 +15,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.AirBlock;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 
 @Slf4j
 public class ObjectTracker {
@@ -29,10 +30,10 @@ public class ObjectTracker {
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
 
-    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_NEXT_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_PREVIOUS_ITEM.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.TARGET_NEAREST_OBJECT.mapping), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyBindingsHandler.Keys.OBJECT_TRACKER_NEXT_ITEM.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyBindingsHandler.Keys.OBJECT_TRACKER_PREVIOUS_ITEM.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyBindingsHandler.Keys.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyBindingsHandler.Keys.TARGET_NEAREST_OBJECT.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
 
     @Getter
     private Object currentObject = null;
@@ -82,16 +83,20 @@ public class ObjectTracker {
 
         int currentGroupIndex = groups.indexOf(currentGroup);
 
+        if (currentGroup != null && currentGroup.isEmpty()) currentGroupIndex = -1;
         if (!groups.isEmpty() && currentGroupIndex == -1) currentGroup = groups.getFirst();
         if (groups.isEmpty() && currentGroupIndex != -1) currentGroup = null;
     }
 
     private void narrateCurrentObject(boolean interrupt) {
-        if (currentObject == null) {
+        if (checkAndNarrateIfAllGroupsEmpty()) return;
+
+        if (!isObjectValid(currentObject)) {
+            clearCurrentObject();
             MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
+            return;
         }
 
-        if (checkAndNarrateIfAllGroupsEmpty()) return;
         boolean narrateDistance = Config.getInstance().poi.narrateDistance;
 
         if (currentObject instanceof Entity entity) {
@@ -112,6 +117,7 @@ public class ObjectTracker {
                     1.0f,
                     true
             );
+            return;
         }
 
         if (currentObject instanceof BlockPos blockPos) {
@@ -137,27 +143,76 @@ public class ObjectTracker {
         if (checkAndNarrateIfAllGroupsEmpty()) return;
 
         int currentGroupIndex = groups.indexOf(currentGroup);
+        int newIndex = currentGroupIndex + step;
 
-        if ((currentGroupIndex + step) > (groups.size() - 1)) {
-            MainClass.narrate(I18n.get(END_OF_LIST), true);
-            MainClass.narrate(currentGroup.getTranslatedName(), false);
-            return;
-        }
-
-        if ((currentGroupIndex + step) < 0) {
+        boolean atBoundary = false;
+        if (newIndex < 0) {
+            newIndex = 0;
+            atBoundary = true;
             MainClass.narrate(I18n.get(START_OF_LIST), true);
-            MainClass.narrate(currentGroup.getTranslatedName(), false);
+        } else if (newIndex >= groups.size()) {
+            newIndex = groups.size() - 1;
+            atBoundary = true;
+            MainClass.narrate(I18n.get(END_OF_LIST), true);
+        }
+
+        POIGroup<?> nextGroup = groups.get(newIndex);
+
+        while ((nextGroup.isEmpty()
+            || nextGroup.sortByDistance().stream().noneMatch(this::isObjectValid))
+                && newIndex + step >= 0
+                && newIndex + step < groups.size()) {
+            newIndex += step;
+            nextGroup = groups.get(newIndex);
+        }
+
+        if (nextGroup.isEmpty()
+                || nextGroup.sortByDistance().stream().noneMatch(this::isObjectValid)) {
+            MainClass.narrate(I18n.get(step > 0 ? END_OF_LIST : START_OF_LIST), true);
             return;
         }
 
-        currentGroup = groups.get(currentGroupIndex + step);
-        currentObject = currentGroup.sortByDistance().getFirst();
-        MainClass.narrate(currentGroup.getTranslatedName(), true);
+        currentGroup = nextGroup;
+
+        List<?> validObjects = currentGroup.sortByDistance().stream()
+                .filter(this::isObjectValid)
+                .toList();
+
+        if (validObjects.isEmpty()) {
+            clearCurrentObject();
+            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
+            return;
+        }
+
+        currentObject = validObjects.getFirst();
+
+        if (!atBoundary) {
+            MainClass.narrate(currentGroup.getTranslatedName(), true);
+        } else {
+            MainClass.narrate(currentGroup.getTranslatedName(), false);
+        }
+
         narrateCurrentObject(false);
+    }
+
+    public boolean isObjectValid(Object object) {
+        if (object == null) return false;
+
+        if (object instanceof Entity entity) {
+            return entity.isAlive();
+        }
+
+        if (object instanceof BlockPos pos) {
+            if (client.level == null) return false;
+            return !(client.level.getBlockState(pos).getBlock() instanceof AirBlock);
+        }
+
+        return false;
     }
 
     private void moveObject(int step) {
         if (checkAndNarrateIfAllGroupsEmpty()) return;
+        if (currentGroup != null && currentGroup.isEmpty()) clearCurrentObject();
 
         List<?> objects = currentGroup.sortByDistance();
         int currentObjectIndex = objects.indexOf(currentObject);
@@ -165,32 +220,40 @@ public class ObjectTracker {
         if (currentObjectIndex == -1) {
             MainClass.narrate(I18n.get(START_OF_LIST), true);
             currentObject = objects.getFirst();
-            narrateCurrentObject(false);
-            return;
+        } else {
+            int newIndex = currentObjectIndex + step;
+            if (newIndex < 0) {
+                MainClass.narrate(I18n.get(START_OF_LIST), true);
+                currentObject = objects.getFirst();
+            } else if (newIndex >= objects.size()) {
+                MainClass.narrate(I18n.get(END_OF_LIST), true);
+                currentObject = objects.getLast();
+            } else {
+                currentObject = objects.get(newIndex);
+            }
         }
 
-        if ((currentObjectIndex + step) > (objects.size() - 1)) {
-            MainClass.narrate(I18n.get(END_OF_LIST), true);
-            narrateCurrentObject(false);
-            return;
+        while (!isObjectValid(currentObject)) {
+            int nextIndex = objects.indexOf(currentObject) + step;
+            if (nextIndex < 0 || nextIndex >= objects.size()) {
+                MainClass.narrate(I18n.get(step > 0 ? END_OF_LIST : START_OF_LIST), true);
+                clearCurrentObject();
+                return;
+            }
+            currentObject = objects.get(nextIndex);
         }
 
-        if ((currentObjectIndex + step) < 0) {
-            MainClass.narrate(I18n.get(START_OF_LIST), true);
-            narrateCurrentObject(false);
-            return;
-        }
-
-        currentObject = objects.get(currentObjectIndex + step);
-        narrateCurrentObject(true);
+        narrateCurrentObject(false);
     }
 
     private boolean checkAndNarrateIfAllGroupsEmpty() {
         if (groups.isEmpty()) {
+            clearCurrentObject();
             MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found"), true);
-
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     private void targetNearestObject() {
@@ -249,5 +312,6 @@ public class ObjectTracker {
 
     public void clearCurrentObject() {
         currentObject = null;
+        updateGroups();
     }
 }

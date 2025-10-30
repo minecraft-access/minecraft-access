@@ -26,7 +26,6 @@ import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 
 /**
  * Opens a menu when F4 button is pressed (configurable) with helpful options.
@@ -87,7 +86,7 @@ public class AccessMenu {
         if (CLIENT.player == null) return;
 
         if (CLIENT.screen == null) {
-            if (Minecraft.getInstance().hasAltDown()) {
+            if (CLIENT.hasAltDown()) {
                 handleInMenuActions();
                 return;
             }
@@ -103,13 +102,12 @@ public class AccessMenu {
                 CLIENT.setScreen(new AccessMenuGUI());
             }
         } else if (CLIENT.screen instanceof AccessMenuGUI) {
-            if (MENU_KEY.closeMenuIfMenuKeyPressing()) return;
             handleInMenuActions();
         }
 
         if (CLIENT.screen instanceof GameModeSwitcherScreen) {
             gameModeSwitcherActive = true;
-        } else if (!KeyUtils.isAnyPressed(InputConstants.KEY_F4)) {
+        } else if (!InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_F4)) {
             gameModeSwitcherActive = false;
         }
     }

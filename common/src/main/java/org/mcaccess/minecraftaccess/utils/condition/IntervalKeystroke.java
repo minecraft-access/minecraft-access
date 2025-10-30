@@ -2,9 +2,12 @@ package org.mcaccess.minecraftaccess.utils.condition;
 
 import java.util.function.BooleanSupplier;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
+
 
 /**
  * For keys that you can keep pressing and the function executes at intervals.
@@ -14,7 +17,9 @@ public class IntervalKeystroke extends TimedKeystroke {
      * Single key, {@link TriggeredAt#PRESSING}
      */
     public IntervalKeystroke(KeyMapping singleKey) {
-        this(() -> KeyUtils.isAnyPressed(singleKey), TriggeredAt.PRESSING);
+        this(() ->
+                        InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), ((KeyMappingAccessor) singleKey).getKey().getValue()),
+                TriggeredAt.PRESSING);
     }
 
     /**

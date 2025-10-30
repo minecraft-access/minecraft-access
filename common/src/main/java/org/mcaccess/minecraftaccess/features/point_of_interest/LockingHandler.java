@@ -14,8 +14,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.BowItem;
-import net.minecraft.world.level.block.AirBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DoorBlock;
@@ -32,7 +30,7 @@ import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 
 /**
  * Locks on to the nearest entity or block.<br><br>
@@ -81,7 +79,7 @@ public class LockingHandler {
     }
 
     private void handleLockingKeyPressing() {
-        boolean isLockingKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.LOCKING_HANDLER_KEY.mapping);
+        boolean isLockingKeyPressed = KeyBindingsHandler.Keys.LOCKING_HANDLER_KEY.mapping.isDown();
         if (isLockingKeyPressed && client.hasAltDown()) {
             if (isPlayerLocked()) {
                 unlock(true, true);
@@ -255,8 +253,6 @@ public class LockingHandler {
      * @return true if unlocked
      */
     private boolean unlockFromDeadEntity() {
-        if (lockedOnEntity.isAlive()) return false;
-
         // When the eye of ender disappears, its isAlive() will also return false.
         // Change the lock target to the last (block) position (somewhere floating in the air) where the eye of ender disappeared,
         // so the player can continue walking until being under that position.
@@ -264,6 +260,8 @@ public class LockingHandler {
             lockOnBlock(lockedOnEntity.blockPosition());
             isLockedOnWhereEyeOfEnderDisappears = true;
         }
+
+        if (MainClass.poiManager.objectTracker.isObjectValid(lockedOnEntity)) return false;
 
         unlock(true, false);
         return true;
@@ -275,9 +273,7 @@ public class LockingHandler {
      * @return true if unlocked
      */
     private boolean unlockFromAirBlock() {
-        assert client.level != null;
-        Block currentBlock = client.level.getBlockState(lockedOnBlockPos).getBlock();
-        if (!(currentBlock instanceof AirBlock)) return false;
+        if (MainClass.poiManager.objectTracker.isObjectValid(lockedOnBlockPos)) return false;
         unlock(true, false);
         return true;
     }
@@ -286,7 +282,7 @@ public class LockingHandler {
      * @return true if locked
      */
     public boolean lockOnEntity(Entity entity) {
-        if (!entity.isAlive()) return false;
+        if (!MainClass.poiManager.objectTracker.isObjectValid(entity)) return false;
 
         unlock(false, true);
         lockedOnEntity = entity;

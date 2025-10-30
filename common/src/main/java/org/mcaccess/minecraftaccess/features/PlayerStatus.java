@@ -16,7 +16,7 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
+
 
 /**
  * Adds a key bind to narrate the player's non potion related statuses.<br>
@@ -25,7 +25,7 @@ import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 @Slf4j
 public class PlayerStatus {
     IntervalKeystroke narrationKey = new IntervalKeystroke(
-            () -> KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping),
+            () -> KeyBindingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping.isDown(),
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
             Interval.ms(3000));

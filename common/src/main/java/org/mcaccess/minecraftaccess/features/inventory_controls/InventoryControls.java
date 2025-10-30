@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.StateSwitchingButton;
@@ -39,11 +40,11 @@ import org.mcaccess.minecraftaccess.mixin.AbstractRecipeBookScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.AnvilScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.CreativeModeInventoryScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.EditBoxAccessor;
+import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
@@ -179,16 +180,16 @@ public class InventoryControls {
      * Handles the key inputs.
      */
     private boolean keyListener() {
-        boolean isGroupKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping);
-        boolean isUpKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping);
-        boolean isRightKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
-        boolean isDownKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_DOWN_KEY.mapping);
-        boolean isLeftKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_LEFT_KEY.mapping);
-        boolean isSwitchTabKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
-        boolean isToggleCraftableKeyPressed = KeyUtils.isAnyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
-        boolean isLeftShiftPressed = KeyUtils.isLeftShiftPressed();
-        boolean isEnterPressed = KeyUtils.isEnterPressed();
-        boolean isTPressed = KeyUtils.isAnyPressed(InputConstants.KEY_T);
+        boolean isGroupKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping);
+        boolean isUpKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping);
+        boolean isRightKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
+        boolean isDownKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_DOWN_KEY.mapping);
+        boolean isLeftKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_LEFT_KEY.mapping);
+        boolean isSwitchTabKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
+        boolean isToggleCraftableKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
+        boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
+                || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
+        boolean isTPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_T);
         boolean disableInputForSearchBox = false;
 
         //<editor-fold desc="When using a search box">
@@ -233,15 +234,15 @@ public class InventoryControls {
 
         if (isGroupKeyPressed) {
             log.debug("Group key pressed");
-            changeGroup(!isLeftShiftPressed);
+            changeGroup(!client.hasShiftDown());
             return true;
         }
         if (isSwitchTabKeyPressed) {
             log.debug("Switch Tab key pressed");
             if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen) {
-                changeRecipeTab(!isLeftShiftPressed);
+                changeRecipeTab(!client.hasShiftDown());
             } else if (currentScreen instanceof CreativeModeInventoryScreen) {
-                changeCreativeInventoryTab(!isLeftShiftPressed);
+                changeCreativeInventoryTab(!client.hasShiftDown());
             }
 
             return true;
@@ -249,7 +250,7 @@ public class InventoryControls {
 
         if (isUpKeyPressed) {
             log.debug("Up key pressed");
-            if (isLeftShiftPressed && currentGroup.isScrollable) {
+            if (client.hasShiftDown() && currentGroup.isScrollable) {
                 if (recipeBookIsOpening()) {
                     clickPreviousRecipeBookPage();
                 } else {
@@ -269,7 +270,7 @@ public class InventoryControls {
 
         if (isDownKeyPressed) {
             log.debug("Down key pressed");
-            if (isLeftShiftPressed && currentGroup.isScrollable) {
+            if (client.hasShiftDown() && currentGroup.isScrollable) {
                 if (recipeBookIsOpening()) {
                     clickNextRecipeBookPage();
                 } else {
@@ -322,6 +323,12 @@ public class InventoryControls {
         }
 
         return false;
+    }
+
+    private boolean isKeyPressed(KeyMapping keyMapping) {
+        if (keyMapping.isUnbound()) return false;
+
+        return InputConstants.isKeyDown(client.getWindow(), ((KeyMappingAccessor) keyMapping).getKey().getValue());
     }
 
     private boolean recipeBookIsOpening() {

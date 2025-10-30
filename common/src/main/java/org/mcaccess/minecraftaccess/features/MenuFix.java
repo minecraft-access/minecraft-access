@@ -27,7 +27,6 @@ import net.minecraft.client.gui.screens.worldselection.EditWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.utils.system.KeyUtils;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
@@ -63,22 +62,20 @@ public final class MenuFix {
     private MenuFix() {
     }
 
-    public static void tick(Minecraft minecraftClient) {
-        if (!Config.getInstance().menuFixEnabled || minecraftClient.screen == null) {
+    public static void tick(Minecraft client) {
+        if (!Config.getInstance().menuFixEnabled || client.screen == null) {
             return;
         }
 
-        Class<? extends Screen> currentScreen = minecraftClient.screen.getClass();
+        Class<? extends Screen> currentScreen = client.screen.getClass();
         if (MENUS_NEED_FIX.contains(currentScreen)) {
             if (prevScreenClass != currentScreen) {
-                log.debug("Performing menu fix on {}", minecraftClient.screen.getTitle().getString());
+                log.debug("Performing menu fix on {}", client.screen.getTitle().getString());
                 moveMouseCursor();
                 prevScreenClass = currentScreen;
             }
 
-            boolean isLeftAltPressed = KeyUtils.isLeftAltPressed();
-            boolean isRPressed = KeyUtils.isAnyPressed(InputConstants.KEY_R);
-            if (isLeftAltPressed && isRPressed) {
+            if (InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_R) && client.hasAltDown()) {
                 moveMouseCursor();
             }
         }
