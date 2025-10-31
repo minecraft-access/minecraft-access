@@ -20,7 +20,7 @@ import org.mcaccess.minecraftaccess.MainClass;
  * Narrates titles
  */
 @Mixin(Gui.class)
-public class GuiMixin {
+abstract class GuiMixin {
     @Shadow
     private Component title;
 
