@@ -47,6 +47,11 @@ subprojects {
                 artifactType("zip")
             }
         }
+
+        compileOnly libs.lombok
+        annotationProcessor libs.lombok
+        testCompileOnly libs.lombok
+        testAnnotationProcessor libs.lombok
     }
 
     // If you add something to the repositories block

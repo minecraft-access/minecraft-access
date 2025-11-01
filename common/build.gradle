@@ -13,12 +13,6 @@ dependencies {
     modImplementation libs.architecturyApi
     modImplementation libs.clothConfig
 
-    // https://projectlombok.org/setup/gradle
-    compileOnly libs.lombok
-    annotationProcessor libs.lombok
-    testCompileOnly libs.lombok
-    testAnnotationProcessor libs.lombok
-
     // Unit test dependencies
     testImplementation libs.junitJupiter
     testImplementation libs.junitJupiterParams

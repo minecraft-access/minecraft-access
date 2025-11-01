@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess;
 
+import java.util.List;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
@@ -17,6 +19,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
 
+import org.mcaccess.minecraftaccess.api.AddonRegistry;
+import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.features.CameraControls;
@@ -45,6 +49,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 public final class MainClass {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     public static final String MOD_ID = "minecraft_access";
+    public static final AddonRegistry REGISTRY = new AddonRegistry();
     @Getter
     private static ScreenReaderInterface screenReader = null;
 
@@ -68,7 +73,7 @@ public final class MainClass {
     /**
      * Initializes the mod
      */
-    public static void init() {
+    public static void init(List<MinecraftAccessAddon> addons) {
         Config.init();
 
         String startupMessage = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
@@ -94,6 +99,10 @@ public final class MainClass {
                 getScreenReader().closeScreenReader();
             }
         }, "Shutdown-thread"));
+
+        for (MinecraftAccessAddon addon : addons) {
+            addon.init(REGISTRY);
+        }
     }
 
     /**
