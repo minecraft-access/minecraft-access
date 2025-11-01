@@ -13,12 +13,14 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -166,11 +168,10 @@ public class AccessMenu {
 
     public static void getBiome() {
         if (CLIENT.player == null) return;
-        if (CLIENT.level == null) return;
 
         CLIENT.player.clientSideCloseContainer();
 
-        Holder<Biome> currentBiome = CLIENT.level.getBiome(CLIENT.player.blockPosition());
+        Holder<Biome> currentBiome = BiomeIndicator.getCurrentBiome();
         NarrationUtils.getTranslatedName(currentBiome, "biome")
                 .ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true));
     }
@@ -221,6 +222,37 @@ public class AccessMenu {
 
         String narration = I18n.get(translationKey.toString(), String.format("%02d:%02d", hours, minutes));
         MainClass.narrate(narration, true);
+    }
+
+    public static void getWeatherStatus() {
+        Holder<Biome> currentBiome = BiomeIndicator.getCurrentBiome();
+        Level level = CLIENT.level;
+        if (CLIENT.player == null) return;
+        if (level == null) return;
+        if (currentBiome == null) return;
+
+        Biome.Precipitation currentPrecipitation = currentBiome.value()
+                .getPrecipitationAt(CLIENT.player.getOnPos(), level.getSeaLevel());
+
+        CLIENT.player.clientSideCloseContainer();
+
+        if (!level.isRaining()) {
+            MainClass.narrate(I18n.get("minecraft_access.weather.clear"), false);
+            return;
+        }
+
+        switch (currentPrecipitation) {
+            case NONE -> MainClass.narrate(I18n.get("minecraft_access.weather.clear"), false);
+            case RAIN -> {
+                if (level.isThundering()) {
+                    MainClass.narrate(I18n.get("minecraft_access.weather.thunder"), false);
+                } else {
+                    MainClass.narrate(I18n.get("minecraft_access.weather.rain"), false);
+                }
+            }
+            case SNOW -> MainClass.narrate(I18n.get("minecraft_access.weather.snow"), false);
+            default -> log.warn("Unexpected Precipitation type in weather status.");
+        }
     }
 
     private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {

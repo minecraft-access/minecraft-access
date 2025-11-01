@@ -65,6 +65,9 @@ public class AccessMenuGUI extends Screen {
         button("0", "minecraft_access.access_menu.gui.button.open_config_menu",
                 (button) -> Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, this).get()));
 
+        button("", "minecraft_access.access_menu.gui.button.weather",
+                (button) -> AccessMenu.getWeatherStatus());
+
         layout.visitWidgets(this::addRenderableWidget);
         layout.arrangeElements();
     }
