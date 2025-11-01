@@ -41,7 +41,7 @@ public class MCAccess implements CrosshairNarrator {
                 BlockState state = world.getBlockState(blockHitResult.getBlockPos());
                 Block block = state.getBlock();
                 if (block instanceof RedStoneWireBlock) {
-                    RedstoneDetails.describe(world, block, state, blockHitResult.getBlockPos());
+                    RedstoneDetails.describe(world, block, blockHitResult.getBlockPos());
                 }
                 String side = narrateSide ? blockHitResult.getDirection().getName() : "";
                 yield Arrays.asList(
