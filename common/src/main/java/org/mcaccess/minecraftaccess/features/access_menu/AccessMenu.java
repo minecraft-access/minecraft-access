@@ -69,6 +69,8 @@ public class AccessMenu {
                     AccessMenu::getXP),
             new MenuFunction(9, new IntervalKeystroke(KeyBindingsHandler.Keys.REFRESH_SCREEN_READER.mapping),
                     () -> ScreenReaderController.refreshScreenReader(true)),
+            new MenuFunction(10, new IntervalKeystroke(KeyBindingsHandler.Keys.WEATHER.mapping),
+                    AccessMenu::getWeatherStatus),
     };
 
     static {

@@ -1,6 +1,7 @@
 {
     "block.minecraft.flowing_lava": "Flowing Lava",
     "block.minecraft.flowing_water": "Flowing Water",
+    "key.category.minecraft_access.access_menu": "Minecraft Access: Access Menu",
     "key.category.minecraft_access.camera_controls": "Minecraft Access: Camera Controls",
     "key.category.minecraft_access.inventory_controls": "Minecraft Access: Inventory Controls",
     "key.category.minecraft_access.mouse_simulation": "Minecraft Access: Mouse Simulation",
