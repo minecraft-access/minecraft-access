@@ -71,30 +71,4 @@ abstract class SubCategoryListEntryMixin extends TooltipListEntry<List<AbstractC
         builder.add(NarratedElementType.TITLE, Component.translatable(translationKey, getFieldName()));
         super.updateNarration(builder);
     }
-
-    @Mixin(value = SubCategoryListEntry.CategoryLabelWidget.class, remap = false)
-    abstract static class CategoryLabelWidgetMixin implements GuiEventListener, NarratableEntry {
-        @Shadow
-        @Final
-        private Rectangle rectangle;
-
-        /**
-         * Make the label widget expandable through keyboard.
-         * Although this widget is treated as one of {@link SubCategoryListEntry#children()},
-         * it's this very widget's job to handle mouse operation.
-         */
-        @Override
-        public boolean keyPressed(KeyEvent event) {
-            if (KeyUtils.isSpaceOrEnterPressed()) {
-                mouseClicked(new MouseButtonEvent(rectangle.x + 1, rectangle.y + 1, new MouseButtonInfo(0, 0)), false);
-                return true;
-            }
-            return false;
-        }
-
-        @Inject(method = "narrationPriority", at = @At("TAIL"), remap = true, cancellable = true)
-        public void neverNarrateLabel(CallbackInfoReturnable<NarrationPriority> cir) {
-            cir.setReturnValue(NarrationPriority.NONE);
-        }
-    }
 }

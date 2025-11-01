@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.features.redstoneDetails;
+package org.mcaccess.minecraftaccess.features.redstone;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.mcaccess.minecraftaccess.MainClass;
 
-public class RedstoneEnhancer {
+public class RedstoneDetails {
     public static void describe(Level world, Block block, BlockState state, BlockPos pos) {
 
         BlockPos northPos = new BlockPos(pos.getX(), pos.getY(), pos.getZ() - 1);

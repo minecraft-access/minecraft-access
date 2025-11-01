@@ -318,12 +318,6 @@ public final class KeyBindingsHandler {
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_END,
                 Categories.OBJECT_TRACKER
-        ),
-        WEATHER(
-                "minecraft_access.keys.other.weather",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_X,
-                Categories.OTHER
         );
 
         public final KeyMapping mapping;

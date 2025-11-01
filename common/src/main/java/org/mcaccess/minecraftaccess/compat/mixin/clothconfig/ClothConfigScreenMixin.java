@@ -60,7 +60,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
      * @implNote enable remap since this is a vanilla method from {@link Screen#init()}
      */
     @Inject(at = @At("TAIL"), method = "init", remap = true)
-    void addComponentsAsNarratables(CallbackInfo ci) {
+    private void addComponentsAsNarratables(CallbackInfo ci) {
         List<NarratableEntry> narratables = ((ScreenAccessor) this).getNarratables();
         if (listWidget != null) {
             narratables.addAll(listWidget.children());
@@ -115,40 +115,6 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
             arrowButton.mouseClicked(new MouseButtonEvent(arrowButton.getX() + 1, arrowButton.getY() + 1, new MouseButtonInfo(0, 0)), false);
             // but the scroll needs ticking to be finished, so directly trigger the tab button by calling onPress
             tabButton.onPress(new MouseButtonInfo(0, 0));
-        }
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Mixin(value = ClothConfigScreen.ListWidget.class, remap = false)
-    abstract static class ListWidgetMixin extends DynamicElementListWidget {
-        @Shadow
-        @Final
-        private AbstractConfigScreen screen;
-
-        protected ListWidgetMixin(Minecraft client, int width, int height, int top, int bottom, ResourceLocation backgroundLocation) {
-            super(client, width, height, top, bottom, backgroundLocation);
-        }
-
-        @Override
-        @Shadow
-        public abstract @NotNull List<GuiEventListener> children();
-
-        /**
-         * Focus on the last option if navigating backward from cancel button
-         */
-        @Override
-        public ComponentPath nextFocusPath(FocusNavigationEvent event) {
-            List<GuiEventListener> children = children();
-            if (!isFocused() && !children.isEmpty() && NavigationUtils.isDirectionBackward(event)) {
-                setFocused(null);
-                return ComponentPath.path(this, NavigationUtils.getFocusPathStartFrom(children.getLast(), event));
-            }
-            return super.nextFocusPath(event);
-        }
-
-        @Override
-        public boolean isFocused() {
-            return screen.getFocused() == this;
         }
     }
 }
