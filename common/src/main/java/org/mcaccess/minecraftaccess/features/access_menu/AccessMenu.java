@@ -238,25 +238,35 @@ public class AccessMenu {
 
         CLIENT.player.clientSideCloseContainer();
 
-        if (!level.isRaining()) {
-            MainClass.narrate(I18n.get("minecraft_access.weather.clear"), false);
-            return;
+        String weather;
+        if (level.isRaining()) {
+            weather = switch (currentPrecipitation) {
+                case NONE -> I18n.get("minecraft_access.weather.clear");
+                case RAIN -> {
+                    if (level.isThundering()) {
+                        yield I18n.get("minecraft_access.weather.thunder");
+                    } else {
+                        yield I18n.get("minecraft_access.weather.rain");
+                    }
+                }
+                case SNOW -> I18n.get("minecraft_access.weather.snow");
+                default -> {
+                    log.warn("Unexpected Precipitation type in weather status.");
+                    yield "";
+                }
+            };
+        } else {
+            weather = I18n.get("minecraft_access.weather.clear");
         }
 
-        switch (currentPrecipitation) {
-            case NONE -> MainClass.narrate(I18n.get("minecraft_access.weather.clear"), false);
-            case RAIN -> {
-                if (level.isThundering()) {
-                    MainClass.narrate(I18n.get("minecraft_access.weather.thunder"), false);
-                } else {
-                    MainClass.narrate(I18n.get("minecraft_access.weather.rain"), false);
-                }
-            }
-            case SNOW -> MainClass.narrate(I18n.get("minecraft_access.weather.snow"), false);
-            default -> log.warn("Unexpected Precipitation type in weather status.");
+        if (level.isMoonVisible()) {
+            int moonPhase = level.getMoonPhase();
+            weather += I18n.get("minecraft_access.other.words_connection") + I18n.get("minecraft_access.weather.moon_phase." + moonPhase);
         }
+
+        MainClass.narrate(weather, false);
     }
 
     private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
-    }
+}
 }
