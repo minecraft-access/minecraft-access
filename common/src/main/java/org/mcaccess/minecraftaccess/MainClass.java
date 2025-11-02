@@ -1,6 +1,8 @@
 package org.mcaccess.minecraftaccess;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.event.events.client.ClientPlayerEvent;
@@ -14,6 +16,7 @@ import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -22,6 +25,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.mcaccess.minecraftaccess.addon.CoreAddon;
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
+import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.features.CameraControls;
@@ -49,9 +53,10 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 public final class MainClass {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     public static final String MOD_ID = "minecraft_access";
-    public static final AddonRegistry REGISTRY = new AddonRegistry();
     @Getter
     private static ScreenReaderInterface screenReader = null;
+
+    public static final Map<ResourceLocation, Status> STATUS_REGISTRY = new LinkedHashMap<>();
 
     public static AccessMenu accessMenu = null;
     public static BiomeIndicator biomeIndicator = null;
@@ -72,7 +77,7 @@ public final class MainClass {
     /**
      * Initializes the mod
      */
-    public static void init(List<MinecraftAccessAddon> addons) {
+    public static void init(List<Addon> addons) {
         Config.init();
 
         String startupMessage = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
@@ -99,9 +104,13 @@ public final class MainClass {
             }
         }, "Shutdown-thread"));
 
-        new CoreAddon().init(REGISTRY);
-        for (MinecraftAccessAddon addon : addons) {
-            addon.init(REGISTRY);
+        AddonRegistry coreRegistry = new AddonRegistry(MOD_ID);
+        new CoreAddon().init(coreRegistry);
+        STATUS_REGISTRY.putAll(coreRegistry.getStatuses());
+        for (Addon addon : addons) {
+            AddonRegistry registry = new AddonRegistry(MOD_ID);
+            addon.addon.init(registry);
+            STATUS_REGISTRY.putAll(registry.getStatuses());
         }
     }
 
@@ -218,5 +227,8 @@ public final class MainClass {
         if (CLIENT.options.narrator().get() != NarratorStatus.OFF) {
             ((GameNarratorAccessor) CLIENT.getNarrator()).invokeNarrateMessage(text, interrupt);
         }
+    }
+
+    public record Addon(String modid, MinecraftAccessAddon addon) {
     }
 }

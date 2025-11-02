@@ -22,48 +22,48 @@ public class CoreAddon implements MinecraftAccessAddon {
 
     @Override
     public void init(@NotNull AddonRegistry registry) {
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "health"), new Health());
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "hunger"), new Hunger());
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "armour"), new Armour());
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "air"), new Air());
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "frost"), new Frost());
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "game_mode"), GAME_MODE_STAT);
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/main_hand"), new Durability(
+        registry.register("health", new Health());
+        registry.register("hunger", new Hunger());
+        registry.register("armour", new Armour());
+        registry.register("air", new Air());
+        registry.register("frost", new Frost());
+        registry.register("game_mode", GAME_MODE_STAT);
+        registry.register("durability/main_hand", new Durability(
                 () -> {
                     assert client.player != null;
                     return client.player.getMainHandItem();
                 },
                 () -> Config.getInstance().playerWarnings.durabilityWarnings.enableHeldItems
         ));
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/offhand"), new Durability(
+        registry.register("durability/offhand", new Durability(
                 () -> {
                     assert client.player != null;
                     return client.player.getOffhandItem();
                 },
                 () -> Config.getInstance().playerWarnings.durabilityWarnings.enableHeldItems
         ));
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/head"), new Durability(
+        registry.register("durability/head", new Durability(
                 () -> {
                     assert client.player != null;
                     return client.player.getInventory().getItem(36);
                 },
                 () -> Config.getInstance().playerWarnings.durabilityWarnings.enableWornArmor
         ));
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/chest"), new Durability(
+        registry.register("durability/chest", new Durability(
                 () -> {
                     assert client.player != null;
                     return client.player.getInventory().getItem(37);
                 },
                 () -> Config.getInstance().playerWarnings.durabilityWarnings.enableWornArmor
         ));
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/legs"), new Durability(
+        registry.register("durability/legs", new Durability(
                 () -> {
                     assert client.player != null;
                     return client.player.getInventory().getItem(38);
                 },
                 () -> Config.getInstance().playerWarnings.durabilityWarnings.enableWornArmor
         ));
-        registry.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/feet"), new Durability(
+        registry.register("durability/feet", new Durability(
                 () -> {
                     assert client.player != null;
                     return client.player.getInventory().getItem(39);

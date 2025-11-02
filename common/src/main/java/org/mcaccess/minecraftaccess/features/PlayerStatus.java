@@ -48,7 +48,7 @@ public class PlayerStatus {
         movementTypeStatus();
 
         if (Config.getInstance().playerWarnings.enabled) {
-            for (Map.Entry<ResourceLocation, Status> status : MainClass.REGISTRY.getStats().entrySet()) {
+            for (Map.Entry<ResourceLocation, Status> status : MainClass.STATUS_REGISTRY.entrySet()) {
                 Status.WarningLevel currentLevel = status.getValue().warning();
                 if (currentLevel.ordinal() > lastWarning.getOrDefault(status.getKey(), Status.WarningLevel.NONE).ordinal()) {
                     if (Config.getInstance().playerWarnings.playSound) {
@@ -76,7 +76,7 @@ public class PlayerStatus {
                 return;
             }
 
-            List<Status> statuses = MainClass.REGISTRY.getStats().values().stream()
+            List<Status> statuses = MainClass.STATUS_REGISTRY.values().stream()
                     .filter(Status::show)
                     .filter(stat -> !client.hasAltDown() || stat.important())
                     .toList();

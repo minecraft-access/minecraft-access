@@ -30,7 +30,7 @@ public class MainClassNeoForge {
 
     @SubscribeEvent
     private void onClientSetup(final FMLClientSetupEvent event) {
-        List<MinecraftAccessAddon> addons = new ArrayList<>();
+        List<MainClass.Addon> addons = new ArrayList<>();
         for (ModContainer mod : ModList.get().getSortedMods()) {
             mod.getModInfo()
                     .getOwningFile()
@@ -39,7 +39,8 @@ public class MainClassNeoForge {
                     .getAnnotatedBy(MinecraftAccessAddon.NeoForge.class, ElementType.TYPE)
                     .forEach(annotation -> {
                         try {
-                            addons.add((MinecraftAccessAddon) Class.forName(annotation.memberName()).getConstructor().newInstance());
+                            MinecraftAccessAddon addon = (MinecraftAccessAddon) Class.forName(annotation.memberName()).getConstructor().newInstance();
+                            addons.add(new MainClass.Addon(mod.getModId(), addon));
                         } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException
                                  | NoSuchMethodException e) {
                             log.error("Unable to initialise addon for {}", mod.getModId(), e);
