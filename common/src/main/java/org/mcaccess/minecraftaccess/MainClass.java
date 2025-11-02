@@ -30,6 +30,7 @@ import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.features.PlayerStatus;
 import org.mcaccess.minecraftaccess.features.PlayerWarnings;
 import org.mcaccess.minecraftaccess.features.PositionNarrator;
+import org.mcaccess.minecraftaccess.features.TimeIndicator;
 import org.mcaccess.minecraftaccess.features.XPIndicator;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
@@ -60,6 +61,7 @@ public final class MainClass {
     public static PlayerStatus playerStatus = null;
     public static PlayerWarnings playerWarnings = null;
     public static POIManager poiManager = null;
+    public static TimeIndicator timeIndicator = null;
     public static XPIndicator xpIndicator = null;
 
     private MainClass() {
@@ -141,13 +143,17 @@ public final class MainClass {
             biomeIndicator.tick();
         }
 
-            if (playerStatus != null) {
-                playerStatus.tick();
-            }
+        if (playerStatus != null) {
+            playerStatus.tick();
+        }
 
-            if (client.screen == null) {
-                CameraControls.tick();
-            }
+        if (config.features.timeIndicatorEnabled && timeIndicator != null) {
+            timeIndicator.tick();
+        }
+
+        if (client.screen == null) {
+            CameraControls.tick();
+        }
 
         if (playerWarnings != null) {
             if (config.playerWarnings.enabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {
@@ -184,6 +190,7 @@ public final class MainClass {
         playerStatus = new PlayerStatus();
         playerWarnings = new PlayerWarnings();
         poiManager = new POIManager();
+        timeIndicator = new TimeIndicator();
         xpIndicator = new XPIndicator();
 
         if (CLIENT.options.keyAdvancements.same(KeyBindingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping)) {

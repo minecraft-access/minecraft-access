@@ -13,12 +13,14 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -67,6 +69,8 @@ public class AccessMenu {
                     AccessMenu::getXP),
             new MenuFunction(9, new IntervalKeystroke(KeyBindingsHandler.Keys.REFRESH_SCREEN_READER.mapping),
                     () -> ScreenReaderController.refreshScreenReader(true)),
+            new MenuFunction(10, new IntervalKeystroke(KeyBindingsHandler.Keys.WEATHER.mapping),
+                    AccessMenu::getWeatherStatus),
     };
 
     static {
@@ -166,11 +170,10 @@ public class AccessMenu {
 
     public static void getBiome() {
         if (CLIENT.player == null) return;
-        if (CLIENT.level == null) return;
 
         CLIENT.player.clientSideCloseContainer();
 
-        Holder<Biome> currentBiome = CLIENT.level.getBiome(CLIENT.player.blockPosition());
+        Holder<Biome> currentBiome = BiomeIndicator.getCurrentBiome();
         NarrationUtils.getTranslatedName(currentBiome, "biome")
                 .ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true));
     }
@@ -223,6 +226,47 @@ public class AccessMenu {
         MainClass.narrate(narration, true);
     }
 
-    private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
+    public static void getWeatherStatus() {
+        Holder<Biome> currentBiome = BiomeIndicator.getCurrentBiome();
+        Level level = CLIENT.level;
+        if (CLIENT.player == null) return;
+        if (level == null) return;
+        if (currentBiome == null) return;
+
+        Biome.Precipitation currentPrecipitation = currentBiome.value()
+                .getPrecipitationAt(CLIENT.player.getOnPos(), level.getSeaLevel());
+
+        CLIENT.player.clientSideCloseContainer();
+
+        String weather;
+        if (level.isRaining()) {
+            weather = switch (currentPrecipitation) {
+                case NONE -> I18n.get("minecraft_access.weather.clear");
+                case RAIN -> {
+                    if (level.isThundering()) {
+                        yield I18n.get("minecraft_access.weather.thunder");
+                    } else {
+                        yield I18n.get("minecraft_access.weather.rain");
+                    }
+                }
+                case SNOW -> I18n.get("minecraft_access.weather.snow");
+                default -> {
+                    log.warn("Unexpected Precipitation type in weather status.");
+                    yield "";
+                }
+            };
+        } else {
+            weather = I18n.get("minecraft_access.weather.clear");
+        }
+
+        if (level.isMoonVisible()) {
+            int moonPhase = level.getMoonPhase();
+            weather += I18n.get("minecraft_access.other.words_connection") + I18n.get("minecraft_access.weather.moon_phase." + moonPhase);
+        }
+
+        MainClass.narrate(weather, false);
     }
+
+    private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
+}
 }

@@ -17,22 +17,28 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
  */
 @Slf4j
 public class BiomeIndicator {
+    private static final Minecraft CLIENT = Minecraft.getInstance();
     @Nullable
     private Holder<Biome> previousBiome = null;
 
     public void tick() {
-        Minecraft client = Minecraft.getInstance();
-        if (client.level == null) return;
-        if (client.player == null) return;
-        if (client.screen != null) return;
-        BlockPos pos = client.player.blockPosition();
-        LevelChunk currentChunk = client.level.getChunkSource().getChunk(pos.getX() >> 4, pos.getZ() >> 4, false);
-        if (currentChunk == null) return;
+        if (CLIENT.screen != null) return;
 
-        Holder<Biome> currentBiome = client.level.getBiome(client.player.blockPosition());
-        if (currentBiome != previousBiome) {
-            previousBiome = currentBiome;
+        Holder<Biome> currentBiome = getCurrentBiome();
+        if (currentBiome != null && currentBiome != previousBiome) {
             NarrationUtils.getTranslatedName(currentBiome, "biome").ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.other.biome", name), true));
+            previousBiome = currentBiome;
         }
+    }
+
+    @Nullable
+    public static Holder<Biome> getCurrentBiome() {
+        if (CLIENT.level == null) return null;
+        if (CLIENT.player == null) return null;
+        BlockPos pos = CLIENT.player.blockPosition();
+        LevelChunk currentChunk = CLIENT.level.getChunkSource().getChunk(pos.getX() >> 4, pos.getZ() >> 4, false);
+        if (currentChunk == null) return null;
+
+        return CLIENT.level.getBiome(CLIENT.player.blockPosition());
     }
 }
