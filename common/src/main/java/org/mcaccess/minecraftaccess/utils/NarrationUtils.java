@@ -42,27 +42,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.BeehiveBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.ButtonBlock;
-import net.minecraft.world.level.block.ComparatorBlock;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.EndPortalFrameBlock;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.GlowLichenBlock;
-import net.minecraft.world.level.block.HopperBlock;
-import net.minecraft.world.level.block.LeverBlock;
-import net.minecraft.world.level.block.ObserverBlock;
-import net.minecraft.world.level.block.RedStoneWireBlock;
-import net.minecraft.world.level.block.RedstoneLampBlock;
-import net.minecraft.world.level.block.RedstoneTorchBlock;
-import net.minecraft.world.level.block.RepeaterBlock;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
@@ -579,17 +559,50 @@ public final class NarrationUtils {
             // If there's no redstone wire on x+1 side,
             // then current wire is not connected to that side,
             // so it's not connected to all directions.
-            if (!result) return new Tuple<>(narration, currentQuery);
+            if (result) {
+                String directionsNarration = String.join(I18n.get("minecraft_access.other.words_connection"), connectedDirections);
+                narration = I18n.get("minecraft_access.read_crosshair.redstone_wire_connection", narration, directionsNarration);
+                currentQuery += "connected to " + connectedDirections;
+            }
         }
 
-        String directionsNarration = String.join(I18n.get("minecraft_access.other.words_connection"), connectedDirections);
-        narration = I18n.get("minecraft_access.read_crosshair.redstone_wire_connection", narration, directionsNarration);
-        currentQuery += "connected to " + connectedDirections;
+        Block north = CLIENT.level.getBlockState(pos.north()).getBlock();
+        Block south = CLIENT.level.getBlockState(pos.south()).getBlock();
+        Block west = CLIENT.level.getBlockState(pos.west()).getBlock();
+        Block east = CLIENT.level.getBlockState(pos.east()).getBlock();
+
+        String surroundingBlocks = "";
+
+        if (isRedstoneBlock(east)) surroundingBlocks += I18n.get("minecraft_access.direction.east") + ": " + east.getName().getString();
+        if (isRedstoneBlock(west)) surroundingBlocks += I18n.get("minecraft_access.direction.west") + ": " + west.getName().getString() + ". ";
+        if (isRedstoneBlock(north)) surroundingBlocks += I18n.get("minecraft_access.direction.north") + ": " + north.getName().getString() + ". ";
+        if (isRedstoneBlock(south)) surroundingBlocks += I18n.get("minecraft_access.direction.south") + ": " + south.getName().getString() + ". ";
+
+        if (!surroundingBlocks.isEmpty()) {
+            surroundingBlocks = I18n.get("minecraft_access.redstonedetails.possible") + " " + surroundingBlocks;
+        }
+
+        currentQuery += " " + surroundingBlocks;
+        narration += " " + surroundingBlocks;
 
         return new Tuple<>(narration, currentQuery);
     }
 
-    private static @NotNull Tuple<String, String> getBeehiveInfo(BeehiveBlockEntity blockEntity, BlockState blockState, String narration, String currentQuery) {
+    private static boolean isRedstoneBlock(Block block) {
+        return block instanceof DispenserBlock
+                || block instanceof CrafterBlock
+                || block instanceof DropperBlock
+                || block instanceof LeverBlock
+                || block instanceof ButtonBlock
+                || block instanceof PressurePlateBlock
+                || block instanceof RepeaterBlock
+                || block instanceof ComparatorBlock
+                || block instanceof TripWireHookBlock
+                || block instanceof ObserverBlock;
+    }
+
+    private static @NotNull Tuple<String, String> getBeehiveInfo(BeehiveBlockEntity blockEntity, BlockState blockState, String narration, String
+            currentQuery) {
         boolean isSmoked = blockEntity.isSedated();
         int honeyLevel = blockState.getValue(BeehiveBlock.HONEY_LEVEL);
         Direction facingDirection = blockState.getValue(BeehiveBlock.FACING);
