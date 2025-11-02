@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
 
+import org.mcaccess.minecraftaccess.addon.CoreAddon;
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
@@ -32,7 +33,6 @@ import org.mcaccess.minecraftaccess.features.MenuFix;
 import org.mcaccess.minecraftaccess.features.MouseKeySimulation;
 import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.features.PlayerStatus;
-import org.mcaccess.minecraftaccess.features.PlayerWarnings;
 import org.mcaccess.minecraftaccess.features.PositionNarrator;
 import org.mcaccess.minecraftaccess.features.XPIndicator;
 import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
@@ -63,7 +63,6 @@ public final class MainClass {
     public static NarrateCrosshair narrateCrosshair = null;
     public static NarrateHeldItem narrateHeldItem = null;
     public static PlayerStatus playerStatus = null;
-    public static PlayerWarnings playerWarnings = null;
     public static POIManager poiManager = null;
     public static XPIndicator xpIndicator = null;
 
@@ -100,6 +99,7 @@ public final class MainClass {
             }
         }, "Shutdown-thread"));
 
+        new CoreAddon().init(REGISTRY);
         for (MinecraftAccessAddon addon : addons) {
             addon.init(REGISTRY);
         }
@@ -150,22 +150,12 @@ public final class MainClass {
             biomeIndicator.tick();
         }
 
-            if (playerStatus != null) {
-                playerStatus.tick();
-            }
+        if (playerStatus != null) {
+            playerStatus.tick();
+        }
 
-            if (client.screen == null) {
-                CameraControls.tick();
-            }
-
-        if (playerWarnings != null) {
-            if (config.playerWarnings.enabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {
-                playerWarnings.tick();
-            }
-
-            if (config.playerWarnings.durabilityWarnings.enableHeldItems || config.playerWarnings.durabilityWarnings.enableWornArmor) {
-                playerWarnings.durabilityWarnings();
-            }
+        if (client.screen == null) {
+            CameraControls.tick();
         }
 
         if (accessMenu != null && config.accessMenu.enabled) {
@@ -191,7 +181,6 @@ public final class MainClass {
         narrateCrosshair = new NarrateCrosshair();
         narrateHeldItem = new NarrateHeldItem();
         playerStatus = new PlayerStatus();
-        playerWarnings = new PlayerWarnings();
         poiManager = new POIManager();
         xpIndicator = new XPIndicator();
 
