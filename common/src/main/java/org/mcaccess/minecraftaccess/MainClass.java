@@ -147,7 +147,7 @@ public final class MainClass {
             playerStatus.tick();
         }
 
-        if (timeIndicator != null) {
+        if (config.features.timeIndicatorEnabled && timeIndicator != null) {
             timeIndicator.tick();
         }
 
