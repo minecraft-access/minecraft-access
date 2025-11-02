@@ -233,7 +233,6 @@
     "minecraft_access.read_crosshair.tamed": "Tamed %s",
     "minecraft_access.read_crosshair.using_tongue": "%s, using tongue",
     "minecraft_access.read_crosshair.zombie_villager_is_curing": "%s is Curing",
-    "minecraft_access.redstonedetails.possible": "possible blocks to connect. ",
     "minecraft_access.set_perspective": "Perspective set to: %s",
     "minecraft_access.slot_group.armour": "Armour",
     "minecraft_access.slot_group.banner_input": "Banner Input",
