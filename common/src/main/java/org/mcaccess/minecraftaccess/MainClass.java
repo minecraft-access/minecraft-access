@@ -105,19 +105,6 @@ public final class MainClass {
             }
         }, "Shutdown-thread"));
 
-        AddonRegistry coreRegistry = new AddonRegistry(MOD_ID);
-        new CoreAddon().init(coreRegistry);
-        STATUS_REGISTRY.putAll(coreRegistry.getStatuses());
-        for (Map.Entry<ResourceLocation, AccessMenuFunction> function : coreRegistry.getAccessMenuOptions().entrySet()) {
-            KeyMapping key = new KeyMapping(
-                    function.getKey().toLanguageKey("access_menu_function"),
-                    InputConstants.Type.KEYSYM,
-                    InputConstants.UNKNOWN.getValue(),
-                    KeyBindingsHandler.Categories.ACCESS_MENU.category
-            );
-            KeyMappingRegistry.register(key);
-            ACCESS_MENU_REGISTRY.put(function.getKey(), new AccessMenu.RegisteredFunction(function.getValue(), key));
-        }
         for (Addon addon : addons) {
             AddonRegistry registry = new AddonRegistry(MOD_ID);
             addon.addon.init(registry);

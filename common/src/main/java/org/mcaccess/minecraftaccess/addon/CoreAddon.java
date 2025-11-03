@@ -24,6 +24,7 @@ import org.mcaccess.minecraftaccess.addon.statuses.Hunger;
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 
+@MinecraftAccessAddon.NeoForge
 public class CoreAddon implements MinecraftAccessAddon {
     public static final GameMode GAME_MODE_STAT = new GameMode();
     private final Minecraft client = Minecraft.getInstance();
