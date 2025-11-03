@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess;
 
-import java.util.LinkedHashMap;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,6 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
@@ -22,12 +22,11 @@ import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.UnmodifiableView;
 
-import org.mcaccess.minecraftaccess.addon.CoreAddon;
-import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
-import org.mcaccess.minecraftaccess.api.Status;
+import org.mcaccess.minecraftaccess.features.AccessMenu;
 import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.features.CameraControls;
@@ -40,7 +39,6 @@ import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.features.PlayerStatus;
 import org.mcaccess.minecraftaccess.features.PositionNarrator;
 import org.mcaccess.minecraftaccess.features.XPIndicator;
-import org.mcaccess.minecraftaccess.features.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import org.mcaccess.minecraftaccess.features.narrate_crosshair.NarrateCrosshair;
 import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
@@ -56,9 +54,8 @@ public final class MainClass {
     public static final String MOD_ID = "minecraft_access";
     @Getter
     private static ScreenReaderInterface screenReader = null;
-
-    public static final Map<ResourceLocation, Status> STATUS_REGISTRY = new LinkedHashMap<>();
-    public static final Map<ResourceLocation, AccessMenu.RegisteredFunction> ACCESS_MENU_REGISTRY = new LinkedHashMap<>();
+    private static final Map<Class<?>, Map<ResourceLocation, Object>> REGISTRY = new HashMap<>();
+    private static boolean frozen = false;
 
     public static AccessMenu accessMenu = null;
     public static BiomeIndicator biomeIndicator = null;
@@ -73,6 +70,25 @@ public final class MainClass {
     public static XPIndicator xpIndicator = null;
 
     private MainClass() {
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> @UnmodifiableView Map<ResourceLocation, T> registry(Class<T> registry) {
+        return Collections.unmodifiableMap(REGISTRY.getOrDefault(registry, Collections.EMPTY_MAP));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Map<ResourceLocation, T> mutableRegistry(Class<T> registry) {
+        if (frozen) {
+            throw new UnsupportedOperationException("Registries are frozen");
+        }
+        return (Map<ResourceLocation, T>) REGISTRY.computeIfAbsent(registry, t -> new HashMap<>());
+    }
+
+    public static <T> void register(Class<T> registry, ResourceLocation identifier, T value) {
+        if (mutableRegistry(registry).putIfAbsent(identifier, value) != null) {
+            throw new IllegalArgumentException(String.format("%s %s is already registered", registry.getSimpleName(), identifier));
+        }
     }
 
     /**
@@ -106,20 +122,9 @@ public final class MainClass {
         }, "Shutdown-thread"));
 
         for (Addon addon : addons) {
-            AddonRegistry registry = new AddonRegistry(MOD_ID);
-            addon.addon.init(registry);
-            STATUS_REGISTRY.putAll(registry.getStatuses());
-            for (Map.Entry<ResourceLocation, AccessMenuFunction> function : registry.getAccessMenuOptions().entrySet()) {
-                KeyMapping key = new KeyMapping(
-                        function.getKey().toLanguageKey("access_menu_function"),
-                        InputConstants.Type.KEYSYM,
-                        InputConstants.UNKNOWN.getValue(),
-                        KeyBindingsHandler.Categories.ACCESS_MENU.category
-                );
-                KeyMappingRegistry.register(key);
-                ACCESS_MENU_REGISTRY.put(function.getKey(), new AccessMenu.RegisteredFunction(function.getValue(), key));
-            }
+            addon.addon().init(new AddonRegistry(addon.modid()));
         }
+        frozen = true;
     }
 
     /**

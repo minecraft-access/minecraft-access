@@ -34,7 +34,7 @@ public class AccessMenu {
         if (CLIENT.screen == null) {
             if (CLIENT.hasAltDown()) {
                 assert CLIENT.player != null;
-                Queue<RegisteredFunction> functions = new ArrayDeque<>(MainClass.ACCESS_MENU_REGISTRY.values());
+                Queue<RegisteredFunction> functions = new ArrayDeque<>(MainClass.registry(RegisteredFunction.class).values());
                 for (byte i = 1; i < 11; i++) {
                     RegisteredFunction function = functions.poll();
                     if (function == null) {
@@ -48,7 +48,7 @@ public class AccessMenu {
                 return;
             }
 
-            for (RegisteredFunction function : MainClass.ACCESS_MENU_REGISTRY.values()) {
+            for (RegisteredFunction function : MainClass.registry(RegisteredFunction.class).values()) {
                 while (function.key().consumeClick()) {
                     if (function.function().enabled()) {
                         function.function().execute();
@@ -85,7 +85,7 @@ public class AccessMenu {
             GridLayout grid = new GridLayout().spacing(10);
             GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
 
-            for (Map.Entry<ResourceLocation, RegisteredFunction> function : MainClass.ACCESS_MENU_REGISTRY.entrySet()) {
+            for (Map.Entry<ResourceLocation, RegisteredFunction> function : MainClass.registry(RegisteredFunction.class).entrySet()) {
                 Component label = Component.translatable(function.getKey().toLanguageKey("access_menu_function"));
                 // TODO: Shortcut in label
                 Button button = Button.builder(label, b -> {
@@ -109,7 +109,7 @@ public class AccessMenu {
                 return true;
             }
             if (event.key() >= InputConstants.KEY_0 && event.key() <= InputConstants.KEY_9) {
-                Optional<RegisteredFunction> function = MainClass.ACCESS_MENU_REGISTRY.values().stream()
+                Optional<RegisteredFunction> function = MainClass.registry(RegisteredFunction.class).values().stream()
                         .skip((event.key() - InputConstants.KEY_0 + 9) % 10)
                         .findFirst();
                 if (function.isPresent()) {
