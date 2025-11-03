@@ -286,7 +286,7 @@ public final class Config implements ConfigData {
 
         public static final class FluidDetector {
             public float volume = 0.25f;
-            public int range = 10;
+            public int range = 100;
 
             private FluidDetector() {
             }

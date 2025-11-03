@@ -1,14 +1,17 @@
 package org.mcaccess.minecraftaccess.addon.accessmenu;
 
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.util.ArrayListDeque;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -18,96 +21,59 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
-/**
- * Searches for the closest water/lava source.
- */
 @Slf4j
 public class FluidDetector implements AccessMenuFunction {
     private final TagKey<Fluid> fluid;
+    private final Config.AccessMenu.FluidDetector config = Config.getInstance().accessMenu.fluidDetector;
+    private final Minecraft client = Minecraft.getInstance();
 
     public FluidDetector(TagKey<Fluid> fluid) {
         this.fluid = fluid;
     }
 
-    /**
-     * Finds the closest fluid(water/lava) source and plays a sound at its position and
-     * narrates its name with relative position.
-     */
     @Override
     public void execute() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.level == null) return;
-        if (minecraftClient.player == null) return;
+        if (client.level == null) return;
+        if (client.player == null) return;
 
-        Config.AccessMenu.FluidDetector config = Config.getInstance().accessMenu.fluidDetector;
+        Set<BlockPos> visited = new HashSet<>();
+        Queue<BlockPos> queue = new ArrayListDeque<>();
+        queue.add(BlockPos.containing(client.player.position()));
 
-        BlockPos pos = minecraftClient.player.blockPosition();
-        int posX = pos.getX();
-        int posY = pos.getY();
-        int posZ = pos.getZ();
+        while (!queue.isEmpty()) {
+            BlockPos pos = queue.poll();
+            assert pos != null;
+            if (visited.contains(pos)) {
+                continue;
+            }
+            visited.add(pos);
+            if (pos.distToCenterSqr(client.player.position()) > config.range || !client.level.isLoaded(pos)) {
+                continue;
+            }
+            BlockState blockState = client.level.getBlockState(pos);
+            FluidState fluidState = client.level.getFluidState(pos);
+            if (fluidState.is(fluid) && fluidState.isSource()) {
+                log.debug("playing sound at {}", pos);
+                client.level.playSound(client.player, pos, SoundEvents.ITEM_PICKUP,
+                        SoundSource.BLOCKS, config.volume, 1.0f);
 
-        BlockPos startingPointPos = new BlockPos(new Vec3i(posX, posY, posZ));
-        BlockPos closestFluidPos = findFluid(minecraftClient, startingPointPos, config.range);
-        if (closestFluidPos == null) {
-            log.debug("Unable to find closest fluid source");
-            MainClass.narrate(I18n.get("minecraft_access.other.not_found"), true);
-            return;
+                String posDifference = NarrationUtils.narrateRelativePositionOfPlayerAnd(pos);
+                String name = blockState.getBlock().getName().getString();
+
+                MainClass.narrate(name + I18n.get("minecraft_access.other.words_connection") + posDifference, true);
+                return;
+            }
+            if (!blockState.isAir() && !fluidState.is(fluid)) {
+                continue;
+            }
+            queue.add(pos.above());
+            queue.add(pos.below());
+            queue.add(pos.north());
+            queue.add(pos.south());
+            queue.add(pos.east());
+            queue.add(pos.west());
         }
-
-        log.debug("{FluidDetector} playing sound at %dx %dy %dz".formatted(closestFluidPos.getX(), closestFluidPos.getY(), closestFluidPos.getZ()));
-        minecraftClient.level.playSound(minecraftClient.player, closestFluidPos, SoundEvents.ITEM_PICKUP,
-                SoundSource.BLOCKS, config.volume, 1.0f);
-
-        String posDifference = NarrationUtils.narrateRelativePositionOfPlayerAnd(closestFluidPos);
-        String name = minecraftClient.level.getBlockState(closestFluidPos).getBlock().getName().getString();
-
-        MainClass.narrate(name + ", " + posDifference, true);
-    }
-
-    /**
-     * Checks if the block at the given position is fluid or not. If not found and within the range,
-     * checks for the neighbouring blocks for the fluid recursively.
-     *
-     * @param minecraftClient The instance of MinecraftClient.
-     * @param blockPos        The position of the block to check.
-     * @param range           The range of the search area.
-     * @return Returns the position of the fluid source or null if not found
-     */
-    private BlockPos findFluid(Minecraft minecraftClient, BlockPos blockPos, int range) {
-        if (minecraftClient.level == null) return null;
-        if (minecraftClient.player == null) return null;
-
-        BlockState blockState = minecraftClient.level.getBlockState(blockPos);
-        if (blockState.is(Blocks.VOID_AIR)) {  // Skip if void air is found, the world is probably still loading.
-            return null;
-        }
-
-        FluidState fluidState = minecraftClient.level.getFluidState(blockPos);
-        boolean rightTarget = fluidState.is(fluid);
-
-        if (rightTarget && fluidState.isSource()) {
-            return blockPos;
-        } else if (range - 1 >= 0 && blockState.isAir()) {
-            int posX = blockPos.getX();
-            int posY = blockPos.getY();
-            int posZ = blockPos.getZ();
-            int rangeVal = range - 1;
-
-            BlockPos bp1 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY, posZ - 1)), rangeVal);
-            BlockPos bp2 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY, posZ + 1)), rangeVal);
-            BlockPos bp3 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX - 1, posY, posZ)), rangeVal);
-            BlockPos bp4 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX + 1, posY, posZ)), rangeVal);
-            BlockPos bp5 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY - 1, posZ)), rangeVal);
-            BlockPos bp6 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY + 1, posZ)), rangeVal);
-
-            if (bp1 != null) return bp1;
-            if (bp2 != null) return bp2;
-            if (bp3 != null) return bp3;
-            if (bp4 != null) return bp4;
-            if (bp5 != null) return bp5;
-            return bp6;
-        }
-
-        return null;
+        log.debug("Unable to find closest fluid source");
+        MainClass.narrate(I18n.get("minecraft_access.other.not_found"), true);
     }
 }
