@@ -1,11 +1,19 @@
 package org.mcaccess.minecraftaccess.addon;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.addon.accessmenu.FluidDetector;
+import org.mcaccess.minecraftaccess.addon.accessmenu.GetBiome;
+import org.mcaccess.minecraftaccess.addon.accessmenu.GetTime;
+import org.mcaccess.minecraftaccess.addon.accessmenu.GetXP;
+import org.mcaccess.minecraftaccess.addon.accessmenu.LightLevel;
+import org.mcaccess.minecraftaccess.addon.accessmenu.NarrateTarget;
+import org.mcaccess.minecraftaccess.addon.accessmenu.OpenConfig;
+import org.mcaccess.minecraftaccess.addon.accessmenu.RefreshScreenReader;
+import org.mcaccess.minecraftaccess.addon.accessmenu.TargetPosition;
 import org.mcaccess.minecraftaccess.addon.statuses.Air;
 import org.mcaccess.minecraftaccess.addon.statuses.Armour;
 import org.mcaccess.minecraftaccess.addon.statuses.Durability;
@@ -70,5 +78,16 @@ public class CoreAddon implements MinecraftAccessAddon {
                 },
                 () -> Config.getInstance().playerWarnings.durabilityWarnings.enableWornArmor
         ));
+
+        registry.register("narrate_target", new NarrateTarget());
+        registry.register("target_position", new TargetPosition());
+        registry.register("light_level", new LightLevel());
+        registry.register("find_water", new FluidDetector(FluidTags.WATER));
+        registry.register("find_lava", new FluidDetector(FluidTags.LAVA));
+        registry.register("biome", new GetBiome());
+        registry.register("time", new GetTime());
+        registry.register("xp", new GetXP());
+        registry.register("refresh_screen_reader", new RefreshScreenReader());
+        registry.register("config", new OpenConfig());
     }
 }

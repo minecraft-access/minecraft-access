@@ -11,6 +11,7 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
@@ -23,6 +24,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
 
 import org.mcaccess.minecraftaccess.addon.CoreAddon;
+import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 import org.mcaccess.minecraftaccess.api.Status;
@@ -31,7 +33,6 @@ import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.features.CameraControls;
 import org.mcaccess.minecraftaccess.features.FacingDirection;
 import org.mcaccess.minecraftaccess.features.FallDetector;
-import org.mcaccess.minecraftaccess.features.FluidDetector;
 import org.mcaccess.minecraftaccess.features.HUDStatus;
 import org.mcaccess.minecraftaccess.features.MenuFix;
 import org.mcaccess.minecraftaccess.features.MouseKeySimulation;
@@ -39,7 +40,7 @@ import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.features.PlayerStatus;
 import org.mcaccess.minecraftaccess.features.PositionNarrator;
 import org.mcaccess.minecraftaccess.features.XPIndicator;
-import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
+import org.mcaccess.minecraftaccess.features.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import org.mcaccess.minecraftaccess.features.narrate_crosshair.NarrateCrosshair;
 import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
@@ -57,12 +58,12 @@ public final class MainClass {
     private static ScreenReaderInterface screenReader = null;
 
     public static final Map<ResourceLocation, Status> STATUS_REGISTRY = new LinkedHashMap<>();
+    public static final Map<ResourceLocation, AccessMenu.RegisteredFunction> ACCESS_MENU_REGISTRY = new LinkedHashMap<>();
 
     public static AccessMenu accessMenu = null;
     public static BiomeIndicator biomeIndicator = null;
     public static FacingDirection facingDirection = null;
     public static FallDetector fallDetector = null;
-    public static FluidDetector fluidDetector = null;
     public static HUDStatus hudStatus = null;
     public static InventoryControls inventoryControls = null;
     public static NarrateCrosshair narrateCrosshair = null;
@@ -107,10 +108,30 @@ public final class MainClass {
         AddonRegistry coreRegistry = new AddonRegistry(MOD_ID);
         new CoreAddon().init(coreRegistry);
         STATUS_REGISTRY.putAll(coreRegistry.getStatuses());
+        for (Map.Entry<ResourceLocation, AccessMenuFunction> function : coreRegistry.getAccessMenuOptions().entrySet()) {
+            KeyMapping key = new KeyMapping(
+                    function.getKey().toLanguageKey("access_menu_function"),
+                    InputConstants.Type.KEYSYM,
+                    InputConstants.UNKNOWN.getValue(),
+                    KeyBindingsHandler.Categories.ACCESS_MENU.category
+            );
+            KeyMappingRegistry.register(key);
+            ACCESS_MENU_REGISTRY.put(function.getKey(), new AccessMenu.RegisteredFunction(function.getValue(), key));
+        }
         for (Addon addon : addons) {
             AddonRegistry registry = new AddonRegistry(MOD_ID);
             addon.addon.init(registry);
             STATUS_REGISTRY.putAll(registry.getStatuses());
+            for (Map.Entry<ResourceLocation, AccessMenuFunction> function : registry.getAccessMenuOptions().entrySet()) {
+                KeyMapping key = new KeyMapping(
+                        function.getKey().toLanguageKey("access_menu_function"),
+                        InputConstants.Type.KEYSYM,
+                        InputConstants.UNKNOWN.getValue(),
+                        KeyBindingsHandler.Categories.ACCESS_MENU.category
+                );
+                KeyMappingRegistry.register(key);
+                ACCESS_MENU_REGISTRY.put(function.getKey(), new AccessMenu.RegisteredFunction(function.getValue(), key));
+            }
         }
     }
 
@@ -184,7 +205,6 @@ public final class MainClass {
         biomeIndicator = new BiomeIndicator();
         facingDirection = new FacingDirection();
         fallDetector = new FallDetector();
-        fluidDetector = new FluidDetector();
         hudStatus = new HUDStatus();
         inventoryControls = new InventoryControls();
         narrateCrosshair = new NarrateCrosshair();

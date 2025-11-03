@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.features;
+package org.mcaccess.minecraftaccess.addon.accessmenu;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
@@ -7,56 +7,34 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 /**
  * Searches for the closest water/lava source.
  */
 @Slf4j
-public class FluidDetector {
+public class FluidDetector implements AccessMenuFunction {
+    private final TagKey<Fluid> fluid;
 
-    /**
-     * Finds the closest water source and plays a sound at its position.
-     *
-     * @param closeCurrentlyOpenedScreen Whether to close the currently opened screen or not
-     */
-    public void findClosestWaterSource(boolean closeCurrentlyOpenedScreen) {
-        if (closeCurrentlyOpenedScreen && Minecraft.getInstance().screen != null && Minecraft.getInstance().player != null) {
-            Minecraft.getInstance().player.clientSideCloseContainer();
-        }
-
-        log.debug("Finding closest water source");
-        findClosestFluidSource(true);
-    }
-
-    /**
-     * Finds the closest lava source and plays a sound at its position.
-     *
-     * @param closeCurrentlyOpenedScreen Whether to close the currently opened screen or not
-     */
-    public void findClosestLavaSource(boolean closeCurrentlyOpenedScreen) {
-        if (closeCurrentlyOpenedScreen && Minecraft.getInstance().screen != null && Minecraft.getInstance().player != null) {
-            Minecraft.getInstance().player.clientSideCloseContainer();
-        }
-
-        log.debug("Finding closest lava source");
-        findClosestFluidSource(false);
+    public FluidDetector(TagKey<Fluid> fluid) {
+        this.fluid = fluid;
     }
 
     /**
      * Finds the closest fluid(water/lava) source and plays a sound at its position and
      * narrates its name with relative position.
-     *
-     * @param water Whether to find water or lava source block or not.
      */
-    private void findClosestFluidSource(boolean water) {
+    @Override
+    public void execute() {
         Minecraft minecraftClient = Minecraft.getInstance();
         if (minecraftClient.level == null) return;
         if (minecraftClient.player == null) return;
@@ -69,7 +47,7 @@ public class FluidDetector {
         int posZ = pos.getZ();
 
         BlockPos startingPointPos = new BlockPos(new Vec3i(posX, posY, posZ));
-        BlockPos closestFluidPos = findFluid(minecraftClient, startingPointPos, config.range, water);
+        BlockPos closestFluidPos = findFluid(minecraftClient, startingPointPos, config.range);
         if (closestFluidPos == null) {
             log.debug("Unable to find closest fluid source");
             MainClass.narrate(I18n.get("minecraft_access.other.not_found"), true);
@@ -93,10 +71,9 @@ public class FluidDetector {
      * @param minecraftClient The instance of MinecraftClient.
      * @param blockPos        The position of the block to check.
      * @param range           The range of the search area.
-     * @param water           Whether to check for water source or lava source.
      * @return Returns the position of the fluid source or null if not found
      */
-    private static BlockPos findFluid(Minecraft minecraftClient, BlockPos blockPos, int range, boolean water) {
+    private BlockPos findFluid(Minecraft minecraftClient, BlockPos blockPos, int range) {
         if (minecraftClient.level == null) return null;
         if (minecraftClient.player == null) return null;
 
@@ -106,7 +83,7 @@ public class FluidDetector {
         }
 
         FluidState fluidState = minecraftClient.level.getFluidState(blockPos);
-        boolean rightTarget = fluidState.is(FluidTags.LAVA) && !water || fluidState.is(FluidTags.WATER) && water;
+        boolean rightTarget = fluidState.is(fluid);
 
         if (rightTarget && fluidState.isSource()) {
             return blockPos;
@@ -116,12 +93,12 @@ public class FluidDetector {
             int posZ = blockPos.getZ();
             int rangeVal = range - 1;
 
-            BlockPos bp1 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY, posZ - 1)), rangeVal, water);
-            BlockPos bp2 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY, posZ + 1)), rangeVal, water);
-            BlockPos bp3 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX - 1, posY, posZ)), rangeVal, water);
-            BlockPos bp4 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX + 1, posY, posZ)), rangeVal, water);
-            BlockPos bp5 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY - 1, posZ)), rangeVal, water);
-            BlockPos bp6 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY + 1, posZ)), rangeVal, water);
+            BlockPos bp1 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY, posZ - 1)), rangeVal);
+            BlockPos bp2 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY, posZ + 1)), rangeVal);
+            BlockPos bp3 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX - 1, posY, posZ)), rangeVal);
+            BlockPos bp4 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX + 1, posY, posZ)), rangeVal);
+            BlockPos bp5 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY - 1, posZ)), rangeVal);
+            BlockPos bp6 = findFluid(minecraftClient, new BlockPos(new Vec3i(posX, posY + 1, posZ)), rangeVal);
 
             if (bp1 != null) return bp1;
             if (bp2 != null) return bp2;

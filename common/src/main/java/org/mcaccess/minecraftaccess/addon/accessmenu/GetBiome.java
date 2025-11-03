@@ -1,0 +1,24 @@
+package org.mcaccess.minecraftaccess.addon.accessmenu;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.biome.Biome;
+
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
+import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+
+public class GetBiome implements AccessMenuFunction {
+    private final Minecraft client = Minecraft.getInstance();
+
+    @Override
+    public void execute() {
+        if (client.player == null) return;
+        if (client.level == null) return;
+
+        Holder<Biome> currentBiome = client.level.getBiome(client.player.blockPosition());
+        NarrationUtils.getTranslatedName(currentBiome, "biome")
+                .ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true));
+    }
+}

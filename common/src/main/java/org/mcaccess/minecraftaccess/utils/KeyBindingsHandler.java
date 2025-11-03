@@ -13,12 +13,13 @@ public final class KeyBindingsHandler {
     private KeyBindingsHandler() {
     }
 
-    private enum Categories {
+    public enum Categories {
         OTHER("other"),
         CAMERA_CONTROLS("camera_controls"),
         INVENTORY_CONTROLS("inventory_controls"),
         MOUSE_SIMULATION("mouse_simulation"),
-        OBJECT_TRACKER("object_tracker");
+        OBJECT_TRACKER("object_tracker"),
+        ACCESS_MENU("access_menu");
 
         public final KeyMapping.Category category;
 
@@ -56,66 +57,6 @@ public final class KeyBindingsHandler {
                 "minecraft_access.keys.other.access_menu_key_name",
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_F4,
-                Categories.OTHER
-        ),
-        NARRATE_TARGET(
-                "minecraft_access.access_menu.gui.button.block_and_fluid_target_info",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_B,
-                Categories.OTHER
-        ),
-        TARGET_POSITION(
-                "minecraft_access.access_menu.gui.button.block_and_fluid_target_position",
-                InputConstants.Type.KEYSYM,
-                InputConstants.UNKNOWN.getValue(),
-                Categories.OTHER
-        ),
-        LIGHT_LEVEL(
-                "minecraft_access.access_menu.gui.button.light_level",
-                InputConstants.Type.KEYSYM,
-                InputConstants.UNKNOWN.getValue(),
-                Categories.OTHER
-        ),
-        CLOSEST_WATER_SOURCE(
-                "minecraft_access.access_menu.gui.button.find_water",
-                InputConstants.Type.KEYSYM,
-                InputConstants.UNKNOWN.getValue(),
-                Categories.OTHER
-        ),
-        CLOSEST_LAVA_SOURCE(
-                "minecraft_access.access_menu.gui.button.find_lava",
-                InputConstants.Type.KEYSYM,
-                InputConstants.UNKNOWN.getValue(),
-                Categories.OTHER
-        ),
-        CURRENT_BIOME(
-                "minecraft_access.access_menu.gui.button.biome",
-                InputConstants.Type.KEYSYM,
-                InputConstants.UNKNOWN.getValue(),
-                Categories.OTHER
-        ),
-        TIME_OF_DAY(
-                "minecraft_access.access_menu.gui.button.time_of_day",
-                InputConstants.Type.KEYSYM,
-                InputConstants.UNKNOWN.getValue(),
-                Categories.OTHER
-        ),
-        XP_LEVEL(
-                "minecraft_access.access_menu.gui.button.xp",
-                InputConstants.Type.KEYSYM,
-                InputConstants.UNKNOWN.getValue(),
-                Categories.OTHER
-        ),
-        REFRESH_SCREEN_READER(
-                "minecraft_access.access_menu.gui.button.refresh_screen_reader",
-                InputConstants.Type.KEYSYM,
-                InputConstants.UNKNOWN.getValue(),
-                Categories.OTHER
-        ),
-        OPEN_CONFIG_MENU(
-                "minecraft_access.access_menu.gui.button.open_config_menu",
-                InputConstants.Type.KEYSYM,
-                InputConstants.UNKNOWN.getValue(),
                 Categories.OTHER
         ),
         DIRECTION_NARRATION_KEY("minecraft_access.keys.other.facing_direction_key_name",
