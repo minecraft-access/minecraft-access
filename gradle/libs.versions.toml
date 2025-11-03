@@ -41,4 +41,4 @@ checkstyle = "com.puppycrawl.tools:checkstyle:12.1.1"
 architecturyLoom = { id = "dev.architectury.loom", version = "1.11.456" }
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.162" }
 gitVersion = { id = "com.palantir.git-version", version = "4.1.0" }
-shadow = { id = "com.gradleup.shadow", version = "9.0.2" }
+shadow = { id = "com.gradleup.shadow", version = "9.2.2" }
