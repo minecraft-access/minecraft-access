@@ -8,15 +8,15 @@ import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+
+import org.mcaccess.minecraftaccess.utils.config.ConfigExtension;
 
 @me.shedaniel.autoconfig.annotation.Config(name = "minecraft-access")
 public final class Config implements ConfigData {
-    @ConfigEntry.Gui.Excluded
     private static final Pattern FORMAT_STRING_PLACEHOLDER = Pattern.compile("%(?<type>[^%])");
     @Getter
-    @ConfigEntry.Gui.Excluded
     private static Config instance;
 
     public boolean menuFixEnabled = true;
@@ -60,7 +60,8 @@ public final class Config implements ConfigData {
     }
 
     static void init() {
-        AutoConfig.register(Config.class, GsonConfigSerializer::new);
+        ConfigExtension.apply(AutoConfig.getGuiRegistry(Config.class));
+        AutoConfig.register(Config.class, ConfigExtension::serialiser);
         instance = AutoConfig.getConfigHolder(Config.class).get();
     }
 
@@ -280,6 +281,8 @@ public final class Config implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public FluidDetector fluidDetector = new FluidDetector();
+        @ConfigEntry.Gui.CollapsibleObject
+        public ShortcutBar shortcutBar = new ShortcutBar();
 
         private AccessMenu() {
         }
@@ -291,5 +294,29 @@ public final class Config implements ConfigData {
             private FluidDetector() {
             }
         }
+
+        public static final class ShortcutBar {
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key1 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_target");
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key2 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "target_position");
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key3 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "light_level");
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key4 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "find_water");
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key5 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "find_lava");
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key6 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "biome");
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key7 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "time");
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key8 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "xp");
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key9 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "refresh_screen_reader");
+            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            public ResourceLocation key0 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "config");
+        }
     }
+
 }

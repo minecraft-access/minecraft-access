@@ -1,9 +1,6 @@
 package org.mcaccess.minecraftaccess.features;
 
-import java.util.ArrayDeque;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -16,8 +13,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
@@ -34,13 +33,9 @@ public class AccessMenu {
         if (CLIENT.screen == null) {
             if (CLIENT.hasAltDown()) {
                 assert CLIENT.player != null;
-                Queue<RegisteredFunction> functions = new ArrayDeque<>(MainClass.registry(RegisteredFunction.class).values());
-                for (byte i = 1; i < 11; i++) {
-                    RegisteredFunction function = functions.poll();
-                    if (function == null) {
-                        break;
-                    }
-                    if (function.function().enabled() && InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_0 + i % 10)) {
+                for (byte i = 0; i < 10; i++) {
+                    RegisteredFunction function = getShortcuts()[i];
+                    if (InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_0 + i) && function.function().enabled()) {
                         CLIENT.player.clientSideCloseContainer();
                         function.function().execute();
                     }
@@ -68,6 +63,23 @@ public class AccessMenu {
         }
     }
 
+    private static RegisteredFunction[] getShortcuts() {
+        Config.AccessMenu.ShortcutBar config = Config.getInstance().accessMenu.shortcutBar;
+        Map<ResourceLocation, RegisteredFunction> registry = MainClass.registry(RegisteredFunction.class);
+        return new RegisteredFunction[]{
+                registry.get(config.key0),
+                registry.get(config.key1),
+                registry.get(config.key2),
+                registry.get(config.key3),
+                registry.get(config.key4),
+                registry.get(config.key5),
+                registry.get(config.key6),
+                registry.get(config.key7),
+                registry.get(config.key8),
+                registry.get(config.key9),
+        };
+    }
+
     public record RegisteredFunction(AccessMenuFunction function, KeyMapping key) {
     }
 
@@ -86,8 +98,12 @@ public class AccessMenu {
             GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
 
             for (Map.Entry<ResourceLocation, RegisteredFunction> function : MainClass.registry(RegisteredFunction.class).entrySet()) {
-                Component label = Component.translatable(function.getKey().toLanguageKey("access_menu_function"));
-                // TODO: Shortcut in label
+                MutableComponent label = Component.translatable(function.getKey().toLanguageKey("access_menu_function"));
+                for (byte i = 0; i < 10; i++) {
+                    if (getShortcuts()[i] == function.getValue()) {
+                        label.append(Component.literal(String.format(" [%d]", i)).withColor(0xbbbbbb));
+                    }
+                }
                 Button button = Button.builder(label, b -> {
                     onClose();
                     function.getValue().function().execute();
@@ -108,16 +124,12 @@ public class AccessMenu {
                 onClose();
                 return true;
             }
-            if (event.key() >= InputConstants.KEY_0 && event.key() <= InputConstants.KEY_9) {
-                Optional<RegisteredFunction> function = MainClass.registry(RegisteredFunction.class).values().stream()
-                        .skip((event.key() - InputConstants.KEY_0 + 9) % 10)
-                        .findFirst();
-                if (function.isPresent()) {
-                    if (function.get().function().enabled()) {
-                        onClose();
-                        function.get().function().execute();
-                        return true;
-                    }
+            if (event.getDigit() != -1) {
+                RegisteredFunction function = getShortcuts()[event.getDigit()];
+                if (function.function().enabled()) {
+                    onClose();
+                    function.function().execute();
+                    return true;
                 }
             }
             return super.keyPressed(event);
