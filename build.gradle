@@ -61,8 +61,15 @@ subprojects {
             url = 'https://maven.neoforged.net/releases/'
         }
         maven {
-            name = 'Mod Menu'
+            name = 'TerraformersMC'
             url = 'https://maven.terraformersmc.com/'
+        }
+        maven {
+            name = 'Twelve Iterations'
+            url "https://maven.twelveiterations.com/repository/maven-public/"
+            content {
+                includeGroup "net.blay09.mods"
+            }
         }
         exclusiveContent {
             forRepository {

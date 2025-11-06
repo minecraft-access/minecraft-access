@@ -26,9 +26,9 @@ type = "required"
 versionRange = "${minecraft_version}"
 
 [[dependencies.minecraft_access]]
-modId = "architectury"
+modId = "balm"
 type = "required"
-versionRange = "[${architectury_api_version},)"
+versionRange = "[${balm_version},)"
 ordering = "BEFORE"
 side = "CLIENT"
 
@@ -48,7 +48,7 @@ versionRange = "[${jade_neoforge_version},)"
 
 [mc-publish]
 dependencies = [
-    "architectury@${architectury_api_version}(embedded){modrinth:lhGA9TYQ}{curseforge:419699}",
+    "balm@${balm_version}(embedded){modrinth:MBAkmtvl}{curseforge:531761}",
     "cloth-config@${cloth_config_version}(embedded){modrinth:9s6osm5g}{curseforge:348521}",
     "jade@${jade_neoforge_version}(optional){modrinth:nvQzSEkH}{curseforge:324717}",
 ]

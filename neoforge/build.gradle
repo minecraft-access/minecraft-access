@@ -22,8 +22,8 @@ configurations {
 dependencies {
     neoForge libs.neoForge
 
-    modRuntimeOnly libs.architecturyApiNeoForge
-    include libs.architecturyApiNeoForge
+    modRuntimeOnly libs.balmNeoForge
+    include libs.balmNeoForge
 
     modImplementation libs.clothConfigNeoForge
     include libs.clothConfigNeoForge
@@ -39,7 +39,7 @@ processResources {
     filesMatching("META-INF/neoforge.mods.toml") {
         expand version: modVersion,
                 neoforge_version: libs.neoForge.get().version,
-                architectury_api_version: libs.architecturyApiNeoForge.get().version,
+                balm_version: libs.balmNeoForge.get().version,
                 jade_neoforge_version: libs.jadeNeoForge.get().version,
                 cloth_config_version: libs.clothConfigNeoForge.get().version,
                 minecraft_version: libs.minecraft.get().version
