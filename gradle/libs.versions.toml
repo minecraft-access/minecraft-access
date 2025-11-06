@@ -38,7 +38,7 @@ mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.re
 checkstyle = "com.puppycrawl.tools:checkstyle:12.1.1"
 
 [plugins]
-architecturyLoom = { id = "dev.architectury.loom", version = "1.11.456" }
+architecturyLoom = { id = "dev.architectury.loom", version = "1.13.457" }
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.162" }
 gitVersion = { id = "com.palantir.git-version", version = "4.1.0" }
 shadow = { id = "com.gradleup.shadow", version = "9.2.2" }
