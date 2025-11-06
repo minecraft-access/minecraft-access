@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import dev.architectury.platform.Platform;
+import net.blay09.mods.balm.api.Balm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -117,7 +117,7 @@ public class NarrateCrosshair {
     }
 
     private CrosshairNarrator getNarrator() {
-        if (CONFIG.useJade && Platform.isModLoaded("jade")) {
+        if (CONFIG.useJade && Balm.isModLoaded("jade")) {
             return jade;
         }
         return mcAccess;

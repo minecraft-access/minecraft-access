@@ -25,7 +25,7 @@ dependencies {
     modRuntimeOnly libs.fabricApi
     include libs.fabricApi
 
-    modRuntimeOnly libs.balmFabric
+    modImplementation libs.balmFabric
     include libs.balmFabric
 
     modImplementation libs.clothConfigFabric

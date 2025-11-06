@@ -1,12 +1,14 @@
 package org.mcaccess.minecraftaccess;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.architectury.event.events.client.ClientPlayerEvent;
-import dev.architectury.event.events.client.ClientTickEvent;
-import dev.architectury.platform.Platform;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.event.TickPhase;
+import net.blay09.mods.balm.api.event.TickType;
+import net.blay09.mods.balm.api.event.client.ConnectedToServerEvent;
+import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
@@ -70,10 +72,10 @@ public final class MainClass {
     /**
      * Initializes the mod
      */
-    public static void init() {
+    public static void init(BalmClientRegistrars registrars) {
         Config.init();
 
-        String startupMessage = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
+        String startupMessage = "Initializing Minecraft Access: version " + Balm.platform().getModInfo(MOD_ID).get().versionString();
         log.info(startupMessage);
 
         new AutoLibrarySetup().initialize();
@@ -83,12 +85,14 @@ public final class MainClass {
             getScreenReader().narrate(startupMessage, true);
         }
 
-        for (KeyBindingsHandler.Keys key : KeyBindingsHandler.Keys.values()) {
-            KeyMappingRegistry.register(key.mapping);
-        }
+        registrars.keyMappings(MOD_ID, keyMappings -> {
+            for (KeyBindingsHandler.Keys key : KeyBindingsHandler.Keys.values()) {
+                keyMappings.register(key.mapping);
+            }
+        });
 
-        ClientTickEvent.CLIENT_POST.register(MainClass::clientTickEventsMethod);
-        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(MainClass::initWorldState);
+        Balm.getEvents().onTickEvent(TickType.Client, TickPhase.End, MainClass::clientTickEventsMethod);
+        Balm.getEvents().onEvent(ConnectedToServerEvent.class, MainClass::initWorldState);
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -177,7 +181,7 @@ public final class MainClass {
         Keystroke.updateInstances();
     }
 
-    private static void initWorldState(LocalPlayer player) {
+    private static void initWorldState(ConnectedToServerEvent event) {
         accessMenu = new AccessMenu();
         biomeIndicator = new BiomeIndicator();
         facingDirection = new FacingDirection();
@@ -205,7 +209,7 @@ public final class MainClass {
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = Config.getInstance().debugMode || Platform.isDevelopmentEnvironment();
+        boolean debugMode = Config.getInstance().debugMode || Balm.isDevelopmentEnvironment();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);

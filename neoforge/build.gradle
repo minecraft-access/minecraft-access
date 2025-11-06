@@ -22,7 +22,7 @@ configurations {
 dependencies {
     neoForge libs.neoForge
 
-    modRuntimeOnly libs.balmNeoForge
+    modImplementation libs.balmNeoForge
     include libs.balmNeoForge
 
     modImplementation libs.clothConfigNeoForge
