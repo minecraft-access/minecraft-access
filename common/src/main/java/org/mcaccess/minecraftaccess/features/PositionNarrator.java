@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 
@@ -28,7 +28,7 @@ public final class PositionNarrator {
     public static Keystroke keyX = new Keystroke(() -> InputConstants.isKeyDown(window, InputConstants.KEY_X));
     public static Keystroke keyC = new Keystroke(() -> InputConstants.isKeyDown(window, InputConstants.KEY_C));
     public static Keystroke keyZ = new Keystroke(() -> InputConstants.isKeyDown(window, InputConstants.KEY_Z));
-    public static Keystroke positionNarrationKey = new Keystroke(() -> KeyBindingsHandler.Keys.POSITION_NARRATION_KEY.mapping.isDown());
+    public static Keystroke positionNarrationKey = new Keystroke(() -> KeyMappingsHandler.Keys.POSITION_NARRATION_KEY.mapping.isDown());
 
     private PositionNarrator() {
     }

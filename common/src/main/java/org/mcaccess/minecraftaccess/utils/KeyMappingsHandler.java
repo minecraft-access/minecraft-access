@@ -9,8 +9,8 @@ import org.mcaccess.minecraftaccess.MainClass;
 /**
  * Initializes all the keybindings used by the mod.
  */
-public final class KeyBindingsHandler {
-    private KeyBindingsHandler() {
+public final class KeyMappingsHandler {
+    private KeyMappingsHandler() {
     }
 
     private enum Categories {

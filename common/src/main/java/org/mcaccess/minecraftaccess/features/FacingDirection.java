@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 
 
@@ -20,7 +20,7 @@ public class FacingDirection {
         if (client.player == null) return;
         if (client.screen != null) return;
 
-        boolean isDirectionNarrationKeyPressed = KeyBindingsHandler.Keys.DIRECTION_NARRATION_KEY.mapping.isDown();
+        boolean isDirectionNarrationKeyPressed = KeyMappingsHandler.Keys.DIRECTION_NARRATION_KEY.mapping.isDown();
         if (!isDirectionNarrationKeyPressed) return;
 
         String narration;

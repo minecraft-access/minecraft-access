@@ -8,12 +8,10 @@ import net.blay09.mods.balm.api.event.TickPhase;
 import net.blay09.mods.balm.api.event.TickType;
 import net.blay09.mods.balm.api.event.client.ConnectedToServerEvent;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -41,7 +39,7 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 @Slf4j
@@ -86,7 +84,7 @@ public final class MainClass {
         }
 
         registrars.keyMappings(MOD_ID, keyMappings -> {
-            for (KeyBindingsHandler.Keys key : KeyBindingsHandler.Keys.values()) {
+            for (KeyMappingsHandler.Keys key : KeyMappingsHandler.Keys.values()) {
                 keyMappings.register(key.mapping);
             }
         });
@@ -197,7 +195,7 @@ public final class MainClass {
         timeIndicator = new TimeIndicator();
         xpIndicator = new XPIndicator();
 
-        if (CLIENT.options.keyAdvancements.same(KeyBindingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping)) {
+        if (CLIENT.options.keyAdvancements.same(KeyMappingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping)) {
             CLIENT.options.keyAdvancements.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_O));
             CLIENT.options.save();
             CLIENT.options.load();
