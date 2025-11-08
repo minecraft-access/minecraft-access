@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dev.architectury.platform.Platform;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -11,6 +12,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
 import org.mcaccess.minecraftaccess.utils.config.ConfigExtension;
 
 @me.shedaniel.autoconfig.annotation.Config(name = "minecraft-access")
@@ -234,7 +236,8 @@ public final class Config implements ConfigData {
 
     public static final class NarrateCrosshair {
         public boolean enabled = true;
-        public boolean useJade = true;
+        @ConfigExtension.Registry(registry = CrosshairNarrator.class, i18n = "narrator")
+        public ResourceLocation narrator = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, Platform.isModLoaded("jade") ? "jade" : "minecraft_access");
         public boolean narrateBlockFace = true;
         public boolean disableNarratingConsecutiveBlocks = false;
         public long repetitionInterval = 0;

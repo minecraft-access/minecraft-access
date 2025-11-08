@@ -1,10 +1,9 @@
-package org.mcaccess.minecraftaccess.features.narrate_crosshair;
+package org.mcaccess.minecraftaccess.features;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import dev.architectury.platform.Platform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
@@ -34,13 +34,9 @@ public class NarrateCrosshair {
     private boolean filterBlocks;
     private boolean filterEntities;
     private static final Config.NarrateCrosshair CONFIG = Config.getInstance().narrateCrosshair;
-    private final MCAccess mcAccess;
-    private final Jade jade;
 
     public NarrateCrosshair() {
         loadConfig();
-        mcAccess = new MCAccess();
-        jade = new Jade();
     }
 
     public void tick() {
@@ -52,7 +48,7 @@ public class NarrateCrosshair {
         loadConfig();
         if (!CONFIG.enabled) return;
 
-        CrosshairNarrator narrator = getNarrator();
+        CrosshairNarrator narrator = MainClass.registry(CrosshairNarrator.class).get(CONFIG.narrator);
         Object deduplication = narrator.deduplication(CONFIG.narrateBlockFace, !CONFIG.disableNarratingConsecutiveBlocks);
         if (Objects.equals(deduplication, previous) && !repetitionInterval.isReady()) {
             return;
@@ -114,13 +110,6 @@ public class NarrateCrosshair {
                 filterEntities = true;
             }
         }
-    }
-
-    private CrosshairNarrator getNarrator() {
-        if (CONFIG.useJade && Platform.isModLoaded("jade")) {
-            return jade;
-        }
-        return mcAccess;
     }
 
     private boolean isIgnored(ResourceLocation identifier) {

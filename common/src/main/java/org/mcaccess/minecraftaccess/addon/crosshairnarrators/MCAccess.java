@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.features.narrate_crosshair;
+package org.mcaccess.minecraftaccess.addon.crosshairnarrators;
 
 import java.util.Arrays;
 
@@ -11,6 +11,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 

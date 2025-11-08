@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.features.narrate_crosshair;
+package org.mcaccess.minecraftaccess.api;
 
 import java.util.Objects;
 

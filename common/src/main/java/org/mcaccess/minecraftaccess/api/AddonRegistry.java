@@ -62,4 +62,18 @@ public final class AddonRegistry {
         MainClass.register(AccessMenu.RegisteredFunction.class, location, new AccessMenu.RegisteredFunction(function, key));
         KeyMappingRegistry.register(key);
     }
+
+    /**
+     * Registers a {@link CrosshairNarrator}.
+     *
+     * @param identifier A unique identifier for the {@link CrosshairNarrator}. This is automatically namespaced by mod ID.
+     * @param crosshairNarrator The {@link CrosshairNarrator} to register.
+     * @throws IllegalArgumentException If a {@link CrosshairNarrator} is already registered with the provided identifier and the same mod ID.
+     * @throws UnsupportedOperationException Registries are already frozen.
+     * @see CrosshairNarrator
+     * @since 1.12.0
+     */
+    public void register(@NotNull String identifier, @NotNull CrosshairNarrator crosshairNarrator) {
+        MainClass.register(CrosshairNarrator.class, ResourceLocation.fromNamespaceAndPath(modid, identifier), crosshairNarrator);
+    }
 }
