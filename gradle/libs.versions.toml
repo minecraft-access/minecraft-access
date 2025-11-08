@@ -23,7 +23,7 @@ jadeNeoForge = "maven.modrinth:jade:20.0.5+neoforge"
 lombok = "org.projectlombok:lombok:1.18.42"
 minecraft = "com.mojang:minecraft:1.21.10"
 modMenu = "com.terraformersmc:modmenu:16.0.0-rc.1"
-neoForge = "net.neoforged:neoforge:21.10.47-beta"
+neoForge = "net.neoforged:neoforge:21.10.49-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.10:2025.10.12"
 
 assertjCore = "org.assertj:assertj-core:3.27.6"

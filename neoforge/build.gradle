@@ -37,12 +37,14 @@ processResources {
     inputs.property "version", modVersion
 
     filesMatching("META-INF/neoforge.mods.toml") {
-        expand version: modVersion,
+        expand(
+                version: modVersion,
                 neoforge_version: libs.neoForge.get().version,
-                balm_version: libs.balmNeoForge.get().version,
+                balm_version: libs.balmNeoForge.get().version.split('\\+')[0],
                 jade_neoforge_version: libs.jadeNeoForge.get().version,
                 cloth_config_version: libs.clothConfigNeoForge.get().version,
                 minecraft_version: libs.minecraft.get().version
+        )
     }
 }
 

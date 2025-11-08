@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.neoforge;
 
 import me.shedaniel.autoconfig.AutoConfig;
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.client.BalmClient;
 import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.neoforged.api.distmarker.Dist;
@@ -16,10 +15,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 @Mod(value = MainClass.MOD_ID, dist = Dist.CLIENT)
 public class MainClassNeoForge {
     public MainClassNeoForge(IEventBus modEventBus, ModContainer container) {
-        modEventBus.register(this);
         container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> AutoConfig.getConfigScreen(Config.class, parent).get());
-        final NeoForgeLoadContext context = new NeoForgeLoadContext(modEventBus);
-        Balm.initializeMod(MainClass.MOD_ID, context, () -> {});
-        BalmClient.initializeMod(MainClass.MOD_ID, context, MainClass::init);
+        BalmClient.initializeMod(MainClass.MOD_ID, new NeoForgeLoadContext(modEventBus), MainClass::init);
     }
 }
