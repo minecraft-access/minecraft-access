@@ -47,7 +47,6 @@ public final class MainClass {
     public static final String MOD_ID = "minecraft_access";
     @Getter
     private static ScreenReaderInterface screenReader = null;
-    private static boolean alreadyReboundAdvancementsKey = false;
 
     public static AccessMenu accessMenu = null;
     public static BiomeIndicator biomeIndicator = null;
@@ -194,17 +193,6 @@ public final class MainClass {
         poiManager = new POIManager();
         timeIndicator = new TimeIndicator();
         xpIndicator = new XPIndicator();
-
-        if (!alreadyReboundAdvancementsKey) {
-            Minecraft client = Minecraft.getInstance();
-            if (client.options.keyAdvancements.same(KeyMappingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping)) {
-                client.options.keyAdvancements.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_O));
-                client.options.save();
-                client.options.load();
-                log.info("Rebound advancements key");
-            }
-            alreadyReboundAdvancementsKey = true;
-        }
     }
 
     /**
