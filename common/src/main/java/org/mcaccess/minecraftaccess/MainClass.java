@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.api.Balm;
@@ -66,9 +65,6 @@ public final class MainClass {
     private MainClass() {
     }
 
-    /**
-     * Initializes the mod
-     */
     public static void init(BalmClientRegistrars registrars) {
         Config.init();
 
