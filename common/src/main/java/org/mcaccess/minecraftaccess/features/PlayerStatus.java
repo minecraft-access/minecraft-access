@@ -13,7 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.GameType;
 
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
@@ -28,7 +28,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 public class PlayerStatus {
     private final Minecraft client = Minecraft.getInstance();
     IntervalKeystroke narrationKey = new IntervalKeystroke(
-            () -> KeyBindingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping.isDown(),
+            () -> KeyMappingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping.isDown(),
             Keystroke.TriggeredAt.PRESSED,
             // 3s interval
             Interval.ms(3000));

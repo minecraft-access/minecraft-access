@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 
 /**
  * GUI screen for the access menu.
@@ -83,7 +83,7 @@ public class AccessMenuGUI extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (KeyBindingsHandler.Keys.ACCESS_MENU_KEY.mapping.matches(event)) {
+        if (KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping.matches(event)) {
             Minecraft.getInstance().player.clientSideCloseContainer();
             return true;
         }

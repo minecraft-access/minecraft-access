@@ -25,8 +25,8 @@ dependencies {
     modRuntimeOnly libs.fabricApi
     include libs.fabricApi
 
-    modRuntimeOnly libs.architecturyApiFabric
-    include libs.architecturyApiFabric
+    modImplementation libs.balmFabric
+    include libs.balmFabric
 
     modImplementation libs.clothConfigFabric
     include libs.clothConfigFabric
@@ -42,13 +42,15 @@ processResources {
     inputs.property "version", modVersion
 
     filesMatching("fabric.mod.json") {
-        expand version: modVersion,
+        expand(
+                version: modVersion,
                 fabric_loader_version: libs.fabricLoader.get().version,
                 fabric_api_version: libs.fabricApi.get().version,
-                architectury_api_version: libs.architecturyApiFabric.get().version,
+                balm_version: libs.balmFabric.get().version.split('\\+')[0],
                 jade_fabric_version: libs.jadeFabric.get().version,
                 cloth_config_version: libs.clothConfigFabric.get().version,
                 minecraft_version: libs.minecraft.get().version
+        )
     }
 }
 

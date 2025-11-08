@@ -1,17 +1,16 @@
 package org.mcaccess.minecraftaccess;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import dev.architectury.event.events.client.ClientPlayerEvent;
-import dev.architectury.event.events.client.ClientTickEvent;
-import dev.architectury.platform.Platform;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.event.TickPhase;
+import net.blay09.mods.balm.api.event.TickType;
+import net.blay09.mods.balm.api.event.client.ConnectedToServerEvent;
+import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -39,12 +38,11 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 @Slf4j
 public final class MainClass {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
     public static final String MOD_ID = "minecraft_access";
     @Getter
     private static ScreenReaderInterface screenReader = null;
@@ -67,13 +65,10 @@ public final class MainClass {
     private MainClass() {
     }
 
-    /**
-     * Initializes the mod
-     */
-    public static void init() {
+    public static void init(BalmClientRegistrars registrars) {
         Config.init();
 
-        String startupMessage = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
+        String startupMessage = "Initializing Minecraft Access: version " + Balm.platform().getModInfo(MOD_ID).get().versionString();
         log.info(startupMessage);
 
         new AutoLibrarySetup().initialize();
@@ -83,12 +78,14 @@ public final class MainClass {
             getScreenReader().narrate(startupMessage, true);
         }
 
-        for (KeyBindingsHandler.Keys key : KeyBindingsHandler.Keys.values()) {
-            KeyMappingRegistry.register(key.mapping);
-        }
+        registrars.keyMappings(MOD_ID, keyMappings -> {
+            for (KeyMappingsHandler.Keys key : KeyMappingsHandler.Keys.values()) {
+                keyMappings.register(key.mapping);
+            }
+        });
 
-        ClientTickEvent.CLIENT_POST.register(MainClass::clientTickEventsMethod);
-        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(MainClass::initWorldState);
+        Balm.getEvents().onTickEvent(TickType.Client, TickPhase.End, MainClass::clientTickEventsMethod);
+        Balm.getEvents().onEvent(ConnectedToServerEvent.class, MainClass::initWorldState);
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -177,7 +174,7 @@ public final class MainClass {
         Keystroke.updateInstances();
     }
 
-    private static void initWorldState(LocalPlayer player) {
+    private static void initWorldState(ConnectedToServerEvent event) {
         accessMenu = new AccessMenu();
         biomeIndicator = new BiomeIndicator();
         facingDirection = new FacingDirection();
@@ -192,20 +189,13 @@ public final class MainClass {
         poiManager = new POIManager();
         timeIndicator = new TimeIndicator();
         xpIndicator = new XPIndicator();
-
-        if (CLIENT.options.keyAdvancements.same(KeyBindingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping)) {
-            CLIENT.options.keyAdvancements.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_O));
-            CLIENT.options.save();
-            CLIENT.options.load();
-            log.info("Rebound advancements key");
-        }
     }
 
     /**
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = Config.getInstance().debugMode || Platform.isDevelopmentEnvironment();
+        boolean debugMode = Config.getInstance().debugMode || Balm.isDevelopmentEnvironment();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);
@@ -220,12 +210,15 @@ public final class MainClass {
     }
 
     public static void narrate(String text, boolean interrupt) {
-        if (Strings.isEmpty(text) || !CLIENT.isWindowActive()) {
+        Minecraft client = Minecraft.getInstance();
+
+        if (Strings.isEmpty(text) || !client.isWindowActive()) {
             log.warn("The narration of string \"{}\" with interrupt={} was suppressed", text, interrupt);
             return;
         }
-        if (CLIENT.options.narrator().get() != NarratorStatus.OFF) {
-            ((GameNarratorAccessor) CLIENT.getNarrator()).invokeNarrateMessage(text, interrupt);
+
+        if (client.options.narrator().get() != NarratorStatus.OFF) {
+            ((GameNarratorAccessor) client.getNarrator()).invokeNarrateMessage(text, interrupt);
         }
     }
 }

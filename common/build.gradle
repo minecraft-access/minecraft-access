@@ -10,7 +10,7 @@ idea {
 
 dependencies {
     modImplementation libs.jadeFabric
-    modImplementation libs.architecturyApi
+    modImplementation libs.balm
     modImplementation libs.clothConfig
 
     // https://projectlombok.org/setup/gradle
