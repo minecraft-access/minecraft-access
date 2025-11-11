@@ -8,7 +8,7 @@ architectury {
 }
 
 loom {
-    log4jConfigs.from(file("../log4j.xml"))
+    log4jConfigs.from(file('../log4j.xml'))
 }
 
 configurations {
@@ -28,15 +28,15 @@ dependencies {
     modImplementation libs.clothConfigNeoForge
     include libs.clothConfigNeoForge
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive = false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
+    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    shadowCommon(project(path: ':common', configuration: 'transformProductionNeoForge')) { transitive = false }
 }
 
 processResources {
     def modVersion = project.version.toString()
-    inputs.property "version", modVersion
+    inputs.property 'version', modVersion
 
-    filesMatching("META-INF/neoforge.mods.toml") {
+    filesMatching('META-INF/neoforge.mods.toml') {
         expand(
                 version: modVersion,
                 neoforge_version: libs.neoForge.get().version,
@@ -49,10 +49,10 @@ processResources {
 }
 
 shadowJar {
-    exclude "fabric.mod.json"
+    exclude 'fabric.mod.json'
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier = "dev-shadow"
+    archiveClassifier = 'dev-shadow'
 }
 
 remapJar {
@@ -62,11 +62,11 @@ remapJar {
 }
 
 jar {
-    archiveClassifier = "dev"
+    archiveClassifier = 'dev'
 }
 
 sourcesJar {
-    def commonSources = project(":common").sourcesJar
+    def commonSources = project(':common').sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map {
         zipTree(it)

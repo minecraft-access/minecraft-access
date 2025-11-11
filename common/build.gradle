@@ -1,5 +1,5 @@
 architectury {
-    common("fabric", "neoforge")
+    common('fabric', 'neoforge')
 }
 
 idea {
@@ -36,5 +36,5 @@ test {
     useJUnitPlatform()
     // Suppress JVM warning about mockito's behavior when running unit tests with IntelliJ
     // ref: https://stackoverflow.com/questions/77951485/getting-a-java-agent-has-been-loaded-warning-in-intellij-after-upgrading-jdk-17
-    jvmArgs("-XX:+EnableDynamicAgentLoading")
+    jvmArgs('-XX:+EnableDynamicAgentLoading')
 }
