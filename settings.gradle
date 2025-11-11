@@ -14,9 +14,9 @@ pluginManagement {
         }
         maven {
             name = 'Twelve Iterations'
-            url "https://maven.twelveiterations.com/repository/maven-public/"
+            url = 'https://maven.twelveiterations.com/repository/maven-public/'
             content {
-                includeGroup "net.blay09.mods"
+                includeGroup 'net.blay09.mods'
             }
         }
         gradlePluginPortal()
@@ -29,7 +29,7 @@ plugins {
 
 develocity {
     buildScan {
-        publishing.onlyIf { System.getenv("GITHUB_ACTIONS") == "true" }
+        publishing.onlyIf { System.getenv('GITHUB_ACTIONS') == 'true' }
     }
 }
 
@@ -40,7 +40,7 @@ dependencyResolutionManagement {
             url = 'https://maven.architectury.dev'
         }
         mavenCentral()
-        maven{
+        maven {
             name = 'Cloth Config'
             url = 'https://maven.shedaniel.me/'
         }
@@ -74,8 +74,8 @@ dependencyResolutionManagement {
     }
 }
 
-include("common")
-include("fabric")
-include("neoforge")
+include('common')
+include('fabric')
+include('neoforge')
 
-rootProject.name = "minecraft_access"
+rootProject.name = 'minecraft_access'
