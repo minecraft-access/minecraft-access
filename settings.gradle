@@ -30,7 +30,6 @@ plugins {
 develocity {
     buildScan {
         publishing.onlyIf { System.getenv("GITHUB_ACTIONS") == "true" }
-        tag(System.getenv("GITHUB_REF_NAME"))
     }
 }
 
