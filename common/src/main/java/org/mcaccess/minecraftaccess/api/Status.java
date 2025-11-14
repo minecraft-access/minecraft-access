@@ -1,13 +1,12 @@
 package org.mcaccess.minecraftaccess.api;
 
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * A status to be narrated in the player status readout or to trigger warnings.
  *
- * @see AddonRegistry#register(ResourceLocation, Status)
+ * @see AddonRegistry#register(String, Status)
  * @since 1.12.0
  */
 public interface Status {

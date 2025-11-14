@@ -32,3 +32,20 @@ test {
     // ref: https://stackoverflow.com/questions/77951485/getting-a-java-agent-has-been-loaded-warning-in-intellij-after-upgrading-jdk-17
     jvmArgs("-XX:+EnableDynamicAgentLoading")
 }
+
+javadoc {
+    include 'org/mcaccess/minecraftaccess/api/**'
+    title "Minecraft Access ${rootProject.version} API"
+    options {
+        tags(
+                'apiNote:a:API Note:',
+                'implSpec:a:Implementation Requirements:',
+                'implNote:a:Implementation Note:',
+        )
+        keyWords true
+        linkSource true
+        links(
+                'https://javadoc.io/doc/org.jetbrains/annotations/latest/',
+        )
+    }
+}
