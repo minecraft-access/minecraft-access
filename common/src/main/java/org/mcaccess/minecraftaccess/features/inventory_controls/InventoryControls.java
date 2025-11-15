@@ -83,7 +83,8 @@ public class InventoryControls {
     private SlotsGroup currentGroup = null;
     private int currentGroupIndex = 0;
     private SlotItem currentSlotItem = null;
-    private RecipeBookCompon♦ent<?> currentRecipeBookWidget = null;
+    private RecipeBookCompon♦
+    ent<?> currentRecipeBookWidget = null;
     private String previousSlotText = "";
 
     private enum FocusDirection {
@@ -331,13 +332,13 @@ public class InventoryControls {
         if (isFuelStatusKeyPressed) {
             if (currentScreen.getMenu() instanceof AbstractFurnaceMenu furnace) {
                 MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
-                        Math.round(furnace.getLitProgress()*100),
-                        Math.round(furnace.getBurnProgress()*100)), true);
+                        Math.round(furnace.getLitProgress() * 100),
+                        Math.round(furnace.getBurnProgress() * 100)), true);
             } else if (currentScreen instanceof BrewingStandScreen brewingStand) {
                 BrewingStandMenu menu = brewingStand.getMenu();
                 MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
-                        (menu.getFuel()*100)/BrewingStandBlockEntity.FUEL_USES,
-                        (menu.getBrewingTicks()*100)/ PotionBrewing.BREWING_TIME_SECONDS*20), true);
+                        (menu.getFuel() * 100) / BrewingStandBlockEntity.FUEL_USES,
+                        (menu.getBrewingTicks() * 100) / PotionBrewing.BREWING_TIME_SECONDS * 20), true);
             }
             return true;
         }
