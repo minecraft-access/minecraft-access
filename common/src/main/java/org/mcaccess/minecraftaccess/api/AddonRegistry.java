@@ -22,9 +22,7 @@ import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 public final class AddonRegistry {
     private final String modid;
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     @ApiStatus.Internal
     public AddonRegistry(String modid) {
         this.modid = modid;

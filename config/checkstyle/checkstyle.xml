@@ -192,4 +192,70 @@
         <module name="JavadocType"/>
         <module name="VariableDeclarationUsageDistance"/>
     </module>
+    <module name="SuppressionSingleFilter">
+        <property name="files" value="/org/mcaccess/minecraftaccess/(?:(?!api)[^/]+/)*[^/]+$"/>
+        <property name="id" value="api"/>
+    </module>
+    <module name="SuppressWithNearbyTextFilter">
+        <property name="checkPattern" value="Javadoc|RequireEmptyLineBeforeBlockTagGroup|WriteTag"/>
+        <property name="lineRange" value="2"/>
+        <property name="nearbyTextPattern" value="^\W*/\*\* @hidden \*/$"/>
+    </module>
+    <module name="JavadocPackage">
+        <property name="id" value="api"/>
+    </module>
+    <module name="TreeWalker">
+        <property name="severity" value="error"/>
+        <module name="JavadocMethod">
+            <property name="id" value="api"/>
+            <property name="accessModifiers" value="public, protected"/>
+            <property name="allowedAnnotations" value="Override, ApiStatus.Internal"/>
+            <property name="validateThrows" value="true"/>
+        </module>
+        <module name="JavadocParagraph">
+            <property name="id" value="api"/>
+        </module>
+        <module name="JavadocStyle">
+            <property name="id" value="api"/>
+            <property name="checkEmptyJavadoc" value="true"/>
+            <property name="scope" value="protected"/>
+        </module>
+        <module name="JavadocType">
+            <property name="id" value="api"/>
+            <property name="allowedAnnotations" value="Generated, ApiStatus.Internal"/>
+            <property name="scope" value="protected"/>
+        </module>
+        <module name="JavadocVariable">
+            <property name="id" value="api"/>
+            <property name="accessModifiers" value="public, protected"/>
+        </module>
+        <module name="MissingJavadocMethod">
+            <property name="id" value="api"/>
+            <property name="allowedAnnotations" value="Override, ApiStatus.Internal"/>
+            <property name="scope" value="protected"/>
+        </module>
+        <module name="MissingJavadocPackage">
+            <property name="id" value="api"/>
+        </module>
+        <module name="MissingJavadocType">
+            <property name="id" value="api"/>
+            <property name="scope" value="protected"/>
+            <property name="skipAnnotations" value="Generated, ApiStatus.Internal"/>
+        </module>
+        <module name="RequireEmptyLineBeforeBlockTagGroup">
+            <property name="id" value="api"/>
+        </module>
+        <module name="SummaryJavadoc">
+            <property name="id" value="api"/>
+        </module>
+        <module name="WriteTag">
+            <property name="id" value="api"/>
+            <property name="tag" value="@since"/>
+            <property name="tagFormat" value="^\d+\.\d+\.\d+$"/>
+            <property name="tagSeverity" value="ignore"/>
+            <property name="tokens"
+                      value="INTERFACE_DEF, CLASS_DEF, ENUM_DEF, ANNOTATION_DEF, METHOD_DEF, CTOR_DEF, ENUM_CONSTANT_DEF, ANNOTATION_FIELD_DEF, RECORD_DEF,
+                             COMPACT_CTOR_DEF"/>
+        </module>
+    </module>
 </module>
