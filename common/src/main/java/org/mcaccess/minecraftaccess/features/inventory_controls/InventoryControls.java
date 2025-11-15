@@ -320,9 +320,9 @@ public class InventoryControls {
             MouseUtils.moveAndLeftClick(p.x(), p.y());
             moveToSlotItem(currentSlotItem, 100);
 
-            String narration = toggleCraftableButton.isStateTriggered() ?
-                    ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString() :
-                    I18n.get("gui.recipebook.toggleRecipes.all");
+            String narration = toggleCraftableButton.isStateTriggered()
+                    ? ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString()
+                    : I18n.get("gui.recipebook.toggleRecipes.all");
             MainClass.narrate(narration, true);
 
             return true;

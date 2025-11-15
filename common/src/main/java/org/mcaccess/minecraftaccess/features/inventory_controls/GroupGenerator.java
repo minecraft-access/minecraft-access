@@ -76,7 +76,7 @@ public final class GroupGenerator {
         }
 
         if (screen instanceof AbstractRecipeBookScreen<?>) {
-            return RecipeBookGroups(screen);
+            return recipeBookGroups(screen);
         }
 
         return commonGroups(screen);
@@ -677,7 +677,7 @@ public final class GroupGenerator {
         return adjacentOnX || adjacentOnY;
     }
 
-    private static @NotNull List<SlotsGroup> RecipeBookGroups(@NotNull AbstractContainerScreenAccessor screen) {
+    private static @NotNull List<SlotsGroup> recipeBookGroups(@NotNull AbstractContainerScreenAccessor screen) {
         List<SlotsGroup> foundGroups = commonGroups(screen);
 
         RecipeBookComponent<?> recipeBookWidget = null;
