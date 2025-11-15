@@ -274,7 +274,15 @@ public final class Config implements ConfigData {
             public enum TargetMode {
                 ALL,
                 ENTITY,
-                BLOCK,
+                BLOCK;
+
+                public boolean filterBlocks() {
+                    return this == ALL || this == BLOCK;
+                }
+
+                public boolean filterEntities() {
+                    return this == ALL || this == ENTITY;
+                }
             }
         }
     }

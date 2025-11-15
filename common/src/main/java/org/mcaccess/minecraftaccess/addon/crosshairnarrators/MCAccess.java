@@ -1,7 +1,5 @@
 package org.mcaccess.minecraftaccess.addon.crosshairnarrators;
 
-import java.util.Arrays;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
@@ -24,26 +22,7 @@ public class MCAccess implements CrosshairNarrator {
     }
 
     @Override
-    public @Nullable Object deduplication(boolean narrateSide, boolean narrateConsecutiveBlocks) {
-        HitResult hit = rayCast();
-        if (hit.getType() == HitResult.Type.MISS) {
-            return null;
-        }
-        return switch (hit) {
-            case BlockHitResult blockHitResult -> {
-                String side = narrateSide ? blockHitResult.getDirection().getName() : "";
-                yield Arrays.asList(
-                        NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getB(),
-                        narrateConsecutiveBlocks ? blockHitResult.getBlockPos() : null
-                );
-            }
-            case EntityHitResult entityHitResult -> NarrationUtils.narrateEntity(entityHitResult.getEntity());
-            default -> null;
-        };
-    }
-
-    @Override
-    public @NotNull String narrate(boolean narrateSide) {
+    public @Nullable String narrate(boolean narrateSide) {
         return switch (rayCast()) {
             case BlockHitResult blockHitResult -> {
                 String side = narrateSide ? I18n.get(String.format("minecraft_access.direction.%s", blockHitResult.getDirection().getName())) : "";

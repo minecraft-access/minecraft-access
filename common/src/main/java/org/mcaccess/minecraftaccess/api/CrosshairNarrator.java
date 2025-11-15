@@ -1,32 +1,41 @@
 package org.mcaccess.minecraftaccess.api;
 
-import java.util.Objects;
-
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Provides narration for whatever the player is currently looking at.
+ *
+ * @see AddonRegistry#register(String, CrosshairNarrator)
+ * @since 1.12.0
+ */
 public interface CrosshairNarrator {
-    @NotNull HitResult rayCast();
+    /**
+     * Preforms a ray cast to determine what the player is looking at.
+     *
+     * <p>A value of {@code null} is equivalent to a {@link HitResult} with type {@link HitResult.Type#MISS}
+     * and indicates that the player is not looking at anything.
+     *
+     * <p>This must match the block/entity narrated by {@link #narrate(boolean)}.
+     *
+     * @return A {@link HitResult} for what the player is looking at or {@code null}.
+     * @since 1.12.0
+     */
+    @Contract(pure = true)
+    @Nullable HitResult rayCast();
 
     /**
-     * Determines weather the player is looking at the same block or entity.
-     * {@link #narrate(boolean)} will only be called
-     * if this method returns a different non-null value than its previous call.
-     * A value of null indicates that the player is not currently looking at any block
-     * and thus {@link #narrate(boolean)} MUST NOT be called.
+     * Generates a description of the block or entity the player is currently looking at to be narrated.
      *
-     * @param narrateSide Whether the block side the player is pointing at should be narrated
-     * @return Any object comparable with {@link Objects#equals(Object, Object)} or null
-     */
-    @Nullable Object deduplication(boolean narrateSide, boolean narrateConsecutiveBlocks);
-
-    /**
-     * Generates a description of the block or entity the player is currently looking at to be read out.
-     * This will never be called if {@link #deduplication(boolean, boolean)} returns null.
+     * <p>A value of {@code null} indicates that there is no narration available.
      *
-     * @param narrateSide Weather the block side the player is pointing at should be narrated
-     * @return A non-null string to be read to the player
+     * <p>The narrated block/entity must match {@link #rayCast()}.
+     *
+     * @param narrateSide Weather the block side the player is looking at should be narrated.
+     * @return A string to be narrated to the player or null.
+     * @since 1.12.0
      */
-    @NotNull String narrate(boolean narrateSide);
+    @Contract(pure = true)
+    @Nullable String narrate(boolean narrateSide);
 }

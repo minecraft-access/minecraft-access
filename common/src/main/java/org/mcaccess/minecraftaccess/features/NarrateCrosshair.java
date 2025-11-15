@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,47 +28,56 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  * This feature reads the name of the targeted block or entity.<br>
  * It also gives feedback when a block is powered by a redstone signal or when a door is open similar cases.
  */
+@Slf4j
 public class NarrateCrosshair {
-    private @Nullable Object previous = null;
+    private @Nullable Object previousTarget = null;
+    private @Nullable String previousNarration = null;
     private Vec3 previousSoundPos = Vec3.ZERO;
     private final Interval repetitionInterval = Interval.defaultDelay();
-    private boolean filterBlocks;
-    private boolean filterEntities;
     private static final Config.NarrateCrosshair CONFIG = Config.getInstance().narrateCrosshair;
-
-    public NarrateCrosshair() {
-        loadConfig();
-    }
 
     public void tick() {
         Minecraft client = Minecraft.getInstance();
-        if (client.level == null) return;
-        if (client.player == null) return;
         if (client.screen != null) return;
-
-        loadConfig();
         if (!CONFIG.enabled) return;
+        repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
 
         CrosshairNarrator narrator = MainClass.registry(CrosshairNarrator.class).get(CONFIG.narrator);
-        Object deduplication = narrator.deduplication(CONFIG.narrateBlockFace, !CONFIG.disableNarratingConsecutiveBlocks);
-        if (Objects.equals(deduplication, previous) && !repetitionInterval.isReady()) {
-            return;
-        }
-        previous = deduplication;
-        if (deduplication == null) {
+        HitResult rayCast = narrator.rayCast();
+        if (rayCast == null || rayCast.getType() == HitResult.Type.MISS) {
+            previousTarget = null;
+            previousNarration = null;
             return;
         }
 
-        HitResult hit = narrator.rayCast();
+        String narration = narrator.narrate(CONFIG.narrateBlockFace);
+        Object target = switch (rayCast) {
+            case BlockHitResult blockHitResult -> CONFIG.disableNarratingConsecutiveBlocks ? null : blockHitResult.getBlockPos();
+            case EntityHitResult entityHitResult -> entityHitResult.getEntity();
+            default -> rayCast;
+        };
+
+        if (Objects.equals(target, previousTarget) && Objects.equals(narration, previousNarration) && !repetitionInterval.isReady()) {
+            previousTarget = target;
+            previousNarration = narration;
+            return;
+        }
+        previousTarget = target;
+        previousNarration = narration;
+
+        if (narration == null) {
+            return;
+        }
 
         if (CONFIG.relativePositionSoundCue.enabled) {
+            assert client.player != null;
             double rayCastDistance = Math.min(client.player.blockInteractionRange(), client.player.entityInteractionRange());
-            Vec3 targetPosition = switch (hit) {
+            Vec3 targetPosition = switch (rayCast) {
                 case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().getCenter();
                 case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();
-                default -> null;
+                default -> rayCast.getLocation();
             };
-            if (targetPosition != null && !Objects.equals(targetPosition, previousSoundPos)) {
+            if (!Objects.equals(targetPosition, previousSoundPos)) {
                 playRelativePositionSoundCue(targetPosition, rayCastDistance,
                         SoundEvents.NOTE_BLOCK_HARP,
                         CONFIG.relativePositionSoundCue.minSoundVolume,
@@ -76,40 +86,29 @@ public class NarrateCrosshair {
             previousSoundPos = targetPosition;
         }
 
-        if (CONFIG.filter.enabled) {
-            ResourceLocation resourceLocation = switch (hit) {
-                case BlockHitResult blockHitResult ->
-                        BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
-                case EntityHitResult entityHitResult -> EntityType.getKey(entityHitResult.getEntity().getType());
-                default -> null;
-            };
-            if (filterBlocks && hit.getType() == HitResult.Type.BLOCK && isIgnored(resourceLocation)) {
-                return;
-            }
-            if (filterEntities && hit.getType() == HitResult.Type.ENTITY && isIgnored(resourceLocation)) {
-                return;
+        if (!(rayCast instanceof BlockHitResult || rayCast instanceof EntityHitResult)) {
+            log.warn("Filtering only works on BlockHitResult and EntityHitResult. Using narrator {}", CONFIG.narrator);
+        } else if (CONFIG.filter.enabled) {
+            switch (rayCast) {
+                case BlockHitResult blockHitResult when CONFIG.filter.targetMode.filterBlocks() -> {
+                    assert client.level != null;
+                    ResourceLocation key = BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
+                    if (isIgnored(key)) {
+                        return;
+                    }
+                }
+                case EntityHitResult entityHitResult when CONFIG.filter.targetMode.filterEntities() -> {
+                    ResourceLocation key = EntityType.getKey(entityHitResult.getEntity().getType());
+                    if (isIgnored(key)) {
+                        return;
+                    }
+                }
+                default -> {
+                }
             }
         }
 
         MainClass.narrate(narrator.narrate(CONFIG.narrateBlockFace), true);
-    }
-
-    private void loadConfig() {
-        repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
-        switch (CONFIG.filter.targetMode) {
-            case ALL -> {
-                filterBlocks = true;
-                filterEntities = true;
-            }
-            case BLOCK -> {
-                filterBlocks = true;
-                filterEntities = false;
-            }
-            case ENTITY -> {
-                filterBlocks = false;
-                filterEntities = true;
-            }
-        }
     }
 
     private boolean isIgnored(ResourceLocation identifier) {
