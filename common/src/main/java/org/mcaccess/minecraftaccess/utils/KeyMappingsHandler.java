@@ -271,6 +271,12 @@ public final class KeyMappingsHandler {
                 InputConstants.KEY_R,
                 Categories.INVENTORY_CONTROLS
         ),
+        INVENTORY_CONTROLS_FUEL_STATUS_KEY(
+                "minecraft_access.keys.inventory_controls.fuel_status_key_name",
+                InputConstants.Type.KEYSYM,
+                InputConstants.KEY_U,
+                Categories.INVENTORY_CONTROLS
+        ),
 
         MOUSE_SIMULATION_LEFT_MOUSE_KEY(
                 "minecraft_access.keys.mouse_simulation.left_key_name",
