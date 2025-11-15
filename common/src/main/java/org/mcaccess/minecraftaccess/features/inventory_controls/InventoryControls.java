@@ -83,8 +83,7 @@ public class InventoryControls {
     private SlotsGroup currentGroup = null;
     private int currentGroupIndex = 0;
     private SlotItem currentSlotItem = null;
-    private RecipeBookCompon♦
-    ent<?> currentRecipeBookWidget = null;
+    private RecipeBookComponent<?> currentRecipeBookWidget = null;
     private String previousSlotText = "";
 
     private enum FocusDirection {
@@ -321,9 +320,9 @@ public class InventoryControls {
             MouseUtils.moveAndLeftClick(p.x(), p.y());
             moveToSlotItem(currentSlotItem, 100);
 
-            String narration = toggleCraftableButton.isStateTriggered()
-                    ? I18n.get("gui.recipebook.toggleRecipes.all")
-                    : ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString();
+            String narration = toggleCraftableButton.isStateTriggered() ?
+                    ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString() :
+                    I18n.get("gui.recipebook.toggleRecipes.all");
             MainClass.narrate(narration, true);
 
             return true;

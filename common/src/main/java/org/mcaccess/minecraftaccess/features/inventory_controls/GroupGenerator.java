@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.LoomScreen;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.gui.screens.inventory.StonecutterScreen;
@@ -76,8 +75,8 @@ public final class GroupGenerator {
             return creativeInventoryGroups(creativeInventoryScreen);
         }
 
-        if (screen instanceof InventoryScreen || screen instanceof CraftingScreen) {
-            return inventoryAndCraftingScreensGroups(screen);
+        if (screen instanceof AbstractRecipeBookScreen<?>) {
+            return RecipeBookGroups(screen);
         }
 
         return commonGroups(screen);
@@ -678,7 +677,7 @@ public final class GroupGenerator {
         return adjacentOnX || adjacentOnY;
     }
 
-    private static @NotNull List<SlotsGroup> inventoryAndCraftingScreensGroups(@NotNull AbstractContainerScreenAccessor screen) {
+    private static @NotNull List<SlotsGroup> RecipeBookGroups(@NotNull AbstractContainerScreenAccessor screen) {
         List<SlotsGroup> foundGroups = commonGroups(screen);
 
         RecipeBookComponent<?> recipeBookWidget = null;
