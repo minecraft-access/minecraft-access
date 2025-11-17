@@ -10,8 +10,8 @@ idea {
 
 dependencies {
     modImplementation libs.jadeFabric
-    modImplementation libs.balm
-    modImplementation libs.clothConfig
+    modImplementation libs.balmCommon
+    modImplementation libs.clothConfigCommon
 
     // https://projectlombok.org/setup/gradle
     compileOnly libs.lombok

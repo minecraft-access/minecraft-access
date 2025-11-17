@@ -3,27 +3,27 @@
 # https://parchmentmc.org/docs/getting-started for version table
 
 [versions]
-balm = "21.10.7+1.21.10"
+balm = "21.10.8+1.21.10"
 clothConfig = "20.0.149"
 jmh = "1.37"
 junit = "6.0.1"
 mockito = "5.20.0"
 
 [libraries]
-balm = { module = "net.blay09.mods:balm-common", version.ref = "balm" }
+balmCommon = { module = "net.blay09.mods:balm-common", version.ref = "balm" }
 balmFabric = { module = "net.blay09.mods:balm-fabric", version.ref = "balm" }
 balmNeoForge = { module = "net.blay09.mods:balm-neoforge", version.ref = "balm" }
-clothConfig = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
+clothConfigCommon = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
 fabricApi = "net.fabricmc.fabric-api:fabric-api:0.138.3+1.21.10"
-fabricLoader = "net.fabricmc:fabric-loader:0.17.3"
+fabricLoader = "net.fabricmc:fabric-loader:0.18.0"
 jadeFabric = "maven.modrinth:jade:20.1.0+fabric"
 jadeNeoForge = "maven.modrinth:jade:20.0.5+neoforge"
 lombok = "org.projectlombok:lombok:1.18.42"
 minecraft = "com.mojang:minecraft:1.21.10"
 modMenu = "com.terraformersmc:modmenu:16.0.0-rc.1"
-neoForge = "net.neoforged:neoforge:21.10.50-beta"
+neoForge = "net.neoforged:neoforge:21.10.52-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.10:2025.10.12"
 
 assertjCore = "org.assertj:assertj-core:3.27.6"
@@ -35,10 +35,10 @@ junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher",
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:12.1.1"
+checkstyle = "com.puppycrawl.tools:checkstyle:12.1.2"
 
 [plugins]
 architecturyLoom = { id = "dev.architectury.loom", version = "1.13.457" }
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.162" }
-gitVersion = { id = "com.palantir.git-version", version = "4.1.0" }
+gitVersion = { id = "com.palantir.git-version", version = "4.2.0" }
 shadow = { id = "com.gradleup.shadow", version = "9.2.2" }
