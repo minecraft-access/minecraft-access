@@ -7,18 +7,11 @@ It is an integration and replacement for [a series of previous mods](https://git
 This mod primarily borrows the help of a screen reader to describe (narrate) the game interface, and incorporates sound cues to provide orientation perception in this 3D world.
 Currently, this mod [has enough features](https://mcaccess.org/faq#is-the-mod-enough-to-play-the-game-normally) to help visually impaired players play the game normally.
 
-This mod has available versions for:
-
-* Game versions `1.19.3`, `1.20.1`, `1.20.4`, `1.20.6`, `1.21.1`, `1.21.4`.
-* On the [Fabric](https://fabricmc.net/use/installer/) and [NeoForge](https://neoforged.net) mod loaders
-* On Windows, macOS and Linux operating systems
-
 Whenever the mod's code is updated, or whenever we need an upcoming feature someone contributed to be tested, a build will be automatically published in the [Playability Discord server](https://discord.mcaccess.org/) first to allow for testing, after enough feedback has been gathered, or no serious bugs have been reported in the build, the version will be released on [Modrinth](https://modrinth.com/mod/minecraft-access/versions), [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/blind-accessibility/files), and [GitHub](https://github.com/minecraft-access/minecraft-access/releases).
 
 ## Other Pages
 
 * [Basic Setup](https://docs.mcaccess.org/setup/basic)
-* [Modpack Version Setup](https://docs.mcaccess.org/setup/modpack)
 * [Advanced Setup (with NeoForge, not recommended)](https://docs.mcaccess.org/setup/advanced)
 * [Features](https://docs.mcaccess.org/features)
 * [Keybindings](https://docs.mcaccess.org/keybindings)

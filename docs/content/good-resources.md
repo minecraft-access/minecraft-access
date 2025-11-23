@@ -6,7 +6,6 @@ title: "Good Resources"
 
 * [Documentation for this mod](https://github.com/minecraft-access/minecraft-access) - Check what features this mod provides.
 * [Playability Discord server](https://discord.mcaccess.org/) - You can join our Discord server if you need help setting up the mod or with any issue related to Minecraft Java Edition.
-* [Visually Impaired Access Modpack]({{% relref "/setup/modpack" %}}) - A mod pack that contains this mod and some quality of life mods, made with heart by [@BrailleBennett](https://github.com/BrailleBennett) for the Fabric mod loader.
 
 ## Quality of Life Mods
 
@@ -25,6 +24,10 @@ There are guides about [installing]({{% relref "/setup/basic#install-your-mods" 
     * Carry On ([Fabric and NeoForge](https://modrinth.com/mod/carry-on)): Allows players to pick up, carry, and place some blocks (such as Chests) and animals without breaking blocks or guiding animals with a leash.
     * FTB Ultimine ([Fabric](https://www.curseforge.com/minecraft/mc-mods/ftb-ultimine-fabric)): This mod can make you operate on the same type of blocks around you by operating only once, like harvesting crops, mining a vein, and chopping trees.
     * Simple Voice Chat ([Fabric and NeoForge](https://modrinth.com/plugin/simple-voice-chat)): A proximity voice chat for Minecraft.
+
+## Community Modpacks
+
+* Visually Impaired Access Mods+Fabric ([Fabric](https://modrinth.com/modpack/TAT3EDpw)): The community member [@BrailleBennett](https://github.com/BrailleBennett) has created a modpack that contains performence mods, along with many pre-configured accessibility mods. It is recommended for people who want a well rounded, accessible experience while playing, and don't want to worry about finding and configuring any mods.
 
 ## Tutorial Resources
 
