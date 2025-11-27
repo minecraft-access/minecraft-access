@@ -9,6 +9,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
@@ -22,10 +23,12 @@ public class MCAccess implements CrosshairNarrator {
     }
 
     @Override
-    public @Nullable String narrate(boolean narrateSide) {
+    public @Nullable String narrate() {
         return switch (rayCast()) {
             case BlockHitResult blockHitResult -> {
-                String side = narrateSide ? I18n.get(String.format("minecraft_access.direction.%s", blockHitResult.getDirection().getName())) : "";
+                String side = Config.getInstance().narrateCrosshair.narrateBlockFace
+                        ? I18n.get(String.format("minecraft_access.direction.%s", blockHitResult.getDirection().getName()))
+                        : "";
                 yield NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getA();
             }
             case EntityHitResult entityHitResult -> NarrationUtils.narrateEntity(entityHitResult.getEntity());

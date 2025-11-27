@@ -50,7 +50,7 @@ public class NarrateCrosshair {
             return;
         }
 
-        String narration = narrator.narrate(CONFIG.narrateBlockFace);
+        String narration = narrator.narrate();
         Object target = switch (rayCast) {
             case BlockHitResult blockHitResult -> CONFIG.disableNarratingConsecutiveBlocks ? null : blockHitResult.getBlockPos();
             case EntityHitResult entityHitResult -> entityHitResult.getEntity();
@@ -108,7 +108,7 @@ public class NarrateCrosshair {
             }
         }
 
-        MainClass.narrate(narrator.narrate(CONFIG.narrateBlockFace), true);
+        MainClass.narrate(narration, true);
     }
 
     private boolean isIgnored(ResourceLocation identifier) {

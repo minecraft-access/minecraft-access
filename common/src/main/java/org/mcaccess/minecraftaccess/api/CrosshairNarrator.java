@@ -17,7 +17,7 @@ public interface CrosshairNarrator {
      * <p>A value of {@code null} is equivalent to a {@link HitResult} with type {@link HitResult.Type#MISS}
      * and indicates that the player is not looking at anything.
      *
-     * <p>This must match the block/entity narrated by {@link #narrate(boolean)}.
+     * <p>This must match the block/entity narrated by {@link #narrate()}.
      *
      * @return A {@link HitResult} for what the player is looking at or {@code null}.
      * @since 1.12.0
@@ -32,10 +32,9 @@ public interface CrosshairNarrator {
      *
      * <p>The narrated block/entity must match {@link #rayCast()}.
      *
-     * @param narrateSide Weather the block side the player is looking at should be narrated.
      * @return A string to be narrated to the player or null.
      * @since 1.12.0
      */
     @Contract(pure = true)
-    @Nullable String narrate(boolean narrateSide);
+    @Nullable String narrate();
 }

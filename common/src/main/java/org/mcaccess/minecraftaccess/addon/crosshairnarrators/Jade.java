@@ -14,7 +14,7 @@ public class Jade implements CrosshairNarrator {
     }
 
     @Override
-    public @Nullable String narrate(boolean narrateSide) {
+    public @Nullable String narrate() {
         if (JadeClient.tickHandler().rootElement == null) {
             return null;
         }
