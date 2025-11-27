@@ -29,6 +29,14 @@ public final class ConfigExtension {
                 field -> field.getType() == ResourceLocation.class,
                 Registry.class
         );
+        registry.registerAnnotationProvider(
+                (i18n, field, config, defaults, guiProvider) -> {
+                    Registry annotation = field.getAnnotation(Registry.class);
+                    return Collections.singletonList(new RegistryReorderable(annotation.registry(), annotation.i18n(), i18n, field, config, defaults));
+                },
+                field -> field.getType() == ResourceLocation[].class,
+                Registry.class
+        );
     }
 
     public static <T extends ConfigData> ConfigSerializer<T> serialiser(Config definition, Class<T> configClass) {

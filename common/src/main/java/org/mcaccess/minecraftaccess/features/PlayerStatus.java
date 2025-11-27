@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.features;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -48,18 +49,19 @@ public class PlayerStatus {
         movementTypeStatus();
 
         if (Config.getInstance().playerWarnings.enabled) {
-            for (Map.Entry<ResourceLocation, Status> status : MainClass.registry(Status.class).entrySet()) {
-                Status.WarningLevel currentLevel = status.getValue().warning();
-                if (currentLevel.ordinal() > lastWarning.getOrDefault(status.getKey(), Status.WarningLevel.NONE).ordinal()) {
+            for (ResourceLocation key : Config.getInstance().playerWarnings.statuses) {
+                Status status = MainClass.registry(Status.class).get(key);
+                Status.WarningLevel currentLevel = status.warning();
+                if (currentLevel.ordinal() > lastWarning.getOrDefault(key, Status.WarningLevel.NONE).ordinal()) {
                     if (Config.getInstance().playerWarnings.playSound) {
                         SoundEvent soundToPlay = currentLevel.ordinal() > Status.WarningLevel.WARNING.ordinal()
                                 ? SoundEvents.ANVIL_PLACE
                                 : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value();
                         client.player.playNotifySound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
-                        MainClass.narrate(I18n.get("minecraft_access.player_status.warning", status.getValue().message()), true);
+                        MainClass.narrate(I18n.get("minecraft_access.player_status.warning", status.message()), true);
                     }
                 }
-                lastWarning.put(status.getKey(), currentLevel);
+                lastWarning.put(key, currentLevel);
             }
         }
 
@@ -76,7 +78,8 @@ public class PlayerStatus {
                 return;
             }
 
-            List<Status> statuses = MainClass.registry(Status.class).values().stream()
+            List<Status> statuses = Arrays.stream(Config.getInstance().playerWarnings.statuses)
+                    .map(MainClass.registry(Status.class)::get)
                     .filter(Status::show)
                     .filter(stat -> !client.hasAltDown() || stat.important())
                     .toList();

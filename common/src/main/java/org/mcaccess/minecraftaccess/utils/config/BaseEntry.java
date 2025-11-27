@@ -72,13 +72,13 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
 
     @Override
     public boolean isEdited() {
-        return super.isEdited() || !Objects.equals(getValue(), getField(config, field));
+        return super.isEdited() || !Objects.deepEquals(getValue(), getField(config, field));
     }
 
     @Override
     public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
         super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
-        resetButton.active = isEditable() && !Objects.equals(getValue(), defaultValue);
+        resetButton.active = isEditable() && !Objects.deepEquals(getValue(), defaultValue);
         resetButton.setY(y);
         widget.active = isEditable();
         widget.setY(y);

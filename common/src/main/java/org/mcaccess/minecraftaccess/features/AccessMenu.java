@@ -97,18 +97,19 @@ public class AccessMenu {
             GridLayout grid = new GridLayout().spacing(10);
             GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
 
-            for (Map.Entry<ResourceLocation, RegisteredFunction> function : MainClass.registry(RegisteredFunction.class).entrySet()) {
-                MutableComponent label = Component.translatable(function.getKey().toLanguageKey("access_menu_function"));
+            for (ResourceLocation key : Config.getInstance().accessMenu.functions) {
+                RegisteredFunction function = MainClass.registry(RegisteredFunction.class).get(key);
+                MutableComponent label = Component.translatable(key.toLanguageKey("access_menu_function"));
                 for (byte i = 0; i < 10; i++) {
-                    if (getShortcuts()[i] == function.getValue()) {
+                    if (getShortcuts()[i] == function) {
                         label.append(Component.literal(String.format(" [%d]", i)).withColor(0xbbbbbb));
                     }
                 }
                 Button button = Button.builder(label, b -> {
                     onClose();
-                    function.getValue().function().execute();
+                    function.function().execute();
                 }).width(Math.min(Button.BIG_WIDTH, width / 2 - 15)).build();
-                button.active = function.getValue().function().enabled();
+                button.active = function.function().enabled();
                 rowHelper.addChild(button);
             }
 

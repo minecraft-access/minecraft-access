@@ -83,12 +83,12 @@ class RegistrySingleSelect extends BaseEntry<ResourceLocation, Button> {
             super.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        private final class SelectionList extends ObjectSelectionList<SelectionList.Entry> {
+        private final class SelectionList extends ObjectSelectionList<SelectionList.RegistryEntry> {
             private SelectionList() {
                 super(SelectionScreen.this.minecraft, layout.getWidth(), layout.getContentHeight(), layout.getHeaderHeight(), 16);
                 MainClass.registry(registry).keySet().stream()
                         .sorted(Comparator.comparing(key -> I18n.get(key.toLanguageKey(registryI18n))))
-                        .map(Entry::new)
+                        .map(RegistryEntry::new)
                         .forEachOrdered(this::addEntry);
                 children().stream()
                         .filter(entry -> Objects.equals(entry.value, getValue()))
@@ -96,10 +96,10 @@ class RegistrySingleSelect extends BaseEntry<ResourceLocation, Button> {
                         .ifPresent(this::setSelected);
             }
 
-            private final class Entry extends ObjectSelectionList.Entry<Entry> {
+            private final class RegistryEntry extends ObjectSelectionList.Entry<RegistryEntry> {
                 private final ResourceLocation value;
 
-                private Entry(ResourceLocation value) {
+                private RegistryEntry(ResourceLocation value) {
                     this.value = value;
                 }
 
@@ -110,7 +110,7 @@ class RegistrySingleSelect extends BaseEntry<ResourceLocation, Button> {
 
                 @Override
                 public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-                    guiGraphics.drawString(minecraft.font, getNarration(), getContentX() + 5, getContentY() + 2, -1);
+                    guiGraphics.drawString(minecraft.font, getNarration(), getContentX() + 5, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
                 }
 
                 @Override

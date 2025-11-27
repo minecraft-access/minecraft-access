@@ -13,6 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
+import org.mcaccess.minecraftaccess.api.Status;
+import org.mcaccess.minecraftaccess.features.AccessMenu;
 import org.mcaccess.minecraftaccess.utils.config.ConfigExtension;
 
 @me.shedaniel.autoconfig.annotation.Config(name = "minecraft-access")
@@ -197,7 +199,6 @@ public final class Config implements ConfigData {
     }
 
     public static final class PlayerWarnings {
-
         public boolean enabled = true;
         public boolean playSound = true;
         public double firstHealthThreshold = 6;
@@ -205,7 +206,21 @@ public final class Config implements ConfigData {
         public double hungerThreshold = 3;
         public double airThreshold = 5;
         public double frostThreshold = 30;
-
+        @ConfigExtension.Registry(registry = Status.class, i18n = "status")
+        public ResourceLocation[] statuses = new ResourceLocation[]{
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "health"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "hunger"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "armour"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "air"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "frost"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "game_mode"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/main_hand"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/offhand"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/head"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/chest"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/legs"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/feet"),
+        };
         @ConfigEntry.Gui.CollapsibleObject
         public DurabilityWarnings durabilityWarnings = new DurabilityWarnings();
 
@@ -289,9 +304,21 @@ public final class Config implements ConfigData {
 
     public static final class AccessMenu {
         public boolean enabled = true;
-
         @ConfigEntry.Gui.CollapsibleObject
         public FluidDetector fluidDetector = new FluidDetector();
+        @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+        public ResourceLocation[] functions = new ResourceLocation[]{
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_target"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "target_position"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "light_level"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "find_water"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "find_lava"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "biome"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "time"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "xp"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "refresh_screen_reader"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "config"),
+        };
         @ConfigEntry.Gui.CollapsibleObject
         public ShortcutBar shortcutBar = new ShortcutBar();
 
