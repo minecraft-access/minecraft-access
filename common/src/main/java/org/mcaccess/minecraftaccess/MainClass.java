@@ -95,8 +95,6 @@ public final class MainClass {
      * Initializes the mod
      */
     public static void init(List<Addon> addons) {
-        Config.init();
-
         String startupMessage = "Initializing Minecraft Access: version " + Platform.getMod(MOD_ID).getVersion();
         log.info(startupMessage);
 
@@ -125,6 +123,7 @@ public final class MainClass {
             addon.addon().init(new AddonRegistry(addon.modid()));
         }
         frozen = true;
+        Config.init();
     }
 
     /**

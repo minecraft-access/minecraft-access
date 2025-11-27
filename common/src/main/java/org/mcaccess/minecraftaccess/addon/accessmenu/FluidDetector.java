@@ -24,7 +24,6 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 @Slf4j
 public class FluidDetector implements AccessMenuFunction {
     private final TagKey<Fluid> fluid;
-    private final Config.AccessMenu.FluidDetector config = Config.getInstance().accessMenu.fluidDetector;
     private final Minecraft client = Minecraft.getInstance();
 
     public FluidDetector(TagKey<Fluid> fluid) {
@@ -33,6 +32,7 @@ public class FluidDetector implements AccessMenuFunction {
 
     @Override
     public void execute() {
+        Config.AccessMenu.FluidDetector config = Config.getInstance().accessMenu.fluidDetector;
         if (client.level == null) return;
         if (client.player == null) return;
 

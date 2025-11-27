@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,6 +28,8 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+
+import org.mcaccess.minecraftaccess.MainClass;
 
 @Slf4j
 public final class ConfigExtension {
@@ -96,6 +99,25 @@ public final class ConfigExtension {
                 if (!validateFormatString(value, annotation.value())) {
                     log.error("Invalid format string \"{}\"", value);
                     setField(config, field, getField(defaults, field));
+                }
+            }
+            if (field.isAnnotationPresent(Registry.class) && field.getType() == ResourceLocation.class) {
+                Registry annotation = field.getAnnotation(Registry.class);
+                ResourceLocation value = getField(config, field);
+                if (!MainClass.registry(annotation.registry()).containsKey(value)) {
+                    log.error("Invalid registry value \"{}\"", value);
+                    setField(config, field, getField(defaults, field));
+                }
+            }
+            if (field.isAnnotationPresent(Registry.class) && field.getType() == ResourceLocation[].class) {
+                Registry annotation = field.getAnnotation(Registry.class);
+                ResourceLocation[] value = getField(config, field);
+                ResourceLocation[] filtered = Arrays.stream(value)
+                        .filter(MainClass.registry(annotation.registry())::containsKey)
+                        .toArray(ResourceLocation[]::new);
+                if (!Arrays.equals(value, filtered)) {
+                    log.error("Invalid registry values {}", Arrays.stream(value).filter(key -> !Arrays.asList(filtered).contains(key)).toList());
+                    setField(config, field, filtered);
                 }
             }
         }
