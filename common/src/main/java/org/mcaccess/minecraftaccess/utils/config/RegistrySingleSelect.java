@@ -61,13 +61,13 @@ class RegistrySingleSelect extends BaseEntry<ResourceLocation, Button> {
             layout.addTitleHeader(title, minecraft.font);
             selectionList = layout.addToContents(new SelectionList());
             LinearLayout footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
+            footer.addChild(Button.builder(Component.translatable("gui.cancel"), b -> onClose()).build());
             doneButton = footer.addChild(Button.builder(Component.translatable("gui.done"), b -> {
                 if (selectionList.getSelected() != null) {
                     value = selectionList.getSelected().value;
                 }
                 onClose();
             }).build());
-            footer.addChild(Button.builder(Component.translatable("gui.cancel"), b -> onClose()).build());
             layout.visitWidgets(this::addRenderableWidget);
             layout.arrangeElements();
         }

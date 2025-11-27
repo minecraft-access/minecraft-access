@@ -68,11 +68,11 @@ class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
             availableList = addRenderableWidget(new SelectionList(false));
             selectedList = addRenderableWidget(new SelectionList(true));
             LinearLayout footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
+            footer.addChild(Button.builder(Component.translatable("gui.cancel"), b -> onClose()).build());
             footer.addChild(Button.builder(Component.translatable("gui.done"), b -> {
                 value = selection.toArray(ResourceLocation[]::new);
                 onClose();
             }).build());
-            footer.addChild(Button.builder(Component.translatable("gui.cancel"), b -> onClose()).build());
             layout.visitWidgets(this::addRenderableWidget);
             repositionElements();
         }
