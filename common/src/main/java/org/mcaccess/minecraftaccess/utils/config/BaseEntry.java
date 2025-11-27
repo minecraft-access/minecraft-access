@@ -27,12 +27,12 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
 
     protected BaseEntry(String i18n, Field field, Object config, Object defaults) {
         super(Component.translatable(i18n), false);
-        saveCallback = value -> setField(config, field, value);
+        saveCallback = value -> ConfigExtension.setField(config, field, value);
         this.field = field;
         this.config = config;
         widget = initWidget();
-        defaultValue = getField(defaults, field);
-        value = getField(config, field);
+        defaultValue = ConfigExtension.getField(defaults, field);
+        value = ConfigExtension.getField(config, field);
         label = new StringWidget(getDisplayedFieldName(), Minecraft.getInstance().font);
         resetButton = Button.builder(Component.translatable("text.cloth-config.reset_value"), b -> value = defaultValue)
                 .width(Minecraft.getInstance().font.width(Component.translatable("text.cloth-config.reset_value")) + 6)
@@ -42,23 +42,6 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
     protected abstract W initWidget();
 
     protected abstract void updateWidget(W widget);
-
-    @SuppressWarnings("unchecked")
-    private static <T> T getField(Object config, Field field) {
-        try {
-            return (T) field.get(config);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void setField(Object config, Field field, Object value) {
-        try {
-            field.set(config, value);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public Optional<T> getDefaultValue() {
@@ -72,7 +55,7 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
 
     @Override
     public boolean isEdited() {
-        return super.isEdited() || !Objects.deepEquals(getValue(), getField(config, field));
+        return super.isEdited() || !Objects.deepEquals(getValue(), ConfigExtension.getField(config, field));
     }
 
     @Override

@@ -43,6 +43,7 @@
     "minecraft_access.cat_variant.tabby": "Tabby",
     "minecraft_access.cat_variant.tuxedo": "Tuxedo",
     "minecraft_access.cat_variant.white": "White",
+    "minecraft_access.config.invalid_format_string": "Invalid format string",
     "minecraft_access.credits_screen.started_tip": "Credits Screen: Hold space to speed up credits. Additional control keys will increase the speed further. Press escape to exit.",
     "minecraft_access.crop.mature": "Fully grown %s",
     "minecraft_access.crop.percent": "%d percent grown %s",

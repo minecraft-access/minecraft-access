@@ -4,19 +4,34 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.gson.FormattingStyle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.ConfigSerializer;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+@Slf4j
 public final class ConfigExtension {
+    private static final Pattern FORMAT_STRING_PLACEHOLDER = Pattern.compile("%(?<type>[^%])");
+
     private ConfigExtension() {
     }
 
@@ -37,6 +52,53 @@ public final class ConfigExtension {
                 field -> field.getType() == ResourceLocation[].class,
                 Registry.class
         );
+        registry.registerAnnotationTransformer(
+                (guis, i18n, field, config, defaults, registryAccess) -> {
+                    FormatString annotation = field.getAnnotation(FormatString.class);
+                    return guis.stream()
+                            .peek(gui -> {
+                                //noinspection unchecked
+                                ((AbstractConfigListEntry<String>) gui).setErrorSupplier(() -> {
+                                    String value = (String) gui.getValue();
+                                    if (!validateFormatString(value, annotation.value())) {
+                                        return Optional.of(Component.translatable("minecraft_access.config.invalid_format_string"));
+                                    }
+                                    return Optional.empty();
+                                });
+                            })
+                            .toList();
+                },
+                field -> field.getType() == String.class,
+                FormatString.class
+        );
+    }
+
+    public static <T> void validate(T config) throws ConfigData.ValidationException {
+        T defaults;
+        try {
+            Constructor<?> constructor = config.getClass().getDeclaredConstructor();
+            constructor.setAccessible(true);
+            //noinspection unchecked
+            defaults = (T) constructor.newInstance();
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        for (Field field : config.getClass().getFields()) {
+            if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class)) {
+                continue;
+            }
+            if (field.isAnnotationPresent(ConfigEntry.Gui.TransitiveObject.class) || field.isAnnotationPresent(ConfigEntry.Gui.CollapsibleObject.class)) {
+                validate(getField(config, field));
+            }
+            if (field.isAnnotationPresent(FormatString.class) && field.getType() == String.class) {
+                FormatString annotation = field.getAnnotation(FormatString.class);
+                String value = getField(config, field);
+                if (!validateFormatString(value, annotation.value())) {
+                    log.error("Invalid format string \"{}\"", value);
+                    setField(config, field, getField(defaults, field));
+                }
+            }
+        }
     }
 
     public static <T extends ConfigData> ConfigSerializer<T> serialiser(Config definition, Class<T> configClass) {
@@ -47,6 +109,36 @@ public final class ConfigExtension {
         return new GsonConfigSerializer<>(definition, configClass, gson);
     }
 
+    @SuppressWarnings("unchecked")
+    static <T> T getField(Object config, Field field) {
+        try {
+            return (T) field.get(config);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static void setField(Object config, Field field, Object value) {
+        try {
+            field.set(config, value);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static boolean validateFormatString(String string, char[] placeholders) {
+        Matcher matcher = FORMAT_STRING_PLACEHOLDER.matcher(string);
+        for (char type : placeholders) {
+            if (!matcher.find()) {
+                return false;
+            }
+            if (!Objects.equals(matcher.group("type"), String.valueOf(type))) {
+                return false;
+            }
+        }
+        return !matcher.find();
+    }
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface Registry {
@@ -55,4 +147,9 @@ public final class ConfigExtension {
         String i18n();
     }
 
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface FormatString {
+        char[] value();
+    }
 }

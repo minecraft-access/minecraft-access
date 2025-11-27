@@ -1,29 +1,23 @@
 package org.mcaccess.minecraftaccess;
 
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import dev.architectury.platform.Platform;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
 import org.mcaccess.minecraftaccess.api.Status;
-import org.mcaccess.minecraftaccess.features.AccessMenu;
 import org.mcaccess.minecraftaccess.utils.config.ConfigExtension;
 
 @me.shedaniel.autoconfig.annotation.Config(name = "minecraft-access")
 public final class Config implements ConfigData {
-    private static final Pattern FORMAT_STRING_PLACEHOLDER = Pattern.compile("%(?<type>[^%])");
     @Getter
     private static Config instance;
 
     public boolean menuFixEnabled = true;
+    @ConfigExtension.FormatString({'d', 'd', 's'})
     public String commandSuggestionNarratorFormat = "%dx%d %s";
     public boolean use12HourTimeFormat = false;
     public boolean debugMode = false;
@@ -71,23 +65,7 @@ public final class Config implements ConfigData {
 
     @Override
     public void validatePostLoad() throws ValidationException {
-        validateFormatString(commandSuggestionNarratorFormat, 'd', 'd', 's');
-        validateFormatString(inventoryControls.rowAndColumnFormat, 'd', 'd');
-    }
-
-    private void validateFormatString(String string, char @NotNull ... placeholders) throws ValidationException {
-        Matcher matcher = FORMAT_STRING_PLACEHOLDER.matcher(string);
-        for (char type : placeholders) {
-            if (!matcher.find()) {
-                throw new ValidationException(String.format("Too few placeholders in string '%s'. Expected %d", string, placeholders.length));
-            }
-            if (!Objects.equals(matcher.group("type"), String.valueOf(type))) {
-                throw new ValidationException(String.format("Invalid placeholder type in string '%s'. Expected %%%s, found %%%s", string, type, matcher.group("type")));
-            }
-        }
-        if (matcher.find()) {
-            throw new ValidationException(String.format("Too many placeholders in string '%s'. Expected %d", string, placeholders.length));
-        }
+        ConfigExtension.validate(this);
     }
 
     public static final class Features {
@@ -124,6 +102,7 @@ public final class Config implements ConfigData {
     public static final class InventoryControls {
         public boolean enabled = true;
         public boolean autoOpenRecipeBook = true;
+        @ConfigExtension.FormatString({'d', 'd'})
         public String rowAndColumnFormat = "%dx%d";
         public boolean narrateFocusedSlotChanges = true;
         public int delayMilliseconds = 150;
