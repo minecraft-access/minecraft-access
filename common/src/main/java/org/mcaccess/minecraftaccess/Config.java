@@ -64,8 +64,8 @@ public final class Config implements ConfigData {
     }
 
     @Override
-    public void validatePostLoad() throws ValidationException {
-        ConfigExtension.validate(this);
+    public void validatePostLoad() {
+        ConfigExtension.validate(this, new Config());
     }
 
     public static final class Features {

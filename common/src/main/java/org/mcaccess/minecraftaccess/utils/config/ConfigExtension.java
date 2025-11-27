@@ -4,9 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
@@ -76,22 +74,13 @@ public final class ConfigExtension {
         );
     }
 
-    public static <T> void validate(T config) throws ConfigData.ValidationException {
-        T defaults;
-        try {
-            Constructor<?> constructor = config.getClass().getDeclaredConstructor();
-            constructor.setAccessible(true);
-            //noinspection unchecked
-            defaults = (T) constructor.newInstance();
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public static <T> void validate(T config, T defaults) {
         for (Field field : config.getClass().getFields()) {
             if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class)) {
                 continue;
             }
             if (field.isAnnotationPresent(ConfigEntry.Gui.TransitiveObject.class) || field.isAnnotationPresent(ConfigEntry.Gui.CollapsibleObject.class)) {
-                validate(getField(config, field));
+                validate(getField(config, field), getField(defaults, field));
             }
             if (field.isAnnotationPresent(FormatString.class) && field.getType() == String.class) {
                 FormatString annotation = field.getAnnotation(FormatString.class);
