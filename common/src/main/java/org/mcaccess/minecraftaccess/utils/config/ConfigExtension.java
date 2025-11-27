@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,8 +59,9 @@ public final class ConfigExtension {
                     FormatString annotation = field.getAnnotation(FormatString.class);
                     return guis.stream()
                             .peek(gui -> {
-                                //noinspection unchecked
-                                ((AbstractConfigListEntry<String>) gui).setErrorSupplier(() -> {
+                                @SuppressWarnings("unchecked")
+                                AbstractConfigListEntry<String> entry = gui;
+                                entry.setErrorSupplier(() -> {
                                     String value = (String) gui.getValue();
                                     if (!validateFormatString(value, annotation.value())) {
                                         return Optional.of(Component.translatable("minecraft_access.config.invalid_format_string"));
