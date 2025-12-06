@@ -33,6 +33,9 @@ dependencies {
 
     modImplementation libs.modMenu
 
+    implementation libs.tolk
+    include libs.tolk
+
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowCommon(project(path: ':common', configuration: 'transformProductionFabric')) { transitive = false }
 }
