@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.addon.crosshairnarrators;
+package org.mcaccess.minecraftaccess.addon.worldnarrators;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
+import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.mixin.WolfAccessor;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -86,7 +86,7 @@ import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
 @Slf4j
-public class MCAccess implements CrosshairNarrator {
+public class MinecraftAccess implements WorldNarrator {
     private static final Map<IntegerProperty, Integer> CROP_AGE_PROPERTIES = Map.of(
             BlockStateProperties.AGE_1, 1,
             BlockStateProperties.AGE_2, 2,

@@ -8,12 +8,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Provides narration for whatever the player is currently looking at.
+ * Provides narration for blocks and entities.
  *
- * @see AddonRegistry#register(String, CrosshairNarrator)
+ * @see AddonRegistry#register(String, WorldNarrator)
  * @since 1.12.0
  */
-public interface CrosshairNarrator {
+public interface WorldNarrator {
     /**
      * Preforms a ray cast to determine what the player is looking at.
      *

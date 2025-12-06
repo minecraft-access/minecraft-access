@@ -15,8 +15,8 @@ import org.mcaccess.minecraftaccess.addon.accessmenu.NarrateTarget;
 import org.mcaccess.minecraftaccess.addon.accessmenu.OpenConfig;
 import org.mcaccess.minecraftaccess.addon.accessmenu.RefreshScreenReader;
 import org.mcaccess.minecraftaccess.addon.accessmenu.TargetPosition;
-import org.mcaccess.minecraftaccess.addon.crosshairnarrators.Jade;
-import org.mcaccess.minecraftaccess.addon.crosshairnarrators.MCAccess;
+import org.mcaccess.minecraftaccess.addon.worldnarrators.Jade;
+import org.mcaccess.minecraftaccess.addon.worldnarrators.MinecraftAccess;
 import org.mcaccess.minecraftaccess.addon.statuses.Air;
 import org.mcaccess.minecraftaccess.addon.statuses.Armour;
 import org.mcaccess.minecraftaccess.addon.statuses.Durability;
@@ -94,7 +94,7 @@ public class CoreAddon implements MinecraftAccessAddon {
         registry.register("refresh_screen_reader", new RefreshScreenReader());
         registry.register("config", new OpenConfig());
 
-        registry.register("minecraft_access", new MCAccess());
+        registry.register("minecraft_access", new MinecraftAccess());
         if (Platform.isModLoaded("jade")) {
             registry.register("jade", new Jade());
         }

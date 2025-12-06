@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.addon.crosshairnarrators;
+package org.mcaccess.minecraftaccess.addon.worldnarrators;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -16,9 +16,9 @@ import snownee.jade.impl.Tooltip;
 import snownee.jade.impl.WailaClientRegistration;
 import snownee.jade.overlay.RayTracing;
 
-import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
+import org.mcaccess.minecraftaccess.api.WorldNarrator;
 
-public class Jade implements CrosshairNarrator {
+public class Jade implements WorldNarrator {
     @Override
     public @Nullable HitResult rayCast() {
         return RayTracing.INSTANCE.getTarget();

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
+import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
@@ -42,7 +42,7 @@ public class NarrateCrosshair {
         if (!CONFIG.enabled) return;
         repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
 
-        CrosshairNarrator narrator = MainClass.registry(CrosshairNarrator.class).get(CONFIG.narrator);
+        WorldNarrator narrator = MainClass.registry(WorldNarrator.class).get(CONFIG.narrator);
         HitResult rayCast = narrator.rayCast();
         if (rayCast == null || rayCast.getType() == HitResult.Type.MISS) {
             previousTarget = null;
