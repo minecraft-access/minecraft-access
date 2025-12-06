@@ -5,8 +5,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
+import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
@@ -20,7 +22,11 @@ public class NarrateTarget implements AccessMenuFunction {
             case BLOCK -> {
                 BlockHitResult blockHit = (BlockHitResult) hit;
                 BlockPos blockPos = blockHit.getBlockPos();
-                String narration = NarrationUtils.narrateBlock(blockPos, "") + ", " + NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos);
+                String narration = new StringBuilder()
+                        .append(MainClass.registry(CrosshairNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(blockPos))
+                        .append(I18n.get("minecraft_access.other.words_connection"))
+                        .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos))
+                        .toString();
                 MainClass.narrate(narration, true);
             }
         }

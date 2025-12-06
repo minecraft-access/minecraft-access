@@ -412,14 +412,6 @@ public final class NarrationUtils {
         return new Tuple<>(narration, currentQuery);
     }
 
-    /**
-     * @param pos  block position (in the client world)
-     * @param side if side is provided, then the invoker is ReadCrosshair
-     */
-    public static String narrateBlock(BlockPos pos, String side) {
-        return narrateBlockForContentChecking(pos, side).getA();
-    }
-
     private static String getSignInfo(SignBlockEntity signEntity, LocalPlayer player, String narration) {
         String[] lines = new String[4];
 

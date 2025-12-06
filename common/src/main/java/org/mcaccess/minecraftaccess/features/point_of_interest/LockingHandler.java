@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
@@ -26,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.api.CrosshairNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
@@ -287,7 +289,9 @@ public class LockingHandler {
         unlock(false, true);
         lockedOnEntity = entity;
 
-        StringBuilder narration = new StringBuilder(NarrationUtils.narrateEntity(entity));
+        StringBuilder narration = new StringBuilder(
+                MainClass.registry(CrosshairNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(entity)
+        );
 
         if (Config.getInstance().poi.narrateDistance) {
             narration.append(' ')
@@ -313,7 +317,9 @@ public class LockingHandler {
 
         lockedOnBlockPos = new BlockPos3d(position, absolutePosition);
 
-        StringBuilder blockDescription = new StringBuilder(NarrationUtils.narrateBlock(lockedOnBlockPos, ""));
+        StringBuilder blockDescription = new StringBuilder(
+                MainClass.registry(CrosshairNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(lockedOnBlockPos)
+        );
         if (Config.getInstance().poi.narrateDistance) {
             blockDescription.append(' ')
                     .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlockPos));

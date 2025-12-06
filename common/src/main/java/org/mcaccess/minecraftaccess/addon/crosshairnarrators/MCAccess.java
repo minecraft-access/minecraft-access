@@ -3,6 +3,8 @@ package org.mcaccess.minecraftaccess.addon.crosshairnarrators;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -23,7 +25,7 @@ public class MCAccess implements CrosshairNarrator {
     }
 
     @Override
-    public @Nullable String narrate() {
+    public @Nullable String narrate(@NotNull HitResult rayCast) {
         return switch (rayCast()) {
             case BlockHitResult blockHitResult -> {
                 String side = Config.getInstance().narrateCrosshair.narrateBlockFace
@@ -34,5 +36,15 @@ public class MCAccess implements CrosshairNarrator {
             case EntityHitResult entityHitResult -> NarrationUtils.narrateEntity(entityHitResult.getEntity());
             default -> throw new IllegalStateException("Unexpected value: " + rayCast());
         };
+    }
+
+    @Override
+    public @NotNull String narrate(@NotNull BlockPos block) {
+        return NarrationUtils.narrateBlockForContentChecking(block, "").getA();
+    }
+
+    @Override
+    public @NotNull String narrate(@NotNull Entity entity) {
+        return NarrationUtils.narrateEntity(entity);
     }
 }
