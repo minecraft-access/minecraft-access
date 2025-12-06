@@ -9,25 +9,23 @@ import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 public class Air implements Status {
-    private final Minecraft client = Minecraft.getInstance();
-
     @Override
     public @NotNull String message() {
-        assert client.player != null;
+        assert Minecraft.getInstance().player != null;
         return I18n.get(
                 "minecraft_access.player_status.air",
-                NarrationUtils.narrateNumber(Math.max(client.player.getAirSupply() / 20.0, 0.0)),
-                NarrationUtils.narrateNumber(client.player.getMaxAirSupply() / 20.0)
+                NarrationUtils.narrateNumber(Math.max(Minecraft.getInstance().player.getAirSupply() / 20.0, 0.0)),
+                NarrationUtils.narrateNumber(Minecraft.getInstance().player.getMaxAirSupply() / 20.0)
         );
     }
 
     @Override
     public boolean show() {
-        assert client.gameMode != null;
-        assert client.player != null;
-        return client.gameMode.canHurtPlayer()
-                && !client.player.canBreatheUnderwater()
-                && (client.player.isUnderWater() || client.player.getAirSupply() < client.player.getMaxAirSupply());
+        assert Minecraft.getInstance().gameMode != null;
+        assert Minecraft.getInstance().player != null;
+        return Minecraft.getInstance().gameMode.canHurtPlayer()
+                && !Minecraft.getInstance().player.canBreatheUnderwater()
+                && (Minecraft.getInstance().player.isUnderWater() || Minecraft.getInstance().player.getAirSupply() < Minecraft.getInstance().player.getMaxAirSupply());
     }
 
     @Override
@@ -41,8 +39,8 @@ public class Air implements Status {
             return WarningLevel.NONE;
         }
 
-        assert client.player != null;
-        double air = Math.max(client.player.getAirSupply() / 20.0, 0.0);
+        assert Minecraft.getInstance().player != null;
+        double air = Math.max(Minecraft.getInstance().player.getAirSupply() / 20.0, 0.0);
 
         if (air <= Config.getInstance().playerWarnings.airThreshold && air > 0) {
             return WarningLevel.WARNING;

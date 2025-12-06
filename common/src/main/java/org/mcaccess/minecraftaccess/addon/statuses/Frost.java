@@ -9,22 +9,20 @@ import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 public class Frost implements Status {
-    private final Minecraft client = Minecraft.getInstance();
-
     @Override
     public @NotNull String message() {
-        assert client.player != null;
+        assert Minecraft.getInstance().player != null;
         return I18n.get(
                 "minecraft_access.player_status.frost",
-                NarrationUtils.narrateNumber(client.player.getPercentFrozen() * 100.0)
+                NarrationUtils.narrateNumber(Minecraft.getInstance().player.getPercentFrozen() * 100.0)
         );
     }
 
     @Override
     public boolean show() {
-        assert client.gameMode != null;
-        assert client.player != null;
-        return client.gameMode.canHurtPlayer() && client.player.canFreeze() && (client.player.isInPowderSnow || client.player.getPercentFrozen() > 0);
+        assert Minecraft.getInstance().gameMode != null;
+        assert Minecraft.getInstance().player != null;
+        return Minecraft.getInstance().gameMode.canHurtPlayer() && Minecraft.getInstance().player.canFreeze() && (Minecraft.getInstance().player.isInPowderSnow || Minecraft.getInstance().player.getPercentFrozen() > 0);
     }
 
     @Override
@@ -38,8 +36,8 @@ public class Frost implements Status {
             return WarningLevel.NONE;
         }
 
-        assert client.player != null;
-        double frostExposurePercent = client.player.getPercentFrozen() * 100.0;
+        assert Minecraft.getInstance().player != null;
+        double frostExposurePercent = Minecraft.getInstance().player.getPercentFrozen() * 100.0;
 
         if (frostExposurePercent >= Config.getInstance().playerWarnings.frostThreshold) {
             return WarningLevel.WARNING;

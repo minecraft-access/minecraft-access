@@ -11,12 +11,10 @@ import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 public class GetBiome implements AccessMenuFunction {
-    private final Minecraft client = Minecraft.getInstance();
-
     @Override
     public void execute() {
-        if (client.player == null) return;
-        if (client.level == null) return;
+        if (Minecraft.getInstance().player == null) return;
+        if (Minecraft.getInstance().level == null) return;
 
         Holder<Biome> currentBiome = BiomeIndicator.getCurrentBiome();
         NarrationUtils.getTranslatedName(currentBiome, "biome")

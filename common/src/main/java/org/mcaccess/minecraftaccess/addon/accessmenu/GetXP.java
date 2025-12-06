@@ -9,24 +9,22 @@ import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 public class GetXP implements AccessMenuFunction {
-    private final Minecraft client = Minecraft.getInstance();
-
     @Override
     public void execute() {
-        if (client.player == null) return;
+        if (Minecraft.getInstance().player == null) return;
 
-        assert client.gameMode != null;
-        if (client.gameMode.getPlayerMode() == GameType.SPECTATOR) {
+        assert Minecraft.getInstance().gameMode != null;
+        if (Minecraft.getInstance().gameMode.getPlayerMode() == GameType.SPECTATOR) {
             MainClass.narrate(I18n.get("gameMode.spectator"), true);
             return;
-        } else if (client.gameMode.getPlayerMode() == GameType.CREATIVE) {
+        } else if (Minecraft.getInstance().gameMode.getPlayerMode() == GameType.CREATIVE) {
             MainClass.narrate(I18n.get("gameMode.creative"), true);
             return;
         }
 
         MainClass.narrate(I18n.get("minecraft_access.access_menu.xp",
-                        NarrationUtils.narrateNumber(client.player.experienceLevel),
-                        NarrationUtils.narrateNumber(client.player.experienceProgress * 100)),
+                        NarrationUtils.narrateNumber(Minecraft.getInstance().player.experienceLevel),
+                        NarrationUtils.narrateNumber(Minecraft.getInstance().player.experienceProgress * 100)),
                 true);
     }
 }

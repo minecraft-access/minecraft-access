@@ -9,21 +9,19 @@ import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 public class Hunger implements Status {
-    private final Minecraft client = Minecraft.getInstance();
-
     @Override
     public @NotNull String message() {
-        assert client.player != null;
+        assert Minecraft.getInstance().player != null;
         return I18n.get(
                 "minecraft_access.player_status.hunger",
-                NarrationUtils.narrateNumber(client.player.getFoodData().getFoodLevel() / 2.0)
+                NarrationUtils.narrateNumber(Minecraft.getInstance().player.getFoodData().getFoodLevel() / 2.0)
         );
     }
 
     @Override
     public boolean show() {
-        assert client.gameMode != null;
-        return client.gameMode.canHurtPlayer();
+        assert Minecraft.getInstance().gameMode != null;
+        return Minecraft.getInstance().gameMode.canHurtPlayer();
     }
 
     @Override
@@ -32,8 +30,8 @@ public class Hunger implements Status {
             return WarningLevel.NONE;
         }
 
-        assert client.player != null;
-        double hunger = client.player.getFoodData().getFoodLevel() / 2.0;
+        assert Minecraft.getInstance().player != null;
+        double hunger = Minecraft.getInstance().player.getFoodData().getFoodLevel() / 2.0;
 
         if (hunger <= Config.getInstance().playerWarnings.hungerThreshold) {
             return WarningLevel.WARNING;

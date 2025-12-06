@@ -24,7 +24,6 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 @Slf4j
 public class FluidDetector implements AccessMenuFunction {
     private final TagKey<Fluid> fluid;
-    private final Minecraft client = Minecraft.getInstance();
 
     public FluidDetector(TagKey<Fluid> fluid) {
         this.fluid = fluid;
@@ -33,12 +32,12 @@ public class FluidDetector implements AccessMenuFunction {
     @Override
     public void execute() {
         Config.AccessMenu.FluidDetector config = Config.getInstance().accessMenu.fluidDetector;
-        if (client.level == null) return;
-        if (client.player == null) return;
+        if (Minecraft.getInstance().level == null) return;
+        if (Minecraft.getInstance().player == null) return;
 
         Set<BlockPos> visited = new HashSet<>();
         Queue<BlockPos> queue = new ArrayListDeque<>();
-        queue.add(BlockPos.containing(client.player.position()));
+        queue.add(BlockPos.containing(Minecraft.getInstance().player.position()));
 
         while (!queue.isEmpty()) {
             BlockPos pos = queue.poll();
@@ -47,14 +46,14 @@ public class FluidDetector implements AccessMenuFunction {
                 continue;
             }
             visited.add(pos);
-            if (pos.distToCenterSqr(client.player.position()) > config.range || !client.level.isLoaded(pos)) {
+            if (pos.distToCenterSqr(Minecraft.getInstance().player.position()) > config.range || !Minecraft.getInstance().level.isLoaded(pos)) {
                 continue;
             }
-            BlockState blockState = client.level.getBlockState(pos);
-            FluidState fluidState = client.level.getFluidState(pos);
+            BlockState blockState = Minecraft.getInstance().level.getBlockState(pos);
+            FluidState fluidState = Minecraft.getInstance().level.getFluidState(pos);
             if (fluidState.is(fluid) && fluidState.isSource()) {
                 log.debug("playing sound at {}", pos);
-                client.level.playSound(client.player, pos, SoundEvents.ITEM_PICKUP,
+                Minecraft.getInstance().level.playSound(Minecraft.getInstance().player, pos, SoundEvents.ITEM_PICKUP,
                         SoundSource.BLOCKS, config.volume, 1.0f);
 
                 String posDifference = NarrationUtils.narrateRelativePositionOfPlayerAnd(pos);
