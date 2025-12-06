@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.AirBlock;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
@@ -31,10 +31,10 @@ public class ObjectTracker {
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
 
-    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyBindingsHandler.Keys.OBJECT_TRACKER_NEXT_ITEM.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyBindingsHandler.Keys.OBJECT_TRACKER_PREVIOUS_ITEM.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyBindingsHandler.Keys.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
-    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyBindingsHandler.Keys.TARGET_NEAREST_OBJECT.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke nextItemKeyPressed = new Keystroke(() -> KeyMappingsHandler.Keys.OBJECT_TRACKER_NEXT_ITEM.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke previousItemKeyPressed = new Keystroke(() -> KeyMappingsHandler.Keys.OBJECT_TRACKER_PREVIOUS_ITEM.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke narrateCurrentObjectKeyPressed = new Keystroke(() -> KeyMappingsHandler.Keys.OBJECT_TRACKER_NARRATE_CURRENT_OBJECT.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
+    private final Keystroke targetNearestObjectKeyPressed = new Keystroke(() -> KeyMappingsHandler.Keys.TARGET_NEAREST_OBJECT.mapping.isDown(), Keystroke.TriggeredAt.PRESSED);
 
     @Getter
     private Object currentObject = null;

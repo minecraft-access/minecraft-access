@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
+import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -23,13 +24,17 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.AbstractFurnaceMenu;
+import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item.TooltipContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.ExtendedRecipeBookCategory;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +48,7 @@ import org.mcaccess.minecraftaccess.mixin.EditBoxAccessor;
 import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
@@ -180,13 +185,14 @@ public class InventoryControls {
      * Handles the key inputs.
      */
     private boolean keyListener() {
-        boolean isGroupKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping);
-        boolean isUpKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping);
-        boolean isRightKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
-        boolean isDownKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_DOWN_KEY.mapping);
-        boolean isLeftKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_LEFT_KEY.mapping);
-        boolean isSwitchTabKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
-        boolean isToggleCraftableKeyPressed = isKeyPressed(KeyBindingsHandler.Keys.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
+        boolean isGroupKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping);
+        boolean isUpKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping);
+        boolean isRightKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
+        boolean isDownKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_DOWN_KEY.mapping);
+        boolean isLeftKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_LEFT_KEY.mapping);
+        boolean isSwitchTabKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
+        boolean isToggleCraftableKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
+        boolean isFuelStatusKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_FUEL_STATUS_KEY.mapping);
         boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
                 || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
         boolean isTPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_T);
@@ -315,10 +321,24 @@ public class InventoryControls {
             moveToSlotItem(currentSlotItem, 100);
 
             String narration = toggleCraftableButton.isStateTriggered()
-                    ? I18n.get("gui.recipebook.toggleRecipes.all")
-                    : ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString();
+                    ? ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString()
+                    : I18n.get("gui.recipebook.toggleRecipes.all");
             MainClass.narrate(narration, true);
 
+            return true;
+        }
+
+        if (isFuelStatusKeyPressed) {
+            if (currentScreen.getMenu() instanceof AbstractFurnaceMenu furnace) {
+                MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
+                        Math.round(furnace.getLitProgress() * 100),
+                        Math.round(furnace.getBurnProgress() * 100)), true);
+            } else if (currentScreen instanceof BrewingStandScreen brewingStand) {
+                BrewingStandMenu menu = brewingStand.getMenu();
+                MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
+                        (menu.getFuel() * 100) / BrewingStandBlockEntity.FUEL_USES,
+                        (menu.getBrewingTicks() * 100) / PotionBrewing.BREWING_TIME_SECONDS * 20), true);
+            }
             return true;
         }
 

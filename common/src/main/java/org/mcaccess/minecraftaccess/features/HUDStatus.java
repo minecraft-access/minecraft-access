@@ -14,7 +14,7 @@ import net.minecraft.world.level.GameType;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.BossHealthOverlayAccessor;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 
 public class HUDStatus {
     private final Minecraft client = Minecraft.getInstance();
@@ -27,12 +27,12 @@ public class HUDStatus {
         hudVisibilityStatus();
         attackCooldownStatus();
 
-        if (KeyBindingsHandler.Keys.NARRATE_BOSSBARS_KEY.mapping.consumeClick()) {
+        if (KeyMappingsHandler.Keys.NARRATE_BOSSBARS_KEY.mapping.consumeClick()) {
             if (!bossbarKeyIsDown) {
                 bossbarKeyIsDown = true;
                 narrateBossBars();
             }
-        } else if (!KeyBindingsHandler.Keys.NARRATE_BOSSBARS_KEY.mapping.isDown()) {
+        } else if (!KeyMappingsHandler.Keys.NARRATE_BOSSBARS_KEY.mapping.isDown()) {
             bossbarKeyIsDown = false;
         }
     }

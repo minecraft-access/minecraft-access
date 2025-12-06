@@ -9,17 +9,17 @@ import org.mcaccess.minecraftaccess.MainClass;
 /**
  * Initializes all the keybindings used by the mod.
  */
-public final class KeyBindingsHandler {
-    private KeyBindingsHandler() {
+public final class KeyMappingsHandler {
+    private KeyMappingsHandler() {
     }
 
     public enum Categories {
         OTHER("other"),
+        ACCESS_MENU("access_menu"),
         CAMERA_CONTROLS("camera_controls"),
         INVENTORY_CONTROLS("inventory_controls"),
         MOUSE_SIMULATION("mouse_simulation"),
-        OBJECT_TRACKER("object_tracker"),
-        ACCESS_MENU("access_menu");
+        OBJECT_TRACKER("object_tracker");
 
         public final KeyMapping.Category category;
 
@@ -202,6 +202,12 @@ public final class KeyBindingsHandler {
                 "minecraft_access.keys.inventory_controls.toggle_craftable_key_name",
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_R,
+                Categories.INVENTORY_CONTROLS
+        ),
+        INVENTORY_CONTROLS_FUEL_STATUS_KEY(
+                "minecraft_access.keys.inventory_controls.fuel_status_key_name",
+                InputConstants.Type.KEYSYM,
+                InputConstants.KEY_U,
                 Categories.INVENTORY_CONTROLS
         ),
 

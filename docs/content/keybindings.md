@@ -61,17 +61,18 @@ See also: [Feature Description]({{% relref "/features#mouse-simulation" %}}), [C
 
 ## Inventory Controls
 
-| Single Key         | Default Keybinding | Description                                                                      |
-|--------------------|--------------------|----------------------------------------------------------------------------------|
-| `Menu Move Up`     | I                  | Focus to the slot above                                                          |
-| `Menu Move Right`  | L                  | Focus to the slot right                                                          |
-| `Menu Move Down`   | K                  | Focus to the slot below                                                          |
-| `Menu Move Left`   | J                  | Focus to the slot left                                                           |
-| `Change Group`     | C                  | Select next slot group                                                           |
-| `Switch Tab`       | V                  | Select next tab                                                                  |
-| `Toggle Craftable` | R                  | Switch between `show all` and `show only` craftable recipes in recipe book group |
-| T                  | not re-mappable    | Select the search box or text box                                                |
-| Enter              | not re-mappable    | Deselect the search box or text box                                              |
+| Single Key         | Default Keybinding | Description                                                                                                      |
+|--------------------|--------------------|------------------------------------------------------------------------------------------------------------------|
+| `Menu Move Up`     | I                  | Focus to the slot above                                                                                          |
+| `Menu Move Right`  | L                  | Focus to the slot right                                                                                          |
+| `Menu Move Down`   | K                  | Focus to the slot below                                                                                          |
+| `Menu Move Left`   | J                  | Focus to the slot left                                                                                           |
+| `Change Group`     | C                  | Select next slot group                                                                                           |
+| `Switch Tab`       | V                  | Select next tab                                                                                                  |
+| `Toggle Craftable` | R                  | Switch between `show all` and `show only` craftable recipes in recipe book group                                 |
+| `Fuel Status`      | U                  | Narrate the remaining percent on fuel and time until item is done being processed in furnaces and brewing stands |
+| T                  | not re-mappable    | Select the search box or text box                                                                                |
+| Enter              | not re-mappable    | Deselect the search box or text box                                                                              |
 
 | Key Combination                 | Description                             |
 |---------------------------------|-----------------------------------------|

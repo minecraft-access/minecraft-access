@@ -1,6 +1,6 @@
 package org.mcaccess.minecraftaccess.addon;
 
-import dev.architectury.platform.Platform;
+import net.blay09.mods.balm.api.Balm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tags.FluidTags;
 import org.jetbrains.annotations.NotNull;
@@ -15,8 +15,7 @@ import org.mcaccess.minecraftaccess.addon.accessmenu.NarrateTarget;
 import org.mcaccess.minecraftaccess.addon.accessmenu.OpenConfig;
 import org.mcaccess.minecraftaccess.addon.accessmenu.RefreshScreenReader;
 import org.mcaccess.minecraftaccess.addon.accessmenu.TargetPosition;
-import org.mcaccess.minecraftaccess.addon.worldnarrators.Jade;
-import org.mcaccess.minecraftaccess.addon.worldnarrators.MinecraftAccess;
+import org.mcaccess.minecraftaccess.addon.accessmenu.Weather;
 import org.mcaccess.minecraftaccess.addon.statuses.Air;
 import org.mcaccess.minecraftaccess.addon.statuses.Armour;
 import org.mcaccess.minecraftaccess.addon.statuses.Durability;
@@ -24,6 +23,8 @@ import org.mcaccess.minecraftaccess.addon.statuses.Frost;
 import org.mcaccess.minecraftaccess.addon.statuses.GameMode;
 import org.mcaccess.minecraftaccess.addon.statuses.Health;
 import org.mcaccess.minecraftaccess.addon.statuses.Hunger;
+import org.mcaccess.minecraftaccess.addon.worldnarrators.Jade;
+import org.mcaccess.minecraftaccess.addon.worldnarrators.MinecraftAccess;
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 
@@ -93,9 +94,10 @@ public class CoreAddon implements MinecraftAccessAddon {
         registry.register("xp", new GetXP());
         registry.register("refresh_screen_reader", new RefreshScreenReader());
         registry.register("config", new OpenConfig());
+        registry.register("weather", new Weather());
 
         registry.register("minecraft_access", new MinecraftAccess());
-        if (Platform.isModLoaded("jade")) {
+        if (Balm.platform().isModLoaded("jade")) {
             registry.register("jade", new Jade());
         }
     }

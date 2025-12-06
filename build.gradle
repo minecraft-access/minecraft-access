@@ -6,16 +6,16 @@ plugins {
 
 def git = versionDetails()
 def tag = git.lastTag.substring(1)
-if (System.getenv("GITHUB_ACTIONS") == "true") {
-    if (System.getenv("GITHUB_WORKFLOW") == "Release") {
+if (System.getenv('GITHUB_ACTIONS') == 'true') {
+    if (System.getenv('GITHUB_WORKFLOW') == 'Release') {
         version = tag
-    } else if (System.getenv("PULL_REQUEST")) {
-        version = "${tag}${tag.contains("-") ? "." : "-"}SNAPSHOT.pr.${System.getenv("PULL_REQUEST")}.${System.getenv("GITHUB_RUN_NUMBER")}"
+    } else if (System.getenv('PULL_REQUEST')) {
+        version = "${tag}${tag.contains('-') ? '.' : '-'}SNAPSHOT.pr.${System.getenv('PULL_REQUEST')}.${System.getenv('GITHUB_RUN_NUMBER')}"
     } else {
-        version = "${tag}${tag.contains("-") ? "." : "-"}SNAPSHOT.${System.getenv("GITHUB_RUN_NUMBER")}"
+        version = "${tag}${tag.contains('-') ? '.' : '-'}SNAPSHOT.${System.getenv('GITHUB_RUN_NUMBER')}"
     }
 } else {
-    version = "${tag}${tag.contains("-") ? "." : "-"}SNAPSHOT"
+    version = "${tag}${tag.contains('-') ? '.' : '-'}SNAPSHOT"
 }
 
 architectury {
@@ -44,7 +44,7 @@ subprojects {
         mappings loom.layered() {
             officialMojangMappings()
             parchment variantOf(libs.parchment) {
-                artifactType("zip")
+                artifactType('zip')
             }
         }
 
@@ -66,8 +66,15 @@ subprojects {
             url = 'https://maven.neoforged.net/releases/'
         }
         maven {
-            name = 'Mod Menu'
+            name = 'TerraformersMC'
             url = 'https://maven.terraformersmc.com/'
+        }
+        maven {
+            name = 'Twelve Iterations'
+            url = 'https://maven.twelveiterations.com/repository/maven-public/'
+            content {
+                includeGroup 'net.blay09.mods'
+            }
         }
         exclusiveContent {
             forRepository {
@@ -84,17 +91,17 @@ subprojects {
 }
 
 allprojects {
-    apply plugin: "java"
+    apply plugin: 'java'
     apply plugin: libs.plugins.architecturyPlugin.get().pluginId
-    apply plugin: "maven-publish"
+    apply plugin: 'maven-publish'
     apply plugin: 'checkstyle'
 
     base.archivesName = 'minecraft-access'
 
-    group = "org.mcaccess.minecraftaccess"
+    group = 'org.mcaccess.minecraftaccess'
 
     tasks.withType(JavaCompile).configureEach {
-        options.encoding = "UTF-8"
+        options.encoding = 'UTF-8'
         options.release = 21
     }
 

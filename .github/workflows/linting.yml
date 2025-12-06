@@ -8,12 +8,12 @@ jobs:
     name: Checkstyle
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
-      - uses: dbelyaev/action-checkstyle@v2
+      - uses: dbelyaev/action-checkstyle@v3
         with:
           checkstyle_config: ./config/checkstyle/checkstyle.xml
           properties_file: ./config/checkstyle/checkstyle.properties
@@ -26,7 +26,7 @@ jobs:
     name: Translation File Sorting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
@@ -49,7 +49,7 @@ jobs:
     name: Weblate Mergeability
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0

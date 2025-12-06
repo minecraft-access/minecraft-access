@@ -19,12 +19,12 @@ import net.minecraft.resources.ResourceLocation;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 
 public class AccessMenu {
     private static final Minecraft CLIENT = Minecraft.getInstance();
-    private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyBindingsHandler.Keys.ACCESS_MENU_KEY.mapping);
+    private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping);
     private boolean gameModeSwitcherActive = false;
 
     public void tick() {
@@ -121,7 +121,7 @@ public class AccessMenu {
 
         @Override
         public boolean keyPressed(KeyEvent event) {
-            if (KeyBindingsHandler.Keys.ACCESS_MENU_KEY.mapping.matches(event)) {
+            if (KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping.matches(event)) {
                 onClose();
                 return true;
             }

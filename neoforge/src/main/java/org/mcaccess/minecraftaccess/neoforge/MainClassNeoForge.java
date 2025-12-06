@@ -7,13 +7,13 @@ import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import me.shedaniel.autoconfig.AutoConfig;
+import net.blay09.mods.balm.api.client.BalmClient;
+import net.blay09.mods.balm.neoforge.NeoForgeLoadContext;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -24,12 +24,6 @@ import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 @Mod(value = MainClass.MOD_ID, dist = Dist.CLIENT)
 public class MainClassNeoForge {
     public MainClassNeoForge(IEventBus modEventBus, ModContainer container) {
-        modEventBus.register(this);
-        container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> AutoConfig.getConfigScreen(Config.class, parent).get());
-    }
-
-    @SubscribeEvent
-    private void onClientSetup(final FMLClientSetupEvent event) {
         List<MainClass.Addon> addons = new ArrayList<>();
         for (ModContainer mod : ModList.get().getSortedMods()) {
             mod.getModInfo()
@@ -47,6 +41,7 @@ public class MainClassNeoForge {
                         }
                     });
         }
-        MainClass.init(addons);
+        container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> AutoConfig.getConfigScreen(Config.class, parent).get());
+        BalmClient.initializeMod(MainClass.MOD_ID, new NeoForgeLoadContext(modEventBus), registrars -> MainClass.init(registrars, addons));
     }
 }

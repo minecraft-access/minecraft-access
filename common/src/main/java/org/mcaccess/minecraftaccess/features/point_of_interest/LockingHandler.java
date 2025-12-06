@@ -27,7 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -80,7 +80,7 @@ public class LockingHandler {
     }
 
     private void handleLockingKeyPressing() {
-        boolean isLockingKeyPressed = KeyBindingsHandler.Keys.LOCKING_HANDLER_KEY.mapping.isDown();
+        boolean isLockingKeyPressed = KeyMappingsHandler.Keys.LOCKING_HANDLER_KEY.mapping.isDown();
         if (isLockingKeyPressed && client.hasAltDown()) {
             if (isPlayerLocked()) {
                 unlock(true, true);

@@ -223,6 +223,7 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybin
 | Configuration                        | Default Value | Description                                                                                                                                      |
 |--------------------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | Enable Biome Indicator               | true          | Whether to enable [`Biome Indicator`]({{% relref "/features#biome-indicator" %}}) feature                                                        |
+| Enable Time Indicator                | true          | Whether to enable time of day Indicator                                                                                                          |
 | Enable XP Indicator                  | true          | Whether to enable [`XP Indicator`]({{% relref "/features#xp-indicator" %}}) feature                                                              |
 | Enable Facing Direction              | true          | Whether to automatically speak the current direction as the camera moves                                                                         |
 | Speak Action Bar Messages            | true          | Whether to speak the messages updated in [action bar](https://minecraft.wiki/w/Commands/title), useful when you're in modded multiplayer servers |

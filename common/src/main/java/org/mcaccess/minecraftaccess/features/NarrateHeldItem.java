@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 
 public class NarrateHeldItem {
     private String previousItemName = "";
@@ -21,7 +21,7 @@ public class NarrateHeldItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        while (KeyBindingsHandler.Keys.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
+        while (KeyMappingsHandler.Keys.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
             narrateHand(Minecraft.getInstance().hasAltDown());
         }
 

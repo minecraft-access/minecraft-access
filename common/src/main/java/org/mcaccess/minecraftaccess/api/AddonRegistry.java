@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.api;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
@@ -9,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.features.AccessMenu;
-import org.mcaccess.minecraftaccess.utils.KeyBindingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 
 /**
  * Registry for registering items with Minecraft Access.
@@ -58,10 +57,9 @@ public final class AddonRegistry {
                 location.toLanguageKey("access_menu_function"),
                 InputConstants.Type.KEYSYM,
                 InputConstants.UNKNOWN.getValue(),
-                KeyBindingsHandler.Categories.ACCESS_MENU.category
+                KeyMappingsHandler.Categories.ACCESS_MENU.category
         );
         MainClass.register(AccessMenu.RegisteredFunction.class, location, new AccessMenu.RegisteredFunction(function, key));
-        KeyMappingRegistry.register(key);
     }
 
     /**

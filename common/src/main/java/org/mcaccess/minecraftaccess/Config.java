@@ -1,14 +1,14 @@
 package org.mcaccess.minecraftaccess;
 
-import dev.architectury.platform.Platform;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.blay09.mods.balm.api.Balm;
 import net.minecraft.resources.ResourceLocation;
 
-import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.api.Status;
+import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.config.ConfigExtension;
 
 @me.shedaniel.autoconfig.annotation.Config(name = "minecraft-access")
@@ -72,6 +72,7 @@ public final class Config implements ConfigData {
         public boolean actionBarEnabled = true;
         public boolean onlyNarrateActionBarUpdates = false;
         public boolean biomeIndicatorEnabled = true;
+        public boolean timeIndicatorEnabled = true;
         public boolean xpIndicatorEnabled = true;
         public boolean facingDirectionEnabled = true;
         public boolean fishingHarvestEnabled = true;
@@ -231,7 +232,7 @@ public final class Config implements ConfigData {
     public static final class NarrateCrosshair {
         public boolean enabled = true;
         @ConfigExtension.Registry(registry = WorldNarrator.class, i18n = "narrator")
-        public ResourceLocation narrator = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, Platform.isModLoaded("jade") ? "jade" : "minecraft_access");
+        public ResourceLocation narrator = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, Balm.platform().isModLoaded("jade") ? "jade" : "minecraft_access");
         public boolean narrateBlockFace = true;
         public boolean disableNarratingConsecutiveBlocks = false;
         public long repetitionInterval = 0;
@@ -297,6 +298,7 @@ public final class Config implements ConfigData {
                 ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "xp"),
                 ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "refresh_screen_reader"),
                 ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "config"),
+                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "weather"),
         };
         @ConfigEntry.Gui.CollapsibleObject
         public ShortcutBar shortcutBar = new ShortcutBar();
