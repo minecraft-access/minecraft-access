@@ -31,7 +31,7 @@ public class MCAccess implements CrosshairNarrator {
                 String side = Config.getInstance().narrateCrosshair.narrateBlockFace
                         ? I18n.get(String.format("minecraft_access.direction.%s", blockHitResult.getDirection().getName()))
                         : "";
-                yield NarrationUtils.narrateBlockForContentChecking(blockHitResult.getBlockPos(), side).getA();
+                yield NarrationUtils.narrateBlock(blockHitResult.getBlockPos(), side);
             }
             case EntityHitResult entityHitResult -> NarrationUtils.narrateEntity(entityHitResult.getEntity());
             default -> throw new IllegalStateException("Unexpected value: " + rayCast());
@@ -40,7 +40,7 @@ public class MCAccess implements CrosshairNarrator {
 
     @Override
     public @NotNull String narrate(@NotNull BlockPos block) {
-        return NarrationUtils.narrateBlockForContentChecking(block, "").getA();
+        return NarrationUtils.narrateBlock(block, "");
     }
 
     @Override
