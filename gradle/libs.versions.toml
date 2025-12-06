@@ -23,7 +23,7 @@ jadeNeoForge = "maven.modrinth:jade:20.0.5+neoforge"
 lombok = "org.projectlombok:lombok:1.18.42"
 minecraft = "com.mojang:minecraft:1.21.10"
 modMenu = "com.terraformersmc:modmenu:16.0.0-rc.1"
-neoForge = "net.neoforged:neoforge:21.10.55-beta"
+neoForge = "net.neoforged:neoforge:21.10.64"
 parchment = "org.parchmentmc.data:parchment-1.21.10:2025.10.12"
 
 assertjCore = "org.assertj:assertj-core:3.27.6"
@@ -35,10 +35,10 @@ junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher",
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:12.1.2"
+checkstyle = "com.puppycrawl.tools:checkstyle:12.2.0"
 
 [plugins]
-architecturyLoom = { id = "dev.architectury.loom", version = "1.13.457" }
+architecturyLoom = { id = "dev.architectury.loom", version = "1.13.464" }
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.162" }
 gitVersion = { id = "com.palantir.git-version", version = "4.2.0" }
-shadow = { id = "com.gradleup.shadow", version = "9.2.2" }
+shadow = { id = "com.gradleup.shadow", version = "9.3.0" }
