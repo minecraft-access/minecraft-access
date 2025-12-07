@@ -20,7 +20,7 @@ public class ScreenReaderWindows implements ScreenReaderInterface {
 
         log.info("Initializing Tolk for windows at: {}", path);
 
-       System.load(path.toString());
+        System.load(path.toString());
         Tolk.trySAPI(true);
         Tolk.load();
 
@@ -57,6 +57,7 @@ public class ScreenReaderWindows implements ScreenReaderInterface {
             return;
         }
 
+        log.info("Unloading screen reader interface Tolk");
         Tolk.unload();
     }
 }

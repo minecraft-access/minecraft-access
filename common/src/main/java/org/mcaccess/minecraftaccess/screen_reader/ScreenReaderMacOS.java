@@ -29,7 +29,7 @@ public class ScreenReaderMacOS implements ScreenReaderInterface {
                 objcRuntimeInstance.sel_getUid("init")
         );
 
-        log.info("Successfully initialized screen reader");
+        log.info("Successfully initialized screen reader interface for MacOS");
     }
 
     @Override
@@ -120,7 +120,7 @@ public class ScreenReaderMacOS implements ScreenReaderInterface {
                 objcRuntimeInstance.sel_getUid("release")
         );
 
-        log.info("Successfully closed screen reader");
+        log.info("Successfully closed screen reader interface for MacOS");
     }
 
     @SuppressWarnings("checkstyle:MethodName")
