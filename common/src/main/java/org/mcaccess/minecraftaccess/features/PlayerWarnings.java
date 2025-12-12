@@ -109,7 +109,7 @@ public class PlayerWarnings {
     private void playWarningSound(boolean severe) {
         if (CONFIG.playSound) {
             SoundEvent soundToPlay = severe ? SoundEvents.ANVIL_PLACE : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value();
-            player.playNotifySound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
+            client.level.playPlayerSound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
         }
     }
 

@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.Balm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -81,16 +81,16 @@ public class NarrateCrosshair {
         }
 
         if (CONFIG.filter.enabled) {
-            ResourceLocation resourceLocation = switch (hit) {
+            Identifier identifier = switch (hit) {
                 case BlockHitResult blockHitResult ->
                         BuiltInRegistries.BLOCK.getKey(CLIENT.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
                 case EntityHitResult entityHitResult -> EntityType.getKey(entityHitResult.getEntity().getType());
                 default -> null;
             };
-            if (filterBlocks && hit.getType() == HitResult.Type.BLOCK && isIgnored(resourceLocation)) {
+            if (filterBlocks && hit.getType() == HitResult.Type.BLOCK && isIgnored(identifier)) {
                 return;
             }
-            if (filterEntities && hit.getType() == HitResult.Type.ENTITY && isIgnored(resourceLocation)) {
+            if (filterEntities && hit.getType() == HitResult.Type.ENTITY && isIgnored(identifier)) {
                 return;
             }
         }
@@ -117,13 +117,13 @@ public class NarrateCrosshair {
     }
 
     private CrosshairNarrator getNarrator() {
-        if (CONFIG.useJade && Balm.isModLoaded("jade")) {
+        if (CONFIG.useJade && Balm.platform().isModLoaded("jade")) {
             return jade;
         }
         return mcAccess;
     }
 
-    private boolean isIgnored(ResourceLocation identifier) {
+    private boolean isIgnored(Identifier identifier) {
         if (identifier == null) return false;
         String name = identifier.getPath();
         Predicate<String> p = CONFIG.filter.fuzzy ? name::contains : name::equals;

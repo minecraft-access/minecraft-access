@@ -3,13 +3,13 @@ package org.mcaccess.minecraftaccess.mixin;
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.util.Util;
 import org.apache.logging.log4j.util.Strings;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

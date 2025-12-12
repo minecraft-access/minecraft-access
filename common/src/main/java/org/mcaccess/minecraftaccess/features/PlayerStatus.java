@@ -120,11 +120,11 @@ public class PlayerStatus {
         boolean isSprinting = client.player.isSprinting() && !isSneaking;
 
         if (!wasSneaking && isSneaking) {
-            client.player.playNotifySound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.5f);
+            client.level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.5f);
         } else if (isSprinting && !wasSprinting) {
-            client.player.playNotifySound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 2.0f);
+            client.level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 2.0f);
         } else if (!isSneaking && wasSneaking || !isSprinting && wasSprinting) {
-            client.player.playNotifySound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.9f);
+            client.level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.9f);
         }
 
         wasSneaking = isSneaking;

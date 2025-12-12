@@ -2,11 +2,10 @@ package org.mcaccess.minecraftaccess;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.TickPhase;
-import net.blay09.mods.balm.api.event.TickType;
-import net.blay09.mods.balm.api.event.client.ConnectedToServerEvent;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
@@ -78,14 +77,14 @@ public final class MainClass {
             getScreenReader().narrate(startupMessage, true);
         }
 
-        registrars.keyMappings(MOD_ID, keyMappings -> {
+        registrars.keyMappings(keyMappings -> {
             for (KeyMappingsHandler.Keys key : KeyMappingsHandler.Keys.values()) {
                 keyMappings.register(key.mapping);
             }
         });
 
-        Balm.getEvents().onTickEvent(TickType.Client, TickPhase.End, MainClass::clientTickEventsMethod);
-        Balm.getEvents().onEvent(ConnectedToServerEvent.class, MainClass::initWorldState);
+        ClientTickCallback.AFTER.register(MainClass::clientTickEventsMethod);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(MainClass::initWorldState);
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -174,7 +173,7 @@ public final class MainClass {
         Keystroke.updateInstances();
     }
 
-    private static void initWorldState(ConnectedToServerEvent event) {
+    private static void initWorldState(Minecraft client) {
         accessMenu = new AccessMenu();
         biomeIndicator = new BiomeIndicator();
         facingDirection = new FacingDirection();
@@ -195,7 +194,7 @@ public final class MainClass {
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = Config.getInstance().debugMode || Balm.isDevelopmentEnvironment();
+        boolean debugMode = Config.getInstance().debugMode || Balm.platform().isDevelopmentEnvironment();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);

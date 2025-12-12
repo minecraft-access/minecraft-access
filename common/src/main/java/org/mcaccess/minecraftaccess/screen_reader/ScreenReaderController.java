@@ -1,9 +1,9 @@
 package org.mcaccess.minecraftaccess.screen_reader;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.MainClass;

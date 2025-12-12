@@ -55,7 +55,7 @@ public class HUDStatus {
 
         float cooldownProgress = player.getAttackStrengthScale(1.0f);
         if (!attackCooldownPlayed && cooldownProgress == 1.0f) {
-            player.playNotifySound(SoundEvents.NOTE_BLOCK_HAT.value(), SoundSource.PLAYERS, 0.6f, 1.0f);
+            client.level.playPlayerSound(SoundEvents.NOTE_BLOCK_HAT.value(), SoundSource.PLAYERS, 0.6f, 1.0f);
             attackCooldownPlayed = true;
         } else if (attackCooldownPlayed && cooldownProgress < 1.0f) {
             attackCooldownPlayed = false;

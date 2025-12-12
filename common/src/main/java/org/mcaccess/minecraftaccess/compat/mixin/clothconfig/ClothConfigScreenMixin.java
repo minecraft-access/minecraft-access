@@ -17,7 +17,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,7 +48,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
     @Shadow
     public ClothConfigScreen.ListWidget<AbstractConfigEntry<AbstractConfigEntry<?>>> listWidget;
 
-    ClothConfigScreenMixin(Screen parent, Component title, ResourceLocation backgroundLocation) {
+    ClothConfigScreenMixin(Screen parent, Component title, Identifier backgroundLocation) {
         super(parent, title, backgroundLocation);
     }
 
