@@ -8,8 +8,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -311,7 +311,7 @@ public class InventoryControls {
             if (currentRecipeBookWidget == null) return false;
             if (!currentRecipeBookWidget.isVisible()) return false;
 
-            StateSwitchingButton toggleCraftableButton = ((RecipeBookComponentAccessor) currentRecipeBookWidget).getFilterButton();
+            CycleButton<Boolean> toggleCraftableButton = ((RecipeBookComponentAccessor) currentRecipeBookWidget).getFilterButton();
 
             int x = toggleCraftableButton.getX() + 8;
             int y = toggleCraftableButton.getY() + 4;
@@ -320,7 +320,7 @@ public class InventoryControls {
             MouseUtils.moveAndLeftClick(p.x(), p.y());
             moveToSlotItem(currentSlotItem, 100);
 
-            String narration = toggleCraftableButton.isStateTriggered()
+            String narration = toggleCraftableButton.getValue()
                     ? ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString()
                     : I18n.get("gui.recipebook.toggleRecipes.all");
             MainClass.narrate(narration, true);
@@ -533,7 +533,7 @@ public class InventoryControls {
 
         Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
                 .flatMap(jukeboxPlayable -> jukeboxPlayable.song().key())
-                .ifPresent(discNumber -> toolTipString.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.location().getPath())));
+                .ifPresent(discNumber -> toolTipString.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.identifier().getPath())));
 
         // <slot row col prefix> <count> <name> <description>
         return "%s %s".formatted(info, toolTipString.toString());

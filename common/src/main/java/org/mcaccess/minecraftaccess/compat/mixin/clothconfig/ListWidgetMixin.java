@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +24,7 @@ abstract class ListWidgetMixin extends DynamicElementListWidget {
     @Final
     private AbstractConfigScreen screen;
 
-    protected ListWidgetMixin(Minecraft client, int width, int height, int top, int bottom, ResourceLocation backgroundLocation) {
+    protected ListWidgetMixin(Minecraft client, int width, int height, int top, int bottom, Identifier backgroundLocation) {
         super(client, width, height, top, bottom, backgroundLocation);
     }
 

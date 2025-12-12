@@ -8,7 +8,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,7 +26,7 @@ abstract class GuiGraphicsMixin {
     private static String previous;
 
     @Inject(at = @At("HEAD"), method = "setTooltipForNextFrameInternal")
-    private void narrateTooltip(Font font, List<ClientTooltipComponent> list, int i, int j, ClientTooltipPositioner clientTooltipPositioner, @Nullable ResourceLocation resourceLocation, boolean bl, CallbackInfo ci) {
+    private void narrateTooltip(Font font, List<ClientTooltipComponent> list, int i, int j, ClientTooltipPositioner clientTooltipPositioner, @Nullable Identifier identifier, boolean bl, CallbackInfo ci) {
         if (Config.getInstance().inventoryControls.enabled) {
             return;
         }

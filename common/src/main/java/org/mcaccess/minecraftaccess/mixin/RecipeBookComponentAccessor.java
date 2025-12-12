@@ -2,8 +2,8 @@ package org.mcaccess.minecraftaccess.mixin;
 
 import java.util.List;
 
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookTabButton;
@@ -27,7 +27,7 @@ public interface RecipeBookComponentAccessor {
     RecipeBookPage getRecipeBookPage();
 
     @Accessor
-    StateSwitchingButton getFilterButton();
+    CycleButton<Boolean> getFilterButton();
 
     @Invoker
     Component callGetRecipeFilterName();

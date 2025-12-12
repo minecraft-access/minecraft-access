@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.MouseButtonInfo;
+import net.minecraft.util.Util;
 import org.lwjgl.glfw.GLFW;
 
 import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;

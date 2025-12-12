@@ -12,9 +12,12 @@ import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.MoonPhase;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -259,9 +262,9 @@ public class AccessMenu {
             weather = I18n.get("minecraft_access.weather.clear");
         }
 
-        if (level.isMoonVisible()) {
-            int moonPhase = level.getMoonPhase();
-            weather += I18n.get("minecraft_access.other.words_connection") + I18n.get("minecraft_access.weather.moon_phase." + moonPhase);
+        if (level.isDarkOutside() && level.dimensionType().skybox().equals(DimensionType.Skybox.OVERWORLD)) {
+            MoonPhase moonPhase = level.environmentAttributes().getValue(EnvironmentAttributes.MOON_PHASE, CLIENT.player.getEyePosition());
+            weather += I18n.get("minecraft_access.other.words_connection") + I18n.get("minecraft_access.weather.moon_phase." + moonPhase.getSerializedName());
         }
 
         MainClass.narrate(weather, false);
