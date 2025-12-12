@@ -65,6 +65,7 @@
         "TamableAnimalMixin",
         "TextFieldHelperMixin",
         "ToastManagerMixin",
+        "TolkMixin",
         "TutorialToastAccessor",
         "WinScreenMixin",
         "WolfAccessor"

@@ -1,5 +1,6 @@
 # To manually find version numbers, use
 # https://linkie.shedaniel.dev/dependencies
+
 # https://parchmentmc.org/docs/getting-started for version table
 
 [versions]
@@ -25,6 +26,7 @@ minecraft = "com.mojang:minecraft:1.21.10"
 modMenu = "com.terraformersmc:modmenu:16.0.0-rc.1"
 neoForge = "net.neoforged:neoforge:21.10.64"
 parchment = "org.parchmentmc.data:parchment-1.21.10:2025.10.12"
+tolk = "com.davykager.tolk:Tolk:1.0.0"
 
 assertjCore = "org.assertj:assertj-core:3.27.6"
 jmhCore = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }

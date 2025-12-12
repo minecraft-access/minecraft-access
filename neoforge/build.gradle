@@ -28,6 +28,9 @@ dependencies {
     modImplementation libs.clothConfigNeoForge
     include libs.clothConfigNeoForge
 
+    implementation libs.tolk
+    include libs.tolk
+
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowCommon(project(path: ':common', configuration: 'transformProductionNeoForge')) { transitive = false }
 }

@@ -65,6 +65,10 @@ subprojects {
             url = 'https://maven.terraformersmc.com/'
         }
         maven {
+            name = 'Tolk'
+            url = 'https://repo.granny.dev/releases/'
+        }
+        maven {
             name = 'Twelve Iterations'
             url = 'https://maven.twelveiterations.com/repository/maven-public/'
             content {

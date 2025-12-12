@@ -60,6 +60,10 @@ dependencyResolutionManagement {
             name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org'
         }
+        maven {
+            name = 'Tolk'
+            url = 'https://repo.granny.dev/releases/'
+        }
         exclusiveContent {
             forRepository {
                 maven {

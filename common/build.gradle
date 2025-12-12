@@ -12,6 +12,7 @@ dependencies {
     modImplementation libs.jadeFabric
     modImplementation libs.balmCommon
     modImplementation libs.clothConfigCommon
+    implementation libs.tolk
 
     // https://projectlombok.org/setup/gradle
     compileOnly libs.lombok
