@@ -41,7 +41,7 @@ jobs:
           ./gradlew clean build -x check
           shopt -s extglob
           cp ./!(common)/build/libs/*+!(*-*).jar .
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: "minecraft-access"
           path: "./*.jar"
