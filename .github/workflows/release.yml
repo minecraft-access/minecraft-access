@@ -210,7 +210,7 @@ jobs:
           - name: NeoForge
             slug: neoforge
     steps:
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: ${{ vars.MODRINTH_ID }}
