@@ -37,7 +37,7 @@ junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher",
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:12.2.0"
+checkstyle = "com.puppycrawl.tools:checkstyle:12.3.0"
 
 [plugins]
 architecturyLoom = { id = "dev.architectury.loom", version = "1.13.467" }
