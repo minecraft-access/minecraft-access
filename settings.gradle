@@ -1,30 +1,29 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
 pluginManagement {
     repositories {
         maven {
             name = 'Architectury'
             url = 'https://maven.architectury.dev/'
         }
+
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
+
         maven {
             name = 'Neoforged'
             url = 'https://maven.neoforged.net/releases/'
         }
-        maven {
-            name = 'Twelve Iterations'
-            url = 'https://maven.twelveiterations.com/repository/maven-public/'
-            content {
-                includeGroup 'net.blay09.mods'
-            }
-        }
+
         gradlePluginPortal()
     }
 }
 
 plugins {
     id 'com.gradle.develocity' version '4.3'
+    id 'dev.architectury.loom' version '1.13.467'
 }
 
 develocity {
@@ -34,36 +33,51 @@ develocity {
 }
 
 dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.PREFER_SETTINGS
     repositories {
         maven {
             name = 'Architectury'
             url = 'https://maven.architectury.dev'
         }
-        mavenCentral()
+
+        maven {
+            name = 'Balm'
+            url = 'https://maven.twelveiterations.com/repository/maven-public/'
+            content {
+                includeGroup 'net.blay09.mods'
+            }
+        }
+
         maven {
             name = 'Cloth Config'
             url = 'https://maven.shedaniel.me/'
         }
+
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
+
         maven {
             name = 'Mod Menu'
             url = 'https://maven.terraformersmc.com/'
         }
+
         maven {
             name = 'Neoforged'
             url = 'https://maven.neoforged.net/releases/'
         }
+
         maven {
             name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org'
         }
+
         maven {
             name = 'Tolk'
             url = 'https://repo.granny.dev/releases/'
         }
+
         exclusiveContent {
             forRepository {
                 maven {
@@ -75,6 +89,8 @@ dependencyResolutionManagement {
                 includeGroup 'maven.modrinth'
             }
         }
+
+        mavenCentral()
     }
 }
 
