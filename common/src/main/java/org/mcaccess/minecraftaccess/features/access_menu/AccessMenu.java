@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import lombok.extern.slf4j.Slf4j;
-import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfigClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.resources.language.I18n;
@@ -53,7 +53,7 @@ public class AccessMenu {
      */
     private static final MenuFunction[] FUNCTIONS = new MenuFunction[]{
             new MenuFunction(0, new IntervalKeystroke(KeyMappingsHandler.Keys.OPEN_CONFIG_MENU.mapping),
-                    () -> Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, null).get())),
+                    () -> Minecraft.getInstance().setScreen(AutoConfigClient.getConfigScreen(Config.class, null).get())),
             new MenuFunction(1, new IntervalKeystroke(KeyMappingsHandler.Keys.NARRATE_TARGET.mapping),
                     AccessMenu::getBlockAndFluidTargetInformation),
             new MenuFunction(2, new IntervalKeystroke(KeyMappingsHandler.Keys.TARGET_POSITION.mapping),
@@ -262,7 +262,8 @@ public class AccessMenu {
             weather = I18n.get("minecraft_access.weather.clear");
         }
 
-        if (level.isDarkOutside() && level.dimensionType().skybox().equals(DimensionType.Skybox.OVERWORLD)) {
+        float moonAngle = level.environmentAttributes().getValue(EnvironmentAttributes.MOON_ANGLE, CLIENT.player.position()) % 360;
+        if ((moonAngle >= 270 || moonAngle <= 90) && level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD) {
             MoonPhase moonPhase = level.environmentAttributes().getValue(EnvironmentAttributes.MOON_PHASE, CLIENT.player.getEyePosition());
             weather += I18n.get("minecraft_access.other.words_connection") + I18n.get("minecraft_access.weather.moon_phase." + moonPhase.getSerializedName());
         }
@@ -271,5 +272,5 @@ public class AccessMenu {
     }
 
     private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
-}
+    }
 }
