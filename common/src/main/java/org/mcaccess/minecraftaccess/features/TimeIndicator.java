@@ -2,8 +2,8 @@ package org.mcaccess.minecraftaccess.features;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.dimension.DimensionType;
 
 import org.mcaccess.minecraftaccess.MainClass;
 
@@ -15,7 +15,8 @@ public class TimeIndicator {
         Level level = client.level;
 
         if (level == null) return;
-        if (level.dimensionType().skybox() != DimensionType.Skybox.OVERWORLD) return;
+        if (level.dimensionType().hasFixedTime() || level.dimensionType().hasCeiling()) return;
+        if (!level.canSeeSky(BlockPos.containing(client.player.getEyePosition()))) return;
 
         Times currentTime;
 

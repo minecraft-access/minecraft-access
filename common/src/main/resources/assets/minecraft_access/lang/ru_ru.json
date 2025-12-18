@@ -1,7 +1,6 @@
 {
     "block.minecraft.flowing_lava": "Текучая лава",
     "block.minecraft.flowing_water": "Текучая вода",
-    "minecraft_access.access_menu.biome": "%s биом",
     "minecraft_access.access_menu.gui.button.biome": "Текущий Биом",
     "minecraft_access.access_menu.gui.button.block_and_fluid_target_info": "Информация о целевых блоках и жидкостях",
     "minecraft_access.access_menu.gui.button.block_and_fluid_target_position": "Позиция цели блока и жидкости",
@@ -40,5 +39,6 @@
     "minecraft_access.cat_variant.tuxedo": "Смокинг",
     "minecraft_access.cat_variant.white": "Белый",
     "minecraft_access.credits_screen.started_tip": "Экран кредитов: Удерживайте пробел, чтобы ускорить получение кредитов. Дополнительные клавиши управления еще больше увеличат скорость. Нажмите escape, чтобы выйти.",
-    "minecraft_access.crop.mature": "Полностью выросший %s"
+    "minecraft_access.crop.mature": "Полностью выросший %s",
+    "minecraft_access.other.biome": "%s биом"
 }

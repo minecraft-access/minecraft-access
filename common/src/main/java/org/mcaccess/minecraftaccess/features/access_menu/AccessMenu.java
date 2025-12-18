@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -176,9 +177,17 @@ public class AccessMenu {
 
         CLIENT.player.clientSideCloseContainer();
 
-        Holder<Biome> currentBiome = BiomeIndicator.getCurrentBiome();
-        NarrationUtils.getTranslatedName(currentBiome, "biome")
-                .ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true));
+        String currentBiomeName = NarrationUtils.getTranslatedName(BiomeIndicator.getCurrentBiome(), "biome")
+                .orElse("");
+
+        if (Config.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
+            ResourceKey<Level> currentDimension = CLIENT.level.dimension();
+            MainClass.narrate(I18n.get("minecraft_access.other.biome_and_dimension",
+                    currentBiomeName,
+                    I18n.get(currentDimension.identifier().toLanguageKey("dimension"))), false);
+        } else {
+            MainClass.narrate(I18n.get("minecraft_access.other.biome", currentBiomeName), false);
+        }
     }
 
     public static void getXP() {
@@ -202,11 +211,17 @@ public class AccessMenu {
     }
 
     public static void getTimeOfDay() {
+        Level level = CLIENT.level;
         if (CLIENT.player == null) return;
-        if (CLIENT.level == null) return;
+        if (level == null) return;
+
+        if (level.dimensionType().hasFixedTime()) {
+            MainClass.narrate(I18n.get(level.dimension().identifier().toLanguageKey("dimension")), true);
+            return;
+        }
 
         CLIENT.player.clientSideCloseContainer();
-        long daytime = CLIENT.player.level().getDayTime() + 6000;
+        long daytime = level.getDayTime() + 6000;
         int hours = (int) (daytime / 1000) % 24;
         int minutes = (int) ((daytime % 1000) * 60 / 1000);
 
