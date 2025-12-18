@@ -43,8 +43,8 @@ public final class CameraControls {
     private static final Interval INTERVAL = Interval.defaultDelay();
 
     // config keystroke conditions
-    private static final DoubleClick straightUpDoubleClick = new DoubleClick(() -> KeyMappingsHandler.Keys.CAMERA_CONTROLS_UP.mapping.isDown());
-    private static final DoubleClick straightDownDoubleClick = new DoubleClick(() -> KeyMappingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping.isDown());
+    private static final DoubleClick STRAIGHT_UP_DOUBLE_CLICK = new DoubleClick(() -> KeyMappingsHandler.Keys.CAMERA_CONTROLS_UP.mapping.isDown());
+    private static final DoubleClick STRAIGHT_DOWN_DOUBLE_CLICK = new DoubleClick(() -> KeyMappingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping.isDown());
 
     private CameraControls() {
     }
@@ -87,9 +87,9 @@ public final class CameraControls {
         boolean isCenterCameraKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_CENTER_CAMERA.mapping.isDown();
 
         boolean isStraightUpKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_UP.mapping.isDown();
-        boolean isUpKeyDoublePressedWithRightAlt = isRightAltPressed && straightUpDoubleClick.canBeTriggered();
+        boolean isUpKeyDoublePressedWithRightAlt = isRightAltPressed && STRAIGHT_UP_DOUBLE_CLICK.canBeTriggered();
         boolean isStraightDownKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_DOWN.mapping.isDown();
-        boolean isDownKeyDoublePressedWithRightAlt = isRightAltPressed && straightDownDoubleClick.canBeTriggered();
+        boolean isDownKeyDoublePressedWithRightAlt = isRightAltPressed && STRAIGHT_DOWN_DOUBLE_CLICK.canBeTriggered();
 
         boolean anyFunctionTriggered = false;
 

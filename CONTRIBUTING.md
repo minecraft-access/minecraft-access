@@ -186,8 +186,7 @@ and more described in [this article](https://www.amazingcto.com/mocking-is-an-an
 Since this project is hosted on GitHub, it's natural for us to choose GitHub Action as the CI system.
 This project has an automatic test-build-release pipeline.
 
-* For every PR and building, [`test` workflow](.github/workflows/test.yml) will be triggered for running the test suite against current code.
-* The [`fast-forward` workflow](.github/workflows/fast_forward.yml) is used for performing fast-forward merging (to avoid generating merge commits) and collect changelog in PR description, it will be triggered by `/fast-forward` comment in PR.
+* For every PR and building, [`linting` workflow](.github/workflows/linting.yml) will be triggered for running the test suite against current code.
 * The [`build` workflow](.github/workflows/build.yml) is responsible for building all platforms mod jars, you can manually dispatch it in GitHub Action Page.
 * When a new version is ready and merged, we'll manually run the [`release` workflow](.github/workflows/release.yml) to create a new pre-release in GitHub Release, after one-week exposure, we'll run this workflow against this version again to change the GitHub release to formal state, and publish mod to CurseForge and Modrinth.
 

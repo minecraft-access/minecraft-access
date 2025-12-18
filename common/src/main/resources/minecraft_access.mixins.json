@@ -50,7 +50,6 @@
         "NarrationThunkMixin",
         "NowPlayingToastMixin",
         "OptionsMixin",
-        "PageButtonMixin",
         "RecipeBookComponentAccessor",
         "RecipeBookPageAccessor",
         "RecipeBookPageMixin",

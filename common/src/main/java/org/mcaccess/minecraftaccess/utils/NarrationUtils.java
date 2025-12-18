@@ -33,6 +33,8 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.feline.Cat;
+import net.minecraft.world.entity.animal.fox.Fox;
+import net.minecraft.world.entity.animal.panda.Panda;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -154,8 +156,8 @@ public final class NarrationUtils {
 
         if (!entityIsSitting) {
             switch (entity) {
-                case net.minecraft.world.entity.animal.fox.Fox fox -> entityIsSitting = fox.isSitting();
-                case net.minecraft.world.entity.animal.panda.Panda panda -> entityIsSitting = panda.isSitting();
+                case Fox fox -> entityIsSitting = fox.isSitting();
+                case Panda panda -> entityIsSitting = panda.isSitting();
                 case Camel camel -> entityIsSitting = camel.isCamelSitting();
                 case TamableAnimal tamableAnimal -> entityIsSitting = tamableAnimal.isInSittingPose();
                 default -> {

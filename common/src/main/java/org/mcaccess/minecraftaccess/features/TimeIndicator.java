@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.features;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
 
 import org.mcaccess.minecraftaccess.MainClass;
 
@@ -14,8 +15,9 @@ public class TimeIndicator {
         Level level = client.level;
 
         if (level == null) return;
+        if (level.dimensionType().skybox() != DimensionType.Skybox.OVERWORLD) return;
 
-        Times currentTime = null;
+        Times currentTime;
 
         long time = level.getDayTime() % 24000;
 
