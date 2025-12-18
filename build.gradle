@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.architecturyPlugin)
-    alias(libs.plugins.architecturyLoom) apply false
+    id 'dev.architectury.loom' apply false
     alias(libs.plugins.gitVersion)
 }
 
@@ -23,7 +23,7 @@ architectury {
 }
 
 subprojects {
-    apply plugin: libs.plugins.architecturyLoom.get().pluginId
+    apply plugin: 'dev.architectury.loom'
     version = "${rootProject.version}+${project.name}"
 
     loom {
@@ -45,45 +45,6 @@ subprojects {
             officialMojangMappings()
             parchment variantOf(libs.parchment) {
                 artifactType('zip')
-            }
-        }
-    }
-
-    // If you add something to the repositories block
-    // add it to the settings.gradle file for Dependabot
-    repositories {
-        maven {
-            name = 'ParchmentMC'
-            url = 'https://maven.parchmentmc.org'
-        }
-        maven {
-            name = 'Neoforged'
-            url = 'https://maven.neoforged.net/releases/'
-        }
-        maven {
-            name = 'TerraformersMC'
-            url = 'https://maven.terraformersmc.com/'
-        }
-        maven {
-            name = 'Tolk'
-            url = 'https://repo.granny.dev/releases/'
-        }
-        maven {
-            name = 'Twelve Iterations'
-            url = 'https://maven.twelveiterations.com/repository/maven-public/'
-            content {
-                includeGroup 'net.blay09.mods'
-            }
-        }
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'Modrinth'
-                    url = 'https://api.modrinth.com/maven'
-                }
-            }
-            filter {
-                includeGroup 'maven.modrinth'
             }
         }
     }
