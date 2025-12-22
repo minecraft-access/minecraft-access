@@ -33,6 +33,7 @@ import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.features.PlayerStatus;
 import org.mcaccess.minecraftaccess.features.PositionNarrator;
 import org.mcaccess.minecraftaccess.features.TimeIndicator;
+import org.mcaccess.minecraftaccess.features.ToolCues;
 import org.mcaccess.minecraftaccess.features.XPIndicator;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
 import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
@@ -129,6 +130,7 @@ public final class MainClass {
         registrars.registerModule(poiManager.poiMarking);
         registrars.registerModule(new PositionNarrator());
         registrars.registerModule(new TimeIndicator());
+        registrars.registerModule(new ToolCues());
         registrars.registerModule(new XPIndicator());
     }
 

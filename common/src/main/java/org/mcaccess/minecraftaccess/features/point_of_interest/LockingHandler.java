@@ -55,10 +55,7 @@ public class LockingHandler implements BalmClientModule {
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
     private Map<Property<?>, Comparable<?>> entriesOfLockedOnBlock;
     private boolean aimAssistActive = false;
-    // 0 = can't shoot, 1 = can shoot
-    private int lastAimAssistCue = -1;
-    // -1 = null, 1 = starting, 2 = half drawn, 3 = fully drawn
-    private int lastBowState = -1;
+    private boolean lastAimAssistVisibility = false;
 
     LockingHandler() {
     }
@@ -77,8 +74,6 @@ public class LockingHandler implements BalmClientModule {
             isLockedOnWhereEyeOfEnderDisappears = false;
             entriesOfLockedOnBlock = null;
             aimAssistActive = false;
-            lastAimAssistCue = -1;
-            lastBowState = -1;
         });
 
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.locking/lock"))
@@ -116,7 +111,9 @@ public class LockingHandler implements BalmClientModule {
             lookAtLockedTarget();
         }
 
-        bowAimingAssist();
+        if (config.aimAssistEnabled) {
+            bowAimingAssist();
+        }
     }
 
     private void lookAtLockedTarget() {
@@ -158,57 +155,49 @@ public class LockingHandler implements BalmClientModule {
 
     /**
      * Automatically locks on to the nearest hostile entity when the player is pulling a bow.
+     * Plays NOTE_BLOCK_PLING if the target is visible, NOTE_BLOCK_BASS if not.
      */
     private void bowAimingAssist() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        // Check if player is using a bow
-        if (config.aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getUseItem().getItem() instanceof BowItem) {
+        if (!aimAssistActive && player.isUsingItem()
+                && player.getUseItem().getItem() instanceof BowItem) {
             List<Entity> hostileEntities = BuiltinEntityPOIGroups.HOSTILE.group.getItems();
             if (!hostileEntities.isEmpty()) {
-                Entity entity = hostileEntities.stream()
+                Entity nearest = hostileEntities.stream()
                         .min(Comparator.comparingDouble(player::distanceTo))
                         .get();
-                if (lockOnEntity(entity)) {
+
+                if (lockOnEntity(nearest)) {
                     aimAssistActive = true;
                 }
             }
         }
 
-        // Reset when not using bow anymore
         if (aimAssistActive && (!player.isUsingItem() || !(player.getUseItem().getItem() instanceof BowItem))) {
             unlock(false, true);
             aimAssistActive = false;
-            lastAimAssistCue = -1;
-            lastBowState = -1;
+            lastAimAssistVisibility = false;
             return;
         }
 
-        // Handle audio cues for aiming
         if (config.aimAssistAudioCuesEnabled && aimAssistActive && lockedOnEntity != null) {
-            float bowPullingProgress = BowItem.getPowerForTime(player.getTicksUsingItem());
+            if (PlayerUtils.currentEntityLookingAtPosition != null) {
+                boolean visible = PlayerUtils.isVisibleToPlayer(
+                        player.getEyePosition(),
+                        PlayerUtils.currentEntityLookingAtPosition,
+                        lockedOnEntity
+                );
 
-            int bowState = -1;
-            if (bowPullingProgress >= 0.0f && bowPullingProgress < 0.50f) bowState = 0;
-            if (bowPullingProgress >= 0.50f && bowPullingProgress < 1.0f) bowState = 1;
-            if (bowPullingProgress == 1.0f) bowState = 2;
-
-            Vec3 eyePosition = player.getEyePosition();
-            Vec3 targetPosition = PlayerUtils.currentEntityLookingAtPosition;
-
-            if (targetPosition != null) {
-                if (PlayerUtils.isVisibleToPlayer(eyePosition, targetPosition, lockedOnEntity)) {
-                    if (lastAimAssistCue != 1 || bowState != lastBowState) {
-                        player.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), config.aimAssistAudioCuesVolume, bowState);
-                        lastAimAssistCue = 1;
-                    }
-                } else if (lastAimAssistCue != 0 || bowState != lastBowState) {
-                    player.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), config.aimAssistAudioCuesVolume, bowState);
-                    lastAimAssistCue = 0;
+                if (visible != lastAimAssistVisibility) {
+                    player.playSound(
+                            visible ? SoundEvents.NOTE_BLOCK_PLING.value() : SoundEvents.NOTE_BLOCK_BASS.value(),
+                            config.aimAssistAudioCuesVolume,
+                            1.0f
+                    );
+                    lastAimAssistVisibility = visible;
                 }
-
-                lastBowState = bowState;
             }
         }
     }
