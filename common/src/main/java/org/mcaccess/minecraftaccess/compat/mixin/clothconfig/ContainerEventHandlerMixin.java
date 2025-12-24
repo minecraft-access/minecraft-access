@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ContainerEventHandler.class)
-abstract class ContainerEventHandlerMixin {
+interface ContainerEventHandlerMixin {
     @WrapOperation(method = "handleTabNavigation",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/events/ContainerEventHandler;children()Ljava/util/List;"))
     private List<? extends GuiEventListener> modifyNavigationCandidates(ContainerEventHandler instance, Operation<List<? extends GuiEventListener>> original) {
