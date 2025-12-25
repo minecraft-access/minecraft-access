@@ -89,6 +89,7 @@ public final class Config implements ConfigData {
         public boolean actionBarEnabled = true;
         public boolean onlyNarrateActionBarUpdates = false;
         public boolean biomeIndicatorEnabled = true;
+        public boolean alwaysNarrateDimensionInBiomeIndicator = false;
         public boolean timeIndicatorEnabled = true;
         public boolean xpIndicatorEnabled = true;
         public boolean facingDirectionEnabled = true;

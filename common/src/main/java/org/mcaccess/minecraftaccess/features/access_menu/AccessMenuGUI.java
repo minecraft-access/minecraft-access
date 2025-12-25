@@ -1,6 +1,6 @@
 package org.mcaccess.minecraftaccess.features.access_menu;
 
-import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfigClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -63,7 +63,7 @@ public class AccessMenuGUI extends Screen {
                 (button) -> ScreenReaderController.refreshScreenReader(true));
 
         button("0", "minecraft_access.access_menu.gui.button.open_config_menu",
-                (button) -> Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, this).get()));
+                (button) -> Minecraft.getInstance().setScreen(AutoConfigClient.getConfigScreen(Config.class, this).get()));
 
         button("", "minecraft_access.access_menu.gui.button.weather",
                 (button) -> AccessMenu.getWeatherStatus());

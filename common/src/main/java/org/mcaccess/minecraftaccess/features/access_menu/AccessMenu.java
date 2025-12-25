@@ -6,12 +6,13 @@ import java.util.stream.Stream;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import lombok.extern.slf4j.Slf4j;
-import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfigClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -53,7 +54,7 @@ public class AccessMenu {
      */
     private static final MenuFunction[] FUNCTIONS = new MenuFunction[]{
             new MenuFunction(0, new IntervalKeystroke(KeyMappingsHandler.Keys.OPEN_CONFIG_MENU.mapping),
-                    () -> Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, null).get())),
+                    () -> Minecraft.getInstance().setScreen(AutoConfigClient.getConfigScreen(Config.class, null).get())),
             new MenuFunction(1, new IntervalKeystroke(KeyMappingsHandler.Keys.NARRATE_TARGET.mapping),
                     AccessMenu::getBlockAndFluidTargetInformation),
             new MenuFunction(2, new IntervalKeystroke(KeyMappingsHandler.Keys.TARGET_POSITION.mapping),
@@ -176,9 +177,17 @@ public class AccessMenu {
 
         CLIENT.player.clientSideCloseContainer();
 
-        Holder<Biome> currentBiome = BiomeIndicator.getCurrentBiome();
-        NarrationUtils.getTranslatedName(currentBiome, "biome")
-                .ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.access_menu.biome", name), true));
+        String currentBiomeName = NarrationUtils.getTranslatedName(BiomeIndicator.getCurrentBiome(), "biome")
+                .orElse("");
+
+        if (Config.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
+            ResourceKey<Level> currentDimension = CLIENT.level.dimension();
+            MainClass.narrate(I18n.get("minecraft_access.other.biome_and_dimension",
+                    currentBiomeName,
+                    I18n.get(currentDimension.identifier().toLanguageKey("dimension"))), false);
+        } else {
+            MainClass.narrate(I18n.get("minecraft_access.other.biome", currentBiomeName), false);
+        }
     }
 
     public static void getXP() {
@@ -202,11 +211,17 @@ public class AccessMenu {
     }
 
     public static void getTimeOfDay() {
+        Level level = CLIENT.level;
         if (CLIENT.player == null) return;
-        if (CLIENT.level == null) return;
+        if (level == null) return;
+
+        if (level.dimensionType().hasFixedTime()) {
+            MainClass.narrate(I18n.get(level.dimension().identifier().toLanguageKey("dimension")), true);
+            return;
+        }
 
         CLIENT.player.clientSideCloseContainer();
-        long daytime = CLIENT.player.level().getDayTime() + 6000;
+        long daytime = level.getDayTime() + 6000;
         int hours = (int) (daytime / 1000) % 24;
         int minutes = (int) ((daytime % 1000) * 60 / 1000);
 
@@ -262,7 +277,8 @@ public class AccessMenu {
             weather = I18n.get("minecraft_access.weather.clear");
         }
 
-        if (level.isDarkOutside() && level.dimensionType().skybox().equals(DimensionType.Skybox.OVERWORLD)) {
+        float moonAngle = level.environmentAttributes().getValue(EnvironmentAttributes.MOON_ANGLE, CLIENT.player.position()) % 360;
+        if ((moonAngle >= 270 || moonAngle <= 90) && level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD) {
             MoonPhase moonPhase = level.environmentAttributes().getValue(EnvironmentAttributes.MOON_PHASE, CLIENT.player.getEyePosition());
             weather += I18n.get("minecraft_access.other.words_connection") + I18n.get("minecraft_access.weather.moon_phase." + moonPhase.getSerializedName());
         }
@@ -271,5 +287,5 @@ public class AccessMenu {
     }
 
     private record MenuFunction(int number, IntervalKeystroke keystroke, Runnable func) {
-}
+    }
 }

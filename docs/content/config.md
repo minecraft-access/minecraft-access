@@ -220,18 +220,19 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybin
 
 ### Features
 
-| Configuration                        | Default Value | Description                                                                                                                                      |
-|--------------------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Enable Biome Indicator               | true          | Whether to enable [`Biome Indicator`]({{% relref "/features#biome-indicator" %}}) feature                                                        |
-| Enable Time Indicator                | true          | Whether to enable time of day Indicator                                                                                                          |
-| Enable XP Indicator                  | true          | Whether to enable [`XP Indicator`]({{% relref "/features#xp-indicator" %}}) feature                                                              |
-| Enable Facing Direction              | true          | Whether to automatically speak the current direction as the camera moves                                                                         |
-| Speak Action Bar Messages            | true          | Whether to speak the messages updated in [action bar](https://minecraft.wiki/w/Commands/title), useful when you're in modded multiplayer servers |
-| Only Speak Action Bar Updates        | false         | Only speak changed part of action bar message when the message is partially updated, useful for some mods like Hypixel                           |
-| Speak Harvest Of Fishing             | true          | Whether to speak the harvest of fishing                                                                                                          |
-| Always Speak Picked Up Items         | false         | Whether to speak any items you pick up (this will also enable speaking of fishing harvests)                                                      |
-| Report Held Items Count When Changed | true          | Whether to report the number of held items when it changed                                                                                       |
-| Play a sound for new chat messages   | true          | Whether to play a sound when sending or recieving a chat message                                                                                 |
+| Configuration                                    | Default Value | Description                                                                                                                                      |
+|--------------------------------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| Enable Biome Indicator                           | true          | Whether to enable [`Biome Indicator`]({{% relref "/features#biome-indicator" %}}) feature                                                        |
+| Always Narrate dimension name in biome indicator | false         | This option will include the current dimension name whenever a biome indicator announcement is narrated                                          |
+| Enable Time Indicator                            | true          | Whether to enable time of day Indicator                                                                                                          |
+| Enable XP Indicator                              | true          | Whether to enable [`XP Indicator`]({{% relref "/features#xp-indicator" %}}) feature                                                              |
+| Enable Facing Direction                          | true          | Whether to automatically speak the current direction as the camera moves                                                                         |
+| Speak Action Bar Messages                        | true          | Whether to speak the messages updated in [action bar](https://minecraft.wiki/w/Commands/title), useful when you're in modded multiplayer servers |
+| Only Speak Action Bar Updates                    | false         | Only speak changed part of action bar message when the message is partially updated, useful for some mods like Hypixel                           |
+| Speak Harvest Of Fishing                         | true          | Whether to speak the harvest of fishing                                                                                                          |
+| Always Speak Picked Up Items                     | false         | Whether to speak any items you pick up (this will also enable speaking of fishing harvests)                                                      |
+| Report Held Items Count When Changed             | true          | Whether to report the number of held items when it changed                                                                                       |
+| Play a sound for new chat messages               | true          | Whether to play a sound when sending or recieving a chat message                                                                                 |
 
 ## General
 
