@@ -22,29 +22,16 @@ public interface Status {
     @NotNull String message();
 
     /**
-     * Weather this status should appear in the player status readout.
+     * Weather this status should appear in the player status readout or the conditional status readout.
      *
-     * @implSpec Returns {@code true} by default.
-     * @return {@code true} if it should be included, {@code false} if it should be hidden.
+     * @implSpec Returns {@link Visibility#NORMAL} by default.
+     * @return See {@link Visibility}.
+     * @see Visibility
      * @since 1.12.0
      */
     @Contract(pure = true)
-    default boolean show() {
-        return true;
-    }
-
-    /**
-     * Weather this status should be included in the conditional status readout.
-     *
-     * <p>It will always be excluded if {@link #show()} is {@code false} regardless of the result of this method.
-     *
-     * @implSpec Returns {@code false} by default.
-     * @return {@code true} if it should be included, {@code false} otherwise.
-     * @since 1.12.0
-     */
-    @Contract(pure = true)
-    default boolean important() {
-        return false;
+    default @NotNull Visibility visibility() {
+        return Visibility.NORMAL;
     }
 
     /**
@@ -61,6 +48,35 @@ public interface Status {
     @Contract(pure = true)
     default @NotNull WarningLevel warning() {
         return WarningLevel.NONE;
+    }
+
+    /**
+     * Weather this status should appear in the player status readout or the conditional status readout.
+     *
+     * @see Status#visibility()
+     * @since 1.12.0
+     */
+    enum Visibility {
+        /**
+         * The status will not be included in any readout.
+         *
+         * @since 1.12.0
+         */
+        NONE,
+
+        /**
+         * The status will be included in the normal readout but not the conditional readout.
+         *
+         * @since 1.12.0
+         */
+        NORMAL,
+
+        /**
+         * The status will be included in both the normal and conditional readouts.
+         *
+         * @since 1.12.0
+         */
+        IMPORTANT
     }
 
     /**

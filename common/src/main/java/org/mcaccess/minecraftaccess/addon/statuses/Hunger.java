@@ -19,14 +19,14 @@ public class Hunger implements Status {
     }
 
     @Override
-    public boolean show() {
+    public @NotNull Visibility visibility() {
         assert Minecraft.getInstance().gameMode != null;
-        return Minecraft.getInstance().gameMode.canHurtPlayer();
+        return Minecraft.getInstance().gameMode.canHurtPlayer() ? Visibility.NORMAL : Visibility.NONE;
     }
 
     @Override
     public @NotNull WarningLevel warning() {
-        if (!show()) {
+        if (visibility() == Visibility.NONE) {
             return WarningLevel.NONE;
         }
 

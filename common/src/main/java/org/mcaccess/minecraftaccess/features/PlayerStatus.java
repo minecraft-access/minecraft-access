@@ -81,8 +81,11 @@ public class PlayerStatus {
 
             List<Status> statuses = Arrays.stream(Config.getInstance().playerWarnings.statuses)
                     .map(MainClass.registry(Status.class)::get)
-                    .filter(Status::show)
-                    .filter(stat -> !client.hasAltDown() || stat.important())
+                    .filter(status -> switch (status.visibility()) {
+                        case NONE -> false;
+                        case NORMAL -> !client.hasAltDown();
+                        case IMPORTANT -> true;
+                    })
                     .toList();
 
             if (statuses.isEmpty() && client.hasAltDown()) {

@@ -18,8 +18,8 @@ public class Armour implements Status {
     }
 
     @Override
-    public boolean show() {
+    public @NotNull Visibility visibility() {
         assert Minecraft.getInstance().gameMode != null;
-        return Minecraft.getInstance().gameMode.canHurtPlayer();
+        return Minecraft.getInstance().gameMode.canHurtPlayer() ? Visibility.NORMAL : Visibility.NONE;
     }
 }

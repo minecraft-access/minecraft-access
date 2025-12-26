@@ -19,20 +19,19 @@ public class Frost implements Status {
     }
 
     @Override
-    public boolean show() {
+    public @NotNull Visibility visibility() {
         assert Minecraft.getInstance().gameMode != null;
         assert Minecraft.getInstance().player != null;
-        return Minecraft.getInstance().gameMode.canHurtPlayer() && Minecraft.getInstance().player.canFreeze() && (Minecraft.getInstance().player.isInPowderSnow || Minecraft.getInstance().player.getPercentFrozen() > 0);
-    }
-
-    @Override
-    public boolean important() {
-        return true;
+        return Minecraft.getInstance().gameMode.canHurtPlayer()
+                && Minecraft.getInstance().player.canFreeze()
+                && (Minecraft.getInstance().player.isInPowderSnow || Minecraft.getInstance().player.getPercentFrozen() > 0)
+                ? Visibility.IMPORTANT
+                : Visibility.NONE;
     }
 
     @Override
     public @NotNull WarningLevel warning() {
-        if (!show()) {
+        if (visibility() == Visibility.NONE) {
             return WarningLevel.NONE;
         }
 

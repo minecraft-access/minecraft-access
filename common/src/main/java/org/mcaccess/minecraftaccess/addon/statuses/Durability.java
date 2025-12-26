@@ -30,8 +30,8 @@ public class Durability implements Status {
     }
 
     @Override
-    public boolean show() {
-        return false;
+    public @NotNull Visibility visibility() {
+        return Visibility.NONE;
     }
 
     @Override
