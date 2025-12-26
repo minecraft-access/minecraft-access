@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -38,7 +38,7 @@ public class PlayerStatus {
             KeyMappingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping::isDown,
             Keystroke.TriggeredAt.PRESSED,
             Interval.sec(3));
-    private final Map<ResourceLocation, Status.WarningLevel> lastWarning = new HashMap<>();
+    private final Map<Identifier, Status.WarningLevel> lastWarning = new HashMap<>();
     private boolean wasSneaking = false;
     private boolean wasSprinting = false;
 
@@ -49,7 +49,7 @@ public class PlayerStatus {
         movementTypeStatus();
 
         if (Config.getInstance().playerWarnings.enabled) {
-            for (ResourceLocation key : Config.getInstance().playerWarnings.statuses) {
+            for (Identifier key : Config.getInstance().playerWarnings.statuses) {
                 Status status = MainClass.registry(Status.class).get(key);
                 Status.WarningLevel currentLevel = status.warning();
                 if (currentLevel.ordinal() > lastWarning.getOrDefault(key, Status.WarningLevel.NONE).ordinal()) {
@@ -57,7 +57,8 @@ public class PlayerStatus {
                         SoundEvent soundToPlay = currentLevel.ordinal() > Status.WarningLevel.WARNING.ordinal()
                                 ? SoundEvents.ANVIL_PLACE
                                 : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value();
-                        client.player.playNotifySound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
+                        assert client.level != null;
+                        client.level.playPlayerSound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
                         MainClass.narrate(I18n.get("minecraft_access.player_status.warning", status.message()), true);
                     }
                 }
@@ -109,11 +110,11 @@ public class PlayerStatus {
         boolean isSprinting = client.player.isSprinting() && !isSneaking;
 
         if (!wasSneaking && isSneaking) {
-            client.player.playNotifySound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.5f);
+            client.level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.5f);
         } else if (isSprinting && !wasSprinting) {
-            client.player.playNotifySound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 2.0f);
+            client.level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 2.0f);
         } else if (!isSneaking && wasSneaking || !isSprinting && wasSprinting) {
-            client.player.playNotifySound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.9f);
+            client.level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, 0.9f);
         }
 
         wasSneaking = isSneaking;

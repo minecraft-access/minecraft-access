@@ -25,7 +25,7 @@ import me.shedaniel.autoconfig.serializer.ConfigSerializer;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import org.mcaccess.minecraftaccess.MainClass;
 
@@ -42,7 +42,7 @@ public final class ConfigExtension {
                     Registry annotation = field.getAnnotation(Registry.class);
                     return Collections.singletonList(new RegistrySingleSelect(annotation.registry(), annotation.i18n(), i18n, field, config, defaults));
                 },
-                field -> field.getType() == ResourceLocation.class,
+                field -> field.getType() == Identifier.class,
                 Registry.class
         );
         registry.registerAnnotationProvider(
@@ -50,7 +50,7 @@ public final class ConfigExtension {
                     Registry annotation = field.getAnnotation(Registry.class);
                     return Collections.singletonList(new RegistryReorderable(annotation.registry(), annotation.i18n(), i18n, field, config, defaults));
                 },
-                field -> field.getType() == ResourceLocation[].class,
+                field -> field.getType() == Identifier[].class,
                 Registry.class
         );
         registry.registerAnnotationTransformer(
@@ -91,20 +91,20 @@ public final class ConfigExtension {
                     setField(config, field, getField(defaults, field));
                 }
             }
-            if (field.isAnnotationPresent(Registry.class) && field.getType() == ResourceLocation.class) {
+            if (field.isAnnotationPresent(Registry.class) && field.getType() == Identifier.class) {
                 Registry annotation = field.getAnnotation(Registry.class);
-                ResourceLocation value = getField(config, field);
+                Identifier value = getField(config, field);
                 if (!MainClass.registry(annotation.registry()).containsKey(value)) {
                     log.error("Invalid registry value \"{}\"", value);
                     setField(config, field, getField(defaults, field));
                 }
             }
-            if (field.isAnnotationPresent(Registry.class) && field.getType() == ResourceLocation[].class) {
+            if (field.isAnnotationPresent(Registry.class) && field.getType() == Identifier[].class) {
                 Registry annotation = field.getAnnotation(Registry.class);
-                ResourceLocation[] value = getField(config, field);
-                ResourceLocation[] filtered = Arrays.stream(value)
+                Identifier[] value = getField(config, field);
+                Identifier[] filtered = Arrays.stream(value)
                         .filter(MainClass.registry(annotation.registry())::containsKey)
-                        .toArray(ResourceLocation[]::new);
+                        .toArray(Identifier[]::new);
                 if (!Arrays.equals(value, filtered)) {
                     log.error("Invalid registry values {}", Arrays.stream(value).filter(key -> !Arrays.asList(filtered).contains(key)).toList());
                     setField(config, field, filtered);
@@ -116,7 +116,7 @@ public final class ConfigExtension {
     public static <T extends ConfigData> ConfigSerializer<T> serialiser(Config definition, Class<T> configClass) {
         Gson gson = new GsonBuilder()
                 .setFormattingStyle(FormattingStyle.PRETTY.withIndent("    "))
-                .registerTypeAdapter(ResourceLocation.class, new ResourceLocationAdapter())
+                .registerTypeAdapter(Identifier.class, new IdentifierAdapter())
                 .create();
         return new GsonConfigSerializer<>(definition, configClass, gson);
     }

@@ -2,10 +2,11 @@ package org.mcaccess.minecraftaccess;
 
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfigClient;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import net.blay09.mods.balm.api.Balm;
-import net.minecraft.resources.ResourceLocation;
+import net.blay09.mods.balm.Balm;
+import net.minecraft.resources.Identifier;
 
 import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
@@ -58,7 +59,7 @@ public final class Config implements ConfigData {
     }
 
     static void init() {
-        ConfigExtension.apply(AutoConfig.getGuiRegistry(Config.class));
+        ConfigExtension.apply(AutoConfigClient.getGuiRegistry(Config.class));
         AutoConfig.register(Config.class, ConfigExtension::serialiser);
         instance = AutoConfig.getConfigHolder(Config.class).get();
     }
@@ -72,6 +73,7 @@ public final class Config implements ConfigData {
         public boolean actionBarEnabled = true;
         public boolean onlyNarrateActionBarUpdates = false;
         public boolean biomeIndicatorEnabled = true;
+        public boolean alwaysNarrateDimensionInBiomeIndicator = false;
         public boolean timeIndicatorEnabled = true;
         public boolean xpIndicatorEnabled = true;
         public boolean facingDirectionEnabled = true;
@@ -187,19 +189,19 @@ public final class Config implements ConfigData {
         public double airThreshold = 5;
         public double frostThreshold = 30;
         @ConfigExtension.Registry(registry = Status.class, i18n = "status")
-        public ResourceLocation[] statuses = new ResourceLocation[]{
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "health"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "hunger"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "armour"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "air"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "frost"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "game_mode"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/main_hand"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/offhand"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/head"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/chest"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/legs"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "durability/feet"),
+        public Identifier[] statuses = new Identifier[]{
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "health"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "hunger"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "armour"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "air"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "frost"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "game_mode"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "durability/main_hand"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "durability/offhand"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "durability/head"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "durability/chest"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "durability/legs"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "durability/feet"),
         };
         @ConfigEntry.Gui.CollapsibleObject
         public DurabilityWarnings durabilityWarnings = new DurabilityWarnings();
@@ -232,7 +234,7 @@ public final class Config implements ConfigData {
     public static final class NarrateCrosshair {
         public boolean enabled = true;
         @ConfigExtension.Registry(registry = WorldNarrator.class, i18n = "narrator")
-        public ResourceLocation narrator = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, Balm.platform().isModLoaded("jade") ? "jade" : "minecraft_access");
+        public Identifier narrator = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, Balm.platform().isModLoaded("jade") ? "jade" : "minecraft_access");
         public boolean narrateBlockFace = true;
         public boolean disableNarratingConsecutiveBlocks = false;
         public long repetitionInterval = 0;
@@ -287,18 +289,18 @@ public final class Config implements ConfigData {
         @ConfigEntry.Gui.CollapsibleObject
         public FluidDetector fluidDetector = new FluidDetector();
         @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-        public ResourceLocation[] functions = new ResourceLocation[]{
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_target"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "target_position"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "light_level"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "find_water"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "find_lava"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "biome"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "time"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "xp"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "refresh_screen_reader"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "config"),
-                ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "weather"),
+        public Identifier[] functions = new Identifier[]{
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_target"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "target_position"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "light_level"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "find_water"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "find_lava"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "biome"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "time"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "xp"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "refresh_screen_reader"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "config"),
+                Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "weather"),
         };
         @ConfigEntry.Gui.CollapsibleObject
         public ShortcutBar shortcutBar = new ShortcutBar();
@@ -316,25 +318,25 @@ public final class Config implements ConfigData {
 
         public static final class ShortcutBar {
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key1 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_target");
+            public Identifier key1 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_target");
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key2 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "target_position");
+            public Identifier key2 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "target_position");
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key3 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "light_level");
+            public Identifier key3 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "light_level");
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key4 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "find_water");
+            public Identifier key4 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "find_water");
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key5 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "find_lava");
+            public Identifier key5 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "find_lava");
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key6 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "biome");
+            public Identifier key6 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "biome");
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key7 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "time");
+            public Identifier key7 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "time");
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key8 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "xp");
+            public Identifier key8 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "xp");
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key9 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "refresh_screen_reader");
+            public Identifier key9 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "refresh_screen_reader");
             @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
-            public ResourceLocation key0 = ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, "config");
+            public Identifier key0 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "config");
         }
     }
 

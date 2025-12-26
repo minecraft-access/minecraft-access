@@ -16,12 +16,12 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 
-class RegistrySingleSelect extends BaseEntry<ResourceLocation, Button> {
+class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
     private final Class<?> registry;
     private final String registryI18n;
 
@@ -97,9 +97,9 @@ class RegistrySingleSelect extends BaseEntry<ResourceLocation, Button> {
             }
 
             private final class RegistryEntry extends ObjectSelectionList.Entry<RegistryEntry> {
-                private final ResourceLocation value;
+                private final Identifier value;
 
-                private RegistryEntry(ResourceLocation value) {
+                private RegistryEntry(Identifier value) {
                     this.value = value;
                 }
 

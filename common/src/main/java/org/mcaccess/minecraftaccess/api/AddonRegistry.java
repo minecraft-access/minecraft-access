@@ -2,7 +2,7 @@ package org.mcaccess.minecraftaccess.api;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +38,7 @@ public final class AddonRegistry {
      * @since 1.12.0
      */
     public void register(@NotNull String identifier, @NotNull Status status) {
-        MainClass.register(Status.class, ResourceLocation.fromNamespaceAndPath(modid, identifier), status);
+        MainClass.register(Status.class, Identifier.fromNamespaceAndPath(modid, identifier), status);
     }
 
     /**
@@ -52,7 +52,7 @@ public final class AddonRegistry {
      * @since 1.12.0
      */
     public void register(@NotNull String identifier, @NotNull AccessMenuFunction function) {
-        ResourceLocation location = ResourceLocation.fromNamespaceAndPath(modid, identifier);
+        Identifier location = Identifier.fromNamespaceAndPath(modid, identifier);
         KeyMapping key = new KeyMapping(
                 location.toLanguageKey("access_menu_function"),
                 InputConstants.Type.KEYSYM,
@@ -73,6 +73,6 @@ public final class AddonRegistry {
      * @since 1.12.0
      */
     public void register(@NotNull String identifier, @NotNull WorldNarrator worldNarrator) {
-        MainClass.register(WorldNarrator.class, ResourceLocation.fromNamespaceAndPath(modid, identifier), worldNarrator);
+        MainClass.register(WorldNarrator.class, Identifier.fromNamespaceAndPath(modid, identifier), worldNarrator);
     }
 }

@@ -14,8 +14,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -24,17 +24,17 @@ import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Fox;
-import net.minecraft.world.entity.animal.Panda;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.animal.camel.Camel;
+import net.minecraft.world.entity.animal.feline.Cat;
+import net.minecraft.world.entity.animal.fox.Fox;
+import net.minecraft.world.entity.animal.panda.Panda;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.ZombieVillager;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.monster.zombie.ZombieVillager;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BeehiveBlock;
 import net.minecraft.world.level.block.Block;
@@ -254,14 +254,14 @@ public class MinecraftAccess implements WorldNarrator {
         return switch (animal) {
             case Cat cat -> I18n.get(String.format("minecraft_access.cat_variant.%s",
                     cat.getVariant().unwrapKey()
-                            .map(ResourceKey::location)
-                            .map(ResourceLocation::toShortLanguageKey)
+                            .map(ResourceKey::identifier)
+                            .map(Identifier::toShortLanguageKey)
                             .orElse("other")
             ));
             case Wolf wolf -> I18n.get(String.format("minecraft_access.wolf_variant.%s",
                     ((WolfAccessor) wolf).callGetVariant().unwrapKey()
-                            .map(ResourceKey::location)
-                            .map(ResourceLocation::toShortLanguageKey)
+                            .map(ResourceKey::identifier)
+                            .map(Identifier::toShortLanguageKey)
                             .orElse("other")
             ));
             case Axolotl axolotl -> I18n.get(String.format("minecraft_access.axolotl_variant.%s", axolotl.getVariant().getName()));

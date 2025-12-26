@@ -1,30 +1,56 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
 pluginManagement {
     repositories {
-        maven {
-            name = 'Architectury'
-            url = 'https://maven.architectury.dev/'
-        }
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        maven {
-            name = 'Neoforged'
-            url = 'https://maven.neoforged.net/releases/'
-        }
-        maven {
-            name = 'Twelve Iterations'
-            url = 'https://maven.twelveiterations.com/repository/maven-public/'
-            content {
-                includeGroup 'net.blay09.mods'
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Architectury'
+                    url = 'https://maven.architectury.dev/'
+                }
+            }
+            filter {
+                includeGroup 'dev.architectury'
+                includeGroup 'dev.architectury.loom'
+                includeGroup 'architectury-plugin'
+                includeGroup 'com.mojang'
             }
         }
+
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Fabric'
+                    url = 'https://maven.fabricmc.net/'
+                }
+            }
+            filter {
+                includeGroup 'net.fabricmc'
+                includeGroup 'net.fabricmc.unpick'
+            }
+        }
+
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Neoforged'
+                    url = 'https://maven.neoforged.net/releases/'
+                }
+            }
+            filter {
+                includeGroup 'net.neoforged'
+                includeGroup 'net.minecraftforge'
+                includeGroup 'de.oceanlabs.mcp'
+            }
+        }
+
         gradlePluginPortal()
     }
 }
 
 plugins {
-    id 'com.gradle.develocity' version '4.2.2'
+    id 'com.gradle.develocity' version '4.3'
+    id 'dev.architectury.loom' version '1.13.467'
 }
 
 develocity {
@@ -34,32 +60,95 @@ develocity {
 }
 
 dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.PREFER_SETTINGS
+
     repositories {
-        maven {
-            name = 'Architectury'
-            url = 'https://maven.architectury.dev'
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Balm'
+                    url = 'https://maven.twelveiterations.com/repository/maven-public/'
+                }
+            }
+            filter {
+                includeGroup 'net.blay09.mods'
+            }
         }
-        mavenCentral()
-        maven {
-            name = 'Cloth Config'
-            url = 'https://maven.shedaniel.me/'
+
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Cloth Config'
+                    url = 'https://maven.shedaniel.me/'
+                }
+            }
+            filter {
+                includeGroup 'me.shedaniel.cloth'
+            }
         }
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
+
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Fabric'
+                    url = 'https://maven.fabricmc.net/'
+                }
+            }
+            filter {
+                includeGroup 'net.fabricmc'
+            }
         }
-        maven {
-            name = 'Mod Menu'
-            url = 'https://maven.terraformersmc.com/'
+
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Mod Menu'
+                    url = 'https://maven.terraformersmc.com/'
+                }
+            }
+            filter {
+                includeGroup 'com.terraformersmc'
+            }
         }
-        maven {
-            name = 'Neoforged'
-            url = 'https://maven.neoforged.net/releases/'
+
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Neoforged'
+                    url = 'https://maven.neoforged.net/releases/'
+                }
+            }
+            filter {
+                includeGroup 'net.neoforged'
+                includeGroup 'net.neoforged.accesstransformers'
+                includeGroup 'net.neoforged.fancymodloader'
+            }
         }
-        maven {
-            name = 'ParchmentMC'
-            url = 'https://maven.parchmentmc.org'
+
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'ParchmentMC'
+                    url = 'https://maven.parchmentmc.org'
+                }
+            }
+            filter {
+                includeGroup 'org.parchmentmc.data'
+            }
         }
+
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Tolk'
+                    url = 'https://repo.granny.dev/releases/'
+                }
+            }
+            filter {
+                includeGroup 'com.davykager.tolk'
+            }
+        }
+
         exclusiveContent {
             forRepository {
                 maven {
@@ -71,11 +160,13 @@ dependencyResolutionManagement {
                 includeGroup 'maven.modrinth'
             }
         }
+
+        mavenCentral()
     }
 }
 
-include('common')
-include('fabric')
-include('neoforge')
+include 'common'
+include 'fabric'
+include 'neoforge'
 
 rootProject.name = 'minecraft_access'

@@ -1,6 +1,6 @@
 package org.mcaccess.minecraftaccess.addon;
 
-import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.Balm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tags.FluidTags;
 import org.jetbrains.annotations.NotNull;

@@ -5,10 +5,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
@@ -20,13 +23,31 @@ public class BiomeIndicator {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     @Nullable
     private Holder<Biome> previousBiome = null;
+    private ResourceKey<Level> previousDimension;
 
     public void tick() {
         if (CLIENT.screen != null) return;
 
+        String narration;
+
         Holder<Biome> currentBiome = getCurrentBiome();
         if (currentBiome != null && currentBiome != previousBiome) {
-            NarrationUtils.getTranslatedName(currentBiome, "biome").ifPresent(name -> MainClass.narrate(I18n.get("minecraft_access.other.biome", name), true));
+            String currentBiomeName = NarrationUtils.getTranslatedName(currentBiome, "biome")
+                    .orElse("");
+            ResourceKey<Level> currentDimension = CLIENT.level.dimension();
+            if (!currentDimension.equals(previousDimension) || Config.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
+                narration = I18n.get("minecraft_access.other.biome_and_dimension",
+                        currentBiomeName,
+                        I18n.get(currentDimension.identifier().toLanguageKey("dimension")));
+                previousDimension = currentDimension;
+            } else {
+                narration = I18n.get("minecraft_access.other.biome", currentBiomeName);
+            }
+
+            if (!narration.isEmpty()) {
+                MainClass.narrate(I18n.get("minecraft_access.biome_indicator.biome_entered", narration), false);
+            }
+
             previousBiome = currentBiome;
         }
     }

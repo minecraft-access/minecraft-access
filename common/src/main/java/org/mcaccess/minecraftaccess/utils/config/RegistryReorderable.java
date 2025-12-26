@@ -20,12 +20,12 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 
-class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
+class RegistryReorderable extends BaseEntry<Identifier[], Button> {
     private final Class<?> registry;
     private final String registryI18n;
 
@@ -52,7 +52,7 @@ class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
         private HeaderAndFooterLayout layout;
         private SelectionList availableList;
         private SelectionList selectedList;
-        private final List<ResourceLocation> selection;
+        private final List<Identifier> selection;
 
         private SelectionScreen(Screen previous) {
             super(getDisplayedFieldName());
@@ -70,7 +70,7 @@ class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
             LinearLayout footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
             footer.addChild(Button.builder(Component.translatable("gui.cancel"), b -> onClose()).build());
             footer.addChild(Button.builder(Component.translatable("gui.done"), b -> {
-                value = selection.toArray(ResourceLocation[]::new);
+                value = selection.toArray(Identifier[]::new);
                 onClose();
             }).build());
             layout.visitWidgets(this::addRenderableWidget);
@@ -104,7 +104,7 @@ class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
             }
 
             private void update() {
-                ResourceLocation focussed = getFocused() instanceof RegistryEntry registryEntry ? registryEntry.value : null;
+                Identifier focussed = getFocused() instanceof RegistryEntry registryEntry ? registryEntry.value : null;
                 clearEntries();
                 addEntry(new HeadingEntry(
                                 Component.translatable(isSelectedList ? "pack.selected.title" : "pack.available.title")
@@ -167,9 +167,9 @@ class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
             }
 
             private final class RegistryEntry extends BaseEntry {
-                private final ResourceLocation value;
+                private final Identifier value;
 
-                private RegistryEntry(ResourceLocation value) {
+                private RegistryEntry(Identifier value) {
                     this.value = value;
                 }
 
@@ -214,8 +214,8 @@ class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
                         guiGraphics.blitSprite(
                                 RenderPipelines.GUI_TEXTURED,
                                 isHovering && relativeX < 16
-                                        ? ResourceLocation.withDefaultNamespace("transferable_list/unselect_highlighted")
-                                        : ResourceLocation.withDefaultNamespace("transferable_list/unselect"),
+                                        ? Identifier.withDefaultNamespace("transferable_list/unselect_highlighted")
+                                        : Identifier.withDefaultNamespace("transferable_list/unselect"),
                                 getContentX(), getContentY(),
                                 32, 32
                         );
@@ -223,8 +223,8 @@ class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
                             guiGraphics.blitSprite(
                                     RenderPipelines.GUI_TEXTURED,
                                     isHovering && relativeX > 16 && relativeX < 32 && relativeY < 16
-                                            ? ResourceLocation.withDefaultNamespace("transferable_list/move_up_highlighted")
-                                            : ResourceLocation.withDefaultNamespace("transferable_list/move_up"),
+                                            ? Identifier.withDefaultNamespace("transferable_list/move_up_highlighted")
+                                            : Identifier.withDefaultNamespace("transferable_list/move_up"),
                                     getContentX(), getContentY(),
                                     32, 32
                             );
@@ -233,8 +233,8 @@ class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
                             guiGraphics.blitSprite(
                                     RenderPipelines.GUI_TEXTURED,
                                     isHovering && relativeX > 16 && relativeX < 32 && relativeY > 16
-                                            ? ResourceLocation.withDefaultNamespace("transferable_list/move_down_highlighted")
-                                            : ResourceLocation.withDefaultNamespace("transferable_list/move_down"),
+                                            ? Identifier.withDefaultNamespace("transferable_list/move_down_highlighted")
+                                            : Identifier.withDefaultNamespace("transferable_list/move_down"),
                                     getContentX(), getContentY(),
                                     32, 32
                             );
@@ -243,8 +243,8 @@ class RegistryReorderable extends BaseEntry<ResourceLocation[], Button> {
                         guiGraphics.blitSprite(
                                 RenderPipelines.GUI_TEXTURED,
                                 isHovering && relativeX < 32
-                                        ? ResourceLocation.withDefaultNamespace("transferable_list/select_highlighted")
-                                        : ResourceLocation.withDefaultNamespace("transferable_list/select"),
+                                        ? Identifier.withDefaultNamespace("transferable_list/select_highlighted")
+                                        : Identifier.withDefaultNamespace("transferable_list/select"),
                                 getContentX(), getContentY(),
                                 32, 32
                         );

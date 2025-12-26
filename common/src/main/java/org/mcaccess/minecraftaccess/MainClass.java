@@ -7,16 +7,15 @@ import java.util.Map;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.event.TickPhase;
-import net.blay09.mods.balm.api.event.TickType;
-import net.blay09.mods.balm.api.event.client.ConnectedToServerEvent;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -53,7 +52,7 @@ public final class MainClass {
     public static final String MOD_ID = "minecraft_access";
     @Getter
     private static ScreenReaderInterface screenReader = null;
-    private static final Map<Class<?>, Map<ResourceLocation, Object>> REGISTRY = new HashMap<>();
+    private static final Map<Class<?>, Map<Identifier, Object>> REGISTRY = new HashMap<>();
     private static boolean frozen = false;
 
     public static AccessMenu accessMenu = null;
@@ -73,19 +72,19 @@ public final class MainClass {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> @UnmodifiableView Map<ResourceLocation, T> registry(Class<T> registry) {
+    public static <T> @UnmodifiableView Map<Identifier, T> registry(Class<T> registry) {
         return Collections.unmodifiableMap(REGISTRY.getOrDefault(registry, Collections.EMPTY_MAP));
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Map<ResourceLocation, T> mutableRegistry(Class<T> registry) {
+    private static <T> Map<Identifier, T> mutableRegistry(Class<T> registry) {
         if (frozen) {
             throw new UnsupportedOperationException("Registries are frozen");
         }
-        return (Map<ResourceLocation, T>) REGISTRY.computeIfAbsent(registry, t -> new HashMap<>());
+        return (Map<Identifier, T>) REGISTRY.computeIfAbsent(registry, t -> new HashMap<>());
     }
 
-    public static <T> void register(Class<T> registry, ResourceLocation identifier, T value) {
+    public static <T> void register(Class<T> registry, Identifier identifier, T value) {
         if (mutableRegistry(registry).putIfAbsent(identifier, value) != null) {
             throw new IllegalArgumentException(String.format("%s %s is already registered", registry.getSimpleName(), identifier));
         }
@@ -105,14 +104,14 @@ public final class MainClass {
             getScreenReader().narrate(startupMessage, true);
         }
 
-        registrars.keyMappings(MOD_ID, keyMappings -> {
+        registrars.keyMappings(keyMappings -> {
             for (KeyMappingsHandler.Keys key : KeyMappingsHandler.Keys.values()) {
                 keyMappings.register(key.mapping);
             }
         });
 
-        Balm.getEvents().onTickEvent(TickType.Client, TickPhase.End, MainClass::clientTickEventsMethod);
-        Balm.getEvents().onEvent(ConnectedToServerEvent.class, MainClass::initWorldState);
+        ClientTickCallback.AFTER.register(MainClass::clientTickEventsMethod);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(MainClass::initWorldState);
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -202,7 +201,7 @@ public final class MainClass {
         Keystroke.updateInstances();
     }
 
-    private static void initWorldState(ConnectedToServerEvent event) {
+    private static void initWorldState(Minecraft client) {
         accessMenu = new AccessMenu();
         biomeIndicator = new BiomeIndicator();
         facingDirection = new FacingDirection();
@@ -221,7 +220,7 @@ public final class MainClass {
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = Config.getInstance().debugMode || Balm.isDevelopmentEnvironment();
+        boolean debugMode = Config.getInstance().debugMode || Balm.platform().isDevelopmentEnvironment();
         if (debugMode) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);

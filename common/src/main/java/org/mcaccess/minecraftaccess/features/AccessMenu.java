@@ -14,7 +14,7 @@ import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
@@ -65,7 +65,7 @@ public class AccessMenu {
 
     private static RegisteredFunction[] getShortcuts() {
         Config.AccessMenu.ShortcutBar config = Config.getInstance().accessMenu.shortcutBar;
-        Map<ResourceLocation, RegisteredFunction> registry = MainClass.registry(RegisteredFunction.class);
+        Map<Identifier, RegisteredFunction> registry = MainClass.registry(RegisteredFunction.class);
         return new RegisteredFunction[]{
                 registry.get(config.key0),
                 registry.get(config.key1),
@@ -97,7 +97,7 @@ public class AccessMenu {
             GridLayout grid = new GridLayout().spacing(10);
             GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
 
-            for (ResourceLocation key : Config.getInstance().accessMenu.functions) {
+            for (Identifier key : Config.getInstance().accessMenu.functions) {
                 RegisteredFunction function = MainClass.registry(RegisteredFunction.class).get(key);
                 MutableComponent label = Component.translatable(key.toLanguageKey("access_menu_function"));
                 for (byte i = 0; i < 10; i++) {

@@ -50,7 +50,6 @@
         "NarrationThunkMixin",
         "NowPlayingToastMixin",
         "OptionsMixin",
-        "PageButtonMixin",
         "RecipeBookComponentAccessor",
         "RecipeBookPageAccessor",
         "RecipeBookPageMixin",
@@ -64,6 +63,7 @@
         "TamableAnimalMixin",
         "TextFieldHelperMixin",
         "ToastManagerMixin",
+        "TolkMixin",
         "TutorialToastAccessor",
         "WinScreenMixin",
         "WolfAccessor"

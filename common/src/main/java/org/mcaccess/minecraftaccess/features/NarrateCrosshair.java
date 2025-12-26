@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -92,13 +92,13 @@ public class NarrateCrosshair {
             switch (rayCast) {
                 case BlockHitResult blockHitResult when CONFIG.filter.targetMode.filterBlocks() -> {
                     assert CLIENT.level != null;
-                    ResourceLocation key = BuiltInRegistries.BLOCK.getKey(CLIENT.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
+                    Identifier key = BuiltInRegistries.BLOCK.getKey(CLIENT.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
                     if (isIgnored(key)) {
                         return;
                     }
                 }
                 case EntityHitResult entityHitResult when CONFIG.filter.targetMode.filterEntities() -> {
-                    ResourceLocation key = EntityType.getKey(entityHitResult.getEntity().getType());
+                    Identifier key = EntityType.getKey(entityHitResult.getEntity().getType());
                     if (isIgnored(key)) {
                         return;
                     }
@@ -111,7 +111,7 @@ public class NarrateCrosshair {
         MainClass.narrate(narration, true);
     }
 
-    private boolean isIgnored(ResourceLocation identifier) {
+    private boolean isIgnored(Identifier identifier) {
         if (identifier == null) return false;
         String name = identifier.getPath();
         Predicate<String> p = CONFIG.filter.fuzzy ? name::contains : name::equals;

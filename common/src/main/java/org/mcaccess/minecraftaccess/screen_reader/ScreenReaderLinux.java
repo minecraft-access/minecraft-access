@@ -31,7 +31,7 @@ public class ScreenReaderLinux implements ScreenReaderInterface {
         // Try initializing again after 3 seconds (when no screen reader is running, the library is unable to connect with the speechd socket)
         if (re == -1) {
             try {
-                log.error("Unable to initialize screen reader, trying again in 3 seconds.");
+                log.error("Unable to initialize screen reader interface libspeechdwrapper, trying again in 3 seconds.");
                 TimeUnit.SECONDS.sleep(3);
                 re = instance.Initialize();
             } catch (InterruptedException e) {
@@ -41,9 +41,9 @@ public class ScreenReaderLinux implements ScreenReaderInterface {
 
         if (re == 1) {
             mainInstance = instance;
-            log.info("Successfully initialized screen reader");
+            log.info("Successfully initialized screen reader interface libspeechdwrapper");
         } else {
-            log.error("Unable to initialize screen reader");
+            log.error("Unable to initialize screen reader interface libspeechdwrapper");
         }
     }
 
@@ -68,7 +68,7 @@ public class ScreenReaderLinux implements ScreenReaderInterface {
         if (re == 1) {
             log.info("Narrating(interrupt:{})= {}", interrupt, narration);
         } else {
-            log.error("Unable to narrate");
+            log.error("Unable to narrate using libspeechdwrapper");
         }
     }
 
@@ -80,9 +80,9 @@ public class ScreenReaderLinux implements ScreenReaderInterface {
 
         int re = mainInstance.Close();
         if (re == 1) {
-            log.info("Successfully closed screen reader");
+            log.info("Successfully closed screen reader interface libspeechdwrapper");
         } else {
-            log.error("Unable to close screen reader");
+            log.error("Unable to close screen reader interface libspeechdwrapper");
         }
     }
 

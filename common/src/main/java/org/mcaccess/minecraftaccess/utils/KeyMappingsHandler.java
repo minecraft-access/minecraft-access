@@ -2,7 +2,7 @@ package org.mcaccess.minecraftaccess.utils;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import org.mcaccess.minecraftaccess.MainClass;
 
@@ -24,7 +24,7 @@ public final class KeyMappingsHandler {
         public final KeyMapping.Category category;
 
         Categories(String name) {
-            category = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(MainClass.MOD_ID, name));
+            category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, name));
         }
     }
 

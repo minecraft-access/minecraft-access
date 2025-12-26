@@ -89,11 +89,11 @@ See also: [Feature Description]({{% relref "/features#inventory-controls" %}}), 
 
 ## Point of Interest
 
-| Single Key               | Default Keybinding | Description                                               |
-|--------------------------|--------------------|-----------------------------------------------------------|
-| `Next Item`              | Page Down          | Select next object in current group                       |
-| `Previous Item`          | Page Up            | Select previous object in current group                   |
-| `Narrate current object` | Home               | Narrate current object tracker object                     |
+| Single Key               | Default Keybinding | Description                                                                          |
+|--------------------------|--------------------|--------------------------------------------------------------------------------------|
+| `Next Item`              | Page Down          | Select next object in current group                                                  |
+| `Previous Item`          | Page Up            | Select previous object in current group                                              |
+| `Narrate current object` | Home               | Narrate current object tracker object                                                |
 | `Target nearest object`  | End                | Target the nearest object relative to your current position, regardless of its group |
 | `Locking Key`            | Y                  | Lock onto the block or entity that's currently being targetted by the object tracker |
 

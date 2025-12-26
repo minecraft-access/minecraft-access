@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import org.apache.commons.io.FileUtils;
 
 import org.mcaccess.minecraftaccess.utils.UnzipUtility;

@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.NotNull;
 
 abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigListEntry<T> {
@@ -68,7 +69,9 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
         widget.setWidth(150 - resetButton.getWidth() - 2);
         updateWidget(widget);
         label.setY(y + 6);
-        label.setColor(getPreferredTextColor());
+        if (!Objects.equals(label.getMessage().getStyle().getColor(), TextColor.fromRgb(getPreferredTextColor()))) {
+            label.setMessage(label.getMessage().copy().withColor(getPreferredTextColor()));
+        }
         if (Minecraft.getInstance().font.isBidirectional()) {
             label.setX(Minecraft.getInstance().getWindow().getGuiScaledWidth() - x - label.getWidth());
             resetButton.setX(x);

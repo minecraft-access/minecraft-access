@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.addon.accessmenu;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.language.I18n;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -10,8 +11,14 @@ import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 public class GetTime implements AccessMenuFunction {
     @Override
     public void execute() {
-        assert Minecraft.getInstance().player != null;
-        long daytime = Minecraft.getInstance().player.level().getDayTime() + 6000;
+        ClientLevel level = Minecraft.getInstance().level;
+        assert level != null;
+        if (level.dimensionType().hasFixedTime()) {
+            MainClass.narrate(I18n.get(level.dimension().identifier().toLanguageKey("dimension")), true);
+            return;
+        }
+
+        long daytime = level.getDayTime() + 6000;
         int hours = (int) (daytime / 1000) % 24;
         int minutes = (int) ((daytime % 1000) * 60 / 1000);
 
