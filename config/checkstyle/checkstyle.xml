@@ -254,8 +254,7 @@
             <property name="tagFormat" value="^\d+\.\d+\.\d+$"/>
             <property name="tagSeverity" value="ignore"/>
             <property name="tokens"
-                      value="INTERFACE_DEF, CLASS_DEF, ENUM_DEF, ANNOTATION_DEF, METHOD_DEF, CTOR_DEF, ENUM_CONSTANT_DEF, ANNOTATION_FIELD_DEF, RECORD_DEF,
-                             COMPACT_CTOR_DEF"/>
+                      value="INTERFACE_DEF, CLASS_DEF, ENUM_DEF, ANNOTATION_DEF, METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, RECORD_DEF, COMPACT_CTOR_DEF"/>
         </module>
     </module>
 </module>
