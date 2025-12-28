@@ -27,6 +27,7 @@ import net.minecraft.client.gui.screens.worldselection.EditWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.utils.config.RegistrySingleSelect;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
@@ -56,7 +57,8 @@ public final class MenuFix {
             EditWorldScreen.class,
             JoinMultiplayerScreen.class,
             DirectJoinServerScreen.class,
-            ManageServerScreen.class
+            ManageServerScreen.class,
+            RegistrySingleSelect.SelectionScreen.class
     );
 
     private MenuFix() {

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 
-class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
+public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
     private final Class<?> registry;
     private final String registryI18n;
 
@@ -43,7 +43,7 @@ class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
         widget.setMessage(Component.translatable(getValue().toLanguageKey(registryI18n)));
     }
 
-    private final class SelectionScreen extends Screen {
+    public final class SelectionScreen extends Screen {
         private final Screen previous;
         private HeaderAndFooterLayout layout;
         private SelectionList selectionList;
