@@ -42,4 +42,5 @@ checkstyle = "com.puppycrawl.tools:checkstyle:12.3.0"
 [plugins]
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.162" }
 gitVersion = { id = "com.palantir.git-version", version = "4.2.0" }
+mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.35.0" }
 shadow = { id = "com.gradleup.shadow", version = "9.3.0" }

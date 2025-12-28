@@ -196,6 +196,11 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       ref: ${{ github.ref }}
+      central: true
+    secrets:
+      centralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+      centralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      gpgKey: ${{ secrets.GPG_KEY }}
   release:
     name: Release (${{ matrix.loader.name }})
     needs:
