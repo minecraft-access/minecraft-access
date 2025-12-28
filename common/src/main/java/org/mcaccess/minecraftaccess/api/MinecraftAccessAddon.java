@@ -43,7 +43,7 @@ public interface MinecraftAccessAddon {
      * Marks a {@link MinecraftAccessAddon} that should be loaded on NeoForge.
      *
      * <p>This is ignored on Fabric.
-     * Use {@code fabric.mod.json} as described at {@link MinecraftAccessAddon} instead for Fabric.
+     * Use {@code fabric.mod.json} as described in {@link MinecraftAccessAddon} instead for Fabric.
      *
      * @since 1.12.0
      */
