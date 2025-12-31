@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.features;
 
 import java.util.Objects;
 
-import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -19,7 +18,6 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 /**
  * This feature narrates when the player xp level is increased or decreased.
  */
-@Slf4j
 public class XPIndicator implements BalmClientModule {
     @Nullable
     private Integer previousXPLevel = null;

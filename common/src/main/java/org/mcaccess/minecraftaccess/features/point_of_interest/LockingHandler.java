@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -45,7 +44,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  * 1. Locking Key (default: Y) = Locks onto the nearest entity or block<br>
  * 2. Alt key + Locking Key = Unlocks from the currently locked entity or block<br>
  */
-@Slf4j
 public class LockingHandler implements BalmClientModule {
     private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Locking config;

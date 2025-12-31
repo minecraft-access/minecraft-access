@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.features;
 
-import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
@@ -18,7 +17,6 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  * Adds key binding to narrate the player's facing direction.<br>
  * - Narrate Facing Direction Key (default: H) = Narrates the player facing direction.
  */
-@Slf4j
 public class FacingDirection implements BalmClientModule {
     @Override
     public @NotNull Identifier getId() {

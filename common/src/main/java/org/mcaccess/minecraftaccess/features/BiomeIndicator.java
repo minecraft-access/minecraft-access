@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.features;
 
-import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -23,7 +22,6 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 /**
  * Narrates the name of the biome when entering a different biome.
  */
-@Slf4j
 public class BiomeIndicator implements BalmClientModule {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     @Nullable

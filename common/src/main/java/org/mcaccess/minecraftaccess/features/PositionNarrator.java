@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.features;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,6 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  * 3. Left Alt + C = Narrates only the y position.<br>
  * 4. Left Alt + Z = Narrates only the z position.<br>
  */
-@Slf4j
 public class PositionNarrator implements BalmClientModule {
     public static Keystroke keyX = new Keystroke(() -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_X));
     public static Keystroke keyC = new Keystroke(() -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_C));

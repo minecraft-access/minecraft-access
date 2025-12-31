@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
 import me.shedaniel.autoconfig.AutoConfigClient;
 import net.blay09.mods.balm.client.BalmClient;
 import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
@@ -20,7 +19,6 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 
-@Slf4j
 @Mod(value = MainClass.MOD_ID, dist = Dist.CLIENT)
 public class MainClassNeoForge {
     public MainClassNeoForge(IEventBus modEventBus, ModContainer container) {

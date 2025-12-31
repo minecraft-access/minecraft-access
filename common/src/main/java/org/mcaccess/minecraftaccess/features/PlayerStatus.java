@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -36,7 +35,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
  * Adds a key bind to narrate the player's non potion related statuses.<br>
  * - Narrate Player Status Key (default: R) = Narrates the health and hunger.<br>
  */
-@Slf4j
 public class PlayerStatus implements BalmClientModule {
     private final Minecraft client = Minecraft.getInstance();
     IntervalKeystroke narrationKey = new IntervalKeystroke(
