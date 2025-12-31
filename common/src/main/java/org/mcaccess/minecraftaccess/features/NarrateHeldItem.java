@@ -56,8 +56,8 @@ public class NarrateHeldItem implements BalmClientModule {
         String itemNameWithCount = (currentItemStack.getCount() != 1 && !currentItemStack.isEmpty()) ? itemCount + " " + baseItemName : baseItemName;
 
         boolean nameChanged = !Objects.equals(previousItemName, baseItemName);
-        boolean countChanged = itemCount != previousItemCount;
-        boolean slotChanged = selectedSlot != previousSelectedSlot;
+        boolean countChanged = !Objects.equals(itemCount, previousItemCount);
+        boolean slotChanged = !Objects.equals(selectedSlot, previousSelectedSlot);
 
         if (nameChanged || slotChanged) {
             MainClass.narrate(I18n.get("minecraft_access.other.selected", itemNameWithCount), true);
