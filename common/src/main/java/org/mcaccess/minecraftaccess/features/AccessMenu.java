@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.features;
 
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -20,12 +21,16 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
+import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 
 public class AccessMenu {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping);
     private boolean gameModeSwitcherActive = false;
+    private final Interval[] intervals = IntStream.range(0, 10)
+            .mapToObj(i -> Interval.sec(1))
+            .toArray(Interval[]::new);
 
     public void tick() {
         if (CLIENT.player == null) return;
@@ -35,7 +40,7 @@ public class AccessMenu {
                 assert CLIENT.player != null;
                 for (byte i = 0; i < 10; i++) {
                     RegisteredFunction function = getShortcuts()[i];
-                    if (InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_0 + i) && function.function().enabled()) {
+                    if (InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_0 + i) && function.function().enabled() && intervals[i].isReady()) {
                         CLIENT.player.clientSideCloseContainer();
                         function.function().execute();
                     }
@@ -90,7 +95,6 @@ public class AccessMenu {
 
         @Override
         public void init() {
-            assert minecraft != null;
             HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
             layout.addTitleHeader(title, minecraft.font);
 
