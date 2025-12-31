@@ -1,5 +1,6 @@
 package org.mcaccess.minecraftaccess.addon.accessmenu;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
@@ -13,6 +14,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 
+@Slf4j
 public class Weather implements AccessMenuFunction {
     @Override
     public void execute() {
@@ -39,6 +41,10 @@ public class Weather implements AccessMenuFunction {
                     }
                 }
                 case SNOW -> I18n.get("minecraft_access.weather.snow");
+                default -> {
+                    log.warn("Unexpected Precipitation type in weather status.");
+                    yield "";
+                }
             };
         } else {
             weather = I18n.get("minecraft_access.weather.clear");
