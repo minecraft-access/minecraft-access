@@ -8,35 +8,73 @@
  * Minecraft Access is available on Maven Central, which should be available by default.
  * In the below examples, {@code VERSION} should be replaced with the current version of Minecraft Access.
  *
+ * <p>Currently, the artifacts published to Maven Central are not able to run Minecraft Access in a development environment.
+ * This will likely be changed in a future version.
+ * Until then, artifacts from Modrinth Maven can be used for testing.
+ *
  * <h4>Using a Version Catalog</h4>
  * <h5>{@code gradle/libs.versions.toml}</h5>
  * <pre>{@code
  * [libraries]
  * minecraftAccess = "org.mcaccess:minecraft-access:VERSION"
+ *
+ * # Optional: Only needed to run Minecraft Access in the development environment
+ * # NeoForge is also available.
+ * minecraftAccessFabric = "maven.modrinth:minecraft-access:VERSION+fabric"
  * }</pre>
  *
  * <h5>{@code build.gradle}</h5>
  * <pre>{@code
+ * // Optional: Only needed to run Minecraft Access in the development environment
+ * repositories {
+ *     exclusiveContent {
+ *         forRepository {
+ *             maven {
+ *                 name = 'Modrinth'
+ *                 url = 'https://api.modrinth.com/maven'
+ *             }
+ *         }
+ *         filter {
+ *             includeGroup 'maven.modrinth'
+ *         }
+ *     }
+ * }
+ *
  * dependencies {
  *     // compileOnly should be used instead on NeoForge
  *     modCompileOnly libs.minecraftAccess
  *
  *     // Optional: Enables Minecraft Access in the development environment
  *     // runtimeOnly should be used instead on NeoForge
- *     modRuntimeOnly libs.minecraftAccess
+ *     modRuntimeOnly libs.minecraftAccessFabric
  * }
  * }</pre>
  *
  * <h4>Without a Version Catalog</h4>
  * <h5>{@code build.gradle}</h5>
  * <pre>{@code
+ * // Optional: Only needed to run Minecraft Access in the development environment
+ * repositories {
+ *     exclusiveContent {
+ *         forRepository {
+ *             maven {
+ *                 name = 'Modrinth'
+ *                 url = 'https://api.modrinth.com/maven'
+ *             }
+ *         }
+ *         filter {
+ *             includeGroup 'maven.modrinth'
+ *         }
+ *     }
+ * }
+ *
  * dependencies {
  *     // compileOnly should be used instead on NeoForge
  *     modCompileOnly 'org.mcaccess:minecraft-access:VERSION'
  *
  *     // Optional: Enables Minecraft Access in the development environment
  *     // runtimeOnly should be used instead on NeoForge
- *     modRuntimeOnly 'org.mcaccess:minecraft-access:VERSION'
+ *     modRuntimeOnly 'maven.modrinth:minecraft-access:VERSION+fabric'
  * }
  * }</pre>
  *
@@ -46,7 +84,7 @@
  *
  * <h4>{@code src/main/java/com/example/MyAddon.java}</h4>
  * <pre>{@code
- * class MyAddon implements MinecraftAccessAddon {
+ * public class MyAddon implements MinecraftAccessAddon {
  *     @Override
  *     public void init(AddonRegistry registry) {
  *         // ...
@@ -72,7 +110,7 @@
  * <h4>NeoForge</h4>
  * <pre>{@code
  * @MinecraftAccessAddon.NeoForge
- * class MyAddon implements MinecraftAccessAddon {
+ * public class MyAddon implements MinecraftAccessAddon {
  *     // ...
  * }
  * }</pre>
