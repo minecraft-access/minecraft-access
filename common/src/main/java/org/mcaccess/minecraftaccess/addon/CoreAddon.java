@@ -6,10 +6,10 @@ import net.minecraft.tags.FluidTags;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.addon.accessmenu.Biome;
 import org.mcaccess.minecraftaccess.addon.accessmenu.FluidDetector;
-import org.mcaccess.minecraftaccess.addon.accessmenu.GetBiome;
-import org.mcaccess.minecraftaccess.addon.accessmenu.GetTime;
-import org.mcaccess.minecraftaccess.addon.accessmenu.GetXP;
+import org.mcaccess.minecraftaccess.addon.accessmenu.Time;
+import org.mcaccess.minecraftaccess.addon.accessmenu.XP;
 import org.mcaccess.minecraftaccess.addon.accessmenu.LightLevel;
 import org.mcaccess.minecraftaccess.addon.accessmenu.NarrateTarget;
 import org.mcaccess.minecraftaccess.addon.accessmenu.OpenConfig;
@@ -87,9 +87,9 @@ public class CoreAddon implements MinecraftAccessAddon {
         registry.register("light_level", new LightLevel());
         registry.register("find_water", new FluidDetector(FluidTags.WATER));
         registry.register("find_lava", new FluidDetector(FluidTags.LAVA));
-        registry.register("biome", new GetBiome());
-        registry.register("time", new GetTime());
-        registry.register("xp", new GetXP());
+        registry.register("biome", new Biome());
+        registry.register("time", new Time());
+        registry.register("xp", new XP());
         registry.register("refresh_screen_reader", new RefreshScreenReader());
         registry.register("config", new OpenConfig());
         registry.register("weather", new Weather());

@@ -12,7 +12,7 @@ import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
-public class GetBiome implements AccessMenuFunction {
+public class Biome implements AccessMenuFunction {
     @Override
     public void execute() {
         if (Minecraft.getInstance().level == null) return;

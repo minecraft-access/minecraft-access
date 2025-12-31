@@ -8,7 +8,7 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 
-public class GetTime implements AccessMenuFunction {
+public class Time implements AccessMenuFunction {
     @Override
     public void execute() {
         ClientLevel level = Minecraft.getInstance().level;

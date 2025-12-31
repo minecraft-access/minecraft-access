@@ -8,7 +8,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
-public class GetXP implements AccessMenuFunction {
+public class XP implements AccessMenuFunction {
     @Override
     public void execute() {
         if (Minecraft.getInstance().player == null) return;
