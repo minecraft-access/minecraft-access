@@ -11,6 +11,7 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
@@ -55,18 +57,8 @@ public final class MainClass {
     private static final Map<Class<?>, Map<Identifier, Object>> REGISTRY = new HashMap<>();
     private static boolean frozen = false;
 
-    public static AccessMenu accessMenu = null;
-    public static BiomeIndicator biomeIndicator = null;
-    public static FacingDirection facingDirection = null;
-    public static FallDetector fallDetector = null;
-    public static HUDStatus hudStatus = null;
     public static InventoryControls inventoryControls = null;
-    public static NarrateCrosshair narrateCrosshair = null;
-    public static NarrateHeldItem narrateHeldItem = null;
-    public static PlayerStatus playerStatus = null;
     public static POIManager poiManager = null;
-    public static TimeIndicator timeIndicator = null;
-    public static XPIndicator xpIndicator = null;
 
     private MainClass() {
     }
@@ -111,7 +103,6 @@ public final class MainClass {
         });
 
         ClientTickCallback.AFTER.register(MainClass::clientTickEventsMethod);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(MainClass::initWorldState);
 
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -130,6 +121,29 @@ public final class MainClass {
                 keyMappings.register(key.key());
             }
         });
+
+        registrars.registerModule(new AccessMenu());
+        registrars.registerModule(new BiomeIndicator());
+        registrars.registerModule(new CameraControls());
+        registrars.registerModule(new FacingDirection());
+        registrars.registerModule(new FallDetector());
+        registrars.registerModule(new HUDStatus());
+        inventoryControls = new InventoryControls();
+        registrars.registerModule(inventoryControls);
+        registrars.registerModule(new MenuFix());
+        registrars.registerModule(new MouseKeySimulation());
+        registrars.registerModule(new NarrateCrosshair());
+        registrars.registerModule(new NarrateHeldItem());
+        registrars.registerModule(new PlayerStatus());
+        poiManager = new POIManager();
+        registrars.registerModule(poiManager.lockingHandler);
+        registrars.registerModule(poiManager.objectTracker);
+        registrars.registerModule(poiManager.poiBlocks);
+        registrars.registerModule(poiManager.poiEntities);
+        registrars.registerModule(poiManager.poiMarking);
+        registrars.registerModule(new PositionNarrator());
+        registrars.registerModule(new TimeIndicator());
+        registrars.registerModule(new XPIndicator());
     }
 
     /**
@@ -138,82 +152,10 @@ public final class MainClass {
      * @param client The current minecraft client object
      */
     public static void clientTickEventsMethod(Minecraft client) {
-        Config config = Config.getInstance();
-
         changeLogLevelBaseOnDebugConfig();
-
-        if (config.menuFixEnabled) {
-            MenuFix.tick(client);
-        }
-
-        if (client.level == null || client.player == null) {
+        if (client.getWindow() != null) {
             Keystroke.updateInstances();
-            return;
         }
-
-        narrateCrosshair.tick();
-        facingDirection.tick();
-        PositionNarrator.getINSTANCE().tick();
-        poiManager.tick();
-        fallDetector.tick();
-        hudStatus.tick();
-
-        if (client.screen == null || !(client.screen.getFocused() instanceof EditBox || client.screen instanceof KeyBindsScreen)) {
-            MouseKeySimulation.tick();
-        }
-
-        if (inventoryControls != null && config.inventoryControls.enabled) {
-            inventoryControls.tick();
-        }
-
-        assert client.gameMode != null;
-        GameType mode = client.gameMode.getPlayerMode();
-
-        if (xpIndicator != null && config.features.xpIndicatorEnabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {
-            xpIndicator.tick();
-        }
-
-        if (biomeIndicator != null && config.features.biomeIndicatorEnabled) {
-            biomeIndicator.tick();
-        }
-
-        if (playerStatus != null) {
-            playerStatus.tick();
-        }
-
-        if (config.features.timeIndicatorEnabled && timeIndicator != null) {
-            timeIndicator.tick();
-        }
-
-        if (client.screen == null) {
-            CameraControls.tick();
-        }
-
-        if (accessMenu != null && config.accessMenu.enabled) {
-            accessMenu.tick();
-        }
-
-        if (mode != GameType.SPECTATOR) {
-            narrateHeldItem.tick();
-        }
-
-        // Must always remain at the end of client tick
-        Keystroke.updateInstances();
-    }
-
-    private static void initWorldState(Minecraft client) {
-        accessMenu = new AccessMenu();
-        biomeIndicator = new BiomeIndicator();
-        facingDirection = new FacingDirection();
-        fallDetector = new FallDetector();
-        hudStatus = new HUDStatus();
-        inventoryControls = new InventoryControls();
-        narrateCrosshair = new NarrateCrosshair();
-        narrateHeldItem = new NarrateHeldItem();
-        playerStatus = new PlayerStatus();
-        poiManager = new POIManager();
-        timeIndicator = new TimeIndicator();
-        xpIndicator = new XPIndicator();
     }
 
     /**

@@ -1,14 +1,19 @@
 package org.mcaccess.minecraftaccess.features;
 
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -19,13 +24,30 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
  * Narrates the name of the biome when entering a different biome.
  */
 @Slf4j
-public class BiomeIndicator {
+public class BiomeIndicator implements BalmClientModule {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     @Nullable
     private Holder<Biome> previousBiome = null;
     private ResourceKey<Level> previousDimension;
 
-    public void tick() {
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "biome_indicator");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            previousBiome = null;
+            previousDimension = null;
+        });
+    }
+
+    private void tick(Level level) {
+        if (!Config.getInstance().features.biomeIndicatorEnabled) {
+            return;
+        }
         if (CLIENT.screen != null) return;
 
         String narration;

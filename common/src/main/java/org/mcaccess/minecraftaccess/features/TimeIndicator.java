@@ -1,22 +1,37 @@
 package org.mcaccess.minecraftaccess.features;
 
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 
-public class TimeIndicator {
-    private final Minecraft client = Minecraft.getInstance();
+public class TimeIndicator implements BalmClientModule {
     private Times previousTime = null;
 
-    public void tick() {
-        Level level = client.level;
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "time_indicator");
+    }
 
-        if (level == null) return;
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            previousTime = null;
+        });
+    }
+
+    private void tick(Level level) {
         if (level.dimensionType().hasFixedTime() || level.dimensionType().hasCeiling()) return;
-        if (!level.canSeeSky(BlockPos.containing(client.player.getEyePosition()))) return;
+        assert Minecraft.getInstance().player != null;
+        if (!level.canSeeSky(BlockPos.containing(Minecraft.getInstance().player.getEyePosition()))) return;
 
         Times currentTime;
 

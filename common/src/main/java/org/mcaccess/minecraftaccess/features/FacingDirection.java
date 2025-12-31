@@ -1,8 +1,13 @@
 package org.mcaccess.minecraftaccess.features;
 
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
@@ -14,17 +19,25 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  * - Narrate Facing Direction Key (default: H) = Narrates the player facing direction.
  */
 @Slf4j
-public class FacingDirection {
-    public void tick() {
-        Minecraft client = Minecraft.getInstance();
-        if (client.player == null) return;
-        if (client.screen != null) return;
+public class FacingDirection implements BalmClientModule {
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "facing_direction");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+    }
+
+    private void tick(Player player) {
+        if (Minecraft.getInstance().screen != null) return;
 
         boolean isDirectionNarrationKeyPressed = KeyMappingsHandler.Keys.DIRECTION_NARRATION_KEY.mapping.isDown();
         if (!isDirectionNarrationKeyPressed) return;
 
         String narration;
-        if (client.hasAltDown()) {
+        if (Minecraft.getInstance().hasAltDown()) {
             String t = PlayerPositionUtils.getVerticalFacingDirectionInWords();
             narration = I18n.get("minecraft_access.other.facing_direction", t);
         } else {

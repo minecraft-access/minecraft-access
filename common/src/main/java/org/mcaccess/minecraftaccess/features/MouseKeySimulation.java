@@ -3,12 +3,19 @@ package org.mcaccess.minecraftaccess.features;
 import java.util.Set;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
 import org.apache.commons.lang3.tuple.Triple;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -19,7 +26,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 /**
  * Simulate mouse key operations by programmatically invoking vanilla mouse key operation handlers.
  */
-public final class MouseKeySimulation {
+public class MouseKeySimulation implements BalmClientModule {
     private static final Keystroke[] MOUSE_CLICKS = new Keystroke[]{
             new Keystroke(() -> isKeyPressed(KeyMappingsHandler.Keys.MOUSE_SIMULATION_LEFT_MOUSE_KEY.mapping)),
             new Keystroke(() -> isKeyPressed(KeyMappingsHandler.Keys.MOUSE_SIMULATION_MIDDLE_MOUSE_KEY.mapping)),
@@ -39,7 +46,14 @@ public final class MouseKeySimulation {
             new Tuple<IntervalKeystroke, Runnable>(MOUSE_SCROLLS[1], MouseUtils.Wheel.DOWN::scroll)
     );
 
-    private MouseKeySimulation() {
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_key_simulation");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.AFTER.register(this::tick);
     }
 
     private static void loadConfig() {
@@ -48,7 +62,11 @@ public final class MouseKeySimulation {
         MOUSE_SCROLLS[1].interval.setDelay(config.scrollDelayMilliseconds, Interval.Unit.MILLISECOND);
     }
 
-    public static void tick() {
+    private void tick(Minecraft client) {
+        if (client.screen != null && (client.screen.getFocused() instanceof EditBox || client.screen instanceof KeyBindsScreen)) {
+            return;
+        }
+
         loadConfig();
         MOUSE_SCROLL_ACTIONS.forEach(t -> {
             if (t.getA().canBeTriggered()) {

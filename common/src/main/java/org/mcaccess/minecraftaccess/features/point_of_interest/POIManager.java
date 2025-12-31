@@ -14,13 +14,4 @@ public class POIManager {
         poiEntities = new POIEntities();
         poiMarking = new POIMarking();
     }
-
-    public void tick() {
-        poiMarking.tick();
-        poiBlocks.tick(poiMarking.isMarked(), poiMarking.getMarkedBlock());
-        poiEntities.tick(poiMarking.isMarked(), poiMarking.getMarkedEntity());
-        // Locking Handler (POI Locking) should be after POI Scan features
-        lockingHandler.tick();
-        objectTracker.tick();
-    }
 }

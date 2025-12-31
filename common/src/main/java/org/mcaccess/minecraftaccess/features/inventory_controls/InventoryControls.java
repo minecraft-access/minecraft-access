@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.CycleButton;
@@ -23,6 +25,7 @@ import net.minecraft.client.gui.screens.recipebook.SearchRecipeBookCategory;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -71,7 +74,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  * </p>
  */
 @Slf4j
-public class InventoryControls {
+public class InventoryControls implements BalmClientModule {
     private Config.InventoryControls config;
     private final Interval interval = Interval.defaultDelay();
     private final Minecraft client = Minecraft.getInstance();
@@ -85,6 +88,16 @@ public class InventoryControls {
     private SlotItem currentSlotItem = null;
     private RecipeBookComponent<?> currentRecipeBookWidget = null;
     private String previousSlotText = "";
+
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.AFTER.register(this::tick);
+    }
 
     private enum FocusDirection {
         UP("gui.up"),
@@ -111,7 +124,7 @@ public class InventoryControls {
         return config.rowAndColumnFormat;
     }
 
-    public void tick() {
+    private void tick(Minecraft client) {
         if (!interval.isReady()) return;
 
         if (client.player == null) return;
@@ -124,6 +137,9 @@ public class InventoryControls {
             return;
         }
         if (!(client.screen instanceof AbstractContainerScreen)) return;
+        if (!config.enabled) {
+            return;
+        }
 
         loadConfig();
         currentScreen = (AbstractContainerScreenAccessor) client.screen;

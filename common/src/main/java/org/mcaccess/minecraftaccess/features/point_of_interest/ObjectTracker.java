@@ -8,14 +8,20 @@ import java.util.stream.Stream;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.AirBlock;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
@@ -26,7 +32,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 
 @Slf4j
-public class ObjectTracker {
+public class ObjectTracker implements BalmClientModule {
     private final Minecraft client = Minecraft.getInstance();
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
@@ -46,6 +52,21 @@ public class ObjectTracker {
     ObjectTracker() {
     }
 
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "poi/object_tracker");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            currentObject = null;
+            currentGroup = null;
+            groups = new ArrayList<>();
+        });
+    }
+
     private List<POIGroup<?>> getPOIGroups() {
         List<POIGroup<?>> groupList = Stream.concat(
                 Arrays.stream(MainClass.poiManager.poiEntities.groups),
@@ -61,8 +82,7 @@ public class ObjectTracker {
         return result;
     }
 
-    public void tick() {
-        if (client.player == null) return;
+    private void tick(Player player) {
         if (client.level == null) return;
         if (client.screen != null) return;
 

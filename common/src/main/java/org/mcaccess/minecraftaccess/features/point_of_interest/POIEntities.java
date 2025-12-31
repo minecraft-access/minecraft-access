@@ -9,22 +9,29 @@ import java.util.stream.Stream;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
  * Scans the area for entities, groups them and plays a sound at their location.
  */
 @Slf4j
-public class POIEntities {
+public class POIEntities implements BalmClientModule {
     private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Entities config;
     private final Interval interval = Interval.defaultDelay();
@@ -53,20 +60,33 @@ public class POIEntities {
         loadConfig();
     }
 
-    public void tick(boolean isMarking, Entity markedEntity) {
-        setMarked(markedEntity);
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "poi/entities");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            marked = null;
+            lastScanResults = new ArrayList<>();
+        });
+    }
+
+    private void tick(Level level) {
+        setMarked(MainClass.poiManager.poiMarking.getMarkedEntity());
         loadConfig();
 
         if (!config.enabled) return;
         if (!interval.isReady()) return;
 
         if (client.player == null) return;
-        if (client.level == null) return;
         if (client.screen != null) return; //Prevent running if any screen is opened
 
         log.trace("POIEntities started");
         scanEntitiesAroundPlayer();
-        playerSoundAtFoundPOI(isMarking);
+        playerSoundAtFoundPOI(MainClass.poiManager.poiMarking.isMarked());
         log.trace("POIEntities ended");
     }
 

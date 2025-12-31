@@ -5,6 +5,9 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -13,10 +16,12 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -29,15 +34,30 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  * It also gives feedback when a block is powered by a redstone signal or when a door is open similar cases.
  */
 @Slf4j
-public class NarrateCrosshair {
+public class NarrateCrosshair implements BalmClientModule {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     private @Nullable Object previousTarget = null;
     private @Nullable String previousNarration = null;
-    private Vec3 previousSoundPos = Vec3.ZERO;
+    private Vec3 previousSoundPos = null;
     private final Interval repetitionInterval = Interval.defaultDelay();
     private static final Config.NarrateCrosshair CONFIG = Config.getInstance().narrateCrosshair;
 
-    public void tick() {
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_crosshair");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            previousTarget = null;
+            previousNarration = null;
+            previousSoundPos = null;
+        });
+    }
+
+    private void tick(Level level) {
         if (CLIENT.screen != null) return;
         if (!CONFIG.enabled) return;
         repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);

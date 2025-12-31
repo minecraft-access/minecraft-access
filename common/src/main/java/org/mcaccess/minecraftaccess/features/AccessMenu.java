@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -16,6 +18,8 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
@@ -24,7 +28,7 @@ import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 
-public class AccessMenu {
+public class AccessMenu implements BalmClientModule {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping);
     private boolean gameModeSwitcherActive = false;
@@ -32,9 +36,17 @@ public class AccessMenu {
             .mapToObj(i -> Interval.sec(1))
             .toArray(Interval[]::new);
 
-    public void tick() {
-        if (CLIENT.player == null) return;
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "access_menu");
+    }
 
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+    }
+
+    public void tick(Player player) {
         if (CLIENT.screen == null) {
             if (CLIENT.hasAltDown()) {
                 assert CLIENT.player != null;

@@ -1,10 +1,13 @@
 package org.mcaccess.minecraftaccess.features;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Window;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
@@ -21,22 +24,24 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  * 4. Left Alt + Z = Narrates only the z position.<br>
  */
 @Slf4j
-public final class PositionNarrator {
-    @Getter
-    private static final PositionNarrator INSTANCE = new PositionNarrator();
-    private static Window window = Minecraft.getInstance().getWindow();
-    public static Keystroke keyX = new Keystroke(() -> InputConstants.isKeyDown(window, InputConstants.KEY_X));
-    public static Keystroke keyC = new Keystroke(() -> InputConstants.isKeyDown(window, InputConstants.KEY_C));
-    public static Keystroke keyZ = new Keystroke(() -> InputConstants.isKeyDown(window, InputConstants.KEY_Z));
-    public static Keystroke positionNarrationKey = new Keystroke(() -> KeyMappingsHandler.Keys.POSITION_NARRATION_KEY.mapping.isDown());
+public class PositionNarrator implements BalmClientModule {
+    public static Keystroke keyX = new Keystroke(() -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_X));
+    public static Keystroke keyC = new Keystroke(() -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_C));
+    public static Keystroke keyZ = new Keystroke(() -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_Z));
+    public static Keystroke positionNarrationKey = new Keystroke(KeyMappingsHandler.Keys.POSITION_NARRATION_KEY.mapping::isDown);
 
-    private PositionNarrator() {
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "position_narrator");
     }
 
-    public void tick() {
-        Minecraft minecraftClient = Minecraft.getInstance();
-        if (minecraftClient.player == null) return;
-        if (minecraftClient.screen != null) return;
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+    }
+
+    public void tick(Player player) {
+        if (Minecraft.getInstance().screen != null) return;
 
         if (Minecraft.getInstance().hasAltDown()) {
             if (keyX.canBeTriggered()) {

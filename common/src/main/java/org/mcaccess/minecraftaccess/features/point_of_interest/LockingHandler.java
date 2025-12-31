@@ -5,13 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.level.block.Blocks;
@@ -23,6 +28,7 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
@@ -40,7 +46,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  * 2. Alt key + Locking Key = Unlocks from the currently locked entity or block<br>
  */
 @Slf4j
-public class LockingHandler {
+public class LockingHandler implements BalmClientModule {
     private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Locking config;
     private Entity lockedOnEntity = null;
@@ -57,6 +63,25 @@ public class LockingHandler {
     LockingHandler() {
     }
 
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "poi/locking_handler");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            lockedOnEntity = null;
+            lockedOnBlockPos = null;
+            isLockedOnWhereEyeOfEnderDisappears = false;
+            entriesOfLockedOnBlock = null;
+            aimAssistActive = false;
+            lastAimAssistCue = -1;
+            lastBowState = -1;
+        });
+    }
+
     /**
      * Loads the configs from the config.json
      */
@@ -65,10 +90,9 @@ public class LockingHandler {
         interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
     }
 
-    public void tick() {
+    private void tick(Player player) {
         loadConfig();
         if (!interval.isReady()) return;
-        if (client.player == null) return;
         if (client.level == null) return;
         if (client.screen != null) return;
 

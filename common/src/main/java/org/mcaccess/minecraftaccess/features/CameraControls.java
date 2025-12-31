@@ -2,11 +2,16 @@ package org.mcaccess.minecraftaccess.features;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
@@ -37,7 +42,7 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  * 16) Right Alt + double Look Down Key or Look Straight Down Key (default: Keypad .): Snaps the camera to the look down at feet direction.
  */
 @Slf4j
-public final class CameraControls {
+public class CameraControls implements BalmClientModule {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     private static CameraConfig config;
     private static final Interval INTERVAL = Interval.defaultDelay();
@@ -46,10 +51,17 @@ public final class CameraControls {
     private static final DoubleClick STRAIGHT_UP_DOUBLE_CLICK = new DoubleClick(() -> KeyMappingsHandler.Keys.CAMERA_CONTROLS_UP.mapping.isDown());
     private static final DoubleClick STRAIGHT_DOWN_DOUBLE_CLICK = new DoubleClick(() -> KeyMappingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping.isDown());
 
-    private CameraControls() {
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls");
     }
 
-    public static void tick() {
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+    }
+
+    private void tick(Player player) {
         if (!INTERVAL.isReady()) return;
         loadConfigurations();
         keyListener();

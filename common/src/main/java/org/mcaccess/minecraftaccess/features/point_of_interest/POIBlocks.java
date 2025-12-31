@@ -7,32 +7,40 @@ import java.util.stream.Stream;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
  * Scans the area to find exposed ore blocks, doors, buttons, ladders, etc., groups them and plays a sound only at ore blocks.
  */
 @Slf4j
-public class POIBlocks {
+public class POIBlocks implements BalmClientModule {
     private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Blocks config;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
-    private ClientLevel world = client.level;
 
     private final POIGroup<BlockPos> markedGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.markedBlock",
             new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
-            pos -> world.getBlockState(pos).is(markedBlock)
+            pos -> {
+                assert client.level != null;
+                return client.level.getBlockState(pos).is(markedBlock);
+            }
     );
 
     /**
@@ -44,9 +52,10 @@ public class POIBlocks {
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.otherBlocks",
             pos -> {
-                BlockState state = world.getBlockState(pos);
+                assert client.level != null;
+                BlockState state = client.level.getBlockState(pos);
                 boolean blockAlreadyInGroup = this.otherBlocksGroup.getItems().stream()
-                        .map(p -> world.getBlockState(p).getBlock())
+                        .map(p -> client.level.getBlockState(p).getBlock())
                         .anyMatch(t -> t.equals(state.getBlock()));
                 return !state.isAir() && !blockAlreadyInGroup;
             }
@@ -63,8 +72,22 @@ public class POIBlocks {
         loadConfig();
     }
 
-    public void tick(boolean isMarking, Block markedBlock) {
-        setMarkedBlock(markedBlock);
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "poi/blocks");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            markedBlock = null;
+            lastScanResults = new ArrayList<>();
+        });
+    }
+
+    private void tick(Level level) {
+        setMarkedBlock(MainClass.poiManager.poiMarking.getMarkedBlock());
         loadConfig();
 
         if (!config.enabled) return;
@@ -75,7 +98,7 @@ public class POIBlocks {
 
         log.trace("POIBlock started");
         scanBlocksAroundPlayer();
-        playerSoundAtFoundPOI(isMarking);
+        playerSoundAtFoundPOI(MainClass.poiManager.poiMarking.isMarked());
         log.trace("POIBlock ended");
     }
 

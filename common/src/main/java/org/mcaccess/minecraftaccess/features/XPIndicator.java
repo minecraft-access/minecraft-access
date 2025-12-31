@@ -1,10 +1,18 @@
 package org.mcaccess.minecraftaccess.features;
 
+import java.util.Objects;
+
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.Minecraft;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
@@ -12,17 +20,29 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
  * This feature narrates when the player xp level is increased or decreased.
  */
 @Slf4j
-public class XPIndicator {
-    private final Minecraft client = Minecraft.getInstance();
+public class XPIndicator implements BalmClientModule {
     @Nullable
     private Integer previousXPLevel = null;
 
-    public void tick() {
-        if (client.level == null) return;
-        if (client.player == null) return;
-        if (client.screen != null) return;
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "xp_indicator");
+    }
 
-        int currentXPLevel = client.player.experienceLevel;
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            previousXPLevel = null;
+        });
+    }
+
+    private void tick(Player player) {
+        if (!Config.getInstance().features.xpIndicatorEnabled || !Objects.requireNonNull(player.gameMode()).isSurvival()) {
+            return;
+        }
+
+        int currentXPLevel = player.experienceLevel;
         if (previousXPLevel == null) {
             previousXPLevel = currentXPLevel;
             return;

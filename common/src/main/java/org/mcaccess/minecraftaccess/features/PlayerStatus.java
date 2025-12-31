@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
@@ -15,6 +18,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
@@ -32,7 +37,7 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
  * - Narrate Player Status Key (default: R) = Narrates the health and hunger.<br>
  */
 @Slf4j
-public class PlayerStatus {
+public class PlayerStatus implements BalmClientModule {
     private final Minecraft client = Minecraft.getInstance();
     IntervalKeystroke narrationKey = new IntervalKeystroke(
             KeyMappingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping::isDown,
@@ -42,8 +47,22 @@ public class PlayerStatus {
     private boolean wasSneaking = false;
     private boolean wasSprinting = false;
 
-    public void tick() {
-        if (client.player == null) return;
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_status");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            lastWarning.clear();
+            wasSneaking = false;
+            wasSprinting = false;
+        });
+    }
+
+    private void tick(Player player) {
         if (client.screen != null) return;
 
         movementTypeStatus();
@@ -68,7 +87,7 @@ public class PlayerStatus {
 
         if (narrationKey.canBeTriggered()) {
             if (client.hasControlDown()) {
-                Collection<MobEffectInstance> effects = client.player.getActiveEffects();
+                Collection<MobEffectInstance> effects = player.getActiveEffects();
                 if (effects.isEmpty()) {
                     MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
                     return;
