@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.AirBlock;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
@@ -100,7 +101,9 @@ public class ObjectTracker {
         boolean narrateDistance = Config.getInstance().poi.narrateDistance;
 
         if (currentObject instanceof Entity entity) {
-            StringBuilder narration = new StringBuilder(NarrationUtils.narrateEntity(entity));
+            StringBuilder narration = new StringBuilder(
+                    MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(entity)
+            );
             if (narrateDistance) {
                 narration.append(' ')
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition()));
@@ -121,7 +124,9 @@ public class ObjectTracker {
         }
 
         if (currentObject instanceof BlockPos blockPos) {
-            StringBuilder narration = new StringBuilder(NarrationUtils.narrateBlock(blockPos, null));
+            StringBuilder narration = new StringBuilder(
+                    MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(blockPos)
+            );
             if (narrateDistance) {
                 narration.append(' ')
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos));

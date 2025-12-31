@@ -13,8 +13,8 @@ import net.minecraft.world.phys.HitResult;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
 
 public class POIMarking {
@@ -66,14 +66,14 @@ public class POIMarking {
                 BlockPos pos = ((BlockHitResult) hit).getBlockPos();
                 markedBlock = world.getBlockState(pos).getBlock();
 
-                String name = NarrationUtils.narrateBlock(pos, "");
+                String name = MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(pos);
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.marking.marked", name), true);
             }
             case ENTITY -> {
-                Entity e = ((EntityHitResult) hit).getEntity();
-                markedEntity = e;
+                Entity entity = ((EntityHitResult) hit).getEntity();
+                markedEntity = entity;
 
-                String name = NarrationUtils.narrateEntity(e);
+                String name = MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(entity);
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.marking.marked", name), true);
             }
         }

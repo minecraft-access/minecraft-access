@@ -154,6 +154,7 @@
                          editorAttributes="NOT_USED_ELEMENT_ATTRIBUTES"/>
         <inspection_tool class="SingleStatementInBlock" enabled="false" level="INFORMATION" enabled_by_default="false"/>
         <inspection_tool class="StaticInheritance" enabled="true" level="WARNING" enabled_by_default="true"/>
+        <inspection_tool class="StringBufferReplaceableByString" enabled="false" level="WARNING" enabled_by_default="false"/>
         <inspection_tool class="StringReplaceableByStringBuffer" enabled="true" level="WARNING" enabled_by_default="true">
             <option name="onlyWarnOnLoop" value="false"/>
         </inspection_tool>

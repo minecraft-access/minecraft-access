@@ -1,5 +1,10 @@
 package org.mcaccess.minecraftaccess;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.Balm;
@@ -10,29 +15,31 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.UnmodifiableView;
 
+import org.mcaccess.minecraftaccess.api.AddonRegistry;
+import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
+import org.mcaccess.minecraftaccess.features.AccessMenu;
 import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.features.CameraControls;
 import org.mcaccess.minecraftaccess.features.FacingDirection;
 import org.mcaccess.minecraftaccess.features.FallDetector;
-import org.mcaccess.minecraftaccess.features.FluidDetector;
 import org.mcaccess.minecraftaccess.features.HUDStatus;
 import org.mcaccess.minecraftaccess.features.MenuFix;
 import org.mcaccess.minecraftaccess.features.MouseKeySimulation;
+import org.mcaccess.minecraftaccess.features.NarrateCrosshair;
 import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.features.PlayerStatus;
-import org.mcaccess.minecraftaccess.features.PlayerWarnings;
 import org.mcaccess.minecraftaccess.features.PositionNarrator;
 import org.mcaccess.minecraftaccess.features.TimeIndicator;
 import org.mcaccess.minecraftaccess.features.XPIndicator;
-import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
 import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControls;
-import org.mcaccess.minecraftaccess.features.narrate_crosshair.NarrateCrosshair;
 import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
@@ -45,18 +52,18 @@ public final class MainClass {
     public static final String MOD_ID = "minecraft_access";
     @Getter
     private static ScreenReaderInterface screenReader = null;
+    private static final Map<Class<?>, Map<Identifier, Object>> REGISTRY = new HashMap<>();
+    private static boolean frozen = false;
 
     public static AccessMenu accessMenu = null;
     public static BiomeIndicator biomeIndicator = null;
     public static FacingDirection facingDirection = null;
     public static FallDetector fallDetector = null;
-    public static FluidDetector fluidDetector = null;
     public static HUDStatus hudStatus = null;
     public static InventoryControls inventoryControls = null;
     public static NarrateCrosshair narrateCrosshair = null;
     public static NarrateHeldItem narrateHeldItem = null;
     public static PlayerStatus playerStatus = null;
-    public static PlayerWarnings playerWarnings = null;
     public static POIManager poiManager = null;
     public static TimeIndicator timeIndicator = null;
     public static XPIndicator xpIndicator = null;
@@ -64,9 +71,29 @@ public final class MainClass {
     private MainClass() {
     }
 
-    public static void init(BalmClientRegistrars registrars) {
-        Config.init();
+    @SuppressWarnings("unchecked")
+    public static <T> @UnmodifiableView Map<Identifier, T> registry(Class<T> registry) {
+        return Collections.unmodifiableMap(REGISTRY.getOrDefault(registry, Collections.EMPTY_MAP));
+    }
 
+    @SuppressWarnings("unchecked")
+    private static <T> Map<Identifier, T> mutableRegistry(Class<T> registry) {
+        if (frozen) {
+            throw new UnsupportedOperationException("Registries are frozen");
+        }
+        return (Map<Identifier, T>) REGISTRY.computeIfAbsent(registry, t -> new HashMap<>());
+    }
+
+    public static <T> void register(Class<T> registry, Identifier identifier, T value) {
+        if (mutableRegistry(registry).putIfAbsent(identifier, value) != null) {
+            throw new IllegalArgumentException(String.format("%s %s is already registered", registry.getSimpleName(), identifier));
+        }
+    }
+
+    /**
+     * Initializes the mod
+     */
+    public static void init(BalmClientRegistrars registrars, List<Addon> addons) {
         String startupMessage = "Initializing Minecraft Access: version " + Balm.platform().getModInfo(MOD_ID).get().versionString();
         log.info(startupMessage);
 
@@ -92,6 +119,17 @@ public final class MainClass {
                 getScreenReader().closeScreenReader();
             }
         }, "Shutdown-thread"));
+
+        for (Addon addon : addons) {
+            addon.addon().init(new AddonRegistry(addon.modid()));
+        }
+        frozen = true;
+        Config.init();
+        registrars.keyMappings(keyMappings -> {
+            for (AccessMenu.RegisteredFunction key : registry(AccessMenu.RegisteredFunction.class).values()) {
+                keyMappings.register(key.key());
+            }
+        });
     }
 
     /**
@@ -151,16 +189,6 @@ public final class MainClass {
             CameraControls.tick();
         }
 
-        if (playerWarnings != null) {
-            if (config.playerWarnings.enabled && (mode == GameType.SURVIVAL || mode == GameType.ADVENTURE)) {
-                playerWarnings.tick();
-            }
-
-            if (config.playerWarnings.durabilityWarnings.enableHeldItems || config.playerWarnings.durabilityWarnings.enableWornArmor) {
-                playerWarnings.durabilityWarnings();
-            }
-        }
-
         if (accessMenu != null && config.accessMenu.enabled) {
             accessMenu.tick();
         }
@@ -178,13 +206,11 @@ public final class MainClass {
         biomeIndicator = new BiomeIndicator();
         facingDirection = new FacingDirection();
         fallDetector = new FallDetector();
-        fluidDetector = new FluidDetector();
         hudStatus = new HUDStatus();
         inventoryControls = new InventoryControls();
         narrateCrosshair = new NarrateCrosshair();
         narrateHeldItem = new NarrateHeldItem();
         playerStatus = new PlayerStatus();
-        playerWarnings = new PlayerWarnings();
         poiManager = new POIManager();
         timeIndicator = new TimeIndicator();
         xpIndicator = new XPIndicator();
@@ -219,5 +245,8 @@ public final class MainClass {
         if (client.options.narrator().get() != NarratorStatus.OFF) {
             ((GameNarratorAccessor) client.getNarrator()).invokeNarrateMessage(text, interrupt);
         }
+    }
+
+    public record Addon(String modid, MinecraftAccessAddon addon) {
     }
 }

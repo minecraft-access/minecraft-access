@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.features.access_menu.AccessMenu;
+import org.mcaccess.minecraftaccess.features.AccessMenu;
 
 @Mixin(Minecraft.class)
 abstract class MinecraftMixin {

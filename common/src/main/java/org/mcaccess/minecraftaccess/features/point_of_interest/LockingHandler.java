@@ -26,6 +26,7 @@ import net.minecraft.world.phys.Vec3;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
@@ -287,7 +288,9 @@ public class LockingHandler {
         unlock(false, true);
         lockedOnEntity = entity;
 
-        StringBuilder narration = new StringBuilder(NarrationUtils.narrateEntity(entity));
+        StringBuilder narration = new StringBuilder(
+                MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(entity)
+        );
 
         if (Config.getInstance().poi.narrateDistance) {
             narration.append(' ')
@@ -313,7 +316,9 @@ public class LockingHandler {
 
         lockedOnBlockPos = new BlockPos3d(position, absolutePosition);
 
-        StringBuilder blockDescription = new StringBuilder(NarrationUtils.narrateBlock(lockedOnBlockPos, ""));
+        StringBuilder blockDescription = new StringBuilder(
+                MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(lockedOnBlockPos)
+        );
         if (Config.getInstance().poi.narrateDistance) {
             blockDescription.append(' ')
                     .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlockPos));

@@ -26,6 +26,7 @@ abstract class AbstractConfigListEntryMixin<T> extends AbstractConfigEntry<T> {
         //noinspection ConstantValue
         if (!SubCategoryListEntry.class.isInstance(this)) {
             builder.add(NarratedElementType.TITLE, fieldName);
+            getConfigError().ifPresent(error -> builder.add(NarratedElementType.HINT, error));
         }
         super.updateNarration(builder);
     }

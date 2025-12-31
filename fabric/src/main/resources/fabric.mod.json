@@ -26,6 +26,9 @@
         "main": [
             "org.mcaccess.minecraftaccess.fabric.MainClassFabric"
         ],
+        "minecraft_access": [
+            "org.mcaccess.minecraftaccess.addon.CoreAddon"
+        ],
         "modmenu": [
             "org.mcaccess.minecraftaccess.fabric.ModMenu"
         ]

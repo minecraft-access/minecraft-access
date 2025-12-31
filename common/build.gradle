@@ -1,3 +1,9 @@
+plugins {
+    alias libs.plugins.mavenPublish
+}
+
+version = rootProject.version
+
 architectury {
     common('fabric', 'neoforge')
 }
@@ -13,12 +19,6 @@ dependencies {
     modImplementation libs.balmCommon
     modImplementation libs.clothConfigCommon
     implementation libs.tolk
-
-    // https://projectlombok.org/setup/gradle
-    compileOnly libs.lombok
-    annotationProcessor libs.lombok
-    testCompileOnly libs.lombok
-    testAnnotationProcessor libs.lombok
 
     // Unit test dependencies
     testImplementation libs.junitJupiter
@@ -38,4 +38,98 @@ test {
     // Suppress JVM warning about mockito's behavior when running unit tests with IntelliJ
     // ref: https://stackoverflow.com/questions/77951485/getting-a-java-agent-has-been-loaded-warning-in-intellij-after-upgrading-jdk-17
     jvmArgs('-XX:+EnableDynamicAgentLoading')
+}
+
+javadoc {
+    include 'org/mcaccess/minecraftaccess/api/**'
+    title "Minecraft Access ${rootProject.version} API"
+    options {
+        tags(
+                'apiNote:a:API Note:',
+                'implSpec:a:Implementation Requirements:',
+                'implNote:a:Implementation Note:',
+        )
+        keyWords true
+        linkSource true
+        links(
+                'https://javadoc.io/doc/org.jetbrains/annotations/latest/',
+        )
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+}
+
+mavenPublishing {
+    coordinates project.group, base.archivesName.get(), rootProject.version
+    pom {
+        name = 'Minecraft Access'
+        description = 'A mod for minecraft java (fabric/neoforge) that specifically helps visually impaired players play Minecraft.'
+        url = 'https://mcaccess.org/'
+        inceptionYear = '2022'
+        licenses {
+            license {
+                name = 'GPL-3.0-only'
+                url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+            }
+        }
+        organization {
+            name = 'Minecraft Access'
+            url = 'https://github.com/minecraft-access'
+        }
+        developers {
+            developer {
+                id = 'khanshoaib3'
+                name = 'Shoaib'
+                url = 'https://github.com/khanshoaib3'
+                roles = [
+                        'Owner',
+                ]
+            }
+            developer {
+                id = 'TheSuperGamer20578'
+                name = 'TheSuperGamer20578'
+                email = 'me@sgme.dev'
+                url = 'https://github.com/TheSuperGamer20578'
+                timezone = 'Australia/Sydney'
+                roles = [
+                        'Maintainer',
+                ]
+            }
+            developer {
+                id = 'BrailleBennett'
+                name = 'BrailleBennett'
+                url = 'https://github.com/BrailleBennett'
+            }
+        }
+        contributors {
+            contributor {
+                name = 'Boholder'
+                url = 'https://github.com/boholder'
+            }
+            contributor {
+                name = 'Molitvan'
+                url = 'https://github.com/Molitvan'
+            }
+            contributor {
+                name = 'emassey0135'
+                url = 'https://github.com/emassey0135'
+            }
+        }
+        issueManagement {
+            system = 'GitHub'
+            url = 'https://github.com/minecraft-access/minecraft-access/issues'
+        }
+        ciManagement {
+            system = 'GitHub Actions'
+            url = 'https://github.com/minecraft-access/minecraft-access/actions'
+        }
+        scm {
+            connection = 'scm:git:https://github.com/minecraft-access/minecraft-access'
+            developerConnection = 'scm:git:git@github.com:minecraft-access/minecraft-access'
+            url = 'https://github.com/minecraft-access/minecraft-access'
+        }
+    }
 }

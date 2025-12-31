@@ -27,6 +27,7 @@ import net.minecraft.client.gui.screens.worldselection.EditWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.utils.config.RegistrySingleSelect;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
@@ -36,7 +37,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  */
 @Slf4j
 public final class MenuFix {
-    private static Class<? extends Screen> prevScreenClass = TitleScreen.class;
+    private static Screen previous;
     private static final Set<Class<? extends Screen>> MENUS_NEED_FIX = Set.of(
             TitleScreen.class,
             OptionsScreen.class,
@@ -56,28 +57,26 @@ public final class MenuFix {
             EditWorldScreen.class,
             JoinMultiplayerScreen.class,
             DirectJoinServerScreen.class,
-            ManageServerScreen.class
+            ManageServerScreen.class,
+            RegistrySingleSelect.SelectionScreen.class
     );
 
     private MenuFix() {
     }
 
     public static void tick(Minecraft client) {
+        if (client.screen == previous && !(InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_R) && client.hasAltDown())) {
+            return;
+        }
+        previous = client.screen;
+
         if (!Config.getInstance().menuFixEnabled || client.screen == null) {
             return;
         }
 
-        Class<? extends Screen> currentScreen = client.screen.getClass();
-        if (MENUS_NEED_FIX.contains(currentScreen)) {
-            if (prevScreenClass != currentScreen) {
-                log.debug("Performing menu fix on {}", client.screen.getTitle().getString());
-                moveMouseCursor();
-                prevScreenClass = currentScreen;
-            }
-
-            if (InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_R) && client.hasAltDown()) {
-                moveMouseCursor();
-            }
+        if (MENUS_NEED_FIX.contains(client.screen.getClass())) {
+            log.debug("Performing menu fix on {}", client.screen.getTitle().getString());
+            moveMouseCursor();
         }
     }
 

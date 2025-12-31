@@ -5,6 +5,17 @@ on:
       ref:
         type: string
         required: true
+      central:
+        type: boolean
+        required: false
+        default: false
+    secrets:
+      centralUsername:
+        required: false
+      centralPassword:
+        required: false
+      gpgKey:
+        required: false
 
 env:
   JAVA_VERSION: 21
@@ -36,9 +47,13 @@ jobs:
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
           build-scan-terms-of-use-agree: "yes"
       - name: Build
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.centralUsername }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.centralPassword }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.gpgKey }}
         # language=bash
         run: |
-          ./gradlew clean build -x check
+          ./gradlew clean build ${{ inputs.central && 'publishAndReleaseToMavenCentral' || '' }} -x check
           shopt -s extglob
           cp ./!(common)/build/libs/*+!(*-*).jar .
       - uses: actions/upload-artifact@v6

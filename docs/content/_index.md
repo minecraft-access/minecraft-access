@@ -35,3 +35,6 @@ Any type of contribution is welcome:
 * Create more text or video tutorials about how to play the game with this mod ([examples]({{% relref "/good-resources#gameplay-with-this-mod" %}})).
 * Make sound effects for this mod.
 * For development contributions, please read [CONTRIBUTING.md](https://github.com/minecraft-access/minecraft-access/blob/1.21/CONTRIBUTING.md) for more details.
+
+## Developer API
+Information about the client-side API is available at its [Javadoc](/api/client/javadoc/).

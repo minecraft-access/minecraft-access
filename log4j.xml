@@ -21,7 +21,6 @@
         <Logger name="org.mcaccess.minecraftaccess.features.EffectNarrator" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.FacingDirection" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.FallDetector" level="DEBUG"/>
-        <Logger name="org.mcaccess.minecraftaccess.features.FluidDetector" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.HUDStatus" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.inventory_controls" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.MenuFix" level="DEBUG"/>

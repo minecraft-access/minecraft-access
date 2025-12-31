@@ -1,18 +1,25 @@
 package org.mcaccess.minecraftaccess.features;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.level.GameType;
 
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.addon.CoreAddon;
+import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -28,10 +35,10 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 public class PlayerStatus {
     private final Minecraft client = Minecraft.getInstance();
     IntervalKeystroke narrationKey = new IntervalKeystroke(
-            () -> KeyMappingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping.isDown(),
+            KeyMappingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping::isDown,
             Keystroke.TriggeredAt.PRESSED,
-            // 3s interval
-            Interval.ms(3000));
+            Interval.sec(3));
+    private final Map<Identifier, Status.WarningLevel> lastWarning = new HashMap<>();
     private boolean wasSneaking = false;
     private boolean wasSprinting = false;
 
@@ -40,6 +47,24 @@ public class PlayerStatus {
         if (client.screen != null) return;
 
         movementTypeStatus();
+
+        if (Config.getInstance().playerWarnings.enabled) {
+            for (Identifier key : Config.getInstance().playerWarnings.statuses) {
+                Status status = MainClass.registry(Status.class).get(key);
+                Status.WarningLevel currentLevel = status.warning();
+                if (currentLevel.ordinal() > lastWarning.getOrDefault(key, Status.WarningLevel.NONE).ordinal()) {
+                    if (Config.getInstance().playerWarnings.playSound) {
+                        SoundEvent soundToPlay = currentLevel.ordinal() > Status.WarningLevel.WARNING.ordinal()
+                                ? SoundEvents.ANVIL_PLACE
+                                : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value();
+                        assert client.level != null;
+                        client.level.playPlayerSound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
+                        MainClass.narrate(I18n.get("minecraft_access.player_status.warning", status.message()), true);
+                    }
+                }
+                lastWarning.put(key, currentLevel);
+            }
+        }
 
         if (narrationKey.canBeTriggered()) {
             if (client.hasControlDown()) {
@@ -54,68 +79,36 @@ public class PlayerStatus {
                 return;
             }
 
-            double health = Math.round((client.player.getHealth() / 2.0) * 10.0) / 10.0;
-            double maxHealth = Math.round((client.player.getMaxHealth() / 2.0) * 10.0) / 10.0;
-            double absorption = Math.round((client.player.getAbsorptionAmount() / 2.0) * 10.0) / 10.0;
-            double hunger = Math.round((client.player.getFoodData().getFoodLevel() / 2.0) * 10.0) / 10.0;
-            double maxHunger = Math.round((20 / 2.0) * 10.0) / 10.0;
-            double armor = Math.round((client.player.getArmorValue() / 2.0) * 10.0) / 10.0;
-            double air = Math.round((client.player.getAirSupply() / 20.0) * 10.0) / 10.0;
-            double maxAir = Math.round((client.player.getMaxAirSupply() / 20.0) * 10.0) / 10.0;
-            double frostExposurePercent = Math.round((client.player.getPercentFrozen() * 100.0) * 10.0) / 10.0;
-            assert client.gameMode != null;
-            GameType currentMode = client.gameMode.getPlayerMode();
+            List<Status> statuses = Arrays.stream(Config.getInstance().playerWarnings.statuses)
+                    .map(MainClass.registry(Status.class)::get)
+                    .filter(status -> switch (status.visibility()) {
+                        case NONE -> false;
+                        case NORMAL -> !client.hasAltDown();
+                        case IMPORTANT -> true;
+                    })
+                    .toList();
 
-            StringBuilder narration = new StringBuilder();
-
-            if (currentMode == GameType.SURVIVAL || currentMode == GameType.ADVENTURE) {
-                if (!client.hasAltDown()) {
-                    if (absorption > 0) {
-                        narration.append(I18n.get(
-                                "minecraft_access.player_status.base_with_absorption",
-                                NarrationUtils.narrateNumber(health),
-                                NarrationUtils.narrateNumber(absorption),
-                                NarrationUtils.narrateNumber(maxHealth),
-                                NarrationUtils.narrateNumber(hunger),
-                                NarrationUtils.narrateNumber(maxHunger),
-                                NarrationUtils.narrateNumber(armor))
-                        );
-                    } else {
-                        narration.append(I18n.get(
-                                "minecraft_access.player_status.base",
-                                NarrationUtils.narrateNumber(health),
-                                NarrationUtils.narrateNumber(maxHealth),
-                                NarrationUtils.narrateNumber(hunger),
-                                NarrationUtils.narrateNumber(maxHunger),
-                                NarrationUtils.narrateNumber(armor))
-                        );
-                    }
+            if (statuses.isEmpty() && client.hasAltDown()) {
+                assert client.gameMode != null;
+                if (client.gameMode.getPlayerMode().isSurvival()) {
+                    MainClass.narrate(I18n.get("minecraft_access.player_status.no_conditional_status"), true);
+                } else {
+                    MainClass.narrate(CoreAddon.GAME_MODE_STAT.message(), true);
                 }
-
-                if ((client.player.isUnderWater() || client.player.getAirSupply() < client.player.getMaxAirSupply()) && !client.player.canBreatheUnderwater()) {
-                    air = Math.max(air, 0.0);
-                    narration.append(I18n.get("minecraft_access.player_status.air", NarrationUtils.narrateNumber(air), NarrationUtils.narrateNumber(maxAir)));
-                }
-
-                if ((client.player.isInPowderSnow || frostExposurePercent > 0) && client.player.canFreeze()) {
-                    narration.append(I18n.get("minecraft_access.player_status.frost", NarrationUtils.narrateNumber(frostExposurePercent)));
-                }
+            } else {
+                MainClass.narrate(
+                        statuses.stream()
+                                .map(Status::message)
+                                .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection"))),
+                        true
+                );
             }
-
-            if (narration.isEmpty() && (currentMode == GameType.SURVIVAL || currentMode == GameType.ADVENTURE)) {
-                narration.append(I18n.get("minecraft_access.player_status.no_conditional_status"));
-            }
-
-            if (!Objects.equals(narration.toString(), I18n.get("minecraft_access.player_status.no_conditional_status"))) {
-                addGameMode(narration, currentMode);
-            }
-
-            MainClass.narrate(narration.toString(), true);
         }
         narrationKey.updateStateForNextTick();
     }
 
     private void movementTypeStatus() {
+        assert client.player != null;
         boolean isSneaking = client.player.isCrouching();
         boolean isSprinting = client.player.isSprinting() && !isSneaking;
 
@@ -129,28 +122,5 @@ public class PlayerStatus {
 
         wasSneaking = isSneaking;
         wasSprinting = isSprinting;
-    }
-
-    public void addGameMode(StringBuilder narration, GameType playerMode) {
-        if (!narration.isEmpty()) {
-            narration.append(I18n.get("minecraft_access.other.words_connection"));
-        }
-
-        narration.append(switch (playerMode) {
-            case SURVIVAL -> {
-                assert client.level != null;
-                yield client.level.getLevelData().isHardcore() ? I18n.get("gameMode.hardcore") : I18n.get("gameMode.survival");
-            }
-            case CREATIVE -> I18n.get("gameMode.creative");
-            case SPECTATOR -> I18n.get("gameMode.spectator");
-            case ADVENTURE -> I18n.get("gameMode.adventure");
-        });
-
-        //  If the player is in a hard core world but a different game mode
-        assert client.level != null;
-        if (client.level.getLevelData().isHardcore() && playerMode != GameType.SURVIVAL) {
-            narration.append(' ')
-                    .append(I18n.get("options.difficulty.hardcore"));
-        }
     }
 }

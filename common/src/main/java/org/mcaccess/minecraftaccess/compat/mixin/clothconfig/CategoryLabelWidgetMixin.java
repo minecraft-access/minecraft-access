@@ -1,10 +1,7 @@
 package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Window;
 import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.math.Rectangle;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.input.KeyEvent;
@@ -30,10 +27,7 @@ abstract class CategoryLabelWidgetMixin implements GuiEventListener, NarratableE
      */
     @Override
     public boolean keyPressed(KeyEvent event) {
-        Window window = Minecraft.getInstance().getWindow();
-        if (InputConstants.isKeyDown(window, InputConstants.KEY_SPACE)
-                || InputConstants.isKeyDown(window, InputConstants.KEY_RETURN)
-                || InputConstants.isKeyDown(window, InputConstants.KEY_NUMPADENTER)) {
+        if (event.isSelection()) {
             mouseClicked(new MouseButtonEvent(rectangle.x + 1, rectangle.y + 1, new MouseButtonInfo(0, 0)), false);
             return true;
         }
