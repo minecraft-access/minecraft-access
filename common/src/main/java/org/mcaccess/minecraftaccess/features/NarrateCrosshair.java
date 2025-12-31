@@ -16,7 +16,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -49,7 +49,7 @@ public class NarrateCrosshair implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             previousTarget = null;
             previousNarration = null;
@@ -57,7 +57,7 @@ public class NarrateCrosshair implements BalmClientModule {
         });
     }
 
-    private void tick(Level level) {
+    private void tick(Player player) {
         if (CLIENT.screen != null) return;
         if (!CONFIG.enabled) return;
         repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
@@ -90,8 +90,7 @@ public class NarrateCrosshair implements BalmClientModule {
         }
 
         if (CONFIG.relativePositionSoundCue.enabled) {
-            assert CLIENT.player != null;
-            double rayCastDistance = Math.min(CLIENT.player.blockInteractionRange(), CLIENT.player.entityInteractionRange());
+            double rayCastDistance = Math.min(player.blockInteractionRange(), player.entityInteractionRange());
             Vec3 targetPosition = switch (rayCast) {
                 case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().getCenter();
                 case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();

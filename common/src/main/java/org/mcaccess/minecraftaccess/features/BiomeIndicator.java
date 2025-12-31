@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -35,14 +36,14 @@ public class BiomeIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             previousBiome = null;
             previousDimension = null;
         });
     }
 
-    private void tick(Level level) {
+    private void tick(Player player) {
         if (!Config.getInstance().features.biomeIndicatorEnabled) {
             return;
         }
@@ -54,7 +55,7 @@ public class BiomeIndicator implements BalmClientModule {
         if (currentBiome != null && currentBiome != previousBiome) {
             String currentBiomeName = NarrationUtils.getTranslatedName(currentBiome, "biome")
                     .orElse("");
-            ResourceKey<Level> currentDimension = CLIENT.level.dimension();
+            ResourceKey<Level> currentDimension = player.level().dimension();
             if (!currentDimension.equals(previousDimension) || Config.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
                 narration = I18n.get("minecraft_access.other.biome_and_dimension",
                         currentBiomeName,
