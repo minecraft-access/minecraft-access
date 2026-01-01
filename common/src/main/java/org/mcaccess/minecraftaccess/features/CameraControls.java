@@ -43,7 +43,6 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  */
 @Slf4j
 public class CameraControls implements BalmClientModule {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
     private static CameraConfig config;
     private static final Interval INTERVAL = Interval.defaultDelay();
 
@@ -80,8 +79,8 @@ public class CameraControls implements BalmClientModule {
      * Handles the key inputs
      */
     private static void keyListener() {
-        boolean isLeftAltPressed = InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_LALT);
-        boolean isRightAltPressed = InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_RALT);
+        boolean isLeftAltPressed = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_LALT);
+        boolean isRightAltPressed = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_RALT);
 
         boolean isUpKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_UP.mapping.isDown() || KeyMappingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_UP.mapping.isDown();
         boolean isRightKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping.isDown() || KeyMappingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_RIGHT.mapping.isDown();
@@ -195,8 +194,8 @@ public class CameraControls implements BalmClientModule {
         float verticalAngleDelta = angle * direction.verticalWight;
         log.debug("Rotating camera by x:{} y:{}", horizontalAngleDelta, verticalAngleDelta);
 
-        assert CLIENT.player != null;
-        CLIENT.player.turn(horizontalAngleDelta, verticalAngleDelta);
+        assert Minecraft.getInstance().player != null;
+        Minecraft.getInstance().player.turn(horizontalAngleDelta, verticalAngleDelta);
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
@@ -216,7 +215,7 @@ public class CameraControls implements BalmClientModule {
      */
     private static void rotateCameraTo(Orientation direction) {
         if (handleLocking()) return;
-        LocalPlayer player = CLIENT.player;
+        LocalPlayer player = Minecraft.getInstance().player;
         assert player != null;
         Vec3 playerBlockPosition = player.position();
         Vec3 targetBlockPosition = playerBlockPosition.add(Vec3.atLowerCornerOf(direction.vector));
@@ -245,7 +244,11 @@ public class CameraControls implements BalmClientModule {
     }
 
     private static boolean handleLocking() {
-        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || !CLIENT.getCameraEntity().is(CLIENT.player))) return false;
+        assert Minecraft.getInstance().getCameraEntity() != null;
+        assert Minecraft.getInstance().player != null;
+        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || !Minecraft.getInstance().getCameraEntity().is(Minecraft.getInstance().player))) {
+            return false;
+        }
         MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
         return true;
     }

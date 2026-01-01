@@ -24,7 +24,6 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
  * Narrates the name of the biome when entering a different biome.
  */
 public class BiomeIndicator implements BalmClientModule {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
     @Nullable
     private Holder<Biome> previousBiome = null;
     private ResourceKey<Level> previousDimension;
@@ -47,7 +46,7 @@ public class BiomeIndicator implements BalmClientModule {
         if (!Config.getInstance().features.biomeIndicatorEnabled) {
             return;
         }
-        if (CLIENT.screen != null) return;
+        if (Minecraft.getInstance().screen != null) return;
 
         String narration;
 
@@ -75,12 +74,13 @@ public class BiomeIndicator implements BalmClientModule {
 
     @Nullable
     public static Holder<Biome> getCurrentBiome() {
-        if (CLIENT.level == null) return null;
-        if (CLIENT.player == null) return null;
-        BlockPos pos = CLIENT.player.blockPosition();
-        LevelChunk currentChunk = CLIENT.level.getChunkSource().getChunk(pos.getX() >> 4, pos.getZ() >> 4, false);
+        Minecraft client = Minecraft.getInstance();
+        if (client.level == null) return null;
+        if (client.player == null) return null;
+        BlockPos pos = client.player.blockPosition();
+        LevelChunk currentChunk = client.level.getChunkSource().getChunk(pos.getX() >> 4, pos.getZ() >> 4, false);
         if (currentChunk == null) return null;
 
-        return CLIENT.level.getBiome(CLIENT.player.blockPosition());
+        return client.level.getBiome(client.player.blockPosition());
     }
 }

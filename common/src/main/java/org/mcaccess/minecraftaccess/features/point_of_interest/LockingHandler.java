@@ -45,7 +45,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  * 2. Alt key + Locking Key = Unlocks from the currently locked entity or block<br>
  */
 public class LockingHandler implements BalmClientModule {
-    private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Locking config;
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlockPos = null;
@@ -91,8 +90,7 @@ public class LockingHandler implements BalmClientModule {
     private void tick(Player player) {
         loadConfig();
         if (!interval.isReady()) return;
-        if (client.level == null) return;
-        if (client.screen != null) return;
+        if (Minecraft.getInstance().screen != null) return;
 
         handleLockingKeyPressing();
         if (isPlayerLocked()) {
@@ -102,6 +100,7 @@ public class LockingHandler implements BalmClientModule {
     }
 
     private void handleLockingKeyPressing() {
+        Minecraft client = Minecraft.getInstance();
         boolean isLockingKeyPressed = KeyMappingsHandler.Keys.LOCKING_HANDLER_KEY.mapping.isDown();
         if (isLockingKeyPressed && client.hasAltDown()) {
             if (isPlayerLocked()) {
@@ -110,6 +109,7 @@ public class LockingHandler implements BalmClientModule {
             }
         } else if (isLockingKeyPressed) {
             assert client.getCameraEntity() != null;
+            assert client.player != null;
             if (client.getCameraEntity().is(client.player)) {
                 relock();
             } else {
@@ -122,7 +122,9 @@ public class LockingHandler implements BalmClientModule {
     }
 
     private void lookAtLockedTarget() {
+        Minecraft client = Minecraft.getInstance();
         assert client.getCameraEntity() != null;
+        assert client.player != null;
         if (!client.getCameraEntity().is(client.player)) {
             unlock(true, true);
             return;
@@ -160,7 +162,7 @@ public class LockingHandler implements BalmClientModule {
      * Automatically locks on to the nearest hostile entity when the player is pulling a bow.
      */
     private void bowAimingAssist() {
-        LocalPlayer player = client.player;
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
         // Check if player is using a bow
@@ -226,8 +228,8 @@ public class LockingHandler implements BalmClientModule {
 
         if (narrate) {
             if (config.unlockingSound) {
-                assert client.player != null;
-                client.player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 0.4f, 2.0f);
+                assert Minecraft.getInstance().player != null;
+                Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 0.4f, 2.0f);
             } else {
                 MainClass.narrate(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
             }
@@ -259,8 +261,8 @@ public class LockingHandler implements BalmClientModule {
     private boolean unlockFromLadderIfClimbingOnIt(BlockState blockState) {
         if (Blocks.LADDER.equals(blockState.getBlock())) {
 
-            assert client.player != null;
-            Vec3 playerPos = client.player.position();
+            assert Minecraft.getInstance().player != null;
+            Vec3 playerPos = Minecraft.getInstance().player.position();
             double distance = lockedOnBlockPos.getCenter().distanceTo(playerPos);
             if (distance <= 0.5) {
                 unlock(true, true);
@@ -323,8 +325,8 @@ public class LockingHandler implements BalmClientModule {
     }
 
     private void lockOnBlock(BlockPos position) {
-        assert client.level != null;
-        BlockState blockState = client.level.getBlockState(position);
+        assert Minecraft.getInstance().level != null;
+        BlockState blockState = Minecraft.getInstance().level.getBlockState(position);
         entriesOfLockedOnBlock = blockState.getValues();
 
         Vec3 absolutePosition = switch (blockState.getBlock()) {

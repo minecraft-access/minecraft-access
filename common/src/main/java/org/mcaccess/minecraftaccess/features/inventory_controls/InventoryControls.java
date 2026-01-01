@@ -77,7 +77,6 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 public class InventoryControls implements BalmClientModule {
     private Config.InventoryControls config;
     private final Interval interval = Interval.defaultDelay();
-    private final Minecraft client = Minecraft.getInstance();
 
     private AbstractContainerScreenAccessor previousScreen = null;
     private AbstractContainerScreenAccessor currentScreen = null;
@@ -201,6 +200,7 @@ public class InventoryControls implements BalmClientModule {
      * Handles the key inputs.
      */
     private boolean keyListener() {
+        Minecraft client = Minecraft.getInstance();
         boolean isGroupKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping);
         boolean isUpKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping);
         boolean isRightKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
@@ -364,7 +364,7 @@ public class InventoryControls implements BalmClientModule {
     private boolean isKeyPressed(KeyMapping keyMapping) {
         if (keyMapping.isUnbound()) return false;
 
-        return InputConstants.isKeyDown(client.getWindow(), ((KeyMappingAccessor) keyMapping).getKey().getValue());
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), ((KeyMappingAccessor) keyMapping).getKey().getValue());
     }
 
     private boolean recipeBookIsOpening() {
@@ -542,7 +542,7 @@ public class InventoryControls implements BalmClientModule {
 
         // <name> <description>
         StringBuilder toolTipString = new StringBuilder();
-        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, client.player, TooltipFlag.NORMAL);
+        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, Minecraft.getInstance().player, TooltipFlag.NORMAL);
         for (Component line : toolTipList) {
             toolTipString.append(line.getString()).append(' ');
         }

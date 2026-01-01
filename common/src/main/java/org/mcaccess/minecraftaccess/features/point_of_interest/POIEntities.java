@@ -32,7 +32,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  */
 @Slf4j
 public class POIEntities implements BalmClientModule {
-    private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Entities config;
     private final Interval interval = Interval.defaultDelay();
 
@@ -81,7 +80,7 @@ public class POIEntities implements BalmClientModule {
         if (!config.enabled) return;
         if (!interval.isReady()) return;
 
-        if (client.screen != null) return; //Prevent running if any screen is opened
+        if (Minecraft.getInstance().screen != null) return; //Prevent running if any screen is opened
 
         log.trace("POIEntities started");
         scanEntitiesAroundPlayer();
@@ -96,11 +95,11 @@ public class POIEntities implements BalmClientModule {
             group.clear();
         }
 
-        LocalPlayer player = client.player;
+        LocalPlayer player = Minecraft.getInstance().player;
         assert player != null;
         AABB scanBox = player.getBoundingBox().inflate(config.range, config.range, config.range);
-        assert client.level != null;
-        List<Entity> entities = client.level.getEntities(player, scanBox);
+        assert Minecraft.getInstance().level != null;
+        List<Entity> entities = Minecraft.getInstance().level.getEntities(player, scanBox);
 
         for (Entity entity : entities) {
             for (POIGroup<Entity> group : groups) {

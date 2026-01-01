@@ -36,7 +36,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
  * - Narrate Player Status Key (default: R) = Narrates the health and hunger.<br>
  */
 public class PlayerStatus implements BalmClientModule {
-    private final Minecraft client = Minecraft.getInstance();
     IntervalKeystroke narrationKey = new IntervalKeystroke(
             KeyMappingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping::isDown,
             Keystroke.TriggeredAt.PRESSED,
@@ -61,6 +60,7 @@ public class PlayerStatus implements BalmClientModule {
     }
 
     private void tick(Player player) {
+        Minecraft client = Minecraft.getInstance();
         if (client.screen != null) return;
 
         movementTypeStatus();
@@ -74,8 +74,7 @@ public class PlayerStatus implements BalmClientModule {
                         SoundEvent soundToPlay = currentLevel.ordinal() > Status.WarningLevel.WARNING.ordinal()
                                 ? SoundEvents.ANVIL_PLACE
                                 : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value();
-                        assert client.level != null;
-                        client.level.playPlayerSound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
+                        player.level().playPlayerSound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
                         MainClass.narrate(I18n.get("minecraft_access.player_status.warning", status.message()), true);
                     }
                 }
@@ -125,7 +124,9 @@ public class PlayerStatus implements BalmClientModule {
     }
 
     private void movementTypeStatus() {
+        Minecraft client = Minecraft.getInstance();
         assert client.player != null;
+        assert client.level != null;
         boolean isSneaking = client.player.isCrouching();
         boolean isSprinting = client.player.isSprinting() && !isSneaking;
 

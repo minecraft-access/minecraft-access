@@ -29,7 +29,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  */
 @Slf4j
 public class POIBlocks implements BalmClientModule {
-    private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Blocks config;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
@@ -38,8 +37,8 @@ public class POIBlocks implements BalmClientModule {
             "minecraft_access.point_of_interest.group.markedBlock",
             new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
             pos -> {
-                assert client.level != null;
-                return client.level.getBlockState(pos).is(markedBlock);
+                assert Minecraft.getInstance().level != null;
+                return Minecraft.getInstance().level.getBlockState(pos).is(markedBlock);
             }
     );
 
@@ -52,10 +51,10 @@ public class POIBlocks implements BalmClientModule {
     private final POIGroup<BlockPos> otherBlocksGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.otherBlocks",
             pos -> {
-                assert client.level != null;
-                BlockState state = client.level.getBlockState(pos);
+                assert Minecraft.getInstance().level != null;
+                BlockState state = Minecraft.getInstance().level.getBlockState(pos);
                 boolean blockAlreadyInGroup = this.otherBlocksGroup.getItems().stream()
-                        .map(p -> client.level.getBlockState(p).getBlock())
+                        .map(p -> Minecraft.getInstance().level.getBlockState(p).getBlock())
                         .anyMatch(t -> t.equals(state.getBlock()));
                 return !state.isAir() && !blockAlreadyInGroup;
             }
@@ -93,7 +92,7 @@ public class POIBlocks implements BalmClientModule {
         if (!config.enabled) return;
         if (!interval.isReady()) return;
 
-        if (client.screen != null) return; //Prevent running if any screen is opened
+        if (Minecraft.getInstance().screen != null) return; //Prevent running if any screen is opened
 
         log.trace("POIBlock started");
         scanBlocksAroundPlayer();
@@ -119,8 +118,8 @@ public class POIBlocks implements BalmClientModule {
         });
 
         // where player's leg be
-        assert client.player != null;
-        BlockPos pos = client.player.blockPosition();
+        assert Minecraft.getInstance().player != null;
+        BlockPos pos = Minecraft.getInstance().player.blockPosition();
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.below(), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos, config.range);
