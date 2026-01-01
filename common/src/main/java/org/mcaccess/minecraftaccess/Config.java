@@ -162,7 +162,6 @@ public final class Config implements ConfigData {
         public static final class Locking {
             public boolean unlockingSound = false;
             public boolean autoLockEyeOfEnderEntity = true;
-            public int delay = 100;
             public boolean aimAssistEnabled = true;
             public boolean aimAssistAudioCuesEnabled = true;
             public float aimAssistAudioCuesVolume = 0.5f;
@@ -172,7 +171,6 @@ public final class Config implements ConfigData {
         }
 
         public static final class Marking {
-            public boolean enabled = true;
             public boolean suppressOtherWhenEnabled = true;
 
             private Marking() {

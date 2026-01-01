@@ -4,9 +4,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
@@ -32,11 +37,9 @@ import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
-import org.mcaccess.minecraftaccess.utils.condition.Interval;
-
 
 /**
  * Locks on to the nearest entity or block.<br><br>
@@ -45,12 +48,11 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  * 2. Alt key + Locking Key = Unlocks from the currently locked entity or block<br>
  */
 public class LockingHandler implements BalmClientModule {
-    private Config.POI.Locking config;
+    private Config.POI.Locking config = Config.getInstance().poi.locking;
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlockPos = null;
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
     private Map<Property<?>, Comparable<?>> entriesOfLockedOnBlock;
-    private final Interval interval = Interval.defaultDelay();
     private boolean aimAssistActive = false;
     // 0 = can't shoot, 1 = can shoot
     private int lastAimAssistCue = -1;
@@ -77,48 +79,44 @@ public class LockingHandler implements BalmClientModule {
             lastAimAssistCue = -1;
             lastBowState = -1;
         });
-    }
 
-    /**
-     * Loads the configs from the config.json
-     */
-    private void loadConfig() {
-        config = Config.getInstance().poi.locking;
-        interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.locking/lock"))
+                .withDefault(InputBinding.key(InputConstants.KEY_Y))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    Minecraft client = Minecraft.getInstance();
+                    assert client.getCameraEntity() != null;
+                    assert client.player != null;
+                    if (client.getCameraEntity().is(client.player)) {
+                        relock();
+                    } else {
+                        MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
+                    }
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.locking/unlock"))
+                .withDefault(InputBinding.key(InputConstants.KEY_Y, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    if (isPlayerLocked()) {
+                        unlock(true, true);
+                    }
+                    return true;
+                })
+                .build();
     }
 
     private void tick(Level level) {
-        loadConfig();
-        if (!interval.isReady()) return;
         if (Minecraft.getInstance().screen != null) return;
 
-        handleLockingKeyPressing();
         if (isPlayerLocked()) {
             lookAtLockedTarget();
         }
-        bowAimingAssist();
-    }
 
-    private void handleLockingKeyPressing() {
-        Minecraft client = Minecraft.getInstance();
-        boolean isLockingKeyPressed = KeyMappingsHandler.Keys.LOCKING_HANDLER_KEY.mapping.isDown();
-        if (isLockingKeyPressed && client.hasAltDown()) {
-            if (isPlayerLocked()) {
-                unlock(true, true);
-                interval.beReady();
-            }
-        } else if (isLockingKeyPressed) {
-            assert client.getCameraEntity() != null;
-            assert client.player != null;
-            if (client.getCameraEntity().is(client.player)) {
-                relock();
-            } else {
-                MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
-            }
-            interval.reset();
-        } else {
-            interval.beReady();
-        }
+        bowAimingAssist();
     }
 
     private void lookAtLockedTarget() {

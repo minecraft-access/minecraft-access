@@ -29,12 +29,6 @@ public final class KeyMappingsHandler {
     }
 
     public enum Keys {
-        LOCKING_HANDLER_KEY(
-                "minecraft_access.keys.other.locking_handler_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_Y,
-                Categories.OTHER
-        ),
         ACCESS_MENU_KEY(
                 "minecraft_access.keys.other.access_menu_key_name",
                 InputConstants.Type.KEYSYM,
