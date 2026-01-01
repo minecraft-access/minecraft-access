@@ -17,8 +17,7 @@ public final class KeyMappingsHandler {
         ACCESS_MENU("old_access_menu"),
         CAMERA_CONTROLS("old_camera_controls"),
         INVENTORY_CONTROLS("old_inventory_controls"),
-        MOUSE_SIMULATION("old_mouse_simulation"),
-        OBJECT_TRACKER("old_object_tracker");
+        MOUSE_SIMULATION("old_mouse_simulation");
 
         public final KeyMapping.Category category;
 
@@ -197,31 +196,6 @@ public final class KeyMappingsHandler {
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_APOSTROPHE,
                 Categories.MOUSE_SIMULATION
-        ),
-
-        OBJECT_TRACKER_NEXT_ITEM(
-                "minecraft_access.keys.object_tracker.next_item",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_PAGEDOWN,
-                Categories.OBJECT_TRACKER
-        ),
-        OBJECT_TRACKER_PREVIOUS_ITEM(
-                "minecraft_access.keys.object_tracker.previous_item",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_PAGEUP,
-                Categories.OBJECT_TRACKER
-        ),
-        OBJECT_TRACKER_NARRATE_CURRENT_OBJECT(
-                "minecraft_access.keys.object_tracker.narrate_current_object",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_HOME,
-                Categories.OBJECT_TRACKER
-        ),
-        TARGET_NEAREST_OBJECT(
-                "minecraft_access.keys.object_tracker.target_nearest",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_END,
-                Categories.OBJECT_TRACKER
         );
 
         public final KeyMapping mapping;

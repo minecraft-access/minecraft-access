@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.kuma.api.InputBinding;
@@ -31,7 +30,6 @@ import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
-@Slf4j
 public class AccessMenu implements BalmClientModule {
     private static ManagedKeyMapping keyAccessMenu;
     private boolean gameModeSwitcherActive = false;
