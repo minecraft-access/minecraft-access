@@ -17,7 +17,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -66,14 +66,14 @@ public class POIEntities implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             marked = null;
             lastScanResults = new ArrayList<>();
         });
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         setMarked(MainClass.poiManager.poiMarking.getMarkedEntity());
         loadConfig();
 

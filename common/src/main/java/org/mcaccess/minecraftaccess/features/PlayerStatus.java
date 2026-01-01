@@ -17,7 +17,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -51,7 +51,7 @@ public class PlayerStatus implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             lastWarning.clear();
             wasSneaking = false;
@@ -59,7 +59,7 @@ public class PlayerStatus implements BalmClientModule {
         });
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         Minecraft client = Minecraft.getInstance();
         if (client.screen != null) return;
 
@@ -74,7 +74,7 @@ public class PlayerStatus implements BalmClientModule {
                         SoundEvent soundToPlay = currentLevel.ordinal() > Status.WarningLevel.WARNING.ordinal()
                                 ? SoundEvents.ANVIL_PLACE
                                 : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value();
-                        player.level().playPlayerSound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
+                        level.playPlayerSound(soundToPlay, SoundSource.PLAYERS, 1.0f, 1.0f);
                         MainClass.narrate(I18n.get("minecraft_access.player_status.warning", status.message()), true);
                     }
                 }
@@ -84,7 +84,8 @@ public class PlayerStatus implements BalmClientModule {
 
         if (narrationKey.canBeTriggered()) {
             if (client.hasControlDown()) {
-                Collection<MobEffectInstance> effects = player.getActiveEffects();
+                assert Minecraft.getInstance().player != null;
+                Collection<MobEffectInstance> effects = Minecraft.getInstance().player.getActiveEffects();
                 if (effects.isEmpty()) {
                     MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
                     return;

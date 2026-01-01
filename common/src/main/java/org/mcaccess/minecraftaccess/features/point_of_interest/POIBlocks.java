@@ -14,7 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -78,14 +78,14 @@ public class POIBlocks implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             markedBlock = null;
             lastScanResults = new ArrayList<>();
         });
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         setMarkedBlock(MainClass.poiManager.poiMarking.getMarkedBlock());
         loadConfig();
 

@@ -14,8 +14,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
@@ -35,14 +35,14 @@ public class HUDStatus implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             attackCooldownPlayed = false;
             bossIndex = 0;
         });
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         hudVisibilityStatus();
         attackCooldownStatus();
 

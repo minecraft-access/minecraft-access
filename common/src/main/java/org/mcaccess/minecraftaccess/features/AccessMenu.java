@@ -18,12 +18,11 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.addon.worldnarrators.MinecraftAccess;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -43,10 +42,10 @@ public class AccessMenu implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
     }
 
-    public void tick(Player player) {
+    public void tick(Level level) {
         Minecraft client = Minecraft.getInstance();
         if (client.screen == null) {
             if (client.hasAltDown()) {

@@ -5,7 +5,7 @@ import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
@@ -35,10 +35,10 @@ public class PositionNarrator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
     }
 
-    public void tick(Player player) {
+    public void tick(Level level) {
         if (Minecraft.getInstance().screen != null) return;
 
         if (Minecraft.getInstance().hasAltDown()) {

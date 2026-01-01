@@ -11,8 +11,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -31,7 +31,7 @@ public class NarrateHeldItem implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             previousItemName = null;
             previousItemCount = null;
@@ -39,8 +39,9 @@ public class NarrateHeldItem implements BalmClientModule {
         });
     }
 
-    private void tick(Player player) {
-        if (player.isSpectator()) {
+    private void tick(Level level) {
+        assert Minecraft.getInstance().player != null;
+        if (Minecraft.getInstance().player.isSpectator()) {
             return;
         }
 
@@ -48,8 +49,8 @@ public class NarrateHeldItem implements BalmClientModule {
             narrateHand(Minecraft.getInstance().hasAltDown());
         }
 
-        ItemStack currentItemStack = player.getMainHandItem();
-        int selectedSlot = player.getInventory().getSelectedSlot();
+        ItemStack currentItemStack = Minecraft.getInstance().player.getMainHandItem();
+        int selectedSlot = Minecraft.getInstance().player.getInventory().getSelectedSlot();
         String baseItemName = getItemName(currentItemStack);
         int itemCount = currentItemStack.getCount();
 

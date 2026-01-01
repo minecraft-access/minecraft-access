@@ -14,7 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -40,17 +40,19 @@ public class FallDetector implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
+        Minecraft client = Minecraft.getInstance();
         if (!config.enabled) return;
 
-        if (Minecraft.getInstance().screen != null) return;
-        if (!player.onGround()) return;
-        if (player.isUnderWater()) return;
-        if (player.isSwimming()) return;
-        if (player.isVisuallySwimming()) return;
+        if (client.screen != null) return;
+        assert client.player != null;
+        if (!client.player.onGround()) return;
+        if (client.player.isUnderWater()) return;
+        if (client.player.isSwimming()) return;
+        if (client.player.isVisuallySwimming()) return;
 
         long currentTimeInMillis = clock.millis();
         if (currentTimeInMillis - previousTimeInMillis < config.delay) return;

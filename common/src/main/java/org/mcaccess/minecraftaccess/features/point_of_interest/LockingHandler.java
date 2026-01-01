@@ -15,9 +15,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.BowItem;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DoorBlock;
@@ -67,7 +67,7 @@ public class LockingHandler implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             lockedOnEntity = null;
             lockedOnBlockPos = null;
@@ -87,7 +87,7 @@ public class LockingHandler implements BalmClientModule {
         interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         loadConfig();
         if (!interval.isReady()) return;
         if (Minecraft.getInstance().screen != null) return;

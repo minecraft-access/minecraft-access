@@ -3,10 +3,11 @@ package org.mcaccess.minecraftaccess.features;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
@@ -21,19 +22,20 @@ public class TimeIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             previousTime = null;
         });
     }
 
-    private void tick(Player player) {
-        if (player.level().dimensionType().hasFixedTime() || player.level().dimensionType().hasCeiling()) return;
-        if (!player.level().canSeeSky(BlockPos.containing(player.getEyePosition()))) return;
+    private void tick(Level level) {
+        if (level.dimensionType().hasFixedTime() || level.dimensionType().hasCeiling()) return;
+        assert Minecraft.getInstance().player != null;
+        if (!level.canSeeSky(BlockPos.containing(Minecraft.getInstance().player.getEyePosition()))) return;
 
         Times currentTime;
 
-        long time = player.level().getDayTime() % 24000;
+        long time = level.getDayTime() % 24000;
 
         if (time >= 10000 && time <= 12999) {
             currentTime = Times.AFTERNOON;

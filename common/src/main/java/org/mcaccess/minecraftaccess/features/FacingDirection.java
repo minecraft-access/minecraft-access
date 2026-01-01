@@ -5,7 +5,7 @@ import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
@@ -25,10 +25,10 @@ public class FacingDirection implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         if (Minecraft.getInstance().screen != null) return;
 
         boolean isDirectionNarrationKeyPressed = KeyMappingsHandler.Keys.DIRECTION_NARRATION_KEY.mapping.isDown();

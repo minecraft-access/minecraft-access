@@ -11,14 +11,13 @@ import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallba
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +54,7 @@ public class ObjectTracker implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             currentObject = null;
             currentGroup = null;
@@ -78,7 +77,7 @@ public class ObjectTracker implements BalmClientModule {
         return result;
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         Minecraft client = Minecraft.getInstance();
         if (client.screen != null) return;
 
