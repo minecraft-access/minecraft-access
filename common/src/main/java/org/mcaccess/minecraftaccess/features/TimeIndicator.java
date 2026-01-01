@@ -1,7 +1,5 @@
 package org.mcaccess.minecraftaccess.features;
 
-import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
@@ -11,10 +9,9 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.ServerChangeDetector;
 
 public class TimeIndicator implements BalmClientModule {
-    private Times previousTime = null;
-
     @Override
     public @NotNull Identifier getId() {
         return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "time_indicator");
@@ -22,43 +19,36 @@ public class TimeIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
-            previousTime = null;
-        });
+        new ServerChangeDetector<Times>().levelEvent(level -> Times.of(level.getDayTime()), this::onChange);
     }
 
-    private void tick(Level level) {
+    private void onChange(Level level, Times previous, Times time) {
         if (level.dimensionType().hasFixedTime() || level.dimensionType().hasCeiling()) return;
         assert Minecraft.getInstance().player != null;
         if (!level.canSeeSky(BlockPos.containing(Minecraft.getInstance().player.getEyePosition()))) return;
 
-        Times currentTime;
-
-        long time = level.getDayTime() % 24000;
-
-        if (time >= 10000 && time <= 12999) {
-            currentTime = Times.AFTERNOON;
-        } else if (time >= 13000 && time <= 23999) {
-            currentTime = Times.NIGHT;
-        } else {
-            currentTime = Times.DAY;
-        }
-
-        if (currentTime == previousTime) return;
-
-        switch (currentTime) {
+        switch (time) {
             case AFTERNOON -> MainClass.narrate(I18n.get("minecraft_access.time.afternoon"), false);
             case DAY -> MainClass.narrate(I18n.get("minecraft_access.time.day"), false);
             case NIGHT -> MainClass.narrate(I18n.get("minecraft_access.time.night"), false);
         }
-
-        previousTime = currentTime;
     }
 
     private enum Times {
         DAY,
         AFTERNOON,
-        NIGHT
+        NIGHT;
+
+        private static Times of(long ticks) {
+            long time = ticks % 24000;
+
+            if (time >= 10000 && time < 13000) {
+                return AFTERNOON;
+            } else if (time >= 13000) {
+                return NIGHT;
+            } else {
+                return DAY;
+            }
+        }
     }
 }
