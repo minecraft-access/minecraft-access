@@ -17,7 +17,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  */
 @Slf4j
 public class POIEntities implements BalmClientModule {
-    private final Minecraft client = Minecraft.getInstance();
     private Config.POI.Entities config;
     private final Interval interval = Interval.defaultDelay();
 
@@ -67,21 +66,21 @@ public class POIEntities implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             marked = null;
             lastScanResults = new ArrayList<>();
         });
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         setMarked(MainClass.poiManager.poiMarking.getMarkedEntity());
         loadConfig();
 
         if (!config.enabled) return;
         if (!interval.isReady()) return;
 
-        if (client.screen != null) return; //Prevent running if any screen is opened
+        if (Minecraft.getInstance().screen != null) return; //Prevent running if any screen is opened
 
         log.trace("POIEntities started");
         scanEntitiesAroundPlayer();
@@ -96,11 +95,11 @@ public class POIEntities implements BalmClientModule {
             group.clear();
         }
 
-        LocalPlayer player = client.player;
+        LocalPlayer player = Minecraft.getInstance().player;
         assert player != null;
         AABB scanBox = player.getBoundingBox().inflate(config.range, config.range, config.range);
-        assert client.level != null;
-        List<Entity> entities = client.level.getEntities(player, scanBox);
+        assert Minecraft.getInstance().level != null;
+        List<Entity> entities = Minecraft.getInstance().level.getEntities(player, scanBox);
 
         for (Entity entity : entities) {
             for (POIGroup<Entity> group : groups) {

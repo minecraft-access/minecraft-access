@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -24,7 +23,6 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
  * Narrates the name of the biome when entering a different biome.
  */
 public class BiomeIndicator implements BalmClientModule {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
     @Nullable
     private Holder<Biome> previousBiome = null;
     private ResourceKey<Level> previousDimension;
@@ -36,18 +34,18 @@ public class BiomeIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             previousBiome = null;
             previousDimension = null;
         });
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         if (!Config.getInstance().features.biomeIndicatorEnabled) {
             return;
         }
-        if (CLIENT.screen != null) return;
+        if (Minecraft.getInstance().screen != null) return;
 
         String narration;
 
@@ -55,7 +53,7 @@ public class BiomeIndicator implements BalmClientModule {
         if (currentBiome != null && currentBiome != previousBiome) {
             String currentBiomeName = NarrationUtils.getTranslatedName(currentBiome, "biome")
                     .orElse("");
-            ResourceKey<Level> currentDimension = player.level().dimension();
+            ResourceKey<Level> currentDimension = level.dimension();
             if (!currentDimension.equals(previousDimension) || Config.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
                 narration = I18n.get("minecraft_access.other.biome_and_dimension",
                         currentBiomeName,
@@ -75,12 +73,13 @@ public class BiomeIndicator implements BalmClientModule {
 
     @Nullable
     public static Holder<Biome> getCurrentBiome() {
-        if (CLIENT.level == null) return null;
-        if (CLIENT.player == null) return null;
-        BlockPos pos = CLIENT.player.blockPosition();
-        LevelChunk currentChunk = CLIENT.level.getChunkSource().getChunk(pos.getX() >> 4, pos.getZ() >> 4, false);
+        Minecraft client = Minecraft.getInstance();
+        if (client.level == null) return null;
+        if (client.player == null) return null;
+        BlockPos pos = client.player.blockPosition();
+        LevelChunk currentChunk = client.level.getChunkSource().getChunk(pos.getX() >> 4, pos.getZ() >> 4, false);
         if (currentChunk == null) return null;
 
-        return CLIENT.level.getBiome(CLIENT.player.blockPosition());
+        return client.level.getBiome(client.player.blockPosition());
     }
 }

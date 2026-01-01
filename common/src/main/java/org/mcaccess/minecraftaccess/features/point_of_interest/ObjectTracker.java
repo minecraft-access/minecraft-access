@@ -11,14 +11,13 @@ import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallba
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +29,6 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 public class ObjectTracker implements BalmClientModule {
-    private final Minecraft client = Minecraft.getInstance();
     public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
     public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
 
@@ -56,7 +54,7 @@ public class ObjectTracker implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             currentObject = null;
             currentGroup = null;
@@ -79,8 +77,8 @@ public class ObjectTracker implements BalmClientModule {
         return result;
     }
 
-    private void tick(Player player) {
-        if (client.level == null) return;
+    private void tick(Level level) {
+        Minecraft client = Minecraft.getInstance();
         if (client.screen != null) return;
 
         updateGroups();
@@ -126,8 +124,8 @@ public class ObjectTracker implements BalmClientModule {
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition()));
             }
             MainClass.narrate(narration.toString(), interrupt);
-            assert client.level != null;
-            client.level.playLocalSound(
+            assert Minecraft.getInstance().level != null;
+            Minecraft.getInstance().level.playLocalSound(
                     entity.getX(),
                     entity.getY(),
                     entity.getZ(),
@@ -149,8 +147,8 @@ public class ObjectTracker implements BalmClientModule {
                         .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos));
             }
             MainClass.narrate(narration.toString(), interrupt);
-            assert client.level != null;
-            client.level.playLocalSound(
+            assert Minecraft.getInstance().level != null;
+            Minecraft.getInstance().level.playLocalSound(
                     blockPos,
                     SoundEvents.NOTE_BLOCK_BELL.value(),
                     SoundSource.BLOCKS,
@@ -225,8 +223,8 @@ public class ObjectTracker implements BalmClientModule {
         }
 
         if (object instanceof BlockPos pos) {
-            if (client.level == null) return false;
-            return !(client.level.getBlockState(pos).getBlock() instanceof AirBlock);
+            if (Minecraft.getInstance().level == null) return false;
+            return !(Minecraft.getInstance().level.getBlockState(pos).getBlock() instanceof AirBlock);
         }
 
         return false;
@@ -279,19 +277,17 @@ public class ObjectTracker implements BalmClientModule {
     }
 
     private void targetNearestObject() {
-        LocalPlayer player = client.player;
+        Minecraft client = Minecraft.getInstance();
+        assert client.player != null;
 
         List<Entity> entities = MainClass.poiManager.poiEntities.getLastScanResults()
                 .stream()
-                .sorted(Comparator.comparingDouble(a -> a.distanceTo(player)))
+                .sorted(Comparator.comparingDouble(a -> a.distanceTo(client.player)))
                 .toList();
 
         List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults()
                 .stream()
-                .sorted(Comparator.comparingDouble(a -> {
-                    assert player != null;
-                    return player.getEyePosition().distanceTo(a.getCenter());
-                }))
+                .sorted(Comparator.comparingDouble(a -> client.player.getEyePosition().distanceTo(a.getCenter())))
                 .toList();
 
         if (client.hasControlDown() && !client.hasShiftDown()) {
@@ -318,7 +314,7 @@ public class ObjectTracker implements BalmClientModule {
                 currentObject = entities.getFirst();
                 MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
             } else {
-                if (player.getEyePosition().distanceTo(blocks.getFirst().getCenter()) < player.distanceTo(entities.getFirst())) {
+                if (client.player.getEyePosition().distanceTo(blocks.getFirst().getCenter()) < client.player.distanceTo(entities.getFirst())) {
                     currentObject = blocks.getFirst();
                 } else {
                     currentObject = entities.getFirst();

@@ -18,7 +18,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -29,7 +29,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 
 public class AccessMenu implements BalmClientModule {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
     private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping);
     private boolean gameModeSwitcherActive = false;
     private final Interval[] intervals = IntStream.range(0, 10)
@@ -43,17 +42,18 @@ public class AccessMenu implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
     }
 
-    public void tick(Player player) {
-        if (CLIENT.screen == null) {
-            if (CLIENT.hasAltDown()) {
-                assert CLIENT.player != null;
+    public void tick(Level level) {
+        Minecraft client = Minecraft.getInstance();
+        if (client.screen == null) {
+            if (client.hasAltDown()) {
+                assert client.player != null;
                 for (byte i = 0; i < 10; i++) {
                     RegisteredFunction function = getShortcuts()[i];
-                    if (InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_0 + i) && function.function().enabled() && intervals[i].isReady()) {
-                        CLIENT.player.clientSideCloseContainer();
+                    if (InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_0 + i) && function.function().enabled() && intervals[i].isReady()) {
+                        client.player.clientSideCloseContainer();
                         function.function().execute();
                     }
                 }
@@ -69,13 +69,13 @@ public class AccessMenu implements BalmClientModule {
             }
 
             if (MENU_KEY.canOpenMenu() && !gameModeSwitcherActive) {
-                CLIENT.setScreen(new GUI());
+                client.setScreen(new GUI());
             }
         }
 
-        if (CLIENT.screen instanceof GameModeSwitcherScreen) {
+        if (client.screen instanceof GameModeSwitcherScreen) {
             gameModeSwitcherActive = true;
-        } else if (!InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_F4)) {
+        } else if (!InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_F4)) {
             gameModeSwitcherActive = false;
         }
     }

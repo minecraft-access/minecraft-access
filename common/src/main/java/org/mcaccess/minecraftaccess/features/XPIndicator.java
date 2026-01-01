@@ -1,13 +1,12 @@
 package org.mcaccess.minecraftaccess.features;
 
-import java.util.Objects;
-
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,18 +28,20 @@ public class XPIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             previousXPLevel = null;
         });
     }
 
-    private void tick(Player player) {
-        if (!Config.getInstance().features.xpIndicatorEnabled || !Objects.requireNonNull(player.gameMode()).isSurvival()) {
+    private void tick(Level level) {
+        assert Minecraft.getInstance().gameMode != null;
+        if (!Config.getInstance().features.xpIndicatorEnabled || !Minecraft.getInstance().gameMode.hasExperience()) {
             return;
         }
 
-        int currentXPLevel = player.experienceLevel;
+        assert Minecraft.getInstance().player != null;
+        int currentXPLevel = Minecraft.getInstance().player.experienceLevel;
         if (previousXPLevel == null) {
             previousXPLevel = currentXPLevel;
             return;

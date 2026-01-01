@@ -10,7 +10,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -39,7 +39,7 @@ public class POIMarking implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             isMarked = false;
             markedEntity = null;
@@ -52,7 +52,7 @@ public class POIMarking implements BalmClientModule {
      * and suppress the normal POI scan (by switching their targets to marked target)
      * if this feature is enabled.
      */
-    private void tick(Player player) {
+    private void tick(Level level) {
         if (Config.getInstance().poi.marking.enabled) {
             boolean controlPressed = Minecraft.getInstance().hasControlDown();
             boolean altPressed = Minecraft.getInstance().hasAltDown();

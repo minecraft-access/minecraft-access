@@ -16,7 +16,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -35,7 +35,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Interval;
  */
 @Slf4j
 public class NarrateCrosshair implements BalmClientModule {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
     private @Nullable Object previousTarget = null;
     private @Nullable String previousNarration = null;
     private Vec3 previousSoundPos = null;
@@ -49,7 +48,7 @@ public class NarrateCrosshair implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             previousTarget = null;
             previousNarration = null;
@@ -57,8 +56,8 @@ public class NarrateCrosshair implements BalmClientModule {
         });
     }
 
-    private void tick(Player player) {
-        if (CLIENT.screen != null) return;
+    private void tick(Level level) {
+        if (Minecraft.getInstance().screen != null) return;
         if (!CONFIG.enabled) return;
         repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
 
@@ -90,7 +89,8 @@ public class NarrateCrosshair implements BalmClientModule {
         }
 
         if (CONFIG.relativePositionSoundCue.enabled) {
-            double rayCastDistance = Math.min(player.blockInteractionRange(), player.entityInteractionRange());
+            assert Minecraft.getInstance().player != null;
+            double rayCastDistance = Math.min(Minecraft.getInstance().player.blockInteractionRange(), Minecraft.getInstance().player.entityInteractionRange());
             Vec3 targetPosition = switch (rayCast) {
                 case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().getCenter();
                 case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();
@@ -110,8 +110,7 @@ public class NarrateCrosshair implements BalmClientModule {
         } else if (CONFIG.filter.enabled) {
             switch (rayCast) {
                 case BlockHitResult blockHitResult when CONFIG.filter.targetMode.filterBlocks() -> {
-                    assert CLIENT.level != null;
-                    Identifier key = BuiltInRegistries.BLOCK.getKey(CLIENT.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
+                    Identifier key = BuiltInRegistries.BLOCK.getKey(level.getBlockState(blockHitResult.getBlockPos()).getBlock());
                     if (isIgnored(key)) {
                         return;
                     }
@@ -141,8 +140,8 @@ public class NarrateCrosshair implements BalmClientModule {
 
     // To indicate relative location between player and target.
     private static void playRelativePositionSoundCue(Vec3 targetPosition, double maxDistance, Holder.Reference<SoundEvent> sound, double minVolume, double maxVolume) {
-        assert CLIENT.player != null;
-        Vec3 playerPos = CLIENT.player.position();
+        assert Minecraft.getInstance().player != null;
+        Vec3 playerPos = Minecraft.getInstance().player.position();
 
         // Use pitch to represent relative elevation, the higher the sound the higher the target.
         // The range of pitch is [0.5, 2.0], calculated as: 2 ^ (x / 12), where x is [-12, 12].
@@ -159,7 +158,7 @@ public class NarrateCrosshair implements BalmClientModule {
         double volumeDeltaPerBlock = (maxVolume - minVolume) / maxDistance;
         float volume = (float) (minVolume + (maxDistance - distance) * volumeDeltaPerBlock);
 
-        assert CLIENT.level != null;
-        CLIENT.level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
+        assert Minecraft.getInstance().level != null;
+        Minecraft.getInstance().level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
     }
 }

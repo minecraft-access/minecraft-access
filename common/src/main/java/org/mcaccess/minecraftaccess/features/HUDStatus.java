@@ -14,8 +14,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
@@ -23,7 +23,6 @@ import org.mcaccess.minecraftaccess.mixin.BossHealthOverlayAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 
 public class HUDStatus implements BalmClientModule {
-    private final Minecraft client = Minecraft.getInstance();
     private Boolean hudWasHidden = null;
     private boolean attackCooldownPlayed = false;
     private boolean bossbarKeyIsDown = false;
@@ -36,14 +35,14 @@ public class HUDStatus implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientPlayerTick.AFTER.register(this::tick);
+        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             attackCooldownPlayed = false;
             bossIndex = 0;
         });
     }
 
-    private void tick(Player player) {
+    private void tick(Level level) {
         hudVisibilityStatus();
         attackCooldownStatus();
 
@@ -58,7 +57,7 @@ public class HUDStatus implements BalmClientModule {
     }
 
     private void hudVisibilityStatus() {
-        Boolean hudIsHidden = client.options.hideGui;
+        Boolean hudIsHidden = Minecraft.getInstance().options.hideGui;
 
         if (hudWasHidden != hudIsHidden) {
             MainClass.narrate(I18n.get(String.format("minecraft_access.hud_status.announce_%s", hudIsHidden ? "hidden" : "shown")), true);
@@ -67,6 +66,8 @@ public class HUDStatus implements BalmClientModule {
     }
 
     private void attackCooldownStatus() {
+        Minecraft client = Minecraft.getInstance();
+        assert client.gameMode != null;
         boolean indicatorShowing = !hudWasHidden && client.options.attackIndicator().get() != AttackIndicatorStatus.OFF && client.gameMode.getPlayerMode() != GameType.SPECTATOR;
         if (!indicatorShowing) return;
 
@@ -75,6 +76,7 @@ public class HUDStatus implements BalmClientModule {
 
         float cooldownProgress = player.getAttackStrengthScale(1.0f);
         if (!attackCooldownPlayed && cooldownProgress == 1.0f) {
+            assert client.level != null;
             client.level.playPlayerSound(SoundEvents.NOTE_BLOCK_HAT.value(), SoundSource.PLAYERS, 0.6f, 1.0f);
             attackCooldownPlayed = true;
         } else if (attackCooldownPlayed && cooldownProgress < 1.0f) {
@@ -84,7 +86,7 @@ public class HUDStatus implements BalmClientModule {
 
     private void narrateBossBars() {
         List<LerpingBossEvent> bosses = new ArrayList<>(
-                ((BossHealthOverlayAccessor) client.gui.getBossOverlay()).getEvents().values()
+                ((BossHealthOverlayAccessor) Minecraft.getInstance().gui.getBossOverlay()).getEvents().values()
         );
 
         if (bosses.isEmpty()) {
