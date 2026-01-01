@@ -3,9 +3,14 @@ package org.mcaccess.minecraftaccess.features;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.LerpingBossEvent;
@@ -20,12 +25,11 @@ import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.BossHealthOverlayAccessor;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 
 public class HUDStatus implements BalmClientModule {
     private Boolean hudWasHidden = null;
     private boolean attackCooldownPlayed = false;
-    private boolean bossbarKeyIsDown = false;
     private int bossIndex = 0;
 
     @Override
@@ -40,20 +44,29 @@ public class HUDStatus implements BalmClientModule {
             attackCooldownPlayed = false;
             bossIndex = 0;
         });
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbars/next"))
+                .withDefault(InputBinding.key(InputConstants.KEY_U))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    narrateBossBars(false);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbars/previous"))
+                .withDefault(InputBinding.key(InputConstants.KEY_U, KeyModifiers.of(KeyModifier.SHIFT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    narrateBossBars(true);
+                    return true;
+                })
+                .build();
     }
 
     private void tick(Level level) {
         hudVisibilityStatus();
         attackCooldownStatus();
-
-        if (KeyMappingsHandler.Keys.NARRATE_BOSSBARS_KEY.mapping.consumeClick()) {
-            if (!bossbarKeyIsDown) {
-                bossbarKeyIsDown = true;
-                narrateBossBars();
-            }
-        } else if (!KeyMappingsHandler.Keys.NARRATE_BOSSBARS_KEY.mapping.isDown()) {
-            bossbarKeyIsDown = false;
-        }
     }
 
     private void hudVisibilityStatus() {
@@ -84,7 +97,7 @@ public class HUDStatus implements BalmClientModule {
         }
     }
 
-    private void narrateBossBars() {
+    private void narrateBossBars(boolean isShiftDown) {
         List<LerpingBossEvent> bosses = new ArrayList<>(
                 ((BossHealthOverlayAccessor) Minecraft.getInstance().gui.getBossOverlay()).getEvents().values()
         );
@@ -94,7 +107,12 @@ public class HUDStatus implements BalmClientModule {
             return;
         }
 
-        bossIndex = (bossIndex + 1) % bosses.size();
+        if (isShiftDown) {
+            bossIndex = (bossIndex - 1) % bosses.size();
+        } else {
+            bossIndex = (bossIndex + 1) % bosses.size();
+        }
+
         LerpingBossEvent currentBoss = bosses.get(bossIndex);
         String name = currentBoss.getName().getString();
         int healthPercent = Math.round(currentBoss.getProgress() * 100);

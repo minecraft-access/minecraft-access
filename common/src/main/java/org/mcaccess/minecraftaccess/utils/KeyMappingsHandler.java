@@ -29,12 +29,6 @@ public final class KeyMappingsHandler {
     }
 
     public enum Keys {
-        NARRATE_BOSSBARS_KEY(
-                "minecraft_access.keys.other.narrate_bossbars_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_U,
-                Categories.OTHER
-        ),
         LOCKING_HANDLER_KEY(
                 "minecraft_access.keys.other.locking_handler_key_name",
                 InputConstants.Type.KEYSYM,
