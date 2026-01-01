@@ -16,8 +16,7 @@ public final class KeyMappingsHandler {
     public enum Categories {
         ACCESS_MENU("old_access_menu"),
         CAMERA_CONTROLS("old_camera_controls"),
-        INVENTORY_CONTROLS("old_inventory_controls"),
-        MOUSE_SIMULATION("old_mouse_simulation");
+        INVENTORY_CONTROLS("old_inventory_controls");
 
         public final KeyMapping.Category category;
 
@@ -165,37 +164,6 @@ public final class KeyMappingsHandler {
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_U,
                 Categories.INVENTORY_CONTROLS
-        ),
-
-        MOUSE_SIMULATION_LEFT_MOUSE_KEY(
-                "minecraft_access.keys.mouse_simulation.left_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_LBRACKET,
-                Categories.MOUSE_SIMULATION
-        ),
-        MOUSE_SIMULATION_RIGHT_MOUSE_KEY(
-                "minecraft_access.keys.mouse_simulation.right_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_RBRACKET,
-                Categories.MOUSE_SIMULATION
-        ),
-        MOUSE_SIMULATION_MIDDLE_MOUSE_KEY(
-                "minecraft_access.keys.mouse_simulation.middle_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_BACKSLASH,
-                Categories.MOUSE_SIMULATION
-        ),
-        MOUSE_SIMULATION_SCROLL_UP_KEY(
-                "minecraft_access.keys.mouse_simulation.scroll_up_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_SEMICOLON,
-                Categories.MOUSE_SIMULATION
-        ),
-        MOUSE_SIMULATION_SCROLL_DOWN_KEY(
-                "minecraft_access.keys.mouse_simulation.scroll_down_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_APOSTROPHE,
-                Categories.MOUSE_SIMULATION
         );
 
         public final KeyMapping mapping;
