@@ -4,8 +4,12 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.Kuma;
+import net.blay09.mods.kuma.api.ManagedKeyMapping;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -24,12 +28,12 @@ import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
 
+@Slf4j
 public class AccessMenu implements BalmClientModule {
-    private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping);
+    private static ManagedKeyMapping keyAccessMenu;
     private boolean gameModeSwitcherActive = false;
     private final Interval[] intervals = IntStream.range(0, 10)
             .mapToObj(i -> Interval.sec(1))
@@ -43,6 +47,19 @@ public class AccessMenu implements BalmClientModule {
     @Override
     public void initialize() {
         ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+
+        keyAccessMenu = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.access_menu"))
+                .withDefault(InputBinding.key(InputConstants.KEY_F4))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    Minecraft client = Minecraft.getInstance();
+                    if (keyAccessMenu.getBinding().key().getValue() == InputConstants.KEY_F4 && InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_F3)) {
+                        return false;
+                    }
+                    client.setScreen(new GUI());
+                    return true;
+                })
+                .build();
     }
 
     public void tick(Level level) {
@@ -68,9 +85,9 @@ public class AccessMenu implements BalmClientModule {
                 }
             }
 
-            if (MENU_KEY.canOpenMenu() && !gameModeSwitcherActive) {
-                client.setScreen(new GUI());
-            }
+            //if (!gameModeSwitcherActive) {
+            //client.setScreen(new GUI());
+            //}
         }
 
         if (client.screen instanceof GameModeSwitcherScreen) {
@@ -137,7 +154,7 @@ public class AccessMenu implements BalmClientModule {
 
         @Override
         public boolean keyPressed(KeyEvent event) {
-            if (KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping.matches(event)) {
+            if (keyAccessMenu.matchesKey(event.key(), event.scancode(), event.modifiers())) {
                 onClose();
                 return true;
             }

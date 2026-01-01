@@ -14,7 +14,6 @@ public final class KeyMappingsHandler {
     }
 
     public enum Categories {
-        OTHER("old_other"),
         ACCESS_MENU("old_access_menu"),
         CAMERA_CONTROLS("old_camera_controls"),
         INVENTORY_CONTROLS("old_inventory_controls"),
@@ -29,13 +28,6 @@ public final class KeyMappingsHandler {
     }
 
     public enum Keys {
-        ACCESS_MENU_KEY(
-                "minecraft_access.keys.other.access_menu_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_F4,
-                Categories.OTHER
-        ),
-
         CAMERA_CONTROLS_UP(
                 "minecraft_access.keys.camera_controls.up_key_name",
                 InputConstants.Type.KEYSYM,
