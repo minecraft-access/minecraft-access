@@ -55,9 +55,18 @@ public class AccessMenu implements BalmClientModule {
                     Minecraft client = Minecraft.getInstance();
                     if (keyAccessMenu.getBinding().key().getValue() == InputConstants.KEY_F4 && InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_F3)) {
                         return false;
+                    } else {
+                        client.setScreen(new GUI());
+                        return true;
                     }
-                    client.setScreen(new GUI());
-                    return true;
+                })
+                .handleScreenInput(event -> {
+                    if (event.screen() instanceof GUI) {
+                        Minecraft.getInstance().setScreen(null);
+                        return true;
+                    } else {
+                        return false;
+                    }
                 })
                 .build();
     }
@@ -154,10 +163,6 @@ public class AccessMenu implements BalmClientModule {
 
         @Override
         public boolean keyPressed(KeyEvent event) {
-            if (keyAccessMenu.matchesKey(event.key(), event.scancode(), event.modifiers())) {
-                onClose();
-                return true;
-            }
             if (event.getDigit() != -1) {
                 RegisteredFunction function = getShortcuts()[event.getDigit()];
                 if (function.function().enabled()) {
