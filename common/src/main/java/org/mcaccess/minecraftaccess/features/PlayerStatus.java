@@ -7,9 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
@@ -24,11 +29,8 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.addon.CoreAddon;
 import org.mcaccess.minecraftaccess.api.Status;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.condition.IntervalKeystroke;
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
 
 /**
@@ -36,10 +38,6 @@ import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
  * - Narrate Player Status Key (default: R) = Narrates the health and hunger.<br>
  */
 public class PlayerStatus implements BalmClientModule {
-    IntervalKeystroke narrationKey = new IntervalKeystroke(
-            KeyMappingsHandler.Keys.NARRATE_PLAYER_STATUS_KEY.mapping::isDown,
-            Keystroke.TriggeredAt.PRESSED,
-            Interval.sec(3));
     private final Map<Identifier, Status.WarningLevel> lastWarning = new HashMap<>();
     private boolean wasSneaking = false;
     private boolean wasSprinting = false;
@@ -57,6 +55,43 @@ public class PlayerStatus implements BalmClientModule {
             wasSneaking = false;
             wasSprinting = false;
         });
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.player_status/normal"))
+                .withDefault(InputBinding.key(InputConstants.KEY_R))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    narratePlayerStatus(false);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.player_status/important"))
+                .withDefault(InputBinding.key(InputConstants.KEY_R, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    narratePlayerStatus(true);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.player_effects"))
+                .withDefault(InputBinding.key(InputConstants.KEY_R, KeyModifiers.of(KeyModifier.CONTROL)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    assert Minecraft.getInstance().player != null;
+                    Collection<MobEffectInstance> effects = Minecraft.getInstance().player.getActiveEffects();
+                    if (effects.isEmpty()) {
+                        MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
+                        return true;
+                    }
+                    String narration = effects.stream().map(NarrationUtils::narrateEffect)
+                            .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection")));
+                    MainClass.narrate(narration, true);
+                    return true;
+                })
+                .build();
+
+
     }
 
     private void tick(Level level) {
@@ -81,31 +116,21 @@ public class PlayerStatus implements BalmClientModule {
                 lastWarning.put(key, currentLevel);
             }
         }
+    }
 
-        if (narrationKey.canBeTriggered()) {
-            if (client.hasControlDown()) {
-                assert Minecraft.getInstance().player != null;
-                Collection<MobEffectInstance> effects = Minecraft.getInstance().player.getActiveEffects();
-                if (effects.isEmpty()) {
-                    MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
-                    return;
-                }
-                String narration = effects.stream().map(NarrationUtils::narrateEffect)
-                        .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection")));
-                MainClass.narrate(narration, true);
-                return;
-            }
+    private void narratePlayerStatus(boolean hasAltDown) {
+        Minecraft client = Minecraft.getInstance();
 
             List<Status> statuses = Arrays.stream(Config.getInstance().playerWarnings.statuses)
                     .map(MainClass.registry(Status.class)::get)
                     .filter(status -> switch (status.visibility()) {
                         case NONE -> false;
-                        case NORMAL -> !client.hasAltDown();
+                        case NORMAL -> !hasAltDown;
                         case IMPORTANT -> true;
                     })
                     .toList();
 
-            if (statuses.isEmpty() && client.hasAltDown()) {
+        if (statuses.isEmpty() && hasAltDown) {
                 assert client.gameMode != null;
                 if (client.gameMode.getPlayerMode().isSurvival()) {
                     MainClass.narrate(I18n.get("minecraft_access.player_status.no_conditional_status"), true);
@@ -121,8 +146,6 @@ public class PlayerStatus implements BalmClientModule {
                 );
             }
         }
-        narrationKey.updateStateForNextTick();
-    }
 
     private void movementTypeStatus() {
         Minecraft client = Minecraft.getInstance();

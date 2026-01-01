@@ -29,12 +29,6 @@ public final class KeyMappingsHandler {
     }
 
     public enum Keys {
-        NARRATE_PLAYER_STATUS_KEY(
-                "minecraft_access.keys.other.player_status_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_R,
-                Categories.OTHER
-        ),
         NARRATE_BOSSBARS_KEY(
                 "minecraft_access.keys.other.narrate_bossbars_key_name",
                 InputConstants.Type.KEYSYM,
