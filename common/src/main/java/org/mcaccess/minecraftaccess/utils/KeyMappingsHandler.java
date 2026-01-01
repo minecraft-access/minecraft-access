@@ -59,12 +59,6 @@ public final class KeyMappingsHandler {
                 InputConstants.KEY_F4,
                 Categories.OTHER
         ),
-        NARRATE_HELD_ITEM_KEY(
-                "minecraft_access.keys.other.narrate_held_item_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_GRAVE,
-                Categories.OTHER
-        ),
 
         CAMERA_CONTROLS_UP(
                 "minecraft_access.keys.camera_controls.up_key_name",

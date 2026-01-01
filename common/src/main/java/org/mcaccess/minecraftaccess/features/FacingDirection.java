@@ -7,7 +7,6 @@ import net.blay09.mods.kuma.api.InputBinding;
 import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
-import net.blay09.mods.kuma.api.ManagedKeyMapping;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +22,6 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  */
 @Slf4j
 public class FacingDirection implements BalmClientModule {
-    private static ManagedKeyMapping keyHorizontalFacingDirection;
-    private static ManagedKeyMapping keyVerticleFacingDirection;
-
     @Override
     public @NotNull Identifier getId() {
         return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "facing_direction");
@@ -33,7 +29,7 @@ public class FacingDirection implements BalmClientModule {
 
     @Override
     public void initialize() {
-        keyHorizontalFacingDirection = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.horizontal_facing_direction"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_facing_direction/horizontal"))
                 .withDefault(InputBinding.key(InputConstants.KEY_H))
                 .overrideCategory(KeyMappingCategories.OTHER)
                 .handleWorldInput(event -> {
@@ -42,7 +38,7 @@ public class FacingDirection implements BalmClientModule {
                 })
                 .build();
 
-        keyVerticleFacingDirection = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.verticle_facing_direction"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_facing_direction/verticle"))
                 .withDefault(InputBinding.key(InputConstants.KEY_H, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.OTHER)
                 .handleWorldInput(event -> {

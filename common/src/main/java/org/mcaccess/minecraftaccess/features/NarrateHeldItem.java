@@ -3,9 +3,14 @@ package org.mcaccess.minecraftaccess.features;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
@@ -17,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 
 public class NarrateHeldItem implements BalmClientModule {
     private String previousItemName = null;
@@ -37,17 +42,29 @@ public class NarrateHeldItem implements BalmClientModule {
             previousItemCount = null;
             previousSelectedSlot = null;
         });
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_held_item/mainhand"))
+                .withDefault(InputBinding.key(InputConstants.KEY_GRAVE))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    narrateHand(false);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_held_item/offhand"))
+                .withDefault(InputBinding.key(InputConstants.KEY_GRAVE, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    narrateHand(true);
+                    return true;
+                })
+                .build();
     }
 
     private void tick(Level level) {
         assert Minecraft.getInstance().player != null;
-        if (Minecraft.getInstance().player.isSpectator()) {
-            return;
-        }
-
-        while (KeyMappingsHandler.Keys.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
-            narrateHand(Minecraft.getInstance().hasAltDown());
-        }
+        if (Minecraft.getInstance().player.isSpectator()) return;
 
         ItemStack currentItemStack = Minecraft.getInstance().player.getMainHandItem();
         int selectedSlot = Minecraft.getInstance().player.getInventory().getSelectedSlot();
@@ -87,6 +104,8 @@ public class NarrateHeldItem implements BalmClientModule {
     }
 
     private void narrateHand(boolean hasAltDown) {
+        if (Minecraft.getInstance().player.isSpectator()) return;
+
         LocalPlayer player = Minecraft.getInstance().player;
         String hand;
         ItemStack heldItem;
