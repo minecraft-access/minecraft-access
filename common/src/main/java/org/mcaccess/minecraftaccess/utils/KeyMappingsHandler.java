@@ -35,12 +35,6 @@ public final class KeyMappingsHandler {
                 InputConstants.KEY_Y,
                 Categories.OTHER
         ),
-        POSITION_NARRATION_KEY(
-                "minecraft_access.keys.other.player_position_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_V,
-                Categories.OTHER
-        ),
         ACCESS_MENU_KEY(
                 "minecraft_access.keys.other.access_menu_key_name",
                 InputConstants.Type.KEYSYM,

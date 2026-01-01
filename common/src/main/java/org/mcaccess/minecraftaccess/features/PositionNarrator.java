@@ -1,18 +1,17 @@
 package org.mcaccess.minecraftaccess.features;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
-import net.minecraft.client.Minecraft;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
-
 
 /**
  * Adds key bindings to narrate the player's position.<br><br>
@@ -23,11 +22,6 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  * 4. Left Alt + Z = Narrates only the z position.<br>
  */
 public class PositionNarrator implements BalmClientModule {
-    public static Keystroke keyX = new Keystroke(() -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_X));
-    public static Keystroke keyC = new Keystroke(() -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_C));
-    public static Keystroke keyZ = new Keystroke(() -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_Z));
-    public static Keystroke positionNarrationKey = new Keystroke(KeyMappingsHandler.Keys.POSITION_NARRATION_KEY.mapping::isDown);
-
     @Override
     public @NotNull Identifier getId() {
         return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "position_narrator");
@@ -35,24 +29,40 @@ public class PositionNarrator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
-    }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_player_position"))
+                .withDefault(InputBinding.key(InputConstants.KEY_V))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    MainClass.narrate(PlayerPositionUtils.getNarratableXYZPosition(), true);
+                    return true;
+                })
+                .build();
 
-    public void tick(Level level) {
-        if (Minecraft.getInstance().screen != null) return;
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_coordinate/x"))
+                .withDefault(InputBinding.key(InputConstants.KEY_X, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    MainClass.narrate(PlayerPositionUtils.getNarratableXPos(), true);
+                    return true;
+                })
+                .build();
 
-        if (Minecraft.getInstance().hasAltDown()) {
-            if (keyX.canBeTriggered()) {
-                MainClass.narrate(PlayerPositionUtils.getNarratableXPos(), true);
-            } else if (keyC.canBeTriggered()) {
-                MainClass.narrate(PlayerPositionUtils.getNarratableYPos(), true);
-            } else if (keyZ.canBeTriggered()) {
-                MainClass.narrate(PlayerPositionUtils.getNarratableZPos(), true);
-            }
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_coordinate/y"))
+                .withDefault(InputBinding.key(InputConstants.KEY_C, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    MainClass.narrate(PlayerPositionUtils.getNarratableYPos(), true);
+                    return true;
+                })
+                .build();
 
-        if (positionNarrationKey.canBeTriggered()) {
-            MainClass.narrate(PlayerPositionUtils.getNarratableXYZPosition(), true);
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_coordinate/z"))
+                .withDefault(InputBinding.key(InputConstants.KEY_Z, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    MainClass.narrate(PlayerPositionUtils.getNarratableZPos(), true);
+                    return true;
+                })
+                .build();
     }
 }
