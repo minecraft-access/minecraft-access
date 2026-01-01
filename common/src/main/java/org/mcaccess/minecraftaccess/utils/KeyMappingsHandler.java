@@ -14,12 +14,12 @@ public final class KeyMappingsHandler {
     }
 
     public enum Categories {
-        OTHER("other"),
-        ACCESS_MENU("access_menu"),
-        CAMERA_CONTROLS("camera_controls"),
-        INVENTORY_CONTROLS("inventory_controls"),
-        MOUSE_SIMULATION("mouse_simulation"),
-        OBJECT_TRACKER("object_tracker");
+        OTHER("old_other"),
+        ACCESS_MENU("old_access_menu"),
+        CAMERA_CONTROLS("old_camera_controls"),
+        INVENTORY_CONTROLS("old_inventory_controls"),
+        MOUSE_SIMULATION("old_mouse_simulation"),
+        OBJECT_TRACKER("old_object_tracker");
 
         public final KeyMapping.Category category;
 
@@ -57,11 +57,6 @@ public final class KeyMappingsHandler {
                 "minecraft_access.keys.other.access_menu_key_name",
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_F4,
-                Categories.OTHER
-        ),
-        DIRECTION_NARRATION_KEY("minecraft_access.keys.other.facing_direction_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_H,
                 Categories.OTHER
         ),
         NARRATE_HELD_ITEM_KEY(
