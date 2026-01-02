@@ -15,8 +15,7 @@ public final class KeyMappingsHandler {
 
     public enum Categories {
         ACCESS_MENU("old_access_menu"),
-        CAMERA_CONTROLS("old_camera_controls"),
-        INVENTORY_CONTROLS("old_inventory_controls");
+        CAMERA_CONTROLS("old_camera_controls");
 
         public final KeyMapping.Category category;
 
@@ -115,55 +114,6 @@ public final class KeyMappingsHandler {
                 InputConstants.Type.KEYSYM,
                 InputConstants.KEY_NUMPADCOMMA,
                 Categories.CAMERA_CONTROLS
-        ),
-
-        INVENTORY_CONTROLS_GROUP_KEY(
-                "minecraft_access.keys.inventory_controls.change_group_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_C,
-                Categories.INVENTORY_CONTROLS
-        ),
-        INVENTORY_CONTROLS_UP_KEY(
-                "minecraft_access.keys.inventory_controls.up_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_I,
-                Categories.INVENTORY_CONTROLS
-        ),
-        INVENTORY_CONTROLS_RIGHT_KEY(
-                "minecraft_access.keys.inventory_controls.right_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_L,
-                Categories.INVENTORY_CONTROLS
-        ),
-        INVENTORY_CONTROLS_DOWN_KEY(
-                "minecraft_access.keys.inventory_controls.down_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_K,
-                Categories.INVENTORY_CONTROLS
-        ),
-        INVENTORY_CONTROLS_LEFT_KEY(
-                "minecraft_access.keys.inventory_controls.left_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_J,
-                Categories.INVENTORY_CONTROLS
-        ),
-        INVENTORY_CONTROLS_SWITCH_TAB_KEY(
-                "minecraft_access.keys.inventory_controls.switch_tabs_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_V,
-                Categories.INVENTORY_CONTROLS
-        ),
-        INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY(
-                "minecraft_access.keys.inventory_controls.toggle_craftable_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_R,
-                Categories.INVENTORY_CONTROLS
-        ),
-        INVENTORY_CONTROLS_FUEL_STATUS_KEY(
-                "minecraft_access.keys.inventory_controls.fuel_status_key_name",
-                InputConstants.Type.KEYSYM,
-                InputConstants.KEY_U,
-                Categories.INVENTORY_CONTROLS
         );
 
         public final KeyMapping mapping;
