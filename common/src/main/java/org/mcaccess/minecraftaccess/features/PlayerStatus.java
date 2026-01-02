@@ -29,7 +29,7 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.addon.CoreAddon;
 import org.mcaccess.minecraftaccess.api.Status;
-import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
+import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 

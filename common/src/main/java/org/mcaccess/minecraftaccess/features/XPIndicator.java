@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
-import org.mcaccess.minecraftaccess.utils.ServerChangeDetector;
+import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
 
 /**
  * This feature narrates when the player xp level is increased or decreased.

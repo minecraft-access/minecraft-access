@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.utils;
+package org.mcaccess.minecraftaccess.utils.events;
 
 import java.util.function.Supplier;
 

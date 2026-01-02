@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.ServerChangeDetector;
+import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
 
 public class TimeIndicator implements BalmClientModule {
     @Override

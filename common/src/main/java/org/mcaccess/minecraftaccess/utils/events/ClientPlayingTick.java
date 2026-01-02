@@ -1,4 +1,4 @@
-package org.mcaccess.minecraftaccess.utils;
+package org.mcaccess.minecraftaccess.utils.events;
 
 import net.blay09.mods.balm.platform.event.EventMapper;
 import net.minecraft.client.Minecraft;

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.BossHealthOverlayAccessor;
-import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
+import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 
 public class HUDStatus implements BalmClientModule {

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
+import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
 @Slf4j
 public class FallDetector implements BalmClientModule {
