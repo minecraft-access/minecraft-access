@@ -1,11 +1,12 @@
 package org.mcaccess.minecraftaccess.utils;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
-import net.minecraft.world.level.Level;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class ServerChangeDetector<T> extends ChangeDetector<T> {
     public ServerChangeDetector() {
@@ -17,10 +18,20 @@ public class ServerChangeDetector<T> extends ChangeDetector<T> {
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> previous = reset.get());
     }
 
-    public void levelEvent(Function<Level, T> update, Callback<Level, T> callback) {
-        ClientTickCallback.ClientLevelTick.AFTER.register(level -> {
-            T value = update.apply(level);
-            updateAndGet(value).ifPresent(previous -> callback.handle(level, previous, value));
+    public void levelEvent(Update<T> update, Callback<T> callback) {
+        ClientPlayingTick.AFTER.register((client, player, level) -> {
+            T value = update.update(client, player, level);
+            updateAndGet(value).ifPresent(previous -> callback.handle(client, player, level, previous, value));
         });
+    }
+
+    @FunctionalInterface
+    public interface Update<T> {
+        T update(@NotNull Minecraft client, @NotNull LocalPlayer player, @NotNull ClientLevel level);
+    }
+
+    @FunctionalInterface
+    public interface Callback<T> {
+        void handle(@NotNull Minecraft client, @NotNull LocalPlayer player, @NotNull ClientLevel level, T previous, T value);
     }
 }

@@ -10,13 +10,13 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
@@ -66,21 +67,21 @@ public class POIEntities implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientPlayingTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             marked = null;
             lastScanResults = new ArrayList<>();
         });
     }
 
-    private void tick(Level level) {
+    private void tick(Minecraft client, Player player, Level level) {
         setMarked(MainClass.poiManager.poiMarking.getMarkedEntity());
         loadConfig();
 
         if (!config.enabled) return;
         if (!interval.isReady()) return;
 
-        if (Minecraft.getInstance().screen != null) return; //Prevent running if any screen is opened
+        if (client.screen != null) return; //Prevent running if any screen is opened
 
         log.trace("POIEntities started");
         scanEntitiesAroundPlayer();

@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 
 import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
@@ -16,6 +15,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
+import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
 /**
@@ -48,7 +49,7 @@ public class NarrateCrosshair implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientPlayingTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             previousTarget = null;
             previousNarration = null;
@@ -56,8 +57,8 @@ public class NarrateCrosshair implements BalmClientModule {
         });
     }
 
-    private void tick(Level level) {
-        if (Minecraft.getInstance().screen != null) return;
+    private void tick(Minecraft client, Player player, Level level) {
+        if (client.screen != null) return;
         if (!CONFIG.enabled) return;
         repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
 
@@ -89,8 +90,7 @@ public class NarrateCrosshair implements BalmClientModule {
         }
 
         if (CONFIG.relativePositionSoundCue.enabled) {
-            assert Minecraft.getInstance().player != null;
-            double rayCastDistance = Math.min(Minecraft.getInstance().player.blockInteractionRange(), Minecraft.getInstance().player.entityInteractionRange());
+            double rayCastDistance = Math.min(player.blockInteractionRange(), player.entityInteractionRange());
             Vec3 targetPosition = switch (rayCast) {
                 case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().getCenter();
                 case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();

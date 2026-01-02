@@ -40,6 +40,7 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
+import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 
@@ -94,6 +95,14 @@ public final class MainClass {
             for (KeyMappingsHandler.Keys key : KeyMappingsHandler.Keys.values()) {
                 keyMappings.register(key.mapping);
             }
+        });
+
+        ClientPlayingTick.AFTER.configureMapping((priority, callback) -> {
+            ClientTickCallback.AFTER.register(priority, client -> {
+                if (client.player != null && client.level != null) {
+                    callback.handle(client, client.player, client.level);
+                }
+            });
         });
 
         ClientTickCallback.AFTER.register(MainClass::clientTickEventsMethod);

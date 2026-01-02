@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.kuma.api.InputBinding;
 import net.blay09.mods.kuma.api.Kuma;
@@ -18,6 +17,7 @@ import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
+import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 
@@ -44,7 +45,7 @@ public class AccessMenu implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientPlayingTick.AFTER.register(this::tick);
 
         keyAccessMenu = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.access_menu"))
                 .withDefault(InputBinding.key(InputConstants.KEY_F4))
@@ -69,15 +70,13 @@ public class AccessMenu implements BalmClientModule {
                 .build();
     }
 
-    public void tick(Level level) {
-        Minecraft client = Minecraft.getInstance();
+    public void tick(Minecraft client, LocalPlayer player, Level level) {
         if (client.screen == null) {
             if (client.hasAltDown()) {
-                assert client.player != null;
                 for (byte i = 0; i < 10; i++) {
                     RegisteredFunction function = getShortcuts()[i];
                     if (InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_0 + i) && function.function().enabled() && intervals[i].isReady()) {
-                        client.player.clientSideCloseContainer();
+                        player.clientSideCloseContainer();
                         function.function().execute();
                     }
                 }

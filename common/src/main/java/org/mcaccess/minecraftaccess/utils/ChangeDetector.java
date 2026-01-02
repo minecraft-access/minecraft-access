@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.NotNull;
 
 public class ChangeDetector<T> {
     protected T previous;
@@ -34,7 +35,7 @@ public class ChangeDetector<T> {
         return Optional.ofNullable(previous);
     }
 
-    public void clientEvent(Function<Minecraft, T> update, Callback<Minecraft, T> callback) {
+    public void clientEvent(Function<Minecraft, T> update, Callback<T> callback) {
         ClientTickCallback.AFTER.register(client -> {
             T value = update.apply(client);
             updateAndGet(value).ifPresent(previous -> callback.handle(client, previous, value));
@@ -42,7 +43,7 @@ public class ChangeDetector<T> {
     }
 
     @FunctionalInterface
-    public interface Callback<E, T> {
-        void handle(E eventData, T previous, T value);
+    public interface Callback<T> {
+        void handle(@NotNull Minecraft client, T previous, T value);
     }
 }

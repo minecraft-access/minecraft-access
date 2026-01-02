@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.kuma.api.InputBinding;
 import net.blay09.mods.kuma.api.KeyModifier;
@@ -16,12 +15,14 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 
 public class NarrateHeldItem implements BalmClientModule {
@@ -36,7 +37,7 @@ public class NarrateHeldItem implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientPlayingTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             previousItemName = null;
             previousItemCount = null;
@@ -62,12 +63,11 @@ public class NarrateHeldItem implements BalmClientModule {
                 .build();
     }
 
-    private void tick(Level level) {
-        assert Minecraft.getInstance().player != null;
-        if (Minecraft.getInstance().player.isSpectator()) return;
+    private void tick(Minecraft client, Player player, Level level) {
+        if (player.isSpectator()) return;
 
-        ItemStack currentItemStack = Minecraft.getInstance().player.getMainHandItem();
-        int selectedSlot = Minecraft.getInstance().player.getInventory().getSelectedSlot();
+        ItemStack currentItemStack = player.getMainHandItem();
+        int selectedSlot = player.getInventory().getSelectedSlot();
         String baseItemName = getItemName(currentItemStack);
         int itemCount = currentItemStack.getCount();
 

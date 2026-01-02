@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.Getter;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.kuma.api.InputBinding;
 import net.blay09.mods.kuma.api.KeyModifier;
@@ -22,6 +21,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
+import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
@@ -54,7 +55,7 @@ public class ObjectTracker implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientPlayingTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
             currentObject = null;
             currentGroup = null;
@@ -149,8 +150,8 @@ public class ObjectTracker implements BalmClientModule {
         return result;
     }
 
-    private void tick(Level level) {
-        if (Minecraft.getInstance().screen != null) return;
+    private void tick(Minecraft client, Player player, Level level) {
+        if (client.screen != null) return;
 
         updateGroups();
     }

@@ -7,18 +7,19 @@ import java.util.Queue;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.ClientPlayingTick;
 
 @Slf4j
 public class FallDetector implements BalmClientModule {
@@ -40,19 +41,17 @@ public class FallDetector implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientTickCallback.ClientLevelTick.AFTER.register(this::tick);
+        ClientPlayingTick.AFTER.register(this::tick);
     }
 
-    private void tick(Level level) {
-        Minecraft client = Minecraft.getInstance();
+    private void tick(Minecraft client, Player player, Level level) {
         if (!config.enabled) return;
 
         if (client.screen != null) return;
-        assert client.player != null;
-        if (!client.player.onGround()) return;
-        if (client.player.isUnderWater()) return;
-        if (client.player.isSwimming()) return;
-        if (client.player.isVisuallySwimming()) return;
+        if (!player.onGround()) return;
+        if (player.isUnderWater()) return;
+        if (player.isSwimming()) return;
+        if (player.isVisuallySwimming()) return;
 
         long currentTimeInMillis = clock.millis();
         if (currentTimeInMillis - previousTimeInMillis < config.delay) return;
