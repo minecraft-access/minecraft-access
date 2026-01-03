@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,10 +20,10 @@ public class TimeIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        new ServerChangeDetector<Times>().levelEvent(level -> Times.of(level.getDayTime()), this::onChange);
+        new ServerChangeDetector<Times>().levelEvent((client, player, level) -> Times.of(level.getDayTime()), this::onChange);
     }
 
-    private void onChange(Level level, Times previous, Times time) {
+    private void onChange(Minecraft client, Player player, Level level, Times previous, Times time) {
         if (level.dimensionType().hasFixedTime() || level.dimensionType().hasCeiling()) return;
         assert Minecraft.getInstance().player != null;
         if (!level.canSeeSky(BlockPos.containing(Minecraft.getInstance().player.getEyePosition()))) return;

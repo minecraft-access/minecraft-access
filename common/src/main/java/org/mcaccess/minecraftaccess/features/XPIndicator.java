@@ -4,6 +4,7 @@ import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,13 +24,13 @@ public class XPIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        new ServerChangeDetector<Integer>().levelEvent(level -> {
+        new ServerChangeDetector<Integer>().levelEvent((client, player, level) -> {
             assert Minecraft.getInstance().player != null;
             return Minecraft.getInstance().player.experienceLevel;
         }, this::onChange);
     }
 
-    private void onChange(Level level, Integer previous, Integer value) {
+    private void onChange(Minecraft client, Player player, Level level, Integer previous, Integer value) {
         assert Minecraft.getInstance().gameMode != null;
         if (!Config.getInstance().features.xpIndicatorEnabled || !Minecraft.getInstance().gameMode.hasExperience()) {
             return;
