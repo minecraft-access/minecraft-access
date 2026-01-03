@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.ScrollableLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -27,13 +26,12 @@ import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
-import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
 public class AccessMenu implements BalmClientModule {
     private static ManagedKeyMapping keyAccessMenu;
-    private boolean gameModeSwitcherActive = false;
     private final Interval[] intervals = IntStream.range(0, 10)
             .mapToObj(i -> Interval.sec(1))
             .toArray(Interval[]::new);
@@ -90,16 +88,6 @@ public class AccessMenu implements BalmClientModule {
                     }
                 }
             }
-
-            //if (!gameModeSwitcherActive) {
-            //client.setScreen(new GUI());
-            //}
-        }
-
-        if (client.screen instanceof GameModeSwitcherScreen) {
-            gameModeSwitcherActive = true;
-        } else if (!InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_F4)) {
-            gameModeSwitcherActive = false;
         }
     }
 
