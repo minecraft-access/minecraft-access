@@ -6,6 +6,8 @@ import java.util.stream.IntStream;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.blay09.mods.kuma.api.ManagedKeyMapping;
 import net.minecraft.client.KeyMapping;
@@ -66,21 +68,22 @@ public class AccessMenu implements BalmClientModule {
                     }
                 })
                 .build();
+
+        for (byte i = 0; i < 10; i++) {
+            RegisteredFunction function = getShortcuts()[i];
+            Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "access_menu.shortcuts_bar/" + i))
+                    .withDefault(InputBinding.key(InputConstants.KEY_0 + i, KeyModifiers.of(KeyModifier.ALT)))
+                    .skipRegistration()
+                    .handleWorldInput(event -> {
+                        function.function.execute();
+                        return true;
+                    })
+                    .build();
+        }
     }
 
     public void tick(Minecraft client, LocalPlayer player, Level level) {
         if (client.screen == null) {
-            if (client.hasAltDown()) {
-                for (byte i = 0; i < 10; i++) {
-                    RegisteredFunction function = getShortcuts()[i];
-                    if (InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_0 + i) && function.function().enabled() && intervals[i].isReady()) {
-                        player.clientSideCloseContainer();
-                        function.function().execute();
-                    }
-                }
-                return;
-            }
-
             for (RegisteredFunction function : MainClass.registry(RegisteredFunction.class).values()) {
                 while (function.key().consumeClick()) {
                     if (function.function().enabled()) {
