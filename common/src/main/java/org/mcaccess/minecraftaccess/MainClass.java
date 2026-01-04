@@ -24,7 +24,6 @@ import org.mcaccess.minecraftaccess.features.AccessMenu;
 import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.features.CameraControls;
-import org.mcaccess.minecraftaccess.features.FacingDirection;
 import org.mcaccess.minecraftaccess.features.FallDetector;
 import org.mcaccess.minecraftaccess.features.HUDStatus;
 import org.mcaccess.minecraftaccess.features.MenuFix;
@@ -123,7 +122,6 @@ public final class MainClass {
         registrars.registerModule(new AccessMenu());
         registrars.registerModule(new BiomeIndicator());
         registrars.registerModule(new CameraControls());
-        registrars.registerModule(new FacingDirection());
         registrars.registerModule(new FallDetector());
         registrars.registerModule(new HUDStatus());
         inventoryControls = new InventoryControls();

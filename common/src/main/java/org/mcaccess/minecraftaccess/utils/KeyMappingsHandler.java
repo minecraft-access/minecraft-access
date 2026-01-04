@@ -14,7 +14,6 @@ public final class KeyMappingsHandler {
     }
 
     public enum Categories {
-        ACCESS_MENU("old_access_menu"),
         CAMERA_CONTROLS("old_camera_controls");
 
         public final KeyMapping.Category category;
