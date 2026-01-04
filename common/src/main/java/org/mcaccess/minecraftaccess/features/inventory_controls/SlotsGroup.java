@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.Config;
 
 public class SlotsGroup {
     private final @NotNull String groupKey;
@@ -123,7 +123,7 @@ public class SlotsGroup {
         for (int row = 1; row <= size; row++) {
             for (int column = 1; column <= size; column++) {
                 Slot slot = slotItems.get(i).slot;
-                String prefix = MainClass.inventoryControls.getRowAndColumnFormat().formatted(row, column);
+                String prefix = Config.getInstance().inventoryControls.rowAndColumnFormat.formatted(row, column);
 
                 setSlotPrefix(slot, prefix);
                 ++i;

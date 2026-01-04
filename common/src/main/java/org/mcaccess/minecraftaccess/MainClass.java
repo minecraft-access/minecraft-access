@@ -51,7 +51,6 @@ public final class MainClass {
     private static final Map<Class<?>, Map<Identifier, Object>> REGISTRY = new HashMap<>();
     private static boolean frozen = false;
 
-    public static InventoryControls inventoryControls = null;
     public static POIManager poiManager = null;
 
     private MainClass() {
@@ -124,8 +123,7 @@ public final class MainClass {
         registrars.registerModule(new CameraControls());
         registrars.registerModule(new FallDetector());
         registrars.registerModule(new HUDStatus());
-        inventoryControls = new InventoryControls();
-        registrars.registerModule(inventoryControls);
+        registrars.registerModule(new InventoryControls());
         registrars.registerModule(new MenuFix());
         registrars.registerModule(new MouseKeySimulation());
         registrars.registerModule(new NarrateCrosshair());

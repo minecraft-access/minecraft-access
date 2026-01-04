@@ -316,10 +316,6 @@ public class InventoryControls implements BalmClientModule {
         loadConfig();
     }
 
-    public String getRowAndColumnFormat() {
-        return config.rowAndColumnFormat;
-    }
-
     private void tick(Minecraft client) {
         if (!interval.isReady()) return;
 
