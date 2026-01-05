@@ -27,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
-import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
 /**
  * This feature reads the name of the targeted block or entity.<br>

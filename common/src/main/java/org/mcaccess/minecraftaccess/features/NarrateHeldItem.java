@@ -22,8 +22,8 @@ import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
+import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
 public class NarrateHeldItem implements BalmClientModule {
     private String previousItemName = null;
