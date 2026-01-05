@@ -39,7 +39,6 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
-import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
 @Slf4j
@@ -140,9 +139,6 @@ public final class MainClass {
      */
     public static void clientTickEventsMethod(Minecraft client) {
         changeLogLevelBaseOnDebugConfig();
-        if (client.getWindow() != null) {
-            Keystroke.updateInstances();
-        }
     }
 
     /**

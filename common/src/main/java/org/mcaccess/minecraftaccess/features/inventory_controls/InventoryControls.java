@@ -12,7 +12,6 @@ import net.blay09.mods.kuma.api.InputBinding;
 import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
@@ -52,7 +51,6 @@ import org.mcaccess.minecraftaccess.mixin.AbstractRecipeBookScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.AnvilScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.CreativeModeInventoryScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.EditBoxAccessor;
-import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
@@ -438,12 +436,6 @@ public class InventoryControls implements BalmClientModule {
         //</editor-fold>
 
         return false;
-    }
-
-    private boolean isKeyPressed(KeyMapping keyMapping) {
-        if (keyMapping.isUnbound()) return false;
-
-        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), ((KeyMappingAccessor) keyMapping).getKey().getValue());
     }
 
     private boolean isRecipeBookOpen() {
