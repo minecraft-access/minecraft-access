@@ -39,7 +39,6 @@ import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
 import org.mcaccess.minecraftaccess.utils.condition.Keystroke;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
@@ -88,12 +87,6 @@ public final class MainClass {
         if (getScreenReader() != null && getScreenReader().isInitialized()) {
             getScreenReader().narrate(startupMessage, true);
         }
-
-        registrars.keyMappings(keyMappings -> {
-            for (KeyMappingsHandler.Keys key : KeyMappingsHandler.Keys.values()) {
-                keyMappings.register(key.mapping);
-            }
-        });
 
         ClientPlayingTick.AFTER.configureMapping((priority, callback) -> {
             ClientTickCallback.AFTER.register(priority, client -> {

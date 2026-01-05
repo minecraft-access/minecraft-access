@@ -97,7 +97,6 @@ public final class Config implements ConfigData {
     public static final class CameraControls {
         public float normalRotatingAngle = 22.5f;
         public float modifiedRotatingAngle = 11.25f;
-        public int delayMilliseconds = 250;
 
         private CameraControls() {
         }
