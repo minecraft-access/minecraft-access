@@ -29,36 +29,36 @@ public class PositionNarrator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_player_position"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_position.narrate_player_position"))
                 .withDefault(InputBinding.key(InputConstants.KEY_V))
-                .overrideCategory(KeyMappingCategories.OTHER)
+                .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
                 .handleWorldInput(event -> {
                     MainClass.narrate(PlayerPositionUtils.getNarratableXYZPosition(), true);
                     return true;
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_coordinate/x"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_position.narrate_coordinate/x"))
                 .withDefault(InputBinding.key(InputConstants.KEY_X, KeyModifiers.of(KeyModifier.ALT)))
-                .overrideCategory(KeyMappingCategories.OTHER)
+                .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
                 .handleWorldInput(event -> {
                     MainClass.narrate(PlayerPositionUtils.getNarratableXPos(), true);
                     return true;
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_coordinate/y"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_position.narrate_coordinate/y"))
                 .withDefault(InputBinding.key(InputConstants.KEY_C, KeyModifiers.of(KeyModifier.ALT)))
-                .overrideCategory(KeyMappingCategories.OTHER)
+                .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
                 .handleWorldInput(event -> {
                     MainClass.narrate(PlayerPositionUtils.getNarratableYPos(), true);
                     return true;
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_coordinate/z"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_position.narrate_coordinate/z"))
                 .withDefault(InputBinding.key(InputConstants.KEY_Z, KeyModifiers.of(KeyModifier.ALT)))
-                .overrideCategory(KeyMappingCategories.OTHER)
+                .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
                 .handleWorldInput(event -> {
                     MainClass.narrate(PlayerPositionUtils.getNarratableZPos(), true);
                     return true;

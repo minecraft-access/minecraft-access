@@ -68,7 +68,7 @@ public class AccessMenu implements BalmClientModule {
         for (Map.Entry<Identifier, AccessMenuFunction> function : MainClass.registry(AccessMenuFunction.class).entrySet()) {
             Kuma.createKeyMapping(function.getKey())
                     .overrideName(identifier -> identifier.toLanguageKey("access_menu_function"))
-                    .overrideCategory(KeyMappingCategories.ACCESS_MENU)
+                    .overrideCategory(KeyMappingCategories.ACCESS_MENU_FUNCTIONS)
                     .handleWorldInput(event -> {
                         if (function.getValue().enabled()) {
                             function.getValue().execute();

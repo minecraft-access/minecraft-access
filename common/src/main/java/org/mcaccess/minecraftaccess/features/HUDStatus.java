@@ -46,7 +46,7 @@ public class HUDStatus implements BalmClientModule {
             bossIndex = 0;
         });
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbars/next"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbar/next"))
                 .withDefault(InputBinding.key(InputConstants.KEY_U))
                 .overrideCategory(KeyMappingCategories.OTHER)
                 .handleWorldInput(event -> {
@@ -55,7 +55,7 @@ public class HUDStatus implements BalmClientModule {
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbars/previous"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbar/previous"))
                 .withDefault(InputBinding.key(InputConstants.KEY_U, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.OTHER)
                 .handleWorldInput(event -> {

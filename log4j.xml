@@ -24,7 +24,7 @@
         <Logger name="org.mcaccess.minecraftaccess.features.HUDStatus" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.inventory_controls" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.MenuFix" level="DEBUG"/>
-        <Logger name="org.mcaccess.minecraftaccess.features.MouseKeySimulation" level="DEBUG"/>
+        <Logger name="org.mcaccess.minecraftaccess.features.MouseSimulation" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.narrate_crosshair  " level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.NarrateHeldItem" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.PlayerStatus" level="DEBUG"/>

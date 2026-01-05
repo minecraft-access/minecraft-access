@@ -20,7 +20,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  * Simulate mouse key operations by programmatically invoking vanilla mouse key operation handlers.
  * Supports both press-and-hold and click functionality for mouse buttons.
  */
-public class MouseKeySimulation implements BalmClientModule {
+public class MouseSimulation implements BalmClientModule {
     private static ManagedKeyMapping keyLeftMouseButton;
     private static ManagedKeyMapping keyMiddleMouseButton;
     private static ManagedKeyMapping keyRightMouseButton;
@@ -31,35 +31,35 @@ public class MouseKeySimulation implements BalmClientModule {
 
     @Override
     public @NotNull Identifier getId() {
-        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_key_simulation");
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation");
     }
 
     @Override
     public void initialize() {
         ClientTickCallback.AFTER.register(this::tick);
 
-        keyLeftMouseButton = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_key_simulation.button/left"))
+        keyLeftMouseButton = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.button/left"))
                 .withDefault(InputBinding.key(InputConstants.KEY_LBRACKET))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)
                 .withContext(KeyConflictContext.UNIVERSAL)
                 .build();
 
-        keyMiddleMouseButton = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_key_simulation.button/middle"))
+        keyMiddleMouseButton = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.button/middle"))
                 .withDefault(InputBinding.key(InputConstants.KEY_BACKSLASH))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)
                 .withContext(KeyConflictContext.UNIVERSAL)
                 .build();
 
-        keyRightMouseButton = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_key_simulation.button/right"))
+        keyRightMouseButton = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.button/right"))
                 .withDefault(InputBinding.key(InputConstants.KEY_RBRACKET))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)
                 .withContext(KeyConflictContext.UNIVERSAL)
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_key_simulation.scroll/up"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.scroll/up"))
                 .withDefault(InputBinding.key(InputConstants.KEY_SEMICOLON))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)
@@ -79,7 +79,7 @@ public class MouseKeySimulation implements BalmClientModule {
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_key_simulation.scroll/down"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.scroll/down"))
                 .withDefault(InputBinding.key(InputConstants.KEY_APOSTROPHE))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)

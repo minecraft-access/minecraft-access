@@ -62,7 +62,7 @@ public class ObjectTracker implements BalmClientModule {
             groups = new ArrayList<>();
         });
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.narrate_object"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.narrate_current_object"))
                 .withDefault(InputBinding.key(InputConstants.KEY_HOME))
                 .overrideCategory(KeyMappingCategories.OBJECT_TRACKER)
                 .handleWorldInput(event -> {

@@ -53,7 +53,6 @@ public class POIMarking implements BalmClientModule {
                 .overrideCategory(KeyMappingCategories.OTHER)
                 .handleWorldInput(event -> {
                     mark();
-                    ;
                     return true;
                 })
                 .build();
@@ -63,7 +62,6 @@ public class POIMarking implements BalmClientModule {
                 .overrideCategory(KeyMappingCategories.OTHER)
                 .handleWorldInput(event -> {
                     unmark();
-                    ;
                     return true;
                 })
                 .build();

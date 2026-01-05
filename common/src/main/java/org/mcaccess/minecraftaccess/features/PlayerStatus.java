@@ -57,27 +57,27 @@ public class PlayerStatus implements BalmClientModule {
             wasSprinting = false;
         });
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.player_status/normal"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_status.player_status/normal"))
                 .withDefault(InputBinding.key(InputConstants.KEY_R))
-                .overrideCategory(KeyMappingCategories.OTHER)
+                .overrideCategory(KeyMappingCategories.PLAYER_STATUS)
                 .handleWorldInput(event -> {
                     narratePlayerStatus(false);
                     return true;
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.player_status/important"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_status.player_status/important"))
                 .withDefault(InputBinding.key(InputConstants.KEY_R, KeyModifiers.of(KeyModifier.ALT)))
-                .overrideCategory(KeyMappingCategories.OTHER)
+                .overrideCategory(KeyMappingCategories.PLAYER_STATUS)
                 .handleWorldInput(event -> {
                     narratePlayerStatus(true);
                     return true;
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.player_effects"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_status.player_effects"))
                 .withDefault(InputBinding.key(InputConstants.KEY_R, KeyModifiers.of(KeyModifier.CONTROL)))
-                .overrideCategory(KeyMappingCategories.OTHER)
+                .overrideCategory(KeyMappingCategories.PLAYER_STATUS)
                 .handleWorldInput(event -> {
                     assert Minecraft.getInstance().player != null;
                     Collection<MobEffectInstance> effects = Minecraft.getInstance().player.getActiveEffects();
