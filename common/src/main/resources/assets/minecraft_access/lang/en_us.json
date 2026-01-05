@@ -40,7 +40,7 @@
     "key.minecraft_access.camera_controls.look_straight/forward": "Look Straight Forward",
     "key.minecraft_access.camera_controls.look_straight/up": "Look Straight Up",
     "key.minecraft_access.camera_controls.narrate_facing_direction/horizontal": "Narrate horizontal facing direction",
-    "key.minecraft_access.camera_controls.narrate_facing_direction/verticle": "Narrate verticle facing direction",
+    "key.minecraft_access.camera_controls.narrate_facing_direction/vertical": "Narrate vertical facing direction",
     "key.minecraft_access.inventory_controls.change_group/next": "Next group",
     "key.minecraft_access.inventory_controls.change_group/previous": "Previous group",
     "key.minecraft_access.inventory_controls.fuel_status": "Fuel Status",
