@@ -1,6 +1,7 @@
 package org.mcaccess.minecraftaccess.features;
 
-import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import java.util.Optional;
+
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
@@ -17,16 +18,14 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
 
 /**
  * Narrates the name of the biome when entering a different biome.
  */
 public class BiomeIndicator implements BalmClientModule {
-    @Nullable
-    private Holder<Biome> previousBiome = null;
-    private ResourceKey<Level> previousDimension;
+    private final ServerChangeDetector<Optional<ResourceKey<@NotNull Level>>> dimension = new ServerChangeDetector<>(Optional::empty);
 
     @Override
     public @NotNull Identifier getId() {
@@ -35,45 +34,12 @@ public class BiomeIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        ClientPlayingTick.AFTER.register(this::tick);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
-            previousBiome = null;
-            previousDimension = null;
-        });
-    }
-
-    private void tick(Minecraft client, Player player, Level level) {
-        if (!Config.getInstance().features.biomeIndicatorEnabled) {
-            return;
-        }
-        if (client.screen != null) return;
-
-        String narration;
-
-        Holder<Biome> currentBiome = getCurrentBiome();
-        if (currentBiome != null && currentBiome != previousBiome) {
-            String currentBiomeName = NarrationUtils.getTranslatedName(currentBiome, "biome")
-                    .orElse("");
-            ResourceKey<Level> currentDimension = level.dimension();
-            if (!currentDimension.equals(previousDimension) || Config.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
-                narration = I18n.get("minecraft_access.other.biome_and_dimension",
-                        currentBiomeName,
-                        I18n.get(currentDimension.identifier().toLanguageKey("dimension")));
-                previousDimension = currentDimension;
-            } else {
-                narration = I18n.get("minecraft_access.other.biome", currentBiomeName);
-            }
-
-            if (!narration.isEmpty()) {
-                MainClass.narrate(I18n.get("minecraft_access.biome_indicator.biome_entered", narration), false);
-            }
-
-            previousBiome = currentBiome;
-        }
+        new ServerChangeDetector<Optional<Holder<@NotNull Biome>>>()
+                .levelEvent((client, player, level) -> Optional.ofNullable(getCurrentBiome()), this::onChange);
     }
 
     @Nullable
-    public static Holder<Biome> getCurrentBiome() {
+    public static Holder<@NotNull Biome> getCurrentBiome() {
         Minecraft client = Minecraft.getInstance();
         if (client.level == null) return null;
         if (client.player == null) return null;
@@ -82,5 +48,26 @@ public class BiomeIndicator implements BalmClientModule {
         if (currentChunk == null) return null;
 
         return client.level.getBiome(client.player.blockPosition());
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private void onChange(Minecraft client, Player player, Level level, Optional<Holder<@NotNull Biome>> previous, Optional<Holder<@NotNull Biome>> biome) {
+        if (!Config.getInstance().features.biomeIndicatorEnabled) {
+            dimension.update(Optional.of(level.dimension()));
+            return;
+        }
+        String currentBiomeName = biome.flatMap(b -> NarrationUtils.getTranslatedName(b, "biome")).orElse("");
+        if (dimension.update(Optional.of(level.dimension())) || Config.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
+            MainClass.narrate(I18n.get("minecraft_access.biome_indicator.biome_entered",
+                    I18n.get("minecraft_access.other.biome_and_dimension",
+                            currentBiomeName,
+                            I18n.get(level.dimension().identifier().toLanguageKey("dimension"))
+                    )
+            ), false);
+        } else {
+            MainClass.narrate(I18n.get("minecraft_access.biome_indicator.biome_entered",
+                    I18n.get("minecraft_access.other.biome", currentBiomeName)
+            ), false);
+        }
     }
 }
