@@ -18,8 +18,6 @@
         <Logger name="org.mcaccess.minecraftaccess.features.AutoLibrarySetup" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.BiomeIndicator" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.CameraControls" level="DEBUG"/>
-        <Logger name="org.mcaccess.minecraftaccess.features.EffectNarrator" level="DEBUG"/>
-        <Logger name="org.mcaccess.minecraftaccess.features.FacingDirection" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.FallDetector" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.HUDStatus" level="DEBUG"/>
         <Logger name="org.mcaccess.minecraftaccess.features.inventory_controls" level="DEBUG"/>
