@@ -81,7 +81,6 @@ public class LockingHandler implements BalmClientModule {
             lastBowState = -1;
         });
 
-
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.locking/lock"))
                 .withDefault(InputBinding.key(InputConstants.KEY_Y))
                 .overrideCategory(KeyMappingCategories.OTHER)
