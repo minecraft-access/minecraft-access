@@ -24,7 +24,7 @@ jadeNeoForge = "maven.modrinth:jade:21.0.1+neoforge"
 lombok = "org.projectlombok:lombok:1.18.42"
 minecraft = "com.mojang:minecraft:1.21.11"
 modMenu = "com.terraformersmc:modmenu:17.0.0-beta.2"
-neoForge = "net.neoforged:neoforge:21.11.27-beta"
+neoForge = "net.neoforged:neoforge:21.11.28-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.11:2025.12.20"
 tolk = "com.davykager.tolk:Tolk:1.0.0"
 
