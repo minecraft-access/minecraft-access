@@ -7,20 +7,26 @@ import java.util.Queue;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
 @Slf4j
-public class FallDetector {
+public class FallDetector implements BalmClientModule {
     private final Clock clock;
     private long previousTimeInMillis;
-    private final Minecraft client = Minecraft.getInstance();
     private int count;
-    private Config.FallDetector config;
+    private final Config.FallDetector config;
 
     public FallDetector() {
         clock = Clock.systemDefaultZone();
@@ -28,17 +34,24 @@ public class FallDetector {
         config = Config.getInstance().fallDetector;
     }
 
-    public void tick() {
-        config = Config.getInstance().fallDetector;
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "fall_detector");
+    }
 
+    @Override
+    public void initialize() {
+        ClientPlayingTick.AFTER.register(this::tick);
+    }
+
+    private void tick(Minecraft client, Player player, Level level) {
         if (!config.enabled) return;
 
-        if (client.player == null) return;
         if (client.screen != null) return;
-        if (!client.player.onGround()) return;
-        if (client.player.isUnderWater()) return;
-        if (client.player.isSwimming()) return;
-        if (client.player.isVisuallySwimming()) return;
+        if (!player.onGround()) return;
+        if (player.isUnderWater()) return;
+        if (player.isSwimming()) return;
+        if (player.isVisuallySwimming()) return;
 
         long currentTimeInMillis = clock.millis();
         if (currentTimeInMillis - previousTimeInMillis < config.delay) return;
@@ -50,9 +63,8 @@ public class FallDetector {
     }
 
     private void searchNearbyPositions() {
-        if (client.level == null) return;
-        assert client.player != null;
-        BlockPos center = client.player.blockPosition();
+        assert Minecraft.getInstance().player != null;
+        BlockPos center = Minecraft.getInstance().player.blockPosition();
 
         Queue<BlockPos> toSearch = new LinkedList<>();
         Set<BlockPos> searched = new HashSet<>();
@@ -96,14 +108,14 @@ public class FallDetector {
     }
 
     private void checkForFall(BlockPos toCheck) {
-        assert client.level != null;
-        if (!(client.level.getBlockState(toCheck).isAir())) return;
+        assert Minecraft.getInstance().level != null;
+        if (!Minecraft.getInstance().level.getBlockState(toCheck).isAir()) return;
 
         if (getDepth(toCheck, config.depth) < config.depth) return;
 
         ++count;
         log.debug("{}) Found qualified fall position: x:{} y:{} z:{}", count, toCheck.getX(), toCheck.getY(), toCheck.getZ());
-        client.level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, config.volume, 1.0f, true);
+        Minecraft.getInstance().level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, config.volume, 1.0f, true);
     }
 
     private int getDepth(BlockPos blockPos, int maxDepth) {
@@ -111,8 +123,8 @@ public class FallDetector {
             return 0;
         }
 
-        assert client.level != null;
-        if (!(client.level.getBlockState(blockPos).isAir())) return 0;
+        assert Minecraft.getInstance().level != null;
+        if (!(Minecraft.getInstance().level.getBlockState(blockPos).isAir())) return 0;
 
         return 1 + getDepth(blockPos.below(), maxDepth - 1);
     }

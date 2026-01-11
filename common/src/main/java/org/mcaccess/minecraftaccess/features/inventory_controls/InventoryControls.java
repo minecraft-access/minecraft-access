@@ -6,7 +6,12 @@ import java.util.Optional;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.KeyMapping;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
@@ -23,6 +28,7 @@ import net.minecraft.client.gui.screens.recipebook.SearchRecipeBookCategory;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -45,10 +51,9 @@ import org.mcaccess.minecraftaccess.mixin.AbstractRecipeBookScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.AnvilScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.CreativeModeInventoryScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.EditBoxAccessor;
-import org.mcaccess.minecraftaccess.mixin.KeyMappingAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
@@ -71,10 +76,9 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  * </p>
  */
 @Slf4j
-public class InventoryControls {
+public class InventoryControls implements BalmClientModule {
     private Config.InventoryControls config;
     private final Interval interval = Interval.defaultDelay();
-    private final Minecraft client = Minecraft.getInstance();
 
     private AbstractContainerScreenAccessor previousScreen = null;
     private AbstractContainerScreenAccessor currentScreen = null;
@@ -85,6 +89,209 @@ public class InventoryControls {
     private SlotItem currentSlotItem = null;
     private RecipeBookComponent<?> currentRecipeBookWidget = null;
     private String previousSlotText = "";
+
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls");
+    }
+
+    @Override
+    public void initialize() {
+        ClientTickCallback.AFTER.register(this::tick);
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.change_group/previous"))
+                .withDefault(InputBinding.key(InputConstants.KEY_C, KeyModifiers.of(KeyModifier.SHIFT)))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    log.debug("Group key pressed");
+                    changeGroup(false);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.change_group/next"))
+                .withDefault(InputBinding.key(InputConstants.KEY_C))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    log.debug("Group key pressed");
+                    changeGroup(true);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_tab/previous"))
+                .withDefault(InputBinding.key(InputConstants.KEY_V, KeyModifiers.of(KeyModifier.SHIFT)))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    log.debug("Switch Tab key pressed");
+                    if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen) {
+                        changeRecipeTab(false);
+                        return true;
+                    } else if (currentScreen instanceof CreativeModeInventoryScreen) {
+                        changeCreativeInventoryTab(false);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_tab/next"))
+                .withDefault(InputBinding.key(InputConstants.KEY_V))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    log.debug("Switch Tab key pressed");
+                    if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen) {
+                        changeRecipeTab(true);
+                        return true;
+                    } else if (currentScreen instanceof CreativeModeInventoryScreen) {
+                        changeCreativeInventoryTab(true);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.move/left"))
+                .withDefault(InputBinding.key(InputConstants.KEY_J))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    log.debug("Left key pressed");
+                    focusSlotItemAt(FocusDirection.LEFT);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.move/right"))
+                .withDefault(InputBinding.key(InputConstants.KEY_L))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    log.debug("Right key pressed");
+                    focusSlotItemAt(FocusDirection.RIGHT);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.move/up"))
+                .withDefault(InputBinding.key(InputConstants.KEY_I))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    log.debug("Up key pressed");
+                    focusSlotItemAt(FocusDirection.UP);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_recipe_book_page/previous"))
+                .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.SHIFT)))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    if (currentGroup.isScrollable) {
+                        log.debug("Previous Recipe Book page key pressed");
+                        if (isRecipeBookOpen()) {
+                            clickPreviousRecipeBookPage();
+                            return true;
+                        } else {
+                            MouseUtils.Wheel.UP.scroll();
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.move/down"))
+                .withDefault(InputBinding.key(InputConstants.KEY_K))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    log.debug("Down key pressed");
+                    focusSlotItemAt(FocusDirection.DOWN);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_recipe_book_page/next"))
+                .withDefault(InputBinding.key(InputConstants.KEY_K, KeyModifiers.of(KeyModifier.SHIFT)))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    if (currentGroup.isScrollable) {
+                        log.debug("Next Recipe Book page key pressed");
+                        if (isRecipeBookOpen()) {
+                            clickNextRecipeBookPage();
+                            return true;
+                        } else {
+                            MouseUtils.Wheel.DOWN.scroll();
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.jump_to_textbox"))
+                .withDefault(InputBinding.key(InputConstants.KEY_T))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    if (CreativeModeInventoryScreenAccessor.getSelectedTab().getType() == CreativeModeTab.Type.SEARCH && currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
+                        setSearchBoxFocus(((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox(), true);
+                        return true;
+                    } else if (currentScreen instanceof AnvilScreen anvilScreen) {
+                        setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getName(), true);
+                        return true;
+                    } else if (isRecipeBookOpen()) {
+                        // resolve can-not-enter-characters-issue https://github.com/minecraft-access/minecraft-access/issues/67
+                        Minecraft.getInstance().screen.setFocused(currentRecipeBookWidget);
+                        setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), true);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.toggle_craftable"))
+                .withDefault(InputBinding.key(InputConstants.KEY_R))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    if (currentRecipeBookWidget == null) return false;
+                    if (!currentRecipeBookWidget.isVisible()) return false;
+
+                    CycleButton<Boolean> toggleCraftableButton = ((RecipeBookComponentAccessor) currentRecipeBookWidget).getFilterButton();
+
+                    int x = toggleCraftableButton.getX() + 8;
+                    int y = toggleCraftableButton.getY() + 4;
+
+                    MouseUtils.Coordinates p = MouseUtils.calcRealPositionOfWidget(x, y);
+                    MouseUtils.moveAndLeftClick(p.x(), p.y());
+                    moveToSlotItem(currentSlotItem, 100);
+
+                    String narration = toggleCraftableButton.getValue()
+                            ? ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString()
+                            : I18n.get("gui.recipebook.toggleRecipes.all");
+                    MainClass.narrate(narration, true);
+
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.fuel_status"))
+                .withDefault(InputBinding.key(InputConstants.KEY_U))
+                .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .handleScreenInput(event -> {
+                    if (currentScreen.getMenu() instanceof AbstractFurnaceMenu furnace) {
+                        MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
+                                Math.round(furnace.getLitProgress() * 100),
+                                Math.round(furnace.getBurnProgress() * 100)), true);
+                        return true;
+                    } else if (currentScreen instanceof BrewingStandScreen brewingStand) {
+                        BrewingStandMenu menu = brewingStand.getMenu();
+                        MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
+                                (menu.getFuel() * 100) / BrewingStandBlockEntity.FUEL_USES,
+                                (menu.getBrewingTicks() * 100) / PotionBrewing.BREWING_TIME_SECONDS * 20), true);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+    }
 
     private enum FocusDirection {
         UP("gui.up"),
@@ -107,11 +314,7 @@ public class InventoryControls {
         loadConfig();
     }
 
-    public String getRowAndColumnFormat() {
-        return config.rowAndColumnFormat;
-    }
-
-    public void tick() {
+    private void tick(Minecraft client) {
         if (!interval.isReady()) return;
 
         if (client.player == null) return;
@@ -124,6 +327,9 @@ public class InventoryControls {
             return;
         }
         if (!(client.screen instanceof AbstractContainerScreen)) return;
+        if (!config.enabled) {
+            return;
+        }
 
         loadConfig();
         currentScreen = (AbstractContainerScreenAccessor) client.screen;
@@ -185,19 +391,12 @@ public class InventoryControls {
      * Handles the key inputs.
      */
     private boolean keyListener() {
-        boolean isGroupKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_GROUP_KEY.mapping);
-        boolean isUpKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_UP_KEY.mapping);
-        boolean isRightKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_RIGHT_KEY.mapping);
-        boolean isDownKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_DOWN_KEY.mapping);
-        boolean isLeftKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_LEFT_KEY.mapping);
-        boolean isSwitchTabKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_SWITCH_TAB_KEY.mapping);
-        boolean isToggleCraftableKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_TOGGLE_CRAFTABLE_KEY.mapping);
-        boolean isFuelStatusKeyPressed = isKeyPressed(KeyMappingsHandler.Keys.INVENTORY_CONTROLS_FUEL_STATUS_KEY.mapping);
+        Minecraft client = Minecraft.getInstance();
         boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
                 || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
-        boolean isTPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_T);
         boolean disableInputForSearchBox = false;
 
+        //<editor-fold desc="When using a search box">
         //<editor-fold desc="When using a search box">
         if (currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
             EditBox searchBox = ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox();
@@ -223,7 +422,7 @@ public class InventoryControls {
             }
         }
 
-        if (recipeBookIsOpening()) {
+        if (isRecipeBookOpen()) {
             EditBox searchBox = ((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox();
             if (searchBox.canConsumeInput()) {
                 disableInputForSearchBox = true;
@@ -236,122 +435,10 @@ public class InventoryControls {
         }
         //</editor-fold>
 
-        if (disableInputForSearchBox) return true; // Skip other key inputs if using a search box
-
-        if (isGroupKeyPressed) {
-            log.debug("Group key pressed");
-            changeGroup(!client.hasShiftDown());
-            return true;
-        }
-        if (isSwitchTabKeyPressed) {
-            log.debug("Switch Tab key pressed");
-            if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen) {
-                changeRecipeTab(!client.hasShiftDown());
-            } else if (currentScreen instanceof CreativeModeInventoryScreen) {
-                changeCreativeInventoryTab(!client.hasShiftDown());
-            }
-
-            return true;
-        }
-
-        if (isUpKeyPressed) {
-            log.debug("Up key pressed");
-            if (client.hasShiftDown() && currentGroup.isScrollable) {
-                if (recipeBookIsOpening()) {
-                    clickPreviousRecipeBookPage();
-                } else {
-                    MouseUtils.Wheel.UP.scroll();
-                }
-            } else {
-                focusSlotItemAt(FocusDirection.UP);
-            }
-            return true;
-        }
-
-        if (isRightKeyPressed) {
-            log.debug("Right key pressed");
-            focusSlotItemAt(FocusDirection.RIGHT);
-            return true;
-        }
-
-        if (isDownKeyPressed) {
-            log.debug("Down key pressed");
-            if (client.hasShiftDown() && currentGroup.isScrollable) {
-                if (recipeBookIsOpening()) {
-                    clickNextRecipeBookPage();
-                } else {
-                    MouseUtils.Wheel.DOWN.scroll();
-                }
-            } else {
-                focusSlotItemAt(FocusDirection.DOWN);
-            }
-            return true;
-        }
-
-        if (isLeftKeyPressed) {
-            log.debug("Left key pressed");
-            focusSlotItemAt(FocusDirection.LEFT);
-            return true;
-        }
-
-        if (isTPressed) {
-            if (CreativeModeInventoryScreenAccessor.getSelectedTab().getType() == CreativeModeTab.Type.SEARCH && currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
-                setSearchBoxFocus(((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox(), true);
-            } else if (currentScreen instanceof AnvilScreen anvilScreen) {
-                setSearchBoxFocus(((AnvilScreenAccessor) anvilScreen).getName(), true);
-            } else if (recipeBookIsOpening()) {
-                // resolve can-not-enter-characters-issue https://github.com/minecraft-access/minecraft-access/issues/67
-                client.screen.setFocused(currentRecipeBookWidget);
-                setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), true);
-            }
-            return true;
-        }
-
-        if (isToggleCraftableKeyPressed) {
-            if (currentRecipeBookWidget == null) return false;
-            if (!currentRecipeBookWidget.isVisible()) return false;
-
-            CycleButton<Boolean> toggleCraftableButton = ((RecipeBookComponentAccessor) currentRecipeBookWidget).getFilterButton();
-
-            int x = toggleCraftableButton.getX() + 8;
-            int y = toggleCraftableButton.getY() + 4;
-
-            MouseUtils.Coordinates p = MouseUtils.calcRealPositionOfWidget(x, y);
-            MouseUtils.moveAndLeftClick(p.x(), p.y());
-            moveToSlotItem(currentSlotItem, 100);
-
-            String narration = toggleCraftableButton.getValue()
-                    ? ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString()
-                    : I18n.get("gui.recipebook.toggleRecipes.all");
-            MainClass.narrate(narration, true);
-
-            return true;
-        }
-
-        if (isFuelStatusKeyPressed) {
-            if (currentScreen.getMenu() instanceof AbstractFurnaceMenu furnace) {
-                MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
-                        Math.round(furnace.getLitProgress() * 100),
-                        Math.round(furnace.getBurnProgress() * 100)), true);
-            } else if (currentScreen instanceof BrewingStandScreen brewingStand) {
-                BrewingStandMenu menu = brewingStand.getMenu();
-                MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
-                        (menu.getFuel() * 100) / BrewingStandBlockEntity.FUEL_USES,
-                        (menu.getBrewingTicks() * 100) / PotionBrewing.BREWING_TIME_SECONDS * 20), true);
-            }
-            return true;
-        }
-
         return false;
     }
 
-    private boolean isKeyPressed(KeyMapping keyMapping) {
-        if (keyMapping.isUnbound()) return false;
-
-        return InputConstants.isKeyDown(client.getWindow(), ((KeyMappingAccessor) keyMapping).getKey().getValue());
-    }
-
-    private boolean recipeBookIsOpening() {
+    private boolean isRecipeBookOpen() {
         return currentRecipeBookWidget != null && currentRecipeBookWidget.isVisible();
     }
 
@@ -526,7 +613,7 @@ public class InventoryControls {
 
         // <name> <description>
         StringBuilder toolTipString = new StringBuilder();
-        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, client.player, TooltipFlag.NORMAL);
+        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, Minecraft.getInstance().player, TooltipFlag.NORMAL);
         for (Component line : toolTipList) {
             toolTipString.append(line.getString()).append(' ');
         }

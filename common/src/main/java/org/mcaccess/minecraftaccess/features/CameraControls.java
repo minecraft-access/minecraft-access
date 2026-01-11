@@ -2,156 +2,206 @@ package org.mcaccess.minecraftaccess.features;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
-import org.mcaccess.minecraftaccess.utils.condition.DoubleClick;
-import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 
 /**
- * This feature adds the following key binds to control the camera.<br><br>
- * Key binds and combinations:-<br>
- * 1) Look Up Key (default=i, alternate=keypad 8): Moves the camera vertically up by the normal rotating angle (default=22.5).<br>
- * 2) Look Right Key (default=l, alternate=keypad 6): Moves the camera vertically right by the normal rotating angle (default=22.5).<br>
- * 3) Look Down Key (default=k, alternate=keypad 2): Moves the camera vertically down by the normal rotating angle (default=22.5).<br>
- * 4) Look Left Key (default=j, alternate=keypad 4): Moves the camera vertically left by the normal rotating angle (default=22.5).<br>
- * 5) Left Alt + Look Up Key: Moves the camera vertically up by the modified rotating angle (default=11.25).<br>
- * 6) Left Alt + Look Right Key: Moves the camera vertically right by the modified rotating angle (default=11.25).<br>
- * 7) Left Alt + Look Down Key: Moves the camera vertically down by the modified rotating angle (default=11.25).<br>
- * 8) Left Alt + Look Left Key: Moves the camera vertically left by the modified rotating angle (default=11.25).<br>
- * 9) Right Alt + Look Up Key or Look North Key (default=keypad 7): Snaps the camera to the north block.<br>
- * 10) Right Alt + Look Right Key or Look East Key (default=keypad 9): Snaps the camera to the east block.<br>
- * 11) Right Alt + Look Down Key or Look South Key (default=keypad 3): Snaps the camera to the south block.<br>
- * 12) Right Alt + Look Left Key or Look West Key (default=keypad 1): Snaps the camera to the west block.<br>
- * 13) Center Camera Key (default=keypad 5): Snaps the camera to the closest cardinal direction and center it.<br>
- * 14) Left Alt + Center Camera Key : Snaps the camera to the closest opposite cardinal direction and center it.<br>
- * 15) Right Alt + double Look Up Key or Look Straight Up Key (default: Keypad 0): Snaps the camera to the look above head direction.<br>
- * 16) Right Alt + double Look Down Key or Look Straight Down Key (default: Keypad .): Snaps the camera to the look down at feet direction.
+ * This feature adds key binds to control the camera.
  */
 @Slf4j
-public final class CameraControls {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
-    private static CameraConfig config;
-    private static final Interval INTERVAL = Interval.defaultDelay();
+public class CameraControls implements BalmClientModule {
+    private static Config.CameraControls config = Config.getInstance().cameraControls;
+    private static final float DELTA_90_DEGREES = 600.0f; // 90 / 0.15
 
-    // config keystroke conditions
-    private static final DoubleClick STRAIGHT_UP_DOUBLE_CLICK = new DoubleClick(() -> KeyMappingsHandler.Keys.CAMERA_CONTROLS_UP.mapping.isDown());
-    private static final DoubleClick STRAIGHT_DOWN_DOUBLE_CLICK = new DoubleClick(() -> KeyMappingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping.isDown());
-
-    private CameraControls() {
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls");
     }
 
-    public static void tick() {
-        if (!INTERVAL.isReady()) return;
-        loadConfigurations();
-        keyListener();
-    }
+    @Override
+    public void initialize() {
+        // narrate_facing_direction keys
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.narrate_facing_direction/horizontal"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD0))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    MainClass.narrate(I18n.get("minecraft_access.other.facing_direction", PlayerPositionUtils.getHorizontalFacingDirectionInWords()), true);
+                    return true;
+                })
+                .build();
 
-    /**
-     * Loads the configs from config.json
-     */
-    private static void loadConfigurations() {
-        Config.CameraControls config = Config.getInstance().cameraControls;
-        CameraControls.config = new CameraConfig(config);
-        INTERVAL.setDelay(config.delayMilliseconds, Interval.Unit.MILLISECOND);
-    }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.narrate_facing_direction/vertical"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD0, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    MainClass.narrate(I18n.get("minecraft_access.other.facing_direction", PlayerPositionUtils.getVerticalFacingDirectionInWords()), true);
+                    return true;
+                })
+                .build();
 
-    /**
-     * Handles the key inputs
-     */
-    private static void keyListener() {
-        boolean isLeftAltPressed = InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_LALT);
-        boolean isRightAltPressed = InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_RALT);
+        // look keys
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look/up"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD8))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), RotatingDirection.UP);
+                    return true;
+                })
+                .build();
 
-        boolean isUpKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_UP.mapping.isDown() || KeyMappingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_UP.mapping.isDown();
-        boolean isRightKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_RIGHT.mapping.isDown() || KeyMappingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_RIGHT.mapping.isDown();
-        boolean isDownKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_DOWN.mapping.isDown() || KeyMappingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_DOWN.mapping.isDown();
-        boolean isLeftKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_LEFT.mapping.isDown() || KeyMappingsHandler.Keys.CAMERA_CONTROLS_ALTERNATE_LEFT.mapping.isDown();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look/left"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD4))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), RotatingDirection.LEFT);
+                    return true;
+                })
+                .build();
 
-        boolean isNorthKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_NORTH.mapping.isDown()
-                || isUpKeyPressed && isRightAltPressed && !isLeftAltPressed;
-        boolean isEastKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_EAST.mapping.isDown()
-                || isRightKeyPressed && isRightAltPressed && !isLeftAltPressed;
-        boolean isWestKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_WEST.mapping.isDown()
-                || isLeftKeyPressed && isRightAltPressed && !isLeftAltPressed;
-        boolean isSouthKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_SOUTH.mapping.isDown()
-                || isDownKeyPressed && isRightAltPressed && !isLeftAltPressed;
-        boolean isCenterCameraKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_CENTER_CAMERA.mapping.isDown();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look/down"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD2))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), RotatingDirection.DOWN);
+                    return true;
+                })
+                .build();
 
-        boolean isStraightUpKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_UP.mapping.isDown();
-        boolean isUpKeyDoublePressedWithRightAlt = isRightAltPressed && STRAIGHT_UP_DOUBLE_CLICK.canBeTriggered();
-        boolean isStraightDownKeyPressed = KeyMappingsHandler.Keys.CAMERA_CONTROLS_STRAIGHT_DOWN.mapping.isDown();
-        boolean isDownKeyDoublePressedWithRightAlt = isRightAltPressed && STRAIGHT_DOWN_DOUBLE_CLICK.canBeTriggered();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look/right"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD6))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), RotatingDirection.RIGHT);
+                    return true;
+                })
+                .build();
 
-        boolean anyFunctionTriggered = false;
+        // look_alternate keys
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_alternate/up"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD8, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle), RotatingDirection.UP);
+                    return true;
+                })
+                .build();
 
-        // these two blocks of logic should be ahead of the normal up/down logic
-        if (isStraightUpKeyPressed || isUpKeyDoublePressedWithRightAlt) {
-            anyFunctionTriggered = true;
-            rotateCameraTo(Orientation.UP);
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_alternate/left"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD4, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle), RotatingDirection.LEFT);
+                    return true;
+                })
+                .build();
 
-        if (isStraightDownKeyPressed || isDownKeyDoublePressedWithRightAlt) {
-            anyFunctionTriggered = true;
-            rotateCameraTo(Orientation.DOWN);
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_alternate/down"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD2, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle), RotatingDirection.DOWN);
+                    return true;
+                })
+                .build();
 
-        if (isNorthKeyPressed) {
-            anyFunctionTriggered = true;
-            rotateCameraTo(Orientation.NORTH);
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_alternate/right"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD6, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle), RotatingDirection.RIGHT);
+                    return true;
+                })
+                .build();
 
-        if (isEastKeyPressed) {
-            anyFunctionTriggered = true;
-            rotateCameraTo(Orientation.EAST);
-        }
+        // look_direction keys
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/north"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD7))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraTo(Orientation.NORTH);
+                    return true;
+                })
+                .build();
 
-        if (isWestKeyPressed) {
-            anyFunctionTriggered = true;
-            rotateCameraTo(Orientation.WEST);
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/east"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD9))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraTo(Orientation.EAST);
+                    return true;
+                })
+                .build();
 
-        if (isSouthKeyPressed) {
-            anyFunctionTriggered = true;
-            rotateCameraTo(Orientation.SOUTH);
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/south"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD1))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraTo(Orientation.SOUTH);
+                    return true;
+                })
+                .build();
 
-        float rotateAngle = isLeftAltPressed ? config.modifiedRotatingAngle : config.normalRotatingAngle;
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/west"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD3))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraTo(Orientation.WEST);
+                    return true;
+                })
+                .build();
 
-        if (isUpKeyPressed && !isRightAltPressed) {
-            anyFunctionTriggered = true;
-            rotateCameraBy(rotateAngle, RotatingDirection.UP);
-        }
+        // look_straight keys
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/forward"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD5))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    centerCamera(false);
+                    return true;
+                })
+                .build();
 
-        if (isRightKeyPressed && !isRightAltPressed) {
-            anyFunctionTriggered = true;
-            rotateCameraBy(rotateAngle, RotatingDirection.RIGHT);
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/behind"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD5, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    centerCamera(true);
+                    return true;
+                })
+                .build();
 
-        if (isDownKeyPressed && !isRightAltPressed) {
-            anyFunctionTriggered = true;
-            rotateCameraBy(rotateAngle, RotatingDirection.DOWN);
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/up"))
+                .withDefault(InputBinding.key(InputConstants.KEY_ADD))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraTo(Orientation.UP);
+                    return true;
+                })
+                .build();
 
-        if (isLeftKeyPressed && !isRightAltPressed) {
-            anyFunctionTriggered = true;
-            rotateCameraBy(rotateAngle, RotatingDirection.LEFT);
-        }
-
-        if (isCenterCameraKeyPressed) {
-            anyFunctionTriggered = true;
-            centerCamera(isLeftAltPressed);
-        }
-
-        INTERVAL.adjustNextReadyTimeBy(anyFunctionTriggered);
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/down"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPADENTER))
+                .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
+                .handleWorldInput(event -> {
+                    rotateCameraTo(Orientation.DOWN);
+                    return true;
+                })
+                .build();
     }
 
     private enum RotatingDirection {
@@ -183,8 +233,8 @@ public final class CameraControls {
         float verticalAngleDelta = angle * direction.verticalWight;
         log.debug("Rotating camera by x:{} y:{}", horizontalAngleDelta, verticalAngleDelta);
 
-        assert CLIENT.player != null;
-        CLIENT.player.turn(horizontalAngleDelta, verticalAngleDelta);
+        assert Minecraft.getInstance().player != null;
+        Minecraft.getInstance().player.turn(horizontalAngleDelta, verticalAngleDelta);
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
@@ -204,7 +254,7 @@ public final class CameraControls {
      */
     private static void rotateCameraTo(Orientation direction) {
         if (handleLocking()) return;
-        LocalPlayer player = CLIENT.player;
+        LocalPlayer player = Minecraft.getInstance().player;
         assert player != null;
         Vec3 playerBlockPosition = player.position();
         Vec3 targetBlockPosition = playerBlockPosition.add(Vec3.atLowerCornerOf(direction.vector));
@@ -233,16 +283,12 @@ public final class CameraControls {
     }
 
     private static boolean handleLocking() {
-        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || !CLIENT.getCameraEntity().is(CLIENT.player))) return false;
+        assert Minecraft.getInstance().getCameraEntity() != null;
+        assert Minecraft.getInstance().player != null;
+        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || !Minecraft.getInstance().getCameraEntity().is(Minecraft.getInstance().player))) {
+            return false;
+        }
         MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
         return true;
-    }
-
-    private record CameraConfig(float normalRotatingAngle, float modifiedRotatingAngle) {
-        static final float DELTA_90_DEGREES = 600.0f; // 90 / 0.15
-
-        private CameraConfig(Config.CameraControls config) {
-            this(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle));
-        }
     }
 }

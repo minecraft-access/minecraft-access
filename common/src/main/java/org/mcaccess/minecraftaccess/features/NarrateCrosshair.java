@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -13,32 +15,50 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
 /**
  * This feature reads the name of the targeted block or entity.<br>
  * It also gives feedback when a block is powered by a redstone signal or when a door is open similar cases.
  */
 @Slf4j
-public class NarrateCrosshair {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
+public class NarrateCrosshair implements BalmClientModule {
     private @Nullable Object previousTarget = null;
     private @Nullable String previousNarration = null;
-    private Vec3 previousSoundPos = Vec3.ZERO;
+    private Vec3 previousSoundPos = null;
     private final Interval repetitionInterval = Interval.defaultDelay();
     private static final Config.NarrateCrosshair CONFIG = Config.getInstance().narrateCrosshair;
 
-    public void tick() {
-        if (CLIENT.screen != null) return;
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_crosshair");
+    }
+
+    @Override
+    public void initialize() {
+        ClientPlayingTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            previousTarget = null;
+            previousNarration = null;
+            previousSoundPos = null;
+        });
+    }
+
+    private void tick(Minecraft client, Player player, Level level) {
+        if (client.screen != null) return;
         if (!CONFIG.enabled) return;
         repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
 
@@ -70,8 +90,7 @@ public class NarrateCrosshair {
         }
 
         if (CONFIG.relativePositionSoundCue.enabled) {
-            assert CLIENT.player != null;
-            double rayCastDistance = Math.min(CLIENT.player.blockInteractionRange(), CLIENT.player.entityInteractionRange());
+            double rayCastDistance = Math.min(player.blockInteractionRange(), player.entityInteractionRange());
             Vec3 targetPosition = switch (rayCast) {
                 case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().getCenter();
                 case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();
@@ -91,8 +110,7 @@ public class NarrateCrosshair {
         } else if (CONFIG.filter.enabled) {
             switch (rayCast) {
                 case BlockHitResult blockHitResult when CONFIG.filter.targetMode.filterBlocks() -> {
-                    assert CLIENT.level != null;
-                    Identifier key = BuiltInRegistries.BLOCK.getKey(CLIENT.level.getBlockState(blockHitResult.getBlockPos()).getBlock());
+                    Identifier key = BuiltInRegistries.BLOCK.getKey(level.getBlockState(blockHitResult.getBlockPos()).getBlock());
                     if (isIgnored(key)) {
                         return;
                     }
@@ -122,8 +140,8 @@ public class NarrateCrosshair {
 
     // To indicate relative location between player and target.
     private static void playRelativePositionSoundCue(Vec3 targetPosition, double maxDistance, Holder.Reference<SoundEvent> sound, double minVolume, double maxVolume) {
-        assert CLIENT.player != null;
-        Vec3 playerPos = CLIENT.player.position();
+        assert Minecraft.getInstance().player != null;
+        Vec3 playerPos = Minecraft.getInstance().player.position();
 
         // Use pitch to represent relative elevation, the higher the sound the higher the target.
         // The range of pitch is [0.5, 2.0], calculated as: 2 ^ (x / 12), where x is [-12, 12].
@@ -140,7 +158,7 @@ public class NarrateCrosshair {
         double volumeDeltaPerBlock = (maxVolume - minVolume) / maxDistance;
         float volume = (float) (minVolume + (maxDistance - distance) * volumeDeltaPerBlock);
 
-        assert CLIENT.level != null;
-        CLIENT.level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
+        assert Minecraft.getInstance().level != null;
+        Minecraft.getInstance().level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
     }
 }

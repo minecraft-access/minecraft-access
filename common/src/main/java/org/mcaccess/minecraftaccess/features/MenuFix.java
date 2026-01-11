@@ -4,6 +4,12 @@ import java.util.Set;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DirectJoinServerScreen;
 import net.minecraft.client.gui.screens.ManageServerScreen;
@@ -25,8 +31,12 @@ import net.minecraft.client.gui.screens.packs.PackSelectionScreen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.EditWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.config.RegistrySingleSelect;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
@@ -36,7 +46,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  * which results in infinite narrating of `Screen element x out of x` by the narrator
  */
 @Slf4j
-public final class MenuFix {
+public final class MenuFix implements BalmClientModule {
     private static Screen previous;
     private static final Set<Class<? extends Screen>> MENUS_NEED_FIX = Set.of(
             TitleScreen.class,
@@ -61,13 +71,34 @@ public final class MenuFix {
             RegistrySingleSelect.SelectionScreen.class
     );
 
-    private MenuFix() {
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "menu_fix");
     }
 
-    public static void tick(Minecraft client) {
-        if (client.screen == previous && !(InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_R) && client.hasAltDown())) {
+    @Override
+    public void initialize() {
+        ClientTickCallback.AFTER.register(this::tick);
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.menu_fix"))
+                .withDefault(InputBinding.key(InputConstants.KEY_R, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleScreenInput(event -> {
+                    Minecraft client = Minecraft.getInstance();
+                    if (MENUS_NEED_FIX.contains(client.screen.getClass())) {
+                        log.debug("Performing menu fix on {}", client.screen.getTitle().getString());
+                        moveMouseCursor();
+                    }
+                    return true;
+                })
+                .build();
+    }
+
+    private void tick(Minecraft client) {
+        if (client.screen == previous) {
             return;
         }
+
         previous = client.screen;
 
         if (!Config.getInstance().menuFixEnabled || client.screen == null) {

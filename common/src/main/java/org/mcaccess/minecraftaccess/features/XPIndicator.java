@@ -1,43 +1,43 @@
 package org.mcaccess.minecraftaccess.features;
 
-import lombok.extern.slf4j.Slf4j;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
+import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
 
 /**
  * This feature narrates when the player xp level is increased or decreased.
  */
-@Slf4j
-public class XPIndicator {
-    private final Minecraft client = Minecraft.getInstance();
-    @Nullable
-    private Integer previousXPLevel = null;
+public class XPIndicator implements BalmClientModule {
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "xp_indicator");
+    }
 
-    public void tick() {
-        if (client.level == null) return;
-        if (client.player == null) return;
-        if (client.screen != null) return;
+    @Override
+    public void initialize() {
+        new ServerChangeDetector<Integer>().levelEvent((client, player, level) -> {
+            assert Minecraft.getInstance().player != null;
+            return Minecraft.getInstance().player.experienceLevel;
+        }, this::onChange);
+    }
 
-        int currentXPLevel = client.player.experienceLevel;
-        if (previousXPLevel == null) {
-            previousXPLevel = currentXPLevel;
+    private void onChange(Minecraft client, Player player, Level level, Integer previous, Integer value) {
+        assert Minecraft.getInstance().gameMode != null;
+        if (!Config.getInstance().features.xpIndicatorEnabled || !Minecraft.getInstance().gameMode.hasExperience()) {
             return;
         }
-        if (previousXPLevel == currentXPLevel) {
-            return;
-        }
-
-        boolean increased = previousXPLevel < currentXPLevel;
-        previousXPLevel = currentXPLevel;
-
-        String narration = I18n.get(
-                increased ? "minecraft_access.xp_indicator.increased" : "minecraft_access.xp_indicator.decreased",
-                NarrationUtils.narrateNumber(currentXPLevel)
-        );
-        MainClass.narrate(narration, true);
+        MainClass.narrate(I18n.get(
+                previous < value ? "minecraft_access.xp_indicator.increased" : "minecraft_access.xp_indicator.decreased",
+                NarrationUtils.narrateNumber(value)
+        ), true);
     }
 }

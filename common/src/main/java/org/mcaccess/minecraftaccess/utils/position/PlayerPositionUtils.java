@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.utils.position;
 
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 
@@ -9,7 +8,6 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 /**
  * Functions about getting player entity's position, facing direction etc.
  */
-@Slf4j
 public final class PlayerPositionUtils {
     private static final Minecraft CLIENT = Minecraft.getInstance();
     private static final String POSITION_FORMAT = "{x}, {y}, {z}";

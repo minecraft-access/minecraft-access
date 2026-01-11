@@ -37,8 +37,6 @@
         "I18nMixin",
         "InputMixin",
         "ItemStackMixin",
-        "KeyMappingAccessor",
-        "KeyMappingMixin",
         "LivingEntityMixin",
         "LoomScreenAccessor",
         "MerchantScreenAccessor",

@@ -1,29 +1,70 @@
 package org.mcaccess.minecraftaccess.features;
 
+import java.util.Objects;
 import java.util.Optional;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
+import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
-public class NarrateHeldItem {
-    private String previousItemName = "";
-    private int previousItemCount = 0;
-    private int previousSelectedSlot = 0;
+public class NarrateHeldItem implements BalmClientModule {
+    private String previousItemName = null;
+    private Integer previousItemCount = null;
+    private Integer previousSelectedSlot = null;
 
-    public void tick() {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return;
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_held_item");
+    }
 
-        while (KeyMappingsHandler.Keys.NARRATE_HELD_ITEM_KEY.mapping.consumeClick()) {
-            narrateHand(Minecraft.getInstance().hasAltDown());
-        }
+    @Override
+    public void initialize() {
+        ClientPlayingTick.AFTER.register(this::tick);
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            previousItemName = null;
+            previousItemCount = null;
+            previousSelectedSlot = null;
+        });
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_held_item/mainhand"))
+                .withDefault(InputBinding.key(InputConstants.KEY_GRAVE))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    narrateHand(false);
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_held_item/offhand"))
+                .withDefault(InputBinding.key(InputConstants.KEY_GRAVE, KeyModifiers.of(KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    narrateHand(true);
+                    return true;
+                })
+                .build();
+    }
+
+    private void tick(Minecraft client, Player player, Level level) {
+        if (player.isSpectator()) return;
 
         ItemStack currentItemStack = player.getMainHandItem();
         int selectedSlot = player.getInventory().getSelectedSlot();
@@ -32,9 +73,9 @@ public class NarrateHeldItem {
 
         String itemNameWithCount = (currentItemStack.getCount() != 1 && !currentItemStack.isEmpty()) ? itemCount + " " + baseItemName : baseItemName;
 
-        boolean nameChanged = !previousItemName.equals(baseItemName);
-        boolean countChanged = itemCount != previousItemCount;
-        boolean slotChanged = selectedSlot != previousSelectedSlot;
+        boolean nameChanged = !Objects.equals(previousItemName, baseItemName);
+        boolean countChanged = !Objects.equals(itemCount, previousItemCount);
+        boolean slotChanged = !Objects.equals(selectedSlot, previousSelectedSlot);
 
         if (nameChanged || slotChanged) {
             MainClass.narrate(I18n.get("minecraft_access.other.selected", itemNameWithCount), true);
@@ -63,6 +104,8 @@ public class NarrateHeldItem {
     }
 
     private void narrateHand(boolean hasAltDown) {
+        if (Minecraft.getInstance().player.isSpectator()) return;
+
         LocalPlayer player = Minecraft.getInstance().player;
         String hand;
         ItemStack heldItem;

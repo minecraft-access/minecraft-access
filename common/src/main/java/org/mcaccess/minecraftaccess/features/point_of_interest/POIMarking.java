@@ -1,23 +1,31 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import lombok.Getter;
+import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 
-
-public class POIMarking {
+public class POIMarking implements BalmClientModule {
     @Getter
     private boolean isMarked = false;
 
@@ -27,26 +35,36 @@ public class POIMarking {
     @Getter
     private Block markedBlock = null;
 
-    /**
-     * Perform this feature before the normal POI scan,
-     * and suppress the normal POI scan (by switching their targets to marked target)
-     * if this feature is enabled.
-     */
-    public void tick() {
-        if (Config.getInstance().poi.marking.enabled) {
-            boolean controlPressed = Minecraft.getInstance().hasControlDown();
-            boolean altPressed = Minecraft.getInstance().hasAltDown();
-            boolean lockingKeyPressed = KeyMappingsHandler.Keys.LOCKING_HANDLER_KEY.mapping.isDown();
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "poi/marking");
+    }
 
-            if (lockingKeyPressed && altPressed && controlPressed) {
-                unmark();
-            } else if (controlPressed && lockingKeyPressed) {
-                mark();
-            }
+    @Override
+    public void initialize() {
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+            isMarked = false;
+            markedEntity = null;
+            markedBlock = null;
+        });
 
-        } else {
-            unmark();
-        }
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.poi_marking/mark"))
+                .withDefault(InputBinding.key(InputConstants.KEY_Y, KeyModifiers.of(KeyModifier.CONTROL)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    mark();
+                    return true;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.poi_marking/unmark"))
+                .withDefault(InputBinding.key(InputConstants.KEY_Y, KeyModifiers.of(KeyModifier.CONTROL, KeyModifier.ALT)))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    unmark();
+                    return true;
+                })
+                .build();
     }
 
     private void mark() {

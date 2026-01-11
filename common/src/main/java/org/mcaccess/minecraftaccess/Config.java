@@ -8,6 +8,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.resources.Identifier;
 
+import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.config.ConfigExtension;
@@ -96,7 +97,6 @@ public final class Config implements ConfigData {
     public static final class CameraControls {
         public float normalRotatingAngle = 22.5f;
         public float modifiedRotatingAngle = 11.25f;
-        public int delayMilliseconds = 250;
 
         private CameraControls() {
         }
@@ -162,7 +162,6 @@ public final class Config implements ConfigData {
         public static final class Locking {
             public boolean unlockingSound = false;
             public boolean autoLockEyeOfEnderEntity = true;
-            public int delay = 100;
             public boolean aimAssistEnabled = true;
             public boolean aimAssistAudioCuesEnabled = true;
             public float aimAssistAudioCuesVolume = 0.5f;
@@ -172,7 +171,6 @@ public final class Config implements ConfigData {
         }
 
         public static final class Marking {
-            public boolean enabled = true;
             public boolean suppressOtherWhenEnabled = true;
 
             private Marking() {
@@ -288,7 +286,7 @@ public final class Config implements ConfigData {
         public boolean enabled = true;
         @ConfigEntry.Gui.CollapsibleObject
         public FluidDetector fluidDetector = new FluidDetector();
-        @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+        @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
         public Identifier[] functions = new Identifier[]{
                 Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_target"),
                 Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "target_position"),
@@ -317,25 +315,25 @@ public final class Config implements ConfigData {
         }
 
         public static final class ShortcutBar {
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key1 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "narrate_target");
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key2 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "target_position");
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key3 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "light_level");
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key4 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "find_water");
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key5 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "find_lava");
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key6 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "biome");
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key7 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "time");
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key8 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "xp");
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key9 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "refresh_screen_reader");
-            @ConfigExtension.Registry(registry = org.mcaccess.minecraftaccess.features.AccessMenu.RegisteredFunction.class, i18n = "access_menu_function")
+            @ConfigExtension.Registry(registry = AccessMenuFunction.class, i18n = "access_menu_function")
             public Identifier key0 = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "config");
         }
     }

@@ -1,77 +1,89 @@
 package org.mcaccess.minecraftaccess.features;
 
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.KeyMapping;
+import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.kuma.api.InputBinding;
+import net.blay09.mods.kuma.api.KeyModifier;
+import net.blay09.mods.kuma.api.KeyModifiers;
+import net.blay09.mods.kuma.api.Kuma;
+import net.blay09.mods.kuma.api.ManagedKeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ScrollableLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
-import org.mcaccess.minecraftaccess.utils.KeyMappingsHandler;
-import org.mcaccess.minecraftaccess.utils.condition.Interval;
-import org.mcaccess.minecraftaccess.utils.condition.MenuKeystroke;
+import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 
-public class AccessMenu {
-    private static final Minecraft CLIENT = Minecraft.getInstance();
-    private static final MenuKeystroke MENU_KEY = new MenuKeystroke(KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping);
-    private boolean gameModeSwitcherActive = false;
-    private final Interval[] intervals = IntStream.range(0, 10)
-            .mapToObj(i -> Interval.sec(1))
-            .toArray(Interval[]::new);
+public class AccessMenu implements BalmClientModule {
+    private static ManagedKeyMapping keyAccessMenu;
 
-    public void tick() {
-        if (CLIENT.player == null) return;
+    @Override
+    public @NotNull Identifier getId() {
+        return Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "access_menu");
+    }
 
-        if (CLIENT.screen == null) {
-            if (CLIENT.hasAltDown()) {
-                assert CLIENT.player != null;
-                for (byte i = 0; i < 10; i++) {
-                    RegisteredFunction function = getShortcuts()[i];
-                    if (InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_0 + i) && function.function().enabled() && intervals[i].isReady()) {
-                        CLIENT.player.clientSideCloseContainer();
-                        function.function().execute();
+    @Override
+    public void initialize() {
+        keyAccessMenu = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.access_menu"))
+                .withDefault(InputBinding.key(InputConstants.KEY_F4))
+                .overrideCategory(KeyMappingCategories.OTHER)
+                .handleWorldInput(event -> {
+                    Minecraft client = Minecraft.getInstance();
+                    if (keyAccessMenu.getBinding().key().getValue() == InputConstants.KEY_F4 && InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_F3)) {
+                        return false;
+                    } else {
+                        client.setScreen(new GUI());
+                        return true;
                     }
-                }
-                return;
-            }
+                })
+                .build();
 
-            for (RegisteredFunction function : MainClass.registry(RegisteredFunction.class).values()) {
-                while (function.key().consumeClick()) {
-                    if (function.function().enabled()) {
-                        function.function().execute();
-                    }
-                }
-            }
-
-            if (MENU_KEY.canOpenMenu() && !gameModeSwitcherActive) {
-                CLIENT.setScreen(new GUI());
-            }
+        for (byte i = 0; i < 10; i++) {
+            byte index = i;
+            Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "access_menu.shortcuts_bar/" + index))
+                    .withDefault(InputBinding.key(InputConstants.KEY_0 + i, KeyModifiers.of(KeyModifier.ALT)))
+                    .skipRegistration()
+                    .handleWorldInput(event -> {
+                        AccessMenuFunction function = getShortcuts()[index];
+                        if (function.enabled()) {
+                            function.execute();
+                        }
+                        return true;
+                    })
+                    .build();
         }
 
-        if (CLIENT.screen instanceof GameModeSwitcherScreen) {
-            gameModeSwitcherActive = true;
-        } else if (!InputConstants.isKeyDown(CLIENT.getWindow(), InputConstants.KEY_F4)) {
-            gameModeSwitcherActive = false;
+        for (Map.Entry<Identifier, AccessMenuFunction> function : MainClass.registry(AccessMenuFunction.class).entrySet()) {
+            Kuma.createKeyMapping(function.getKey())
+                    .overrideName(identifier -> identifier.toLanguageKey("access_menu_function"))
+                    .overrideCategory(KeyMappingCategories.ACCESS_MENU_FUNCTIONS)
+                    .handleWorldInput(event -> {
+                        if (function.getValue().enabled()) {
+                            function.getValue().execute();
+                            return true;
+                        }
+                        return false;
+                    })
+                    .build();
         }
     }
 
-    private static RegisteredFunction[] getShortcuts() {
+    private static AccessMenuFunction[] getShortcuts() {
         Config.AccessMenu.ShortcutBar config = Config.getInstance().accessMenu.shortcutBar;
-        Map<Identifier, RegisteredFunction> registry = MainClass.registry(RegisteredFunction.class);
-        return new RegisteredFunction[]{
+        Map<Identifier, AccessMenuFunction> registry = MainClass.registry(AccessMenuFunction.class);
+        return new AccessMenuFunction[]{
                 registry.get(config.key0),
                 registry.get(config.key1),
                 registry.get(config.key2),
@@ -83,9 +95,6 @@ public class AccessMenu {
                 registry.get(config.key8),
                 registry.get(config.key9),
         };
-    }
-
-    public record RegisteredFunction(AccessMenuFunction function, KeyMapping key) {
     }
 
     public static class GUI extends Screen {
@@ -102,7 +111,7 @@ public class AccessMenu {
             GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
 
             for (Identifier key : Config.getInstance().accessMenu.functions) {
-                RegisteredFunction function = MainClass.registry(RegisteredFunction.class).get(key);
+                AccessMenuFunction function = MainClass.registry(AccessMenuFunction.class).get(key);
                 MutableComponent label = Component.translatable(key.toLanguageKey("access_menu_function"));
                 for (byte i = 0; i < 10; i++) {
                     if (getShortcuts()[i] == function) {
@@ -111,9 +120,9 @@ public class AccessMenu {
                 }
                 Button button = Button.builder(label, b -> {
                     onClose();
-                    function.function().execute();
+                    function.execute();
                 }).width(Math.min(Button.BIG_WIDTH, width / 2 - 15)).build();
-                button.active = function.function().enabled();
+                button.active = function.enabled();
                 rowHelper.addChild(button);
             }
 
@@ -124,16 +133,16 @@ public class AccessMenu {
         }
 
         @Override
-        public boolean keyPressed(KeyEvent event) {
-            if (KeyMappingsHandler.Keys.ACCESS_MENU_KEY.mapping.matches(event)) {
+        public boolean keyPressed(@NotNull KeyEvent event) {
+            if (keyAccessMenu.isActiveAndMatchesKey(event)) {
                 onClose();
                 return true;
             }
             if (event.getDigit() != -1) {
-                RegisteredFunction function = getShortcuts()[event.getDigit()];
-                if (function.function().enabled()) {
+                AccessMenuFunction function = getShortcuts()[event.getDigit()];
+                if (function.enabled()) {
                     onClose();
-                    function.function().execute();
+                    function.execute();
                     return true;
                 }
             }
