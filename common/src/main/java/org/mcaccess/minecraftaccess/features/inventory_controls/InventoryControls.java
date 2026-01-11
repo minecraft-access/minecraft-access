@@ -181,12 +181,12 @@ public class InventoryControls implements BalmClientModule {
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.scroll/up"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_recipe_book_page/previous"))
                 .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
                 .handleScreenInput(event -> {
                     if (currentGroup.isScrollable) {
-                        log.debug("Up key pressed");
+                        log.debug("Previous Recipe Book page key pressed");
                         if (isRecipeBookOpen()) {
                             clickPreviousRecipeBookPage();
                             return true;
@@ -209,12 +209,12 @@ public class InventoryControls implements BalmClientModule {
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.scroll/down"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_recipe_book_page/next"))
                 .withDefault(InputBinding.key(InputConstants.KEY_K, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
                 .handleScreenInput(event -> {
                     if (currentGroup.isScrollable) {
-                        log.debug("Down key pressed");
+                        log.debug("Next Recipe Book page key pressed");
                         if (isRecipeBookOpen()) {
                             clickNextRecipeBookPage();
                             return true;
