@@ -149,7 +149,7 @@ public class CameraControls implements BalmClientModule {
                 .build();
 
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/south"))
-                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD1))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD3))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
                     rotateCameraTo(Orientation.SOUTH);
@@ -158,7 +158,7 @@ public class CameraControls implements BalmClientModule {
                 .build();
 
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/west"))
-                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD3))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD1))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
                     rotateCameraTo(Orientation.WEST);

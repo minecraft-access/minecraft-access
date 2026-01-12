@@ -24,30 +24,30 @@ You may want to take a look at [all the original game controls](https://minecraf
 | `Look South`             | Number Pad 3       | Turn the camera to the south                                                                                                         |
 | `Look West`              | Number Pad 1       | Turn the camera to the west                                                                                                          |
 | `Center Camera`          | Number Pad 5       | Look straight ahead: Turn the camera to the closest of the eight cardinal directions and reset vertical angle to horizontal position |
-| `Look Straight Up`       | Number Pad Plus    | Turn the camera to the look above head direction                                                                                     |
-| `Look Straight Down`     | Number Pad Enter   | Turn the camera to the look down at feet direction                                                                                   |
+| `Look Straight Down`     | Number Pad Decimal | Turn the camera to the look down at feet direction                                                                                   |
 | `Speak Facing Direction` | Number Pad 0       | Speak current horizontal facing direction                                                                                            |
 
-| Key Combination        | Description                                                                                                                                         |
-|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Alt` + `Number Pad 8` | Move the camera vertically up by the `Modified Rotating Angle` config value                                                                         |
-| `Alt` + `Number Pad 6` | Move the camera vertically right by the `Modified Rotating Angle` config value                                                                      |
-| `Alt` + `Number Pad 2` | Move the camera vertically down by the `Modified Rotating Angle` config value                                                                       |
-| `Alt` + `Number Pad 4` | Move the camera vertically left by the `Modified Rotating Angle` config value                                                                       |
-| `Alt` + `Number Pad 5` | Look straight back: Turn the camera to the opposite of the closest of the eight cardinal directions and reset vertical angle to horizontal position |
-| `Alt` + `Number Pad 0` | Speak current vertical facing direction                                                                                                             |
+| Key Combination              | Description                                                                                                                                         |
+|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Alt` + `Number Pad 8`       | Move the camera vertically up by the `Modified Rotating Angle` config value                                                                         |
+| `Alt` + `Number Pad 6`       | Move the camera vertically right by the `Modified Rotating Angle` config value                                                                      |
+| `Alt` + `Number Pad 2`       | Move the camera vertically down by the `Modified Rotating Angle` config value                                                                       |
+| `Alt` + `Number Pad 4`       | Move the camera vertically left by the `Modified Rotating Angle` config value                                                                       |
+| `Alt` + `Number Pad 5`       | Look straight back: Turn the camera to the opposite of the closest of the eight cardinal directions and reset vertical angle to horizontal position |
+| `alt` + `Number Pad Decimal` | Turn the camera to the look above head direction                                                                                                    |
+| `Alt` + `Number Pad 0`       | Speak current vertical facing direction                                                                                                             |
 
 See also: [Feature Description]({{% relref "/features#camera-controls" %}}), [Configuration]({{% relref "/config#camera-controls" %}})
 
 ## Mouse Simulation
 
-| Single Key                | Default Keybinding | Description                                                                        |
-|---------------------------|--------------------|------------------------------------------------------------------------------------|
-| `Left Mouse Sim`          | [                  | Simulate left mouse key, default value of the original `Attack/Destroy` key        |
-| `Middle Mouse Sim`        | \                  | Simulate middle mouse key, default value of the original `Pick Block` key          |
-| `Right Mouse Sim`         | ]                  | Simulate right mouse key, default value of the original `Use Item/Place Block` key |
-| `Mouse Wheel Scroll Up`   | ;                  | Simulate mouse wheel scroll up, switching items in hotbar forward                  |
-| `Mouse Wheel Scroll Down` | '                  | Simulate mouse wheel scroll down, switching items in hotbar backward               |
+| Single Key                | Default Keybinding  | Description                                                                        |
+|---------------------------|---------------------|------------------------------------------------------------------------------------|
+| `Left Mouse Sim`          | Number Pad Divide   | Simulate left mouse key, default value of the original `Attack/Destroy` key        |
+| `Middle Mouse Sim`        | Number Pad Subtract | Simulate middle mouse key, default value of the original `Pick Block` key          |
+| `Right Mouse Sim`         | Number Pad Multiply | Simulate right mouse key, default value of the original `Use Item/Place Block` key |
+| `Mouse Wheel Scroll Up`   | Number Pad Add      | Simulate mouse wheel scroll up, switching items in hotbar forward                  |
+| `Mouse Wheel Scroll Down` | Number Pad Enter    | Simulate mouse wheel scroll down, switching items in hotbar backward               |
 
 See also: [Feature Description]({{% relref "/features#mouse-simulation" %}}), [Configuration]({{% relref "/config#mouse-simulation" %}})
 
