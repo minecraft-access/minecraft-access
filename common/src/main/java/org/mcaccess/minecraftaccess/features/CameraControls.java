@@ -186,7 +186,7 @@ public class CameraControls implements BalmClientModule {
                 .build();
 
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/up"))
-                .withDefault(InputBinding.key(InputConstants.KEY_ADD))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPADCOMMA, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
                     rotateCameraTo(Orientation.UP);
@@ -195,7 +195,7 @@ public class CameraControls implements BalmClientModule {
                 .build();
 
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/down"))
-                .withDefault(InputBinding.key(InputConstants.KEY_NUMPADENTER))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPADCOMMA))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
                     rotateCameraTo(Orientation.DOWN);
