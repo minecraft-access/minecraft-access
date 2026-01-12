@@ -13,7 +13,6 @@ import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -25,10 +24,13 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.SearchRecipeBookCategory;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -254,16 +256,10 @@ public class InventoryControls implements BalmClientModule {
                     if (currentRecipeBookWidget == null) return false;
                     if (!currentRecipeBookWidget.isVisible()) return false;
 
-                    CycleButton<Boolean> toggleCraftableButton = ((RecipeBookComponentAccessor) currentRecipeBookWidget).getFilterButton();
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F));
+                    ((RecipeBookComponentAccessor) currentRecipeBookWidget).getFilterButton().onPress(new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0));
 
-                    int x = toggleCraftableButton.getX() + 8;
-                    int y = toggleCraftableButton.getY() + 4;
-
-                    MouseUtils.Coordinates p = MouseUtils.calcRealPositionOfWidget(x, y);
-                    MouseUtils.moveAndLeftClick(p.x(), p.y());
-                    moveToSlotItem(currentSlotItem, 100);
-
-                    String narration = toggleCraftableButton.getValue()
+                    String narration = ((RecipeBookComponentAccessor) currentRecipeBookWidget).getFilterButton().getValue()
                             ? ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString()
                             : I18n.get("gui.recipebook.toggleRecipes.all");
                     MainClass.narrate(narration, true);
