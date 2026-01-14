@@ -63,7 +63,7 @@ allprojects {
 
     base.archivesName = 'minecraft-access'
 
-    group = 'org.mcaccess.minecraftaccess'
+    group = 'org.mcaccess'
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
