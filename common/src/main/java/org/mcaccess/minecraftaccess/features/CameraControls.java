@@ -92,8 +92,8 @@ public class CameraControls implements BalmClientModule {
                 })
                 .build();
 
-        // look_alternate keys
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_alternate/up"))
+        // look_modified keys
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_modified/up"))
                 .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
@@ -102,7 +102,7 @@ public class CameraControls implements BalmClientModule {
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_alternate/left"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_modified/left"))
                 .withDefault(InputBinding.key(InputConstants.KEY_J, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
@@ -111,7 +111,7 @@ public class CameraControls implements BalmClientModule {
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_alternate/down"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_modified/down"))
                 .withDefault(InputBinding.key(InputConstants.KEY_K, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
@@ -120,7 +120,7 @@ public class CameraControls implements BalmClientModule {
                 })
                 .build();
 
-        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_alternate/right"))
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_modified/right"))
                 .withDefault(InputBinding.key(InputConstants.KEY_L, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
