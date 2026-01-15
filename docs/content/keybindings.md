@@ -13,41 +13,41 @@ You may want to take a look at [all the original game controls](https://minecraf
 
 ## Camera Controls
 
-| Single Key               | Default Keybinding | Description                                                                                                                          |
-|--------------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| `Look Up`                | Number Pad 8       | Move the camera vertically up by the `Normal Rotating Angle` config value                                                            |
-| `Look Right`             | Number Pad 6       | Move the camera horizontally right by the `Normal Rotating Angle` config value                                                       |
-| `Look Down`              | Number Pad 2       | Move the camera vertically down by the `Normal Rotating Angle` config value                                                          |
-| `Look Left`              | Number Pad 6       | Move the camera horizontally left by the `Normal Rotating Angle` config value                                                        |
-| `Look North`             | Number Pad 7       | Turn the camera to the north                                                                                                         |
-| `Look East`              | Number Pad 9       | Turn the camera to the east                                                                                                          |
-| `Look South`             | Number Pad 3       | Turn the camera to the south                                                                                                         |
-| `Look West`              | Number Pad 1       | Turn the camera to the west                                                                                                          |
-| `Center Camera`          | Number Pad 5       | Look straight ahead: Turn the camera to the closest of the eight cardinal directions and reset vertical angle to horizontal position |
-| `Look Straight Down`     | Number Pad Decimal | Turn the camera to the look down at feet direction                                                                                   |
-| `Speak Facing Direction` | Number Pad 0       | Speak current horizontal facing direction                                                                                            |
+| Single Key                          | Default Keybinding | Description                                                                                                                          |
+|-------------------------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `Look Up`                           | I                  | Move the camera vertically up by the `Normal Rotating Angle` config value                                                            |
+| `Look Right`                        | L                  | Move the camera horizontally right by the `Normal Rotating Angle` config value                                                       |
+| `Look Down`                         | K                  | Move the camera vertically down by the `Normal Rotating Angle` config value                                                          |
+| `Look Left`                         | J                  | Move the camera horizontally left by the `Normal Rotating Angle` config value                                                        |
+| `Center Camera`                     | Number Pad 5       | Look straight ahead: Turn the camera to the closest of the eight cardinal directions and reset vertical angle to horizontal position |
+| `Look Straight Down`                | Number Pad Decimal | Turn the camera to the look down at feet direction                                                                                   |
+| `Speak Facing Horizontal Direction` | H                  | Speak current horizontal facing direction                                                                                            |
 
-| Key Combination              | Description                                                                                                                                         |
-|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Alt` + `Number Pad 8`       | Move the camera vertically up by the `Modified Rotating Angle` config value                                                                         |
-| `Alt` + `Number Pad 6`       | Move the camera vertically right by the `Modified Rotating Angle` config value                                                                      |
-| `Alt` + `Number Pad 2`       | Move the camera vertically down by the `Modified Rotating Angle` config value                                                                       |
-| `Alt` + `Number Pad 4`       | Move the camera vertically left by the `Modified Rotating Angle` config value                                                                       |
-| `Alt` + `Number Pad 5`       | Look straight back: Turn the camera to the opposite of the closest of the eight cardinal directions and reset vertical angle to horizontal position |
-| `alt` + `Number Pad Decimal` | Turn the camera to the look above head direction                                                                                                    |
-| `Alt` + `Number Pad 0`       | Speak current vertical facing direction                                                                                                             |
+| Key Combination                 | Default Keybinding           | Description                                                                                                                                         |
+|---------------------------------|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Modified Look Up                | `Alt` + `I`                  | Move the camera vertically up by the `Modified Rotating Angle` config value                                                                         |
+| Modified Look Right             | `Alt` + `L`                  | Move the camera vertically right by the `Modified Rotating Angle` config value                                                                      |
+| Modified Look Down              | `Alt` + `K`                  | Move the camera vertically down by the `Modified Rotating Angle` config value                                                                       |
+| Modified Look Left              | `Alt` + `J`                  | Move the camera vertically left by the `Modified Rotating Angle` config value                                                                       |
+| `Look North`                    | `CONTROL` + `I`              | Turn the camera to the north                                                                                                                        |
+| `Look East`                     | `CONTROL` + `L`              | Turn the camera to the east                                                                                                                         |
+| `Look South`                    | `CONTROL` + `K`              | Turn the camera to the south                                                                                                                        |
+| `Look West`                     | `CONTROL` + `J`              | Turn the camera to the west                                                                                                                         |
+| Look Behind                     | `ALT` + `Number Pad 5`       | Look straight back: Turn the camera to the opposite of the closest of the eight cardinal directions and reset vertical angle to horizontal position |
+| Look Straight up                | `aLT` + `Number Pad Decimal` | Turn the camera to the look above head direction                                                                                                    |
+| Speak Facing Vertacle Direction | `ALT` + `Number Pad 0`       | Speak current vertical facing direction                                                                                                             |
 
 See also: [Feature Description]({{% relref "/features#camera-controls" %}}), [Configuration]({{% relref "/config#camera-controls" %}})
 
 ## Mouse Simulation
 
-| Single Key                | Default Keybinding  | Description                                                                        |
-|---------------------------|---------------------|------------------------------------------------------------------------------------|
-| `Left Mouse Sim`          | Number Pad Divide   | Simulate left mouse key, default value of the original `Attack/Destroy` key        |
-| `Middle Mouse Sim`        | Number Pad Subtract | Simulate middle mouse key, default value of the original `Pick Block` key          |
-| `Right Mouse Sim`         | Number Pad Multiply | Simulate right mouse key, default value of the original `Use Item/Place Block` key |
-| `Mouse Wheel Scroll Up`   | Number Pad Add      | Simulate mouse wheel scroll up, switching items in hotbar forward                  |
-| `Mouse Wheel Scroll Down` | Number Pad Enter    | Simulate mouse wheel scroll down, switching items in hotbar backward               |
+| Single Key                | Default Keybinding | Description                                                                        |
+|---------------------------|--------------------|------------------------------------------------------------------------------------|
+| `Left Mouse Sim`          | `[`Left Bracket`]` | Simulate left mouse key, default value of the original `Attack/Destroy` key        |
+| `Middle Mouse Sim`        | `\`                | Simulate middle mouse key, default value of the original `Pick Block` key          |
+| `Right Mouse Sim`         | `]`                | Simulate right mouse key, default value of the original `Use Item/Place Block` key |
+| `Mouse Wheel Scroll Up`   | `;`                | Simulate mouse wheel scroll up, switching items in hotbar forward                  |
+| `Mouse Wheel Scroll Down` | `'`                | Simulate mouse wheel scroll down, switching items in hotbar backward               |
 
 See also: [Feature Description]({{% relref "/features#mouse-simulation" %}}), [Configuration]({{% relref "/config#mouse-simulation" %}})
 
@@ -66,12 +66,12 @@ See also: [Feature Description]({{% relref "/features#mouse-simulation" %}}), [C
 | `Jump to Textbox`  | T                  | Select the search box or text box                                                                                |
 | Enter              | not re-mappable    | Deselect the search box or text box                                                                              |
 
-| Key Combination | Description                             |
-|-----------------|-----------------------------------------|
-| `Shift` + `C`   | Select previous slot group              |
-| `Shift` + `V`   | Select previous tab                     |
-| `Shift` + `I`   | Select previous page of the Recipe Book |
-| `Shift` + `K`   | Select next page of the Recipe Book     |
+| Key Combination           | Default Keybinding | Description                             |
+|---------------------------|--------------------|-----------------------------------------|
+| Previous Group            | `Shift` + `C`      | Select previous slot group              |
+| Previous Tab              | `Shift` + `V`      | Select previous tab                     |
+| Previous Recipe Book Page | `Shift` + `I`      | Select previous page of the Recipe Book |
+| Next Recipe Book Page     | `Shift` + `K`      | Select next page of the Recipe Book     |
 
 `Switching Tabs`, `Toggling Craftable`, `Jumping to Textbox` and `Enter` keys only works when there is a corresponding component in the opened screen.
 Recipe Book page turning only works when `Recipe Book Group` is selected.
@@ -89,15 +89,15 @@ See also: [Feature Description]({{% relref "/features#inventory-controls" %}}), 
 | `Target nearest object`  | End                | Target the nearest object relative to your current position, regardless of its group |
 | `Locking Key`            | Y                  | Lock onto the block or entity that's currently being targetted by the object tracker |
 
-| Key Combination         | Description                                                                          |
-|-------------------------|--------------------------------------------------------------------------------------|
-| `Control` + `Page Down` | Select next object tracker group                                                     |
-| `Control` + `Page Up`   | Select previous object tracker group                                                 |
-| `Control` + `End`       | Target the nearest entity relative to your current position, regardless of its group |
-| `Shift` + `End`         | Target the nearest block relative to your current position, regardless of its group  |
-| `Alt` + `Y`             | Unlock from the currently locked entity or block                                     |
-| `Control` + `Y`         | Mark the block or entity currently targeted with crosshair                           |
-| `Control` + `Alt` + `Y` | Unmark from the target                                                               |
+| Key Combination       | Default Keybinding      | Description                                                                          |
+|-----------------------|-------------------------|--------------------------------------------------------------------------------------|
+| Next Group            | `Control` + `Page Down` | Select next object tracker group                                                     |
+| Previous Group        | `Control` + `Page Up`   | Select previous object tracker group                                                 |
+| Target Nearest Entity | `Control` + `End`       | Target the nearest entity relative to your current position, regardless of its group |
+| Target Nearest Block  | `Shift` + `End`         | Target the nearest block relative to your current position, regardless of its group  |
+| Unlock                | `Alt` + `Y`             | Unlock from the currently locked entity or block                                     |
+| Mark Target           | `Control` + `Y`         | Mark the block or entity currently targeted with crosshair                           |
+| Unmark Target         | `Control` + `Alt` + `Y` | Unmark from the target                                                               |
 
 See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 [Configuration]({{% relref "/config#point-of-interest" %}})
@@ -108,28 +108,28 @@ See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 |-------------------------|--------------------|-----------------------------------|
 | `Speak Player Position` | V                  | Speak the player's x y z position |
 
-| Key Combination  | Description               |
-|------------------|---------------------------|
-| `Left Alt` + `Z` | Speak the player's z-axis |
-| `Left Alt` + `X` | Speak the player's x-axis |
-| `Left Alt` + `C` | Speak the player's y-axis |
+| Key Combination      | Default Keybinding | Description               |
+|----------------------|--------------------|---------------------------|
+| Narrate Z Coordinate | `ALT` + `Z`        | Speak the player's z-axis |
+| Narrate X Coordinate | `ALT` + `X`        | Speak the player's x-axis |
+| Narrate Y Coordinate | `ALT` + `C`        | Speak the player's y-axis |
 
 See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [Configuration]({{% relref "/config#position-narrator" %}})
 
 ## Speak Player Status
 
-| Single Key             | Default Keybinding | Description                                                                                |
-|------------------------|--------------------|--------------------------------------------------------------------------------------------|
-| `Speak Player Status`  | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
-| `Narrate Held Item`    | \`                 | Narrate the item the player currently holds in their main hand                             |
-| `Narrate Next Bossbar` | U                  | Narrates the next visible bossbar on screen                                                |
+| Single Key                    | Default Keybinding | Description                                                                                |
+|-------------------------------|--------------------|--------------------------------------------------------------------------------------------|
+| `Speak Player Status`         | R                  | Speak the player's current health, hunger, armor, and air and frost exposure if applicable |
+| `Narrate Main Hand Held Item` | \`                 | Narrate the item the player currently holds in their main hand                             |
+| `Narrate Next Bossbar`        | U                  | Narrates the next visible bossbar on screen                                                |
 
-| Key Combination | Description                                                                   |
-|-----------------|-------------------------------------------------------------------------------|
-| `Alt` + `R`     | Speak only the conditional statuses of the player like air and frost exposure |
-| `Control` + `R` | Speak currently active effects                                                |
-| `Alt` + `\``    | Narrate the item the player currently holds in their offhand                  |
-| `Shift` + `U`   | Narrates the previous visible bossbar on screen                               |
+| Key Combination                 | Default Keybinding | Description                                                                   |
+|---------------------------------|--------------------|-------------------------------------------------------------------------------|
+| Speak Important Player Statuses | `Alt` + `R`        | Speak only the conditional statuses of the player like air and frost exposure |
+| Narrate Player Effects          | `Control` + `R`    | Speak currently active effects                                                |
+| Narrate Offhand Held Item       | `Alt` + `\``       | Narrate the item the player currently holds in their offhand                  |
+| Narrate Previous Bossbar        | `Shift` + `U`      | Narrates the previous visible bossbar on screen                               |
 
 See also: [Feature Description]({{% relref "/features#player-status" %}}), [Configuration]({{% relref "/config#player-status" %}})
 
@@ -192,6 +192,6 @@ These controls work on any config menu that is powered by Cloth Config.
 
 ## General
 
-| Key Combination  | Description                                                                   |
-|------------------|-------------------------------------------------------------------------------|
-| `Alt` + `R` | Perform [`Menu Fix`]({{% relref "/features#menu-fix" %}}) feature if possible |
+| Key Combination | Default Keybinding | Description                                                                   |
+|-----------------|--------------------|-------------------------------------------------------------------------------|
+| Menu Fix        | `Alt` + `R`        | Perform [`Menu Fix`]({{% relref "/features#menu-fix" %}}) feature if possible |
