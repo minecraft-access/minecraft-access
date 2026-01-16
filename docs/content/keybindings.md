@@ -19,23 +19,23 @@ You may want to take a look at [all the original game controls](https://minecraf
 | `Look Right`                        | L                  | Move the camera horizontally right by the `Normal Rotating Angle` config value                                                       |
 | `Look Down`                         | K                  | Move the camera vertically down by the `Normal Rotating Angle` config value                                                          |
 | `Look Left`                         | J                  | Move the camera horizontally left by the `Normal Rotating Angle` config value                                                        |
-| `Center Camera`                     | Number Pad 5       | Look straight ahead: Turn the camera to the closest of the eight cardinal directions and reset vertical angle to horizontal position |
-| `Look Straight Down`                | Number Pad Decimal | Turn the camera to the look down at feet direction                                                                                   |
+| `Center Camera`                     | ,                  | Look straight ahead: Turn the camera to the closest of the eight cardinal directions and reset vertical angle to horizontal position |
+| `Look Straight Down`                | .                  | Turn the camera to the look down at feet direction                                                                                   |
 | `Speak Facing Horizontal Direction` | H                  | Speak current horizontal facing direction                                                                                            |
 
-| Key Combination                 | Default Keybinding           | Description                                                                                                                                         |
-|---------------------------------|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Modified Look Up                | `Alt` + `I`                  | Move the camera vertically up by the `Modified Rotating Angle` config value                                                                         |
-| Modified Look Right             | `Alt` + `L`                  | Move the camera vertically right by the `Modified Rotating Angle` config value                                                                      |
-| Modified Look Down              | `Alt` + `K`                  | Move the camera vertically down by the `Modified Rotating Angle` config value                                                                       |
-| Modified Look Left              | `Alt` + `J`                  | Move the camera vertically left by the `Modified Rotating Angle` config value                                                                       |
-| `Look North`                    | `CONTROL` + `I`              | Turn the camera to the north                                                                                                                        |
-| `Look East`                     | `CONTROL` + `L`              | Turn the camera to the east                                                                                                                         |
-| `Look South`                    | `CONTROL` + `K`              | Turn the camera to the south                                                                                                                        |
-| `Look West`                     | `CONTROL` + `J`              | Turn the camera to the west                                                                                                                         |
-| Look Behind                     | `ALT` + `Number Pad 5`       | Look straight back: Turn the camera to the opposite of the closest of the eight cardinal directions and reset vertical angle to horizontal position |
-| Look Straight up                | `aLT` + `Number Pad Decimal` | Turn the camera to the look above head direction                                                                                                    |
-| Speak Facing Vertacle Direction | `ALT` + `Number Pad 0`       | Speak current vertical facing direction                                                                                                             |
+| Key Combination                 | Default Keybinding     | Description                                                                                                                                         |
+|---------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Modified Look Up                | `Alt` + `I`            | Move the camera vertically up by the `Modified Rotating Angle` config value                                                                         |
+| Modified Look Right             | `Alt` + `L`            | Move the camera vertically right by the `Modified Rotating Angle` config value                                                                      |
+| Modified Look Down              | `Alt` + `K`            | Move the camera vertically down by the `Modified Rotating Angle` config value                                                                       |
+| Modified Look Left              | `Alt` + `J`            | Move the camera vertically left by the `Modified Rotating Angle` config value                                                                       |
+| `Look North`                    | `CONTROL` + `I`        | Turn the camera to the north                                                                                                                        |
+| `Look East`                     | `CONTROL` + `L`        | Turn the camera to the east                                                                                                                         |
+| `Look South`                    | `CONTROL` + `K`        | Turn the camera to the south                                                                                                                        |
+| `Look West`                     | `CONTROL` + `J`        | Turn the camera to the west                                                                                                                         |
+| Look Behind                     | `ALT` + `,`            | Look straight back: Turn the camera to the opposite of the closest of the eight cardinal directions and reset vertical angle to horizontal position |
+| Look Straight up                | `ALT` + `.`            | Turn the camera to the look above head direction                                                                                                    |
+| Speak Facing Vertacle Direction | `ALT` + `Number Pad 0` | Speak current vertical facing direction                                                                                                             |
 
 See also: [Feature Description]({{% relref "/features#camera-controls" %}}), [Configuration]({{% relref "/config#camera-controls" %}})
 
