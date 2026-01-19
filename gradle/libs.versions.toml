@@ -4,7 +4,7 @@
 # https://parchmentmc.org/docs/getting-started for version table
 
 [versions]
-balm = "21.11.5"
+balm = "21.11.6"
 clothConfig = "21.11.153"
 jmh = "1.37"
 junit = "6.0.2"
