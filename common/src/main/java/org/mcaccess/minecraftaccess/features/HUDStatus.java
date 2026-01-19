@@ -84,12 +84,12 @@ public class HUDStatus implements BalmClientModule {
         }
 
         if (isShiftDown) {
-            bossIndex.set((bossIndex.get() - 1) % bosses.size());
+            bossIndex.value = (bossIndex.value - 1) % bosses.size();
         } else {
-            bossIndex.set((bossIndex.get() + 1) % bosses.size());
+            bossIndex.value = (bossIndex.value + 1) % bosses.size();
         }
 
-        LerpingBossEvent currentBoss = bosses.get(bossIndex.get());
+        LerpingBossEvent currentBoss = bosses.get(bossIndex.value);
         String name = currentBoss.getName().getString();
         int healthPercent = Math.round(currentBoss.getProgress() * 100);
         MainClass.narrate(I18n.get("minecraft_access.other.bossbar_status", name, healthPercent), true);
