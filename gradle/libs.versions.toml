@@ -24,7 +24,7 @@ jadeNeoForge = "maven.modrinth:jade:21.0.1+neoforge"
 lombok = "org.projectlombok:lombok:1.18.42"
 minecraft = "com.mojang:minecraft:1.21.11"
 modMenu = "com.terraformersmc:modmenu:17.0.0-beta.2"
-neoForge = "net.neoforged:neoforge:21.11.32-beta"
+neoForge = "net.neoforged:neoforge:21.11.35-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.11:2025.12.20"
 tolk = "com.davykager.tolk:Tolk:1.0.0"
 
@@ -42,5 +42,5 @@ checkstyle = "com.puppycrawl.tools:checkstyle:13.0.0"
 [plugins]
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.162" }
 gitVersion = { id = "com.palantir.git-version", version = "4.2.0" }
-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.35.0" }
+mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
 shadow = { id = "com.gradleup.shadow", version = "9.3.1" }

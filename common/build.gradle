@@ -42,7 +42,7 @@ test {
 
 javadoc {
     include 'org/mcaccess/minecraftaccess/api/**'
-    title "Minecraft Access ${rootProject.version} API"
+    title = "Minecraft Access ${rootProject.version} API"
     options {
         tags(
                 'apiNote:a:API Note:',

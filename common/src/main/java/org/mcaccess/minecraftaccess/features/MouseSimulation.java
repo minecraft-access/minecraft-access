@@ -10,7 +10,6 @@ import net.blay09.mods.kuma.api.ManagedKeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
@@ -41,21 +40,21 @@ public class MouseSimulation implements BalmClientModule {
 
         // Mouse Button Keys
         keyLeftMouseButton = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.button/left"))
-                .withDefault(InputBinding.key(GLFW.GLFW_KEY_KP_DIVIDE))
+                .withDefault(InputBinding.key(InputConstants.KEY_LBRACKET))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)
                 .withContext(KeyConflictContext.UNIVERSAL)
                 .build();
 
         keyMiddleMouseButton = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.button/middle"))
-                .withDefault(InputBinding.key(GLFW.GLFW_KEY_KP_SUBTRACT))
+                .withDefault(InputBinding.key(InputConstants.KEY_BACKSLASH))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)
                 .withContext(KeyConflictContext.UNIVERSAL)
                 .build();
 
         keyRightMouseButton = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.button/right"))
-                .withDefault(InputBinding.key(InputConstants.KEY_MULTIPLY))
+                .withDefault(InputBinding.key(InputConstants.KEY_RBRACKET))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)
                 .withContext(KeyConflictContext.UNIVERSAL)
@@ -63,7 +62,7 @@ public class MouseSimulation implements BalmClientModule {
 
         // Mouse Scrolling Keys
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.scroll/up"))
-                .withDefault(InputBinding.key(InputConstants.KEY_ADD))
+                .withDefault(InputBinding.key(InputConstants.KEY_SEMICOLON))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)
                 .handleWorldInput(event -> {
@@ -83,7 +82,7 @@ public class MouseSimulation implements BalmClientModule {
                 .build();
 
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "mouse_simulation.scroll/down"))
-                .withDefault(InputBinding.key(InputConstants.KEY_NUMPADENTER))
+                .withDefault(InputBinding.key(InputConstants.KEY_APOSTROPHE))
                 .enableKeyRepeat()
                 .overrideCategory(KeyMappingCategories.MOUSE_SIMULATION)
                 .handleWorldInput(event -> {
