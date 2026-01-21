@@ -12,6 +12,8 @@ import net.blay09.mods.balm.client.BalmClientRegistrars;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.NarratorStatus;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -97,6 +99,23 @@ public final class MainClass {
 
         ClientTickCallback.AFTER.register(MainClass::clientTickEventsMethod);
 
+        if (Balm.platform().isDevelopmentEnvironment()) {
+            ServerList list = new ServerList(Minecraft.getInstance());
+            list.load();
+
+            ServerData testServer = new ServerData(
+                    "Test Server",
+                    "test.mcaccess.org",
+                    ServerData.Type.OTHER
+            );
+
+            if (list.get(testServer.ip) == null) {
+                testServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+                list.add(testServer, false);
+                list.save();
+            }
+        }
+
         // This executes when minecraft closes
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (getScreenReader() != null && getScreenReader().isInitialized()) {
@@ -145,8 +164,7 @@ public final class MainClass {
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        boolean debugMode = Config.getInstance().debugMode || Balm.platform().isDevelopmentEnvironment();
-        if (debugMode) {
+        if (Config.getInstance().debugMode || Balm.platform().isDevelopmentEnvironment()) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);
             }
