@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
  */
 public final class NamedFormatter {
     private static final Pattern RE = Pattern.compile(
-            "\\\\(.)" + // Treat any character after a backslash literally
-                    '|' +
-                    "(\\{([^)]+?)})"  // Look for {keys} to replace, "?" for non-greedy
+            "\\\\(.)" // Treat any character after a backslash literally
+                    + '|'
+                    + "(\\{([^)]+?)})"  // Look for {keys} to replace, "?" for non-greedy
     );
 
     private NamedFormatter() {
@@ -39,11 +39,11 @@ public final class NamedFormatter {
      */
     public static String format(String fmt, Map<String, Object> values) {
         return RE.matcher(fmt).replaceAll(match ->
-                match.group(1) != null ?
+                match.group(1) != null
                         // escape
-                        match.group(1) :
+                        ? match.group(1)
                         // replace
-                        values.getOrDefault(match.group(3), match.group(2)).toString()
+                        : values.getOrDefault(match.group(3), match.group(2)).toString()
         );
     }
 }

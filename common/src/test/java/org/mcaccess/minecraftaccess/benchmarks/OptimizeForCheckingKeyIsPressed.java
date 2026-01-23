@@ -32,6 +32,7 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 public class OptimizeForCheckingKeyIsPressed {
     private static final int[] KEYCODE = new int[]{0};
 
+    @SuppressWarnings("checkstyle:UncommentedMain")
     public static void main(String[] args) throws Exception {
         Main.main(args);
     }
