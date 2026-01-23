@@ -5,10 +5,11 @@ title: "Configuration"
 This page contains all the configuration that controls the features on-off and behavior.
 
 The configuration can be modified in two ways: via the config menu or directly editing the configuration file.
-The `Config Menu` can be opened via opening the `Access Menu` (press F4) then click `Open Config Menu` button, or through this mod's settings in mod management menu.
+The `Config Menu` can be opened via opening the `Access Menu` (press F4) then click `Open Config Menu` button,
+or through this mod's settings in mod management menu.
 The configuration file (named as `minecraft_access.json`) can be found in the `{minecraft directory}/config` directory.
 You can use Notepad or any text editor to edit the file.
-You can also use online JSON editor like [Json Editor Online](https://jsoneditoronline.org/), [Json Formatter](https://jsonformatter.org/json-editor) or [Code Beautify JSON Online Editor](https://jsonformatter.org/json-editor).
+You can also use online JSON editor like [Json Editor Online], [Json Formatter] or [Code Beautify JSON Online Editor].
 
 If you want to reset the config back to default values, there are reset buttons aside options in the config menu.
 
@@ -21,7 +22,8 @@ If you want to reset the config back to default values, there are reset buttons 
 | Modified Rotating Angle | 11.25         | The rotation angle when we press the camera moving keys while holding down the `Left Alt` key |
 | Delay (in milliseconds) | 250           | Cooldown between two feature executions                                                       |
 
-See also: [Feature Description]({{% relref "/features#camera-controls" %}}), [keybindings]({{% relref "/keybindings#camera-controls" %}})
+See also: [Feature Description]({{% relref "/features#camera-controls" %}}),
+[keybindings]({{% relref "/keybindings#camera-controls" %}})
 
 ## Mouse Simulation
 
@@ -30,7 +32,8 @@ See also: [Feature Description]({{% relref "/features#camera-controls" %}}), [ke
 | Enabled                        | true          | Whether to enable this feature                      |
 | Scroll Delay (in milliseconds) | 150           | Cooldown between two mouse wheel scroll simulations |
 
-See also: [Feature Description]({{% relref "/features#mouse-simulation" %}}), [keybindings]({{% relref "/keybindings#mouse-simulation" %}})
+See also: [Feature Description]({{% relref "/features#mouse-simulation" %}}),
+[keybindings]({{% relref "/keybindings#mouse-simulation" %}})
 
 ## Read Crosshair
 
@@ -66,8 +69,6 @@ See also: [Feature Description]({{% relref "/features#relative-position-sound-cu
 | Target Mode     | `block`                                                                                                  | Which type would you like to apply this feature to, either `all`, `entity` or `block`                                  |
 | Targets         | [`slab`,&ZeroWidthSpace;`planks`,&ZeroWidthSpace;`block`,&ZeroWidthSpace;`stone`,&ZeroWidthSpace;`sign`] | Indicated what to be spoken                                                                                            |
 
-[//]: # (A zero-width space is a character which is completely invisible but tells the browser that it may wrap text there, without it that whole thing is treated as one gigantic word, and it tries its best to not wrap it, causing everything to go haywire.)
-
 The `Targets` config can only be configured in `config.json` file.
 Values are written in Minecraft resource location format, the so-called
 `snake_case` (consists of lowercase letters with underscores).
@@ -90,10 +91,14 @@ See also: [Feature Description]({{% relref "/features#partial-speaking" %}})
 | Speak Focused Slot Changes                                                                | true          | Speak if the content of focused slot changes, close it if you hear the mod is continuously repeating changes of item name, some mods like Hypixel will cause that. |
 | Delay (in milliseconds)                                                                   | 250           | Cooldown between two feature executions                                                                                                                            |
 
-Most recipes [require](https://minecraft.wiki/w/Crafting) their ingredients to be arranged in a specific way on the crafting grid (a.k.a. our crafting input group).
-That's how `Row and Column Format in Crafting Input Slots` config can help you, you'll hear something like `1x2 Empty Slot` which represent you're locating at row one and column two slot inside the crafting input group, and it contains nothing.
+Most recipes [require][crafting] their ingredients to be arranged in a specific way on the crafting grid
+(a.k.a. our crafting input group).
+That's how `Row and Column Format in Crafting Input Slots` config can help you,
+you'll hear something like `1x2 Empty Slot` which represent you're locating at row one and column two slot inside the
+crafting input group, and it contains nothing.
 
-See also: [Feature Description]({{% relref "/features#inventory-controls" %}}), [keybindings]({{% relref "/keybindings#inventory-controls" %}})
+See also: [Feature Description]({{% relref "/features#inventory-controls" %}}),
+[keybindings]({{% relref "/keybindings#inventory-controls" %}})
 
 ## Point of Interest
 
@@ -128,17 +133,17 @@ See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 
 ### Entities/Blocks Locking
 
-| Configuration                          | Default Value | Description                                                                                  |
-|----------------------------------------|---------------|----------------------------------------------------------------------------------------------|
-| Enabled                                | true          | Whether to enable this feature                                                               |
-| Lock on Blocks                         | true          | Enable lock on POI blocks as well, if false, only entities can be locked                     |
-| Play Sound                             | true          | Play a sound cue at positions of detected entities                                           |
-| Play Sound Instead Of Speak            | false         | Play a base drum sound cue on unlock instead of speak `unlock`                               |
-| Auto Lock on to Eye of Ender when Used | true          | Automatically lock on to the [Eye of Ender](https://minecraft.wiki/w/Eye_of_Ender) when used |
-| Delay (in milliseconds)                | 100           | Cooldown between two feature executions                                                      |
-| Bow aim assist                         | true          | Enable automatic temporary locking onto the nearest monster when using a bow                 |
-| Aim assist sound                       | true          | Enables audio cues for bow aim assist                                                        |
-| Aim assist sound volume                | 0.5           | Controls the volume of the aim assist audio cues                                             |
+| Configuration                          | Default Value | Description                                                                  |
+|----------------------------------------|---------------|------------------------------------------------------------------------------|
+| Enabled                                | true          | Whether to enable this feature                                               |
+| Lock on Blocks                         | true          | Enable lock on POI blocks as well, if false, only entities can be locked     |
+| Play Sound                             | true          | Play a sound cue at positions of detected entities                           |
+| Play Sound Instead Of Speak            | false         | Play a base drum sound cue on unlock instead of speak `unlock`               |
+| Auto Lock on to Eye of Ender when Used | true          | Automatically lock on to the [Eye of Ender] when used                        |
+| Delay (in milliseconds)                | 100           | Cooldown between two feature executions                                      |
+| Bow aim assist                         | true          | Enable automatic temporary locking onto the nearest monster when using a bow |
+| Aim assist sound                       | true          | Enables audio cues for bow aim assist                                        |
+| Aim assist sound volume                | 0.5           | Controls the volume of the aim assist audio cues                             |
 
 ### Entities/Blocks Marking
 
@@ -156,7 +161,8 @@ These configs are under `General` section in the config file and config menu.
 | Enable Position Narrator | true               | Whether to enable this feature                                                                       |
 | Position Narrator Format | `{x}x, {y}y, {z}z` | The speaking format of the position, `{x}`, `{y}`, `{z}` represent the corresponding axis's position |
 
-See also: [Feature Description]({{% relref "/features#position-narrator" %}}), [keybindings]({{% relref "/keybindings#position-narrator" %}})
+See also: [Feature Description]({{% relref "/features#position-narrator" %}}),
+[keybindings]({{% relref "/keybindings#position-narrator" %}})
 
 ## Player Status
 
@@ -166,7 +172,8 @@ This config is under `Features` section in the config file and config menu.
 |---------------------|---------------|--------------------------------------------------------------------------------------|
 | Enable PlayerStatus | true          | Whether to enable this feature and automatically effect gaining and losing narration |
 
-See also: [Feature Description]({{% relref "/features#player-status" %}}), [keybindings]({{% relref "/keybindings#player-status" %}})
+See also: [Feature Description]({{% relref "/features#player-status" %}}),
+[keybindings]({{% relref "/keybindings#player-status" %}})
 
 ## Player Warnings
 
@@ -209,7 +216,8 @@ See also: [Feature Description]({{% relref "/features#fall-detector" %}})
 |---------------|---------------|--------------------------------|
 | Enabled       | true          | Whether to enable this feature |
 
-See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybindings]({{% relref "/keybindings#access-menu" %}})
+See also: [Feature Description]({{% relref "/features#access-menu" %}}),
+[keybindings]({{% relref "/keybindings#access-menu" %}})
 
 ### Fluid Detector
 
@@ -220,19 +228,19 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybin
 
 ### Features
 
-| Configuration                                    | Default Value | Description                                                                                                                                      |
-|--------------------------------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Enable Biome Indicator                           | true          | Whether to enable [`Biome Indicator`]({{% relref "/features#biome-indicator" %}}) feature                                                        |
-| Always Narrate dimension name in biome indicator | false         | This option will include the current dimension name whenever a biome indicator announcement is narrated                                          |
-| Enable Time Indicator                            | true          | Whether to enable time of day Indicator                                                                                                          |
-| Enable XP Indicator                              | true          | Whether to enable [`XP Indicator`]({{% relref "/features#xp-indicator" %}}) feature                                                              |
-| Enable Facing Direction                          | true          | Whether to automatically speak the current direction as the camera moves                                                                         |
-| Speak Action Bar Messages                        | true          | Whether to speak the messages updated in [action bar](https://minecraft.wiki/w/Commands/title), useful when you're in modded multiplayer servers |
-| Only Speak Action Bar Updates                    | false         | Only speak changed part of action bar message when the message is partially updated, useful for some mods like Hypixel                           |
-| Speak Harvest Of Fishing                         | true          | Whether to speak the harvest of fishing                                                                                                          |
-| Always Speak Picked Up Items                     | false         | Whether to speak any items you pick up (this will also enable speaking of fishing harvests)                                                      |
-| Report Held Items Count When Changed             | true          | Whether to report the number of held items when it changed                                                                                       |
-| Play a sound for new chat messages               | true          | Whether to play a sound when sending or recieving a chat message                                                                                 |
+| Configuration                                    | Default Value | Description                                                                                                            |
+|--------------------------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------|
+| Enable Biome Indicator                           | true          | Whether to enable [`Biome Indicator`]({{% relref "/features#biome-indicator" %}}) feature                              |
+| Always Narrate dimension name in biome indicator | false         | This option will include the current dimension name whenever a biome indicator announcement is narrated                |
+| Enable Time Indicator                            | true          | Whether to enable time of day Indicator                                                                                |
+| Enable XP Indicator                              | true          | Whether to enable [`XP Indicator`]({{% relref "/features#xp-indicator" %}}) feature                                    |
+| Enable Facing Direction                          | true          | Whether to automatically speak the current direction as the camera moves                                               |
+| Speak Action Bar Messages                        | true          | Whether to speak the messages updated in [action bar], useful when you're in modded multiplayer servers                |
+| Only Speak Action Bar Updates                    | false         | Only speak changed part of action bar message when the message is partially updated, useful for some mods like Hypixel |
+| Speak Harvest Of Fishing                         | true          | Whether to speak the harvest of fishing                                                                                |
+| Always Speak Picked Up Items                     | false         | Whether to speak any items you pick up (this will also enable speaking of fishing harvests)                            |
+| Report Held Items Count When Changed             | true          | Whether to report the number of held items when it changed                                                             |
+| Play a sound for new chat messages               | true          | Whether to play a sound when sending or recieving a chat message                                                       |
 
 ## General
 
@@ -245,3 +253,10 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}), [keybin
 | Multiple Click Speed (in milliseconds) | 750           | The maximum time interval between two keystrokes in multiple click operations like `double-click`                                                                         |
 
 See also: [Feature Description]({{% relref "/features#other-small-features" %}})
+
+[Json Editor Online]: https://jsoneditoronline.org/
+[Json Formatter]: https://jsonformatter.org/json-editor
+[Code Beautify JSON Online Editor]: https://jsonformatter.org/json-editor
+[crafting]: https://minecraft.wiki/w/Crafting
+[Eye of Ender]: https://minecraft.wiki/w/Eye_of_Ender
+[action bar]: https://minecraft.wiki/w/Commands/title
