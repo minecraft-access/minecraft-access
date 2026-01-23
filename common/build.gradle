@@ -27,10 +27,6 @@ dependencies {
     testImplementation libs.assertjCore
     testImplementation libs.mockitoCore
     testImplementation libs.mockitoJunitJupiter
-
-    // benchmark dependencies
-    testImplementation libs.jmhCore
-    testAnnotationProcessor libs.jmhGeneratorAnnprocess
 }
 
 test {
