@@ -29,7 +29,7 @@ public final class PlayerUtils {
     }
 
     /**
-     * Let player looks at entity even the entity exposes a very small part of its body
+     * Let player looks at entity even the entity exposes a very small part of its body.
      */
     public static void lookAt(Entity entity) {
         assert CLIENT.player != null;

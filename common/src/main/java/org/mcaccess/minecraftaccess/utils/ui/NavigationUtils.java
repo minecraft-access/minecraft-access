@@ -12,7 +12,7 @@ public final class NavigationUtils {
     }
 
     /**
-     * Only for vertical navigation
+     * Only for vertical navigation.
      *
      * @return true if Tab backward or Arrow up, otherwise false
      */

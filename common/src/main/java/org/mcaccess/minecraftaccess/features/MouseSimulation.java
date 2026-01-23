@@ -103,7 +103,7 @@ public class MouseSimulation implements BalmClientModule {
     }
 
     /**
-     * Check all mouse button keys (left, middle, right) and handle press/hold/release
+     * Check all mouse button keys (left, middle, right) and handle press/hold/release.
      */
     private void tick(Minecraft client) {
         if (keyLeftMouseButton.isDown() && !keyLeftMouseButton.wasDown()) {
@@ -126,7 +126,7 @@ public class MouseSimulation implements BalmClientModule {
     }
 
     /**
-     * Check if enough time has passed for scrolling
+     * Check if enough time has passed for scrolling.
      */
     private boolean canScroll(long lastScrollTime) {
         return System.currentTimeMillis() - lastScrollTime >= config.scrollDelayMilliseconds;

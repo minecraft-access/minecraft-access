@@ -14,33 +14,46 @@
     <module name="FileLength"/>
     <module name="FileTabCharacter"/>
     <module name="LineLength">
-        <property name="severity" value="error"/>
+        <property name="id" value="LineLength-default"/>
+        <property name="severity" value="warning"/>
         <property name="max" value="180"/>
     </module>
-    <module name="LineLength">
-        <property name="severity" value="warning"/>
-        <property name="max" value="160"/>
+    <module name="SuppressionSingleFilter">
+        <property name="id" value="LineLength-default"/>
+        <property name="files" value="\.md$"/>
     </module>
     <module name="LineLength">
         <property name="fileExtensions" value="md"/>
-        <property name="severity" value="warning"/>
+        <property name="severity" value="error"/>
         <property name="max" value="120"/>
+        <property name="ignorePattern" value="^(?:\|(?: .+ |[-:|]+)\|| *(?:[-*] )?\[[^\]]+\]\(https://\S+\)|\[[^\]]+\]: https://\S+)$"/>
     </module>
     <module name="NewlineAtEndOfFile"/>
     <module name="UniqueProperties"/>
     <module name="TreeWalker">
         <property name="severity" value="error"/>
         <module name="AbbreviationAsWordInName"/>
+        <module name="AnnotationUseStyle">
+            <property name="trailingArrayComma" value="ignore"/>
+        </module>
         <module name="ArrayTypeStyle"/>
         <module name="AtclauseOrder"/>
         <module name="AvoidDoubleBraceInitialization"/>
         <module name="CommentsIndentation"/>
         <module name="CovariantEquals"/>
+        <module name="DeclarationOrder">
+            <property name="ignoreModifiers" value="true"/>
+        </module>
         <module name="DefaultComesLast"/>
         <module name="EmptyBlock"/>
         <module name="EmptyCatchBlock">
             <property name="commentFormat" value="^$"/>
             <property name="exceptionVariableName" value="^ignored$"/>
+        </module>
+        <module name="EmptyLineSeparator">
+            <property name="allowMultipleEmptyLines" value="false"/>
+            <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
+            <property name="allowNoEmptyLineBetweenFields" value="true"/>
         </module>
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
@@ -48,6 +61,12 @@
         <module name="IllegalCatch"/>
         <module name="IllegalIdentifierName"/>
         <module name="IllegalType"/>
+        <module name="ImportOrder">
+            <property name="groups" value="/^javax?\./,*,org.mcaccess."/>
+            <property name="option" value="bottom"/>
+            <property name="separated" value="true"/>
+            <property name="sortStaticImportsAlphabetically" value="true"/>
+        </module>
         <module name="Indentation">
             <property name="lineWrappingIndentation" value="8"/>
         </module>
@@ -95,10 +114,12 @@
         <module name="UnusedLocalVariable"/>
         <module name="UpperEll"/>
         <module name="WhenShouldBeUsed"/>
+        <module name="WhitespaceAround">
+            <property name="allowEmptyLambdas" value="true"/>
+        </module>
     </module>
     <module name="TreeWalker">
         <property name="severity" value="warning"/>
-        <module name="AnnotationUseStyle"/>
         <module name="AnonInnerLength"/>
         <module name="ArrayTrailingComma"/>
         <module name="AvoidNestedBlocks"/>
@@ -108,32 +129,16 @@
         <module name="ClassTypeParameterName"/>
         <module name="ConstantName"/>
         <module name="ConstructorsDeclarationGrouping"/>
-        <module name="DeclarationOrder">
-            <property name="ignoreModifiers" value="true"/>
-        </module>
         <module name="EmptyForInitializerPad"/>
         <module name="EmptyForIteratorPad"/>
-        <module name="EmptyLineSeparator">
-            <property name="allowMultipleEmptyLines" value="false"/>
-            <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
-            <property name="allowNoEmptyLineBetweenFields" value="true"/>
-        </module>
-        <module name="ExecutableStatementCount"/>
         <module name="FinalClass"/>
         <module name="GenericWhitespace"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="IllegalThrows"/>
-        <module name="ImportOrder">
-            <property name="groups" value="/^javax?\./,*,org.mcaccess."/>
-            <property name="option" value="bottom"/>
-            <property name="separated" value="true"/>
-            <property name="sortStaticImportsAlphabetically" value="true"/>
-        </module>
         <module name="InnerAssignment"/>
         <module name="InnerTypeLast"/>
         <module name="InterfaceIsType"/>
         <module name="InterfaceTypeParameterName"/>
-        <module name="JavaNCSS"/>
         <module name="LambdaParameterName"/>
         <module name="LeftCurly">
             <property name="ignoreEnums" value="false"/>
@@ -159,7 +164,12 @@
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="PackageName"/>
         <module name="ParameterName"/>
-        <module name="ParameterNumber"/>
+        <module name="ParameterNumber">
+            <property name="ignoreAnnotatedBy"
+                      value="Accessor, Inject, Invoker, ModifyArg, ModifyArgs, ModifyConstant, ModifyExpressionValue, ModifyReceiver, ModifyReturnValue,
+                      ModifyVariable, Overwrite, Redirect, Shadow, SoftOverride, WrapMethod, WrapOperation, WrapWithCondition"/>
+            <property name="ignoreOverriddenMethods" value="true"/>
+        </module>
         <module name="ParenPad"/>
         <module name="PatternVariableName"/>
         <module name="RecordComponentName"/>
@@ -176,21 +186,22 @@
         </module>
         <module name="SingleSpaceSeparator"/>
         <module name="StaticVariableName"/>
-        <module name="SummaryJavadoc"/>
         <module name="TypecastParenPad"/>
         <module name="UnnecessarySemicolonInEnumeration"/>
         <module name="WhitespaceAfter"/>
-        <module name="WhitespaceAround">
-            <property name="allowEmptyLambdas" value="true"/>
-        </module>
     </module>
     <module name="TreeWalker">
         <property name="severity" value="info"/>
+        <module name="ExecutableStatementCount"/>
         <module name="JavadocMethod"/>
         <module name="JavadocParagraph"/>
         <module name="JavadocStyle"/>
         <module name="JavadocType"/>
-        <module name="VariableDeclarationUsageDistance"/>
+        <module name="JavaNCSS"/>
+        <module name="SummaryJavadoc"/>
+        <module name="VariableDeclarationUsageDistance">
+            <property name="ignoreFinal" value="false"/>
+        </module>
     </module>
     <module name="SuppressionSingleFilter">
         <property name="files" value="/org/mcaccess/minecraftaccess/(?:(?!api)[^/]+/)*[^/]+$"/>

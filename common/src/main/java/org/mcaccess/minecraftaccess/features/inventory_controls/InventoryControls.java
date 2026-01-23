@@ -61,8 +61,8 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
  * This features lets us use keyboard in inventory screens. Works with all default minecraft screens.
- * <p>
- * Key binds and combinations:
+ *
+ * <p>Key binds and combinations:
  * (all key binds are re-mappable(except two keys) from the game's controls menu and these key binds do not interrupt with any other key with same key.)<br>
  * 1) Up Key (default: I) = Focus to slot above.<br>
  * 2) Right Key (default: L) = Focus to slot right.<br>
@@ -74,8 +74,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  * 8) Left Shift + Switch Tab Key = Select previous tab (only for creative inventory screen and inventory/crafting screen).<br>
  * 9) Toggle Craftable Key (default: R) = Toggle between show all and show only craftable recipes in inventory/crafting screen.<br>
  * 10) T Key (not re-mappable) = Select the search box.<br>
- * 11) Enter Key (not re-mappable) = Deselect the search box.<br>
- * </p>
+ * 11) Enter Key (not re-mappable) = Deselect the search box.
  */
 @Slf4j
 public class InventoryControls implements BalmClientModule {
@@ -91,6 +90,10 @@ public class InventoryControls implements BalmClientModule {
     private SlotItem currentSlotItem = null;
     private RecipeBookComponent<?> currentRecipeBookWidget = null;
     private String previousSlotText = "";
+
+    public InventoryControls() {
+        loadConfig();
+    }
 
     @Override
     public @NotNull Identifier getId() {
@@ -289,27 +292,6 @@ public class InventoryControls implements BalmClientModule {
                 .build();
     }
 
-    private enum FocusDirection {
-        UP("gui.up"),
-        DOWN("gui.down"),
-        LEFT("minecraft_access.inventory_controls.direction_left"),
-        RIGHT("minecraft_access.inventory_controls.direction_right");
-
-        private final String value;
-
-        FocusDirection(String value) {
-            this.value = value;
-        }
-
-        String getString() {
-            return value;
-        }
-    }
-
-    public InventoryControls() {
-        loadConfig();
-    }
-
     private void tick(Minecraft client) {
         if (!interval.isReady()) return;
 
@@ -376,7 +358,7 @@ public class InventoryControls implements BalmClientModule {
     }
 
     /**
-     * Load configs from config.json
+     * Load configs from config.json.
      */
     private void loadConfig() {
         config = Config.getInstance().inventoryControls;
@@ -390,14 +372,12 @@ public class InventoryControls implements BalmClientModule {
         Minecraft client = Minecraft.getInstance();
         boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
                 || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
-        boolean disableInputForSearchBox = false;
 
         //<editor-fold desc="When using a search box">
         //<editor-fold desc="When using a search box">
         if (currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
             EditBox searchBox = ((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox();
             if (searchBox.canConsumeInput()) {
-                disableInputForSearchBox = true;
                 if (isEnterPressed) {
                     setSearchBoxFocus(searchBox, false);
                     refreshGroupListAndSelectFirstGroup(true);
@@ -409,7 +389,6 @@ public class InventoryControls implements BalmClientModule {
         if (currentScreen instanceof AnvilScreen anvilScreen) {
             EditBox searchBox = ((AnvilScreenAccessor) anvilScreen).getName();
             if (searchBox.canConsumeInput()) {
-                disableInputForSearchBox = true;
                 if (isEnterPressed) {
                     setSearchBoxFocus(searchBox, false);
                     previousSlotText = "";
@@ -421,7 +400,6 @@ public class InventoryControls implements BalmClientModule {
         if (isRecipeBookOpen()) {
             EditBox searchBox = ((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox();
             if (searchBox.canConsumeInput()) {
-                disableInputForSearchBox = true;
                 if (isEnterPressed) {
                     setSearchBoxFocus(searchBox, false);
                     previousSlotText = "";
@@ -716,6 +694,23 @@ public class InventoryControls implements BalmClientModule {
             w.setCanLoseFocus(true);
             w.setFocused(false);
             w.setCanLoseFocus(origin);
+        }
+    }
+
+    private enum FocusDirection {
+        UP("gui.up"),
+        DOWN("gui.down"),
+        LEFT("minecraft_access.inventory_controls.direction_left"),
+        RIGHT("minecraft_access.inventory_controls.direction_right");
+
+        private final String value;
+
+        FocusDirection(String value) {
+            this.value = value;
+        }
+
+        String getString() {
+            return value;
         }
     }
 }

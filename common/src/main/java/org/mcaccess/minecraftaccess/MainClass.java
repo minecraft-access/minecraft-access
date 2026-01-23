@@ -76,7 +76,7 @@ public final class MainClass {
     }
 
     /**
-     * Initializes the mod
+     * Initializes the mod.
      */
     public static void init(BalmClientRegistrars registrars, List<Addon> addons) {
         String startupMessage = "Initializing Minecraft Access: version " + Balm.platform().getModInfo(MOD_ID).get().versionString();
@@ -152,7 +152,7 @@ public final class MainClass {
     }
 
     /**
-     * This method gets called at the end of every tick
+     * This method gets called at the end of every tick.
      *
      * @param client The current minecraft client object
      */

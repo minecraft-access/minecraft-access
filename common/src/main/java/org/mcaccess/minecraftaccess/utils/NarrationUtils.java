@@ -29,8 +29,8 @@ public final class NarrationUtils {
 
     public static String narrateNumber(double num) {
         DecimalFormat df = new DecimalFormat();
-        num = Math.round(num * 10.0) / 10.0;
-        return num >= 0 ? String.valueOf(df.format(num)) : I18n.get("minecraft_access.other.negative", df.format(-num));
+        double rounded = Math.round(num * 10.0) / 10.0;
+        return rounded >= 0 ? String.valueOf(df.format(rounded)) : I18n.get("minecraft_access.other.negative", df.format(-rounded));
     }
 
     public static String narrateNumber(int num) {

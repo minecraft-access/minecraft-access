@@ -13,4 +13,5 @@
     <suppress files="/gradlew(?:\.bat)?$" checks=".*"/>
     <suppress files="/common/src/main/resources/assets/minecraft_access/lang/.+\.json$" checks="LineLength"/>
     <suppress files="/docs/themes/" checks=".*"/>
+    <suppress files="/docs/content/changelog\.md$" checks="LineLength"/>
 </suppressions>

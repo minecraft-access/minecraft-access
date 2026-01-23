@@ -31,7 +31,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.ScreenAccessor;
 
 /**
- * remap=false: suppress warnings since cloth isn't part of original game
+ * remap=false: suppress warnings since cloth isn't part of original game.
  */
 @Mixin(value = ClothConfigScreen.class, remap = false)
 abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {

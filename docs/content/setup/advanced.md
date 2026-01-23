@@ -19,21 +19,32 @@ You must restart your computer after the Java installation is completed.
 ## Install NeoForge
 
 NeoForge requires you to select the right version of the game at the time you download the installer.
-Reports have been received that higher versions of NeoForge that are compatible with the game version may not be compatible with this mod (this mod is always built on one specific NeoForge version), so it is recommended to download the tested version of NeoForge from the link in the [releases page](https://github.com/minecraft-access/minecraft-access/releases/latest) (under the `Mod Version Compatibility` section).
-If you still want to download the latest version of NeoForge for some reason, [here is the download page for that version of NeoForge](https://neoforged.net/).
+Reports have been received that higher versions of NeoForge that are compatible with the game version may not be
+compatible with this mod (this mod is always built on one specific NeoForge version),
+so it is recommended to download the tested version of NeoForge from the link in the [releases page]
+(under the `Mod Version Compatibility` section).
+If you still want to download the latest version of NeoForge for some reason,
+[here is the download page for that version of NeoForge][neoforge].
 Select the `Installer` button under the `Download Recommended` section.
-An executable jar file will be downloaded with the name format `neoforge-<neoforge-version>-installer.jar`, for example `neoforge-21.1.4-installer.jar`.
+An executable jar file will be downloaded with the name format `neoforge-<neoforge-version>-installer.jar`,
+for example `neoforge-21.1.4-installer.jar`.
 
-Before running the installer, download and run the patch file from [here](https://johann.loefflmann.net/en/software/jarfix/index.html) so that you can run the jar file directly in Windows File Explorer. If you downloaded the installer for Windows, skip this step.
-Now you can run the NeoForge jar file like a normal executable file, a window will pop up for you to choose the installation configuration:
+Before running the installer, download and run the patch file from [here] so that you can run the jar file directly in
+Windows File Explorer. If you downloaded the installer for Windows, skip this step.
+Now you can run the NeoForge jar file like a normal executable file,
+a window will pop up for you to choose the installation configuration:
 The NeoForge installer supports multiple languages, so if you want to change the language, you can do this here.
 
-1. First is a radio box for selecting install client or server, `Install client` is selected by default, don't change this.
-2. Then there is an input field for specifying the installation location, normally the installer will automatically recognize the official loader's folder.
-   For example `C:\Users\username\AppData\Roaming\.minecraft`, that's where we want it to install so no need to change this either.
+1. First is a radio box for selecting install client or server, `Install client` is selected by default,
+   don't change this.
+2. Then there is an input field for specifying the installation location,
+   normally the installer will automatically recognize the official loader's folder.
+   For example `C:\Users\username\AppData\Roaming\.minecraft`,
+   that's where we want it to install so no need to change this either.
    Copy this path to somewhere like Notepad, TextEdit, or Pluma for further usage when installing mod files.
 3. Now click the `OK` button to start the installation.
-   It will download some files from the Internet, if the network is fast, the installation should take about two to three minutes.
+   It will download some files from the Internet, if the network is fast,
+   the installation should take about two to three minutes.
    A pop-up will show up to remind you that the installation is successful
 
 All done, you can now continue onto installing mods.
@@ -62,3 +73,7 @@ but also its own worlds, screenshots, resource packs, etc. folders.
 10. You should be returned to the profile options menu.
 11. Click the save button at the bottom of the menu.
 12. launch the game to create all the files and folders.
+
+[releases page]: https://github.com/minecraft-access/minecraft-access/releases/latest
+[neoforge]: https://neoforged.net/
+[jarfix]: https://johann.loefflmann.net/en/software/jarfix/index.html

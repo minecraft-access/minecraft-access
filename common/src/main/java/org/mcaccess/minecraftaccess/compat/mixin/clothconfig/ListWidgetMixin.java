@@ -33,7 +33,7 @@ abstract class ListWidgetMixin extends DynamicElementListWidget {
     public abstract @NotNull List<GuiEventListener> children();
 
     /**
-     * Focus on the last option if navigating backward from cancel button
+     * Focus on the last option if navigating backward from cancel button.
      */
     @Override
     public ComponentPath nextFocusPath(FocusNavigationEvent event) {

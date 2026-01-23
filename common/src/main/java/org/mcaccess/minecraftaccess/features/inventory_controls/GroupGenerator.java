@@ -63,7 +63,7 @@ import org.mcaccess.minecraftaccess.mixin.StonecutterScreenAccessor;
 public final class GroupGenerator {
 
     /**
-     * Saved by RecipeBookPageMixin
+     * Saved by RecipeBookPageMixin.
      */
     public static List<RecipeCollection> recipesOnTheScreen;
 

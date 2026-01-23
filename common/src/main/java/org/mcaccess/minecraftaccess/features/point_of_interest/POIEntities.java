@@ -127,7 +127,7 @@ public class POIEntities implements BalmClientModule {
     }
 
     /**
-     * Loads the configs from config.json
+     * Loads the configs from config.json.
      */
     private void loadConfig() {
         config = Config.getInstance().poi.entities;
