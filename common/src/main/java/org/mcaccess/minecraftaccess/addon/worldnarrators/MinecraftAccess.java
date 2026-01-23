@@ -248,7 +248,7 @@ public class MinecraftAccess implements WorldNarrator {
     }
 
     /**
-     * Get variant text of wolf, cat, axolotl
+     * Get variant text of wolf, cat, axolotl.
      */
     private static String getVariantInfo(Entity animal) {
         return switch (animal) {

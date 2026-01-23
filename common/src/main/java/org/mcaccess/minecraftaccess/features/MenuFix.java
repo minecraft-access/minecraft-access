@@ -112,7 +112,7 @@ public final class MenuFix implements BalmClientModule {
     }
 
     /**
-     * Moves the mouse cursor to x=10 y=10 relative to the Minecraft window location
+     * Moves the mouse cursor to x=10 y=10 relative to the Minecraft window location.
      */
     private static void moveMouseCursor() {
         MouseUtils.moveAndLeftClick(10, 10);

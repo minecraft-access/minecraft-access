@@ -19,7 +19,7 @@ abstract class I18nMixin {
 
     /**
      * Use NamedFormat.format() instead of String.format() (in original logic)
-     * when translation key has "{}"
+     * when translation key has "{}".
      */
     @SuppressWarnings("unchecked")
     @Inject(at = @At("HEAD"), method = "get", cancellable = true)

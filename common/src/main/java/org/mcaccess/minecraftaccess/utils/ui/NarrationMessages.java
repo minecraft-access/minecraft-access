@@ -4,11 +4,11 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 /**
- * Preparing {@link Component}s for {@link NarrationElementOutput}
+ * Preparing {@link Component}s for {@link NarrationElementOutput}.
  */
 public class NarrationMessages {
     /**
-     * "{TYPE} %s out of %s" narration
+     * "{TYPE} %s out of %s" narration.
      */
     public record Position(int position, int totalSize, Type type) {
         public Component toComponent() {
@@ -16,7 +16,7 @@ public class NarrationMessages {
         }
 
         /**
-         * "narrator.position.*" keys in original game's lang files
+         * "narrator.position.*" keys in original game's lang files.
          */
         public enum Type {
             TAB("narrator.position.tab");

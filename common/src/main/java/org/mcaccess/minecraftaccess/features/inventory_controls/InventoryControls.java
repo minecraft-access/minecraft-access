@@ -61,8 +61,8 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
  * This features lets us use keyboard in inventory screens. Works with all default minecraft screens.
- * <p>
- * Key binds and combinations:
+ *
+ * <p>Key binds and combinations:
  * (all key binds are re-mappable(except two keys) from the game's controls menu and these key binds do not interrupt with any other key with same key.)<br>
  * 1) Up Key (default: I) = Focus to slot above.<br>
  * 2) Right Key (default: L) = Focus to slot right.<br>
@@ -74,8 +74,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  * 8) Left Shift + Switch Tab Key = Select previous tab (only for creative inventory screen and inventory/crafting screen).<br>
  * 9) Toggle Craftable Key (default: R) = Toggle between show all and show only craftable recipes in inventory/crafting screen.<br>
  * 10) T Key (not re-mappable) = Select the search box.<br>
- * 11) Enter Key (not re-mappable) = Deselect the search box.<br>
- * </p>
+ * 11) Enter Key (not re-mappable) = Deselect the search box.
  */
 @Slf4j
 public class InventoryControls implements BalmClientModule {
@@ -359,7 +358,7 @@ public class InventoryControls implements BalmClientModule {
     }
 
     /**
-     * Load configs from config.json
+     * Load configs from config.json.
      */
     private void loadConfig() {
         config = Config.getInstance().inventoryControls;

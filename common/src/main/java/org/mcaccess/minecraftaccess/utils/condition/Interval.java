@@ -16,7 +16,7 @@ public class Interval {
     }
 
     /**
-     * In milliseconds
+     * In milliseconds.
      */
     public static Interval ms(long delay) {
         // 1 milliseconds = 1*10^6 nanoseconds
@@ -24,7 +24,7 @@ public class Interval {
     }
 
     /**
-     * In seconds
+     * In seconds.
      */
     public static Interval sec(long delay) {
         // 1 seconds = 1*10^9 nanoseconds
@@ -32,7 +32,7 @@ public class Interval {
     }
 
     /**
-     * Use the value of {@link Config#multipleClickSpeedMilliseconds} as delay
+     * Use the value of {@link Config#multipleClickSpeedMilliseconds} as delay.
      */
     public static Interval defaultDelay() {
         return ms(Config.getInstance().multipleClickSpeedMilliseconds);
@@ -94,7 +94,7 @@ public class Interval {
     }
 
     /**
-     * Make the interval ready immediately
+     * Make the interval ready immediately.
      */
     public void beReady() {
         lastRunTime = 0;

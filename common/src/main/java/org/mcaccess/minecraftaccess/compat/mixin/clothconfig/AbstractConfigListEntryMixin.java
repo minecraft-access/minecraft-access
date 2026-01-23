@@ -32,7 +32,7 @@ abstract class AbstractConfigListEntryMixin<T> extends AbstractConfigEntry<T> {
     }
 
     /**
-     * For debugging convenience
+     * For debugging convenience.
      */
     @Override
     public String toString() {

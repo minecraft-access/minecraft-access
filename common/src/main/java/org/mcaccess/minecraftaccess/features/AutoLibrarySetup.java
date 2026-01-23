@@ -71,7 +71,7 @@ public class AutoLibrarySetup {
     }
 
     /**
-     * Checks whether all the library files are installed or not
+     * Checks whether all the library files are installed or not.
      *
      * @return Returns true if all files are installed otherwise false.
      */

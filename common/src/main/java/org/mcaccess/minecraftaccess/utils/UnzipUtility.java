@@ -11,20 +11,19 @@ import java.util.zip.ZipInputStream;
 
 /**
  * (Taken from <a href="https://www.codejava.net/java-se/file-io/programmatically-extract-a-zip-file-using-java">here</a>)
- * This utility extracts files and directories of a standard zip file to
- * a destination directory.
+ * This utility extracts files and directories of a standard zip file to a destination directory.
  *
  * @author www.codejava.net
  */
 public class UnzipUtility {
     /**
-     * Size of the buffer to read/write data
+     * Size of the buffer to read/write data.
      */
     private static final int BUFFER_SIZE = 4096;
 
     /**
      * Extracts a zip file specified by the zipFilePath to a directory specified by
-     * destDirectory (will be created if does not exists)
+     * destDirectory. (will be created if does not exists)
      */
     public void unzip(String zipFilePath, String destDirectory) throws IOException {
         File destDir = new File(destDirectory);
@@ -51,7 +50,7 @@ public class UnzipUtility {
     }
 
     /**
-     * Extracts a zip entry (file entry)
+     * Extracts a zip entry. (file entry)
      */
     private void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
         String parentDirectory = Paths.get(filePath).getParent().toString();
