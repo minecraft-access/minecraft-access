@@ -60,7 +60,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_I))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(false, RotatingDirection.UP);
+                    rotateCameraBy(RotatingDirection.UP, false);
                     return true;
                 })
                 .build();
@@ -69,7 +69,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_J))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(false, RotatingDirection.LEFT);
+                    rotateCameraBy(RotatingDirection.LEFT, false);
                     return true;
                 })
                 .build();
@@ -78,7 +78,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_K))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(false, RotatingDirection.DOWN);
+                    rotateCameraBy(RotatingDirection.DOWN, false);
                     return true;
                 })
                 .build();
@@ -87,7 +87,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_L))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(false, RotatingDirection.RIGHT);
+                    rotateCameraBy(RotatingDirection.RIGHT, false);
                     return true;
                 })
                 .build();
@@ -97,7 +97,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(true, RotatingDirection.UP);
+                    rotateCameraBy(RotatingDirection.UP, true);
                     return true;
                 })
                 .build();
@@ -106,7 +106,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_J, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(true, RotatingDirection.LEFT);
+                    rotateCameraBy(RotatingDirection.LEFT, true);
                     return true;
                 })
                 .build();
@@ -115,7 +115,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_K, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(true, RotatingDirection.DOWN);
+                    rotateCameraBy(RotatingDirection.DOWN, true);
                     return true;
                 })
                 .build();
@@ -124,7 +124,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_L, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(true, RotatingDirection.RIGHT);
+                    rotateCameraBy(RotatingDirection.RIGHT, true);
                     return true;
                 })
                 .build();
@@ -134,7 +134,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraTo(Orientation.NORTH);
+                    rotateCameraTo(Orientation.NORTH, true);
                     return true;
                 })
                 .build();
@@ -143,7 +143,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_L, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraTo(Orientation.EAST);
+                    rotateCameraTo(Orientation.EAST, true);
                     return true;
                 })
                 .build();
@@ -152,7 +152,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_K, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraTo(Orientation.SOUTH);
+                    rotateCameraTo(Orientation.SOUTH, true);
                     return true;
                 })
                 .build();
@@ -161,7 +161,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_J, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraTo(Orientation.WEST);
+                    rotateCameraTo(Orientation.WEST, true);
                     return true;
                 })
                 .build();
@@ -189,7 +189,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_PERIOD))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraTo(Orientation.DOWN);
+                    rotateCameraTo(Orientation.DOWN, true);
                     return true;
                 })
                 .build();
@@ -198,7 +198,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_PERIOD, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraTo(Orientation.UP);
+                    rotateCameraTo(Orientation.UP, true);
                     return true;
                 })
                 .build();
@@ -224,10 +224,10 @@ public class CameraControls implements BalmClientModule {
     /**
      * Rotates the player's camera.
      *
+     * @param direction  on given direction
      * @param isModified Whether to use normal rotating angle or modified angle
-     * @param direction on given direction
      */
-    private static void rotateCameraBy(boolean isModified, RotatingDirection direction) {
+    private static void rotateCameraBy(RotatingDirection direction, boolean isModified) {
         float angle = (isModified ? CONFIG.modifiedRotatingAngle : CONFIG.normalRotatingAngle) / DEGREES_PER_MOUSE_DELTA;
 
         if (handleLocking()) return;
@@ -236,7 +236,12 @@ public class CameraControls implements BalmClientModule {
         log.debug("Rotating camera by x:{} y:{}", horizontalAngleDelta, verticalAngleDelta);
 
         assert Minecraft.getInstance().player != null;
-        Minecraft.getInstance().player.turn(horizontalAngleDelta, verticalAngleDelta);
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (!isModified && Math.signum(player.getXRot()) * Math.signum(player.getXRot() + verticalAngleDelta * DEGREES_PER_MOUSE_DELTA) < 0) {
+            rotateCameraTo(PlayerPositionUtils.getHorizontalFacing(), false);
+        } else {
+            player.turn(horizontalAngleDelta, verticalAngleDelta);
+        }
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
@@ -252,9 +257,10 @@ public class CameraControls implements BalmClientModule {
     /**
      * Move the camera (player's view).
      *
-     * @param direction to given direction
+     * @param direction     to given direction
+     * @param narrateChange Whether to narrate the result of the method
      */
-    private static void rotateCameraTo(Orientation direction) {
+    private static void rotateCameraTo(Orientation direction, boolean narrateChange) {
         if (handleLocking()) return;
         LocalPlayer player = Minecraft.getInstance().player;
         assert player != null;
@@ -264,7 +270,7 @@ public class CameraControls implements BalmClientModule {
 
         log.debug("Rotating camera to: {}", direction.name());
 
-        if (Config.getInstance().features.facingDirectionEnabled) {
+        if (narrateChange && Config.getInstance().features.facingDirectionEnabled) {
             if (direction.in(Orientation.Layer.MIDDLE)) {
                 MainClass.narrate(PlayerPositionUtils.getHorizontalFacingDirectionInWords(), true);
             } else {
@@ -281,7 +287,7 @@ public class CameraControls implements BalmClientModule {
     private static void centerCamera(boolean lookOpposite) {
         if (handleLocking()) return;
         Orientation o = PlayerPositionUtils.getHorizontalFacing();
-        rotateCameraTo(lookOpposite ? o.getOpposite() : o);
+        rotateCameraTo(lookOpposite ? o.getOpposite() : o, true);
     }
 
     private static boolean handleLocking() {
