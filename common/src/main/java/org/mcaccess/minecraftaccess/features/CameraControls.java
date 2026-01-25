@@ -26,8 +26,8 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  */
 @Slf4j
 public class CameraControls implements BalmClientModule {
-    private static Config.CameraControls config = Config.getInstance().cameraControls;
-    private static final float DELTA_90_DEGREES = 600.0f; // 90 / 0.15
+    private static final Config.CameraControls CONFIG = Config.getInstance().cameraControls;
+    private static final float DEGREES_PER_MOUSE_DELTA = 0.15f;
 
     @Override
     public @NotNull Identifier getId() {
@@ -60,7 +60,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_I))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), RotatingDirection.UP);
+                    rotateCameraBy(false, RotatingDirection.UP);
                     return true;
                 })
                 .build();
@@ -69,7 +69,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_J))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), RotatingDirection.LEFT);
+                    rotateCameraBy(false, RotatingDirection.LEFT);
                     return true;
                 })
                 .build();
@@ -78,7 +78,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_K))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), RotatingDirection.DOWN);
+                    rotateCameraBy(false, RotatingDirection.DOWN);
                     return true;
                 })
                 .build();
@@ -87,7 +87,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_L))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.normalRotatingAngle), RotatingDirection.RIGHT);
+                    rotateCameraBy(false, RotatingDirection.RIGHT);
                     return true;
                 })
                 .build();
@@ -97,7 +97,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle), RotatingDirection.UP);
+                    rotateCameraBy(true, RotatingDirection.UP);
                     return true;
                 })
                 .build();
@@ -106,7 +106,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_J, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle), RotatingDirection.LEFT);
+                    rotateCameraBy(true, RotatingDirection.LEFT);
                     return true;
                 })
                 .build();
@@ -115,7 +115,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_K, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle), RotatingDirection.DOWN);
+                    rotateCameraBy(true, RotatingDirection.DOWN);
                     return true;
                 })
                 .build();
@@ -124,7 +124,7 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_L, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    rotateCameraBy(DELTA_90_DEGREES / (90 / config.modifiedRotatingAngle), RotatingDirection.RIGHT);
+                    rotateCameraBy(true, RotatingDirection.RIGHT);
                     return true;
                 })
                 .build();
@@ -224,10 +224,12 @@ public class CameraControls implements BalmClientModule {
     /**
      * Rotates the player's camera.
      *
-     * @param angle     by given angle
+     * @param isModified Whether to use normal rotating angle or modified angle
      * @param direction on given direction
      */
-    private static void rotateCameraBy(float angle, RotatingDirection direction) {
+    private static void rotateCameraBy(boolean isModified, RotatingDirection direction) {
+        float angle = (isModified ? CONFIG.modifiedRotatingAngle : CONFIG.normalRotatingAngle) / DEGREES_PER_MOUSE_DELTA;
+
         if (handleLocking()) return;
         float horizontalAngleDelta = angle * direction.horizontalWight;
         float verticalAngleDelta = angle * direction.verticalWight;
