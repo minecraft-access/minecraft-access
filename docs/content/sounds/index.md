@@ -35,7 +35,6 @@ Sounds can be played by pressing the play button.
 
 | Description                               | Sound                                                        |
 |-------------------------------------------|--------------------------------------------------------------|
-| Unlocking action in POI locking feature   | {{< sound sound="Note_block_bass_drum_pitch2" >}} Drum sound |
 | Position of current object tracker object | {{< wikiSound "Note_block_bell" >}} Bell sound               |
 
 ### Bow Aim Assist

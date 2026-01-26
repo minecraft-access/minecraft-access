@@ -160,7 +160,6 @@ public final class Config implements ConfigData {
         }
 
         public static final class Locking {
-            public boolean unlockingSound = false;
             public boolean autoLockEyeOfEnderEntity = true;
             public boolean aimAssistEnabled = true;
             public boolean aimAssistAudioCuesEnabled = true;

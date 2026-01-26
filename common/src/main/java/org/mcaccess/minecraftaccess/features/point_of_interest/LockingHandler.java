@@ -225,12 +225,7 @@ public class LockingHandler implements BalmClientModule {
         if (!isStillValid) MainClass.poiManager.objectTracker.clearCurrentObject();
 
         if (narrate) {
-            if (config.unlockingSound) {
-                assert Minecraft.getInstance().player != null;
-                Minecraft.getInstance().player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 0.4f, 2.0f);
-            } else {
                 MainClass.narrate(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
-            }
         }
     }
 
