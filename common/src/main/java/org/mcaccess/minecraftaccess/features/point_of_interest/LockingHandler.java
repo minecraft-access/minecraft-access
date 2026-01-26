@@ -225,7 +225,7 @@ public class LockingHandler implements BalmClientModule {
         if (!isStillValid) MainClass.poiManager.objectTracker.clearCurrentObject();
 
         if (narrate) {
-                MainClass.narrate(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
+            MainClass.narrate(I18n.get("narrator.button.difficulty_lock.unlocked"), true);
         }
     }
 

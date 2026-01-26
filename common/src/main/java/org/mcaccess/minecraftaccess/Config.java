@@ -78,12 +78,18 @@ public final class Config implements ConfigData {
         public boolean timeIndicatorEnabled = true;
         public boolean xpIndicatorEnabled = true;
         public boolean facingDirectionEnabled = true;
-        public boolean fishingHarvestEnabled = true;
-        public boolean alwaysNarratePickedUpItems = false;
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public PickedUpItemNarration pickedUpItemNarration = PickedUpItemNarration.WHEN_FISHING;
         public boolean narrateHeldItemsCountWhenChanged = true;
         public boolean playNewChatMessageSound = true;
 
         private Features() {
+        }
+
+        public enum PickedUpItemNarration {
+            ALWAYS,
+            WHEN_FISHING,
+            NEVER
         }
     }
 
