@@ -36,7 +36,8 @@ abstract class ClientPacketListenerMixin implements TickablePacketListener, Clie
 
         PacketUtils.ensureRunningOnSameThread(packet, this, client.packetProcessor());
         Config.Features config = Config.getInstance().features;
-        if (config.alwaysNarratePickedUpItems || config.fishingHarvestEnabled && player.getMainHandItem().getItem() instanceof FishingRodItem) {
+        if (config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.ALWAYS
+                || config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.WHEN_FISHING && player.getMainHandItem().getItem() instanceof FishingRodItem) {
             int cId = packet.getPlayerId();
             int pId = player.getId();
             // Is this item picked by "me" or other players?
@@ -46,7 +47,6 @@ abstract class ClientPacketListenerMixin implements TickablePacketListener, Clie
                 if (entity instanceof ItemEntity itemEntity) {
                     String name = I18n.get(itemEntity.getItem().getItem().getDescriptionId());
                     log.debug("Fishing harvest: {}", name);
-
                     // Have observed this narrate will interrupt adventure achievement, level up notification or so,
                     // it should be at low priority.
                     MainClass.narrate(I18n.get("minecraft_access.other.picked_up_item", name), false);

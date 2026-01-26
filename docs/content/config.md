@@ -135,10 +135,6 @@ See also: [Feature Description]({{% relref "/features#points-of-interest" %}}),
 
 | Configuration                          | Default Value | Description                                                                  |
 |----------------------------------------|---------------|------------------------------------------------------------------------------|
-| Enabled                                | true          | Whether to enable this feature                                               |
-| Lock on Blocks                         | true          | Enable lock on POI blocks as well, if false, only entities can be locked     |
-| Play Sound                             | true          | Play a sound cue at positions of detected entities                           |
-| Play Sound Instead Of Speak            | false         | Play a base drum sound cue on unlock instead of speak `unlock`               |
 | Auto Lock on to Eye of Ender when Used | true          | Automatically lock on to the [Eye of Ender] when used                        |
 | Delay (in milliseconds)                | 100           | Cooldown between two feature executions                                      |
 | Bow aim assist                         | true          | Enable automatic temporary locking onto the nearest monster when using a bow |
@@ -237,8 +233,7 @@ See also: [Feature Description]({{% relref "/features#access-menu" %}}),
 | Enable Facing Direction                          | true          | Whether to automatically speak the current direction as the camera moves                                               |
 | Speak Action Bar Messages                        | true          | Whether to speak the messages updated in [action bar], useful when you're in modded multiplayer servers                |
 | Only Speak Action Bar Updates                    | false         | Only speak changed part of action bar message when the message is partially updated, useful for some mods like Hypixel |
-| Speak Harvest Of Fishing                         | true          | Whether to speak the harvest of fishing                                                                                |
-| Always Speak Picked Up Items                     | false         | Whether to speak any items you pick up (this will also enable speaking of fishing harvests)                            |
+| Speak Picked Up Items                            | WHEN_FISHING  | Whether to speak any items you pick up (either ALWAYS, WHEN_FISHING, or NEVER)                                         |
 | Report Held Items Count When Changed             | true          | Whether to report the number of held items when it changed                                                             |
 | Play a sound for new chat messages               | true          | Whether to play a sound when sending or recieving a chat message                                                       |
 
