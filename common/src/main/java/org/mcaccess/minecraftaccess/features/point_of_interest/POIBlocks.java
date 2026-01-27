@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import lombok.Getter;
@@ -30,7 +31,7 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  */
 @Slf4j
 public class POIBlocks implements BalmClientModule {
-    private Config.POI.Blocks config;
+    private static final Config.POI.Blocks CONFIG = Config.getInstance().poi.blocks;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
 
@@ -39,7 +40,8 @@ public class POIBlocks implements BalmClientModule {
             new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
             pos -> {
                 assert Minecraft.getInstance().level != null;
-                return Minecraft.getInstance().level.getBlockState(pos).is(markedBlock);
+                Block block = Minecraft.getInstance().level.getBlockState(pos).getBlock();
+                return markedBlock != null && Objects.equals(block, markedBlock);
             }
     );
 
@@ -69,7 +71,7 @@ public class POIBlocks implements BalmClientModule {
     private List<BlockPos> lastScanResults = new ArrayList<>();
 
     POIBlocks() {
-        loadConfig();
+        interval.setDelay(CONFIG.delay, Interval.Unit.MILLISECOND);
     }
 
     @Override
@@ -87,17 +89,23 @@ public class POIBlocks implements BalmClientModule {
     }
 
     private void tick(Minecraft client, Player player, Level level) {
-        setMarkedBlock(MainClass.poiManager.poiMarking.getMarkedBlock());
-        loadConfig();
+        Object currentMarkedObject = MainClass.poiManager.poiMarking.getMarkedObject().value;
+        if (currentMarkedObject instanceof Block block) {
+            markedBlock = block;
+        } else {
+            markedBlock = null;
+        }
 
-        if (!config.enabled) return;
+        interval.setDelay(CONFIG.delay, Interval.Unit.MILLISECOND);
+
+        if (!CONFIG.enabled) return;
         if (!interval.isReady()) return;
 
         if (client.screen != null) return; //Prevent running if any screen is opened
 
         log.trace("POIBlock started");
         scanBlocksAroundPlayer();
-        playerSoundAtFoundPOI(MainClass.poiManager.poiMarking.isMarked());
+        playerSoundAtFoundPOI(MainClass.poiManager.poiMarking.getMarkedObject().value != null);
         log.trace("POIBlock ended");
     }
 
@@ -123,33 +131,24 @@ public class POIBlocks implements BalmClientModule {
         BlockPos pos = Minecraft.getInstance().player.blockPosition();
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.below(), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
-        scanner.scanAndQualifyBlocksExposedInAirAround(pos, config.range);
-        scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(), config.range);
+        scanner.scanAndQualifyBlocksExposedInAirAround(pos, CONFIG.range);
+        scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(), CONFIG.range);
 
         lastScanResults = currentScanResults;
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (config.volume == 0.0f) return;
+        if (CONFIG.volume == 0.0f) return;
         if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
-            markedGroup.playSoundForGroupItems(BlockPos::getCenter, config.volume);
-        } else if (config.playSound) {
-            if (config.playSoundForOtherBlocks) {
+            markedGroup.playSoundForGroupItems(BlockPos::getCenter, CONFIG.volume);
+        } else if (CONFIG.playSound) {
+            if (CONFIG.playSoundForOtherBlocks) {
                 for (POIGroup<BlockPos> group : groups) {
-                    group.playSoundForGroupItems(BlockPos::getCenter, config.volume);
+                    group.playSoundForGroupItems(BlockPos::getCenter, CONFIG.volume);
                 }
             } else {
-                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(BlockPos::getCenter, config.volume);
+                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(BlockPos::getCenter, CONFIG.volume);
             }
         }
-    }
-
-    private void loadConfig() {
-        config = Config.getInstance().poi.blocks;
-        interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
-    }
-
-    private void setMarkedBlock(@Nullable Block block) {
-        markedBlock = block;
     }
 }

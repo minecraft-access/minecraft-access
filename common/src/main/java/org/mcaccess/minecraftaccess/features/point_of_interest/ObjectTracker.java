@@ -241,7 +241,7 @@ public class ObjectTracker implements BalmClientModule {
         POIGroup<?> nextGroup = groups.get(newIndex);
 
         while ((nextGroup.isEmpty()
-            || nextGroup.sortByDistance().stream().noneMatch(this::isObjectValid))
+                || nextGroup.sortByDistance().stream().noneMatch(this::isObjectValid))
                 && newIndex + step >= 0
                 && newIndex + step < groups.size()) {
             newIndex += step;
