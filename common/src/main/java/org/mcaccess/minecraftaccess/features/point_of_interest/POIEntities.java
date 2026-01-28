@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -33,15 +32,15 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  */
 @Slf4j
 public class POIEntities implements BalmClientModule {
-    private Config.POI.Entities config;
+    private static final Config.POI.Entities CONFIG = Config.getInstance().poi.entities;
     private final Interval interval = Interval.defaultDelay();
 
-    private @Nullable Class<? extends Entity> marked = null;
+    private @Nullable Entity markedEntity = null;
 
     private final POIGroup<Entity> markedGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.markedEntity",
             new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
-            e -> marked != null && marked.isInstance(e)
+            e -> markedEntity != null && markedEntity.getClass().isInstance(e)
     );
 
     private final POIGroup<Entity> otherEntitiesGroup = new POIGroup<>(
@@ -57,7 +56,7 @@ public class POIEntities implements BalmClientModule {
     private List<Entity> lastScanResults = new ArrayList<>();
 
     POIEntities() {
-        loadConfig();
+        interval.setDelay(CONFIG.delay, Interval.Unit.MILLISECOND);
     }
 
     @Override
@@ -69,23 +68,29 @@ public class POIEntities implements BalmClientModule {
     public void initialize() {
         ClientPlayingTick.AFTER.register(this::tick);
         ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
-            marked = null;
+            markedEntity = null;
             lastScanResults = new ArrayList<>();
         });
     }
 
     private void tick(Minecraft client, Player player, Level level) {
-        setMarked(MainClass.poiManager.poiMarking.getMarkedEntity());
-        loadConfig();
+        Object currentMarkedObject = MainClass.poiManager.poiMarking.getMarkedObject().value;
+        if (currentMarkedObject instanceof Entity entity) {
+            markedEntity = entity;
+        } else {
+            markedEntity = null;
+        }
 
-        if (!config.enabled) return;
+        interval.setDelay(CONFIG.delay, Interval.Unit.MILLISECOND);
+
+        if (!CONFIG.enabled) return;
         if (!interval.isReady()) return;
 
         if (client.screen != null) return; //Prevent running if any screen is opened
 
         log.trace("POIEntities started");
         scanEntitiesAroundPlayer();
-        playerSoundAtFoundPOI(MainClass.poiManager.poiMarking.isMarked());
+        playerSoundAtFoundPOI(MainClass.poiManager.poiMarking.getMarkedObject().value != null);
         log.trace("POIEntities ended");
     }
 
@@ -98,7 +103,7 @@ public class POIEntities implements BalmClientModule {
 
         LocalPlayer player = Minecraft.getInstance().player;
         assert player != null;
-        AABB scanBox = player.getBoundingBox().inflate(config.range, config.range, config.range);
+        AABB scanBox = player.getBoundingBox().inflate(CONFIG.range, CONFIG.range, CONFIG.range);
         assert Minecraft.getInstance().level != null;
         List<Entity> entities = Minecraft.getInstance().level.getEntities(player, scanBox);
 
@@ -115,26 +120,14 @@ public class POIEntities implements BalmClientModule {
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (config.volume == 0.0f) return;
+        if (CONFIG.volume == 0.0f) return;
         Function<Entity, Vec3> mapper = e -> e.blockPosition().getCenter();
         if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
-            markedGroup.playSoundForGroupItems(mapper, config.volume);
-        } else if (config.playSound) {
+            markedGroup.playSoundForGroupItems(mapper, CONFIG.volume);
+        } else if (CONFIG.playSound) {
             for (POIGroup<Entity> group : groups) {
-                group.playSoundForGroupItems(mapper, config.volume);
+                group.playSoundForGroupItems(mapper, CONFIG.volume);
             }
         }
-    }
-
-    /**
-     * Loads the configs from config.json.
-     */
-    private void loadConfig() {
-        config = Config.getInstance().poi.entities;
-        interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
-    }
-
-    private void setMarked(@Nullable Entity entity) {
-        marked = Optional.ofNullable(entity).map(Entity::getClass).orElse(null);
     }
 }
