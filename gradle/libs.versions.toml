@@ -16,14 +16,14 @@ balmNeoForge = { module = "net.blay09.mods:balm-neoforge", version.ref = "balm" 
 clothConfigCommon = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-fabricApi = "net.fabricmc.fabric-api:fabric-api:0.141.2+1.21.11"
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.143.1+"
 fabricLoader = "net.fabricmc:fabric-loader:0.18.4"
 jadeFabric = "maven.modrinth:jade:21.1.1+fabric"
 jadeNeoForge = "maven.modrinth:jade:21.0.1+neoforge"
 lombok = "org.projectlombok:lombok:1.18.42"
 minecraft = "com.mojang:minecraft:1.21.11"
-modMenu = "com.terraformersmc:modmenu:17.0.0-beta.2"
-neoForge = "net.neoforged:neoforge:21.11.37-beta"
+modMenu = "com.terraformersmc:modmenu:18.0.0-alpha.5"
+neoForge = "net.neoforged:neoforge:21.11.38-beta"
 parchment = "org.parchmentmc.data:parchment-1.21.11:2025.12.20"
 tolk = "com.davykager.tolk:Tolk:1.0.0"
 
@@ -34,7 +34,7 @@ junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher",
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:13.0.0"
+checkstyle = "com.puppycrawl.tools:checkstyle:13.1.0"
 
 [plugins]
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.162" }
