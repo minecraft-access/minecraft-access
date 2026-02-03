@@ -6,7 +6,7 @@ on:
       - dev
 
 env:
-  HUGO_VERSION: 0.155.0
+  HUGO_VERSION: 0.155.2
   JAVA_VERSION: 21
   JAVA_DISTRIBUTION: temurin
 
