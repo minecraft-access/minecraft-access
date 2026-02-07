@@ -84,11 +84,6 @@ public final class MainClass {
 
         new AutoLibrarySetup().initialize();
 
-        ScreenReaderController.refreshScreenReader();
-        if (getScreenReader() != null && getScreenReader().isInitialized()) {
-            getScreenReader().narrate(startupMessage, true);
-        }
-
         ClientPlayingTick.AFTER.configureMapping((priority, callback) -> {
             ClientTickCallback.AFTER.register(priority, client -> {
                 if (client.player != null && client.level != null) {
@@ -128,6 +123,11 @@ public final class MainClass {
         }
         frozen = true;
         Config.init();
+
+        ScreenReaderController.refreshScreenReader();
+        if (getScreenReader() != null && getScreenReader().isInitialized()) {
+            getScreenReader().narrate(startupMessage, true);
+        }
 
         registrars.registerModule(new AccessMenu());
         registrars.registerModule(new BiomeIndicator());
