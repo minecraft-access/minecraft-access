@@ -6,7 +6,7 @@
 [versions]
 balm = "21.11.6"
 clothConfig = "21.11.153"
-junit = "6.0.2"
+junit = "6.0.3"
 mockito = "5.21.0"
 
 [libraries]
@@ -34,7 +34,7 @@ junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher",
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:13.1.0"
+checkstyle = "com.puppycrawl.tools:checkstyle:13.2.0"
 
 [plugins]
 architecturyPlugin = { id = "architectury-plugin", version = "3.4.162" }
