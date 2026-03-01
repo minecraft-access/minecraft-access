@@ -1,4 +1,11 @@
 version: 2
+
+multi-ecosystem-groups:
+  dependencies:
+    schedule:
+      interval: weekly
+      day: sunday
+
 updates:
   - package-ecosystem: gitsubmodule
     directory: "/"
@@ -7,25 +14,12 @@ updates:
 
   - package-ecosystem: github-actions
     directory: "/"
-    schedule:
-      interval: weekly
-      day: sunday
-    groups:
-      gh-actions:
-        update-types:
-          - minor
-          - patch
+    patterns: [ "*" ]
+    multi-ecosystem-group: dependencies
 
   - package-ecosystem: gradle
     directory: "/"
-    schedule:
-      interval: weekly
-      day: sunday
-    groups:
-      gradle-dependencies:
-        patterns:
-          # Use wildcard to bundle plugins and libs into one PR
-          - "*"
+    patterns: [ "*" ]
     ignore:
-        # Ignore Jade since Dependabot can't tell Fabric and Neo builds apart
-        - dependency-name: "maven.modrinth:jade"
+      - dependency-name: "maven.modrinth:jade"
+    multi-ecosystem-group: dependencies
