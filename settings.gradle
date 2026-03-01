@@ -55,7 +55,7 @@ plugins {
 
 develocity {
     buildScan {
-        publishing.onlyIf { System.getenv('GITHUB_ACTIONS') == 'true' }
+        publishing.onlyIf { System.getenv('CI') == 'true' }
     }
 }
 
