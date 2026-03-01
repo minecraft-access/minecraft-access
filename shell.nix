@@ -7,7 +7,7 @@ pkgs.mkShell rec {
         libGL
         openal
         speechd
-        xorg.libX11
+        libx11
     ];
     LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
     nativeBuildInputs = with pkgs.buildPackages; [
