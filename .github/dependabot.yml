@@ -3,7 +3,7 @@ version: 2
 multi-ecosystem-groups:
   dependencies:
     assignees:
-      - "@BrailleBennett"
+      - BrailleBennett
     schedule:
       interval: weekly
       day: sunday
@@ -12,8 +12,8 @@ updates:
   - package-ecosystem: gitsubmodule
     directory: "/"
     assignees:
-      - "@BrailleBennett"
-      - "@TheSuperGamer20578"
+      - BrailleBennett
+      - TheSuperGamer20578
     schedule:
       interval: daily
 
