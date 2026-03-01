@@ -56,11 +56,11 @@ jobs:
           ./gradlew clean build ${{ inputs.central && 'publishAndReleaseToMavenCentral' || '' }} -x check
           shopt -s extglob
           cp ./!(common)/build/libs/*+!(*-*).jar .
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: "minecraft-access"
           path: "./*.jar"
-      - uses: actions/attest-build-provenance@v3
+      - uses: actions/attest-build-provenance@v4
         if: github.event_name != 'pull_request'
         with:
           subject-path: "./*.jar"
