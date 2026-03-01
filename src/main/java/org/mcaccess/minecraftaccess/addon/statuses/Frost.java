@@ -1,21 +1,19 @@
 package org.mcaccess.minecraftaccess.addon.statuses;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.Status;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class Frost implements Status {
     @Override
     public @NotNull String message() {
         assert Minecraft.getInstance().player != null;
-        return I18n.get(
-                "minecraft_access.player_status.frost",
-                NarrationUtils.narrateNumber(Minecraft.getInstance().player.getPercentFrozen() * 100.0)
-        );
+        return new Translation("minecraft_access.player_status.frost")
+                .variable("frost").put(Minecraft.getInstance().player.getPercentFrozen() * 100.0)
+                .getString();
     }
 
     @Override

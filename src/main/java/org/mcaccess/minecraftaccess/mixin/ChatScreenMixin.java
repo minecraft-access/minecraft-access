@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Mixin(ChatScreen.class)
 abstract class ChatScreenMixin {
@@ -90,7 +91,10 @@ abstract class ChatScreenMixin {
 
             if (newChatMessagePage != currentChatMessagePage) {
                 currentChatMessagePage = newChatMessagePage;
-                MainClass.narrate(I18n.get("minecraft_access.gui.chat_screen.showing_message_range", (newChatMessagePage * 10) + 1, (newChatMessagePage + 1) * 10), true);
+                new Translation("minecraft_access.gui.chat_screen.showing_message_range")
+                        .variable("start").put(newChatMessagePage * 10 + 1)
+                        .variable("end").put((newChatMessagePage + 1) * 10)
+                        .narrate(true);
             }
 
             for (int i = 1; i <= 9; i++) {

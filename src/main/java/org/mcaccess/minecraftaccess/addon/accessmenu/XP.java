@@ -1,12 +1,10 @@
 package org.mcaccess.minecraftaccess.addon.accessmenu;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.level.GameType;
 
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class XP implements AccessMenuFunction {
     @Override
@@ -15,16 +13,18 @@ public class XP implements AccessMenuFunction {
 
         assert Minecraft.getInstance().gameMode != null;
         if (Minecraft.getInstance().gameMode.getPlayerMode() == GameType.SPECTATOR) {
-            MainClass.narrate(I18n.get("gameMode.spectator"), true);
+            new Translation.Vanilla("gameMode.spectator")
+                    .narrate(true);
             return;
         } else if (Minecraft.getInstance().gameMode.getPlayerMode() == GameType.CREATIVE) {
-            MainClass.narrate(I18n.get("gameMode.creative"), true);
+            new Translation.Vanilla("gameMode.creative")
+                    .narrate(true);
             return;
         }
 
-        MainClass.narrate(I18n.get("minecraft_access.access_menu.xp",
-                        NarrationUtils.narrateNumber(Minecraft.getInstance().player.experienceLevel),
-                        NarrationUtils.narrateNumber(Minecraft.getInstance().player.experienceProgress * 100)),
-                true);
+        new Translation("minecraft_access.access_menu.xp")
+            .variable("level").put(Minecraft.getInstance().player.experienceLevel)
+            .variable("progress").put(Minecraft.getInstance().player.experienceProgress * 100)
+            .narrate(true);
     }
 }

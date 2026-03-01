@@ -26,6 +26,8 @@ import org.mcaccess.minecraftaccess.mixin.BossHealthOverlayAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.events.ChangeDetector;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
+import org.mcaccess.minecraftaccess.utils.events.ServerLocal;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class HUDStatus implements BalmClientModule {
     private final SessionLocal<Integer> bossIndex = new SessionLocal<>(() -> 0);
@@ -57,10 +59,9 @@ public class HUDStatus implements BalmClientModule {
 
         new ChangeDetector<Boolean>().clientEvent(
                 client -> client.options.hideGui,
-                (client, previous, value) -> MainClass.narrate(
-                        I18n.get(String.format("minecraft_access.hud_status.announce_%s", value ? "hidden" : "shown")),
-                        true
-                )
+                (client, previous, value) -> new Translation("minecraft_access.hud_status.announce")
+                        .variant(value ? "hidden" : "shown")
+                        .narrate(true)
         );
 
         new ServerChangeDetector<>(() -> false).levelEvent((client, player, level) -> player.getAttackStrengthScale(0) >= 1, this::attackIndicator);
@@ -79,7 +80,7 @@ public class HUDStatus implements BalmClientModule {
         );
 
         if (bosses.isEmpty()) {
-            MainClass.narrate(I18n.get("minecraft_access.other.no_bossbars"), true);
+            new Translation("minecraft_access.other.no_bossbars").narrate(true);
             return;
         }
 
@@ -90,8 +91,9 @@ public class HUDStatus implements BalmClientModule {
         }
 
         LerpingBossEvent currentBoss = bosses.get(bossIndex.value);
-        String name = currentBoss.getName().getString();
-        int healthPercent = Math.round(currentBoss.getProgress() * 100);
-        MainClass.narrate(I18n.get("minecraft_access.other.bossbar_status", name, healthPercent), true);
+        new Translation("minecraft_access.other.bossbar_status")
+                .variable("name").put(currentBoss.getName())
+                .variable("health").put(Math.round(currentBoss.getProgress() * 100))
+                .narrate(true);
     }
 }

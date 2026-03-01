@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.mixin;
 import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @SuppressWarnings("EqualsBetweenInconvertibleTypes")
 @Mixin(LivingEntity.class)
@@ -25,8 +24,10 @@ abstract class LivingEntityMixin {
     private void narrateEffectApplication(MobEffectInstance effectInstance, boolean forced, Entity entity, CallbackInfo ci) {
         if (Objects.equals(Minecraft.getInstance().player, this)) {
             if (Minecraft.getInstance().player.hasEffect(effectInstance.getEffect())) return;
-            String effectName = NarrationUtils.narrateEffect(effectInstance);
-            MainClass.narrate(I18n.get("minecraft_access.effect_narration.gained") + ' ' + effectName, false);
+            new Translation("minecraft_access.effect_narration")
+                    .variant("gained")
+                    .variable("effect").put(NarrationUtils.narrateEffect(effectInstance))
+                    .narrate(false);
         }
     }
 
@@ -34,16 +35,20 @@ abstract class LivingEntityMixin {
     private void narrateEffectApplication2(MobEffectInstance effectInstance, Entity entity, CallbackInfo ci) {
         if (Objects.equals(Minecraft.getInstance().player, this)) {
             if (Minecraft.getInstance().player.hasEffect(effectInstance.getEffect())) return;
-            String effectName = NarrationUtils.narrateEffect(effectInstance);
-            MainClass.narrate(I18n.get("minecraft_access.effect_narration.gained") + ' ' + effectName, false);
+            new Translation("minecraft_access.effect_narration")
+                    .variant("gained")
+                    .variable("effect").put(NarrationUtils.narrateEffect(effectInstance))
+                    .narrate(false);
         }
     }
 
     @Inject(method = "removeEffectNoUpdate", at = @At("HEAD"))
     private void narrateEffectRemoval(Holder<MobEffect> effect, CallbackInfoReturnable<MobEffectInstance> cir) {
         if (Objects.equals(Minecraft.getInstance().player, this)) {
-            String effectName = I18n.get(effect.value().getDescriptionId());
-            MainClass.narrate(I18n.get("minecraft_access.effect_narration.lost") + ' ' + effectName, false);
+            new Translation("minecraft_access.effect_narration")
+                    .variant("lsot")
+                    .variable("effect").put(new Translation.Vanilla(effect.value().getDescriptionId()))
+                    .narrate(false);
         }
     }
 }

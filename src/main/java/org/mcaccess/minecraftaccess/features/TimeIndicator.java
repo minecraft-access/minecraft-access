@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class TimeIndicator implements BalmClientModule {
     @Override
@@ -28,11 +29,13 @@ public class TimeIndicator implements BalmClientModule {
         assert Minecraft.getInstance().player != null;
         if (!level.canSeeSky(BlockPos.containing(Minecraft.getInstance().player.getEyePosition()))) return;
 
-        switch (time) {
-            case AFTERNOON -> MainClass.narrate(I18n.get("minecraft_access.time.afternoon"), false);
-            case DAY -> MainClass.narrate(I18n.get("minecraft_access.time.day"), false);
-            case NIGHT -> MainClass.narrate(I18n.get("minecraft_access.time.night"), false);
-        }
+        new Translation("minecraft_access.time")
+                .variant(switch (time) {
+                    case AFTERNOON -> "afternoon";
+                    case DAY -> "day";
+                    case NIGHT -> "night";
+                })
+                .narrate(false);
     }
 
     private enum Times {

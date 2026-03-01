@@ -8,7 +8,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.LoomScreen;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.gui.screens.inventory.StonecutterScreen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -26,6 +25,7 @@ import org.mcaccess.minecraftaccess.mixin.LoomScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.MerchantScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.SingleItemRecipeAccessor;
 import org.mcaccess.minecraftaccess.mixin.StonecutterScreenAccessor;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class SlotItem {
     public SlotItem upSlotItem = null;
@@ -90,7 +90,7 @@ public class SlotItem {
 
             // banner pattern trans key = banner pattern name + color name
             String transKey = pattern.translationKey() + '.' + dyeColor;
-            return I18n.get(transKey);
+            return new Translation.Vanilla(transKey).getString();
         }
 
         if (Minecraft.getInstance().screen instanceof StonecutterScreen stonecutterScreen) {
@@ -113,7 +113,7 @@ public class SlotItem {
 
         if (Minecraft.getInstance().screen instanceof MerchantScreen merchantScreen) {
             MerchantOffers tradeOfferList = merchantScreen.getMenu().getOffers();
-            if (tradeOfferList.isEmpty()) return I18n.get("minecraft_access.inventory_controls.Unknown");
+            if (tradeOfferList.isEmpty()) return new Translation("minecraft_access.inventory_controls.Unknown").getString();
             MerchantOffer tradeOffer = tradeOfferList.get(recipeOrTradeIndex + ((MerchantScreenAccessor) merchantScreen).getScrollOff());
 
             ItemStack firstBuyItem = tradeOffer.getBaseCostA();
@@ -132,9 +132,16 @@ public class SlotItem {
 
             String tradeText;
             if (secondBuyItem.isEmpty()) {
-                tradeText = I18n.get("minecraft_access.inventory_controls.trade_text_format", firstBuyItemString, sellItemString);
+                tradeText = new Translation("minecraft_access.inventory_controls.trade_text_format")
+                        .variable("buy").put(firstBuyItemString)
+                        .variable("sell").put(sellItemString)
+                        .getString();
             } else {
-                tradeText = I18n.get("minecraft_access.inventory_controls.trade_text_format_with_second_item", firstBuyItemString, secondBuyItemString, sellItemString);
+                tradeText = new Translation("minecraft_access.inventory_controls.trade_text_format_with_second_item")
+                        .variable("buy1").put(firstBuyItemString)
+                        .variable("buy2").put(secondBuyItemString)
+                        .variable("sell").put(sellItemString)
+                        .getString();
             }
 
             return tradeText;

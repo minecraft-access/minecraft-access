@@ -15,7 +15,6 @@ import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
@@ -32,10 +31,11 @@ import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class ObjectTracker implements BalmClientModule {
-    public static final String START_OF_LIST = "minecraft_access.other.start_of_list";
-    public static final String END_OF_LIST = "minecraft_access.other.end_of_list";
+    private static final Translation.Unmodifiable START_OF_LIST = new Translation("minecraft_access.other.start_of_list").unmodifiableView();
+    public static final Translation.Unmodifiable END_OF_LIST = new Translation("minecraft_access.other.end_of_list").unmodifiableView();
 
     @Getter
     private Object currentObject = null;
@@ -171,7 +171,7 @@ public class ObjectTracker implements BalmClientModule {
 
         if (!isObjectValid(currentObject)) {
             clearCurrentObject();
-            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
+            new Translation("minecraft_access.point_of_interest.not_selected").narrate(true);
             return;
         }
 
@@ -231,11 +231,11 @@ public class ObjectTracker implements BalmClientModule {
         if (newIndex < 0) {
             newIndex = 0;
             atBoundary = true;
-            MainClass.narrate(I18n.get(START_OF_LIST), true);
+            START_OF_LIST.narrate(true);
         } else if (newIndex >= groups.size()) {
             newIndex = groups.size() - 1;
             atBoundary = true;
-            MainClass.narrate(I18n.get(END_OF_LIST), true);
+            END_OF_LIST.narrate(true);
         }
 
         POIGroup<?> nextGroup = groups.get(newIndex);
@@ -250,7 +250,7 @@ public class ObjectTracker implements BalmClientModule {
 
         if (nextGroup.isEmpty()
                 || nextGroup.sortByDistance().stream().noneMatch(this::isObjectValid)) {
-            MainClass.narrate(I18n.get(step > 0 ? END_OF_LIST : START_OF_LIST), true);
+            (step > 0 ? END_OF_LIST : START_OF_LIST).narrate(true);
             return;
         }
 
@@ -262,7 +262,7 @@ public class ObjectTracker implements BalmClientModule {
 
         if (validObjects.isEmpty()) {
             clearCurrentObject();
-            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_selected"), true);
+            new Translation("minecraft_access.point_of_interest.not_selected").narrate(true);
             return;
         }
 
@@ -300,15 +300,15 @@ public class ObjectTracker implements BalmClientModule {
         int currentObjectIndex = objects.indexOf(currentObject);
 
         if (currentObjectIndex == -1) {
-            MainClass.narrate(I18n.get(START_OF_LIST), true);
+            START_OF_LIST.narrate(true);
             currentObject = objects.getFirst();
         } else {
             int newIndex = currentObjectIndex + step;
             if (newIndex < 0) {
-                MainClass.narrate(I18n.get(START_OF_LIST), true);
+                START_OF_LIST.narrate(true);
                 currentObject = objects.getFirst();
             } else if (newIndex >= objects.size()) {
-                MainClass.narrate(I18n.get(END_OF_LIST), true);
+                END_OF_LIST.narrate(true);
                 currentObject = objects.getLast();
             } else {
                 currentObject = objects.get(newIndex);
@@ -318,7 +318,7 @@ public class ObjectTracker implements BalmClientModule {
         while (!isObjectValid(currentObject)) {
             int nextIndex = objects.indexOf(currentObject) + step;
             if (nextIndex < 0 || nextIndex >= objects.size()) {
-                MainClass.narrate(I18n.get(step > 0 ? END_OF_LIST : START_OF_LIST), true);
+                (step > 0 ? END_OF_LIST : START_OF_LIST).narrate(true);
                 clearCurrentObject();
                 return;
             }
@@ -331,7 +331,7 @@ public class ObjectTracker implements BalmClientModule {
     private boolean checkAndNarrateIfAllGroupsEmpty() {
         if (groups.isEmpty()) {
             clearCurrentObject();
-            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found"), true);
+            new Translation("minecraft_access.point_of_interest.not_found").narrate(true);
             return true;
         } else {
             return false;
@@ -353,7 +353,7 @@ public class ObjectTracker implements BalmClientModule {
                 .toList();
 
         if (entities.isEmpty() && blocks.isEmpty()) {
-            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found"), true);
+            new Translation("minecraft_access.point_of_interest.not_found").narrate(true);
             return;
         }
 
@@ -368,7 +368,7 @@ public class ObjectTracker implements BalmClientModule {
             currentObject = entities.getFirst();
         }
 
-        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest"), true);
+        new Translation("minecraft_access.point_of_interest.targeting_nearest").narrate(true);
         narrateCurrentObject(false);
     }
 
@@ -382,12 +382,12 @@ public class ObjectTracker implements BalmClientModule {
                 .toList();
 
         if (blocks.isEmpty()) {
-            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.block"), true);
+            new Translation("minecraft_access.point_of_interest.not_found.block").narrate(true);
             return;
         }
 
         currentObject = blocks.getFirst();
-        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest.block"), true);
+        new Translation("minecraft_access.point_of_interest.targeting_nearest.block").narrate(true);
         narrateCurrentObject(false);
     }
 
@@ -401,12 +401,12 @@ public class ObjectTracker implements BalmClientModule {
                 .toList();
 
         if (entities.isEmpty()) {
-            MainClass.narrate(I18n.get("minecraft_access.point_of_interest.not_found.entity"), true);
+            new Translation("minecraft_access.point_of_interest.not_found.entity").narrate(true);
             return;
         }
 
         currentObject = entities.getFirst();
-        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.targeting_nearest.entity"), true);
+        new Translation("minecraft_access.point_of_interest.targeting_nearest.entity").narrate(true);
         narrateCurrentObject(false);
     }
 

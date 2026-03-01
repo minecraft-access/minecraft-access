@@ -1,9 +1,9 @@
 package org.mcaccess.minecraftaccess.utils.position;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 /**
  * Functions about getting player entity's position, facing direction etc.
@@ -34,52 +34,28 @@ public final class PlayerPositionUtils {
         return NarrationUtils.narrateNumber(CLIENT.player.position().z) + 'z';
     }
 
-    /**
-     * @return -90 (head up) ~ 90 (head down)
-     */
-    public static int getVerticalFacingDirection() {
+    public static Translation getVerticalFacingDirectionInWords() {
         assert CLIENT.player != null;
-        return (int) CLIENT.player.getRotationVector().x;
-    }
-
-    /**
-     * Get the vertical direction in words.
-     *
-     * @return the vertical direction in words. null on error.
-     */
-    public static String getVerticalFacingDirectionInWords() {
-        int angle = getVerticalFacingDirection();
-        if (isBetween(angle, -90, -88)) {
-            return I18n.get("minecraft_access.direction.up");
-        } else if (isBetween(angle, -87, -3)) {
-            return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(-angle)) + ' ' + I18n.get("minecraft_access.direction.up");
-        } else if (isBetween(angle, -2, 2)) {
-            return I18n.get("minecraft_access.direction.straight");
-        } else if (isBetween(angle, 3, 87)) {
-            return I18n.get("minecraft_access.direction.degrees", NarrationUtils.narrateNumber(angle)) + ' ' + I18n.get("minecraft_access.direction.down");
-        } else if (isBetween(angle, 88, 90)) {
-            return I18n.get("minecraft_access.direction.down");
+        int angle = Math.round(CLIENT.player.getRotationVector().x);
+        if (Math.abs(angle) >= 88) {
+            return new Translation("minecraft_access.direction").variant(angle > 0 ? "up" : "down");
+        } else if (Math.abs(angle) >= 3) {
+            return new Translation("minecraft_access.direction.degrees")
+                    .variable("degrees").put(Math.abs(angle))
+                    .variable("direction").put(new Translation("minecraft_access.direction").variant(angle > 0 ? "up" : "down"));
         } else {
-            return null;
+            return new Translation("minecraft_access.direction").variant("straight");
         }
     }
 
-    public static boolean isBetween(int x, int lower, int upper) {
-        return lower <= x && x <= upper;
-    }
-
-    public static int getHorizontalFacingDirectionInDegrees() {
-        assert CLIENT.player != null;
-        int angle = (int) CLIENT.player.getRotationVector().y;
-        return angle % 360;
-    }
-
     public static Orientation getHorizontalFacing() {
-        int angle = getHorizontalFacingDirectionInDegrees();
-        return Orientation.ofHorizontal(angle);
+        assert CLIENT.player != null;
+        return Orientation.ofHorizontal((int) CLIENT.player.getRotationVector().y % 360);
     }
 
-    public static String getHorizontalFacingDirectionInWords() {
-        return I18n.get("minecraft_access.direction." + getHorizontalFacing());
+    public static Translation.Unmodifiable getHorizontalFacingDirectionInWords() {
+        return new Translation("minecraft_access.direction")
+                .variant(getHorizontalFacing().toString())
+                .unmodifiableView();
     }
 }

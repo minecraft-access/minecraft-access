@@ -25,7 +25,6 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.SearchRecipeBookCategory;
 import net.minecraft.client.input.MouseButtonInfo;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -57,6 +56,7 @@ import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
@@ -264,7 +264,7 @@ public class InventoryControls implements BalmClientModule {
 
                     String narration = ((RecipeBookComponentAccessor) currentRecipeBookWidget).getFilterButton().getValue()
                             ? ((RecipeBookComponentAccessor) currentRecipeBookWidget).callGetRecipeFilterName().getString()
-                            : I18n.get("gui.recipebook.toggleRecipes.all");
+                            : new Translation.Vanilla("gui.recipebook.toggleRecipes.all").getString();
                     MainClass.narrate(narration, true);
 
                     return true;
@@ -276,15 +276,17 @@ public class InventoryControls implements BalmClientModule {
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
                 .handleScreenInput(event -> {
                     if (currentScreen.getMenu() instanceof AbstractFurnaceMenu furnace) {
-                        MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
-                                Math.round(furnace.getLitProgress() * 100),
-                                Math.round(furnace.getBurnProgress() * 100)), true);
+                        new Translation("minecraft_access.inventory_controls.fuel_status")
+                                .variable("fuel").put(Math.round(furnace.getLitProgress() * 100))
+                                .variable("progress").put(Math.round(furnace.getBurnProgress() * 100))
+                                .narrate(true);
                         return true;
                     } else if (currentScreen instanceof BrewingStandScreen brewingStand) {
                         BrewingStandMenu menu = brewingStand.getMenu();
-                        MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
-                                (menu.getFuel() * 100) / BrewingStandBlockEntity.FUEL_USES,
-                                (menu.getBrewingTicks() * 100) / PotionBrewing.BREWING_TIME_SECONDS * 20), true);
+                        new Translation("minecraft_access.inventory_controls.fuel_status")
+                                .variable("fuel").put((menu.getFuel() * 100) / BrewingStandBlockEntity.FUEL_USES)
+                                .variable("progress").put((menu.getBrewingTicks() * 100) / PotionBrewing.BREWING_TIME_SECONDS * 20)
+                                .narrate(true);
                         return true;
                     }
                     return false;
@@ -451,7 +453,9 @@ public class InventoryControls implements BalmClientModule {
 
         SlotItem slotItem = getGroupItemInDirection(focusDirection);
         if (slotItem == null) {
-            MainClass.narrate(I18n.get("minecraft_access.inventory_controls.no_slot_in_direction", I18n.get(focusDirection.getString())), true);
+            new Translation("minecraft_access.inventory_controls.no_slot_in_direction")
+                    .variable("direction").put(new Translation.Vanilla(focusDirection.getString()))
+                    .narrate(true);
             return;
         }
 
@@ -574,10 +578,12 @@ public class InventoryControls implements BalmClientModule {
 
         Slot slot = currentSlotItem.slot;
         if (slot == null) {
-            return Objects.requireNonNullElse(currentSlotItem.getNarratableText(), I18n.get("minecraft_access.inventory_controls.Unknown"));
+            return Objects.requireNonNullElse(currentSlotItem.getNarratableText(), new Translation("minecraft_access.inventory_controls.Unknown").getString());
         }
         if (!slot.hasItem()) {
-            return I18n.get("minecraft_access.inventory_controls.empty_slot", currentGroup.getSlotPrefix(slot));
+            return new Translation("minecraft_access.inventory_controls.empty_slot")
+                    .variable("prefix").put(currentGroup.getSlotPrefix(slot))
+                    .getString();
         }
 
         ItemStack itemStack = slot.getItem();
@@ -594,7 +600,7 @@ public class InventoryControls implements BalmClientModule {
 
         Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
                 .flatMap(jukeboxPlayable -> jukeboxPlayable.song().unwrapKey())
-                .ifPresent(discNumber -> toolTipString.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.identifier().getPath())));
+                .ifPresent(discNumber -> toolTipString.append(' ').append(new Translation.Vanilla("jukebox_song.minecraft." + discNumber.identifier().getPath()).getString()));
 
         // <slot row col prefix> <count> <name> <description>
         return "%s %s".formatted(info, toolTipString.toString());
@@ -629,9 +635,10 @@ public class InventoryControls implements BalmClientModule {
     private void selectGroup(boolean interrupt) {
         currentGroup = currentSlotsGroupList.get(currentGroupIndex);
         log.debug("Group(name:{}) {}/{} selected", currentGroup.getGroupName(), currentGroupIndex + 1, currentSlotsGroupList.size());
-        MainClass.narrate(I18n.get("minecraft_access.inventory_controls.group_selected",
-                currentGroup.isScrollable ? I18n.get("minecraft_access.inventory_controls.scrollable") : "",
-                currentGroup.getGroupName()), interrupt);
+        new Translation("minecraft_access.inventory_controls.group_selected")
+                .variable("scrollable").put(currentGroup.isScrollable ? new Translation("minecraft_access.inventory_controls.scrollable").getString() : "")
+                .variable("group").put(currentGroup.getGroupName())
+                .narrate(interrupt);
         focusSlotItem(currentGroup.getFirstGroupItem(), false);
     }
 

@@ -12,6 +12,7 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 /**
  * This feature narrates when the player xp level is increased or decreased.
@@ -35,9 +36,8 @@ public class XPIndicator implements BalmClientModule {
         if (!Config.getInstance().features.xpIndicatorEnabled || !Minecraft.getInstance().gameMode.hasExperience()) {
             return;
         }
-        MainClass.narrate(I18n.get(
-                previous < value ? "minecraft_access.xp_indicator.increased" : "minecraft_access.xp_indicator.decreased",
-                NarrationUtils.narrateNumber(value)
-        ), true);
+        new Translation("minecraft_access.xp_indicator")
+                .variant(value > previous ? "increased" : "decreased")
+                .variable("level").put(value);
     }
 }

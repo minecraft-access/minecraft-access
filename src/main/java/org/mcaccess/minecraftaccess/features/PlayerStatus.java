@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -13,7 +12,6 @@ import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -27,6 +25,7 @@ import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 /**
  * Adds a key bind to narrate the player's non potion related statuses.<br>
@@ -65,12 +64,12 @@ public class PlayerStatus implements BalmClientModule {
                     assert Minecraft.getInstance().player != null;
                     Collection<MobEffectInstance> effects = Minecraft.getInstance().player.getActiveEffects();
                     if (effects.isEmpty()) {
-                        MainClass.narrate(I18n.get("minecraft_access.effect_narration.no_effects"), true);
+                        new Translation("minecraft_access.effect_narration.no_effects").narrate(true);
                         return true;
                     }
-                    String narration = effects.stream().map(NarrationUtils::narrateEffect)
-                            .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection")));
-                    MainClass.narrate(narration, true);
+                    Translation.Delimited narration = new Translation.Delimited();
+                    effects.stream().map(NarrationUtils::narrateEffect).forEach(narration::put);
+                    narration.narrate(true);
                     return true;
                 })
                 .build();
@@ -108,7 +107,9 @@ public class PlayerStatus implements BalmClientModule {
                         level.playPlayerSound(value.ordinal() >= Status.WarningLevel.CRITICAL.ordinal()
                                 ? SoundEvents.ANVIL_PLACE
                                 : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.PLAYERS, 1.0f, 1.0f);
-                        MainClass.narrate(I18n.get("minecraft_access.player_status.warning", entry.getValue().message()), true);
+                        new Translation("minecraft_access.player_status.warning")
+                                .variable("message").put(entry.getValue().message())
+                                .narrate(true);
                     }
             );
         }
@@ -129,17 +130,14 @@ public class PlayerStatus implements BalmClientModule {
         if (statuses.isEmpty() && hasAltDown) {
             assert client.gameMode != null;
             if (client.gameMode.getPlayerMode().isSurvival()) {
-                MainClass.narrate(I18n.get("minecraft_access.player_status.no_conditional_status"), true);
+                new Translation("minecraft_access.player_status.no_conditional_status").narrate(true);
             } else {
                 MainClass.narrate(CoreAddon.GAME_MODE_STAT.message(), true);
             }
         } else {
-            MainClass.narrate(
-                    statuses.stream()
-                            .map(Status::message)
-                            .collect(Collectors.joining(I18n.get("minecraft_access.other.words_connection"))),
-                    true
-            );
+            Translation.Delimited narration = new Translation.Delimited();
+            statuses.stream().map(Status::message).forEach(narration::put);
+            narration.narrate(true);
         }
     }
 }

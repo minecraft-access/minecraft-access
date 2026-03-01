@@ -9,7 +9,6 @@ import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
@@ -18,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
 
@@ -41,7 +41,9 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_H))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    MainClass.narrate(I18n.get("minecraft_access.other.facing_direction", PlayerPositionUtils.getHorizontalFacingDirectionInWords()), true);
+                    new Translation("minecraft_access.other.facing_direction")
+                            .variable("direction").put(PlayerPositionUtils.getHorizontalFacingDirectionInWords())
+                            .narrate(true);
                     return true;
                 })
                 .build();
@@ -50,7 +52,9 @@ public class CameraControls implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_H, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
                 .handleWorldInput(event -> {
-                    MainClass.narrate(I18n.get("minecraft_access.other.facing_direction", PlayerPositionUtils.getVerticalFacingDirectionInWords()), true);
+                    new Translation("minecraft_access.other.facing_direction")
+                            .variable("direction").put(PlayerPositionUtils.getVerticalFacingDirectionInWords())
+                            .narrate(true);
                     return true;
                 })
                 .build();
@@ -243,11 +247,10 @@ public class CameraControls implements BalmClientModule {
             player.turn(horizontalAngleDelta, verticalAngleDelta);
         }
 
-        String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
         if (Config.getInstance().features.facingDirectionEnabled) {
             if (direction.isRotatingHorizontal) {
-                MainClass.narrate(horizontalDirection, true);
+                PlayerPositionUtils.getHorizontalFacingDirectionInWords().narrate(true);
             } else if (verticalDirection != null) {
                 MainClass.narrate(verticalDirection, true);
             }
@@ -272,7 +275,7 @@ public class CameraControls implements BalmClientModule {
 
         if (narrateChange && Config.getInstance().features.facingDirectionEnabled) {
             if (direction.in(Orientation.Layer.MIDDLE)) {
-                MainClass.narrate(PlayerPositionUtils.getHorizontalFacingDirectionInWords(), true);
+                PlayerPositionUtils.getHorizontalFacingDirectionInWords().narrate(true);
             } else {
                 MainClass.narrate(PlayerPositionUtils.getVerticalFacingDirectionInWords(), true);
             }
@@ -296,7 +299,7 @@ public class CameraControls implements BalmClientModule {
         if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || !Minecraft.getInstance().getCameraEntity().is(Minecraft.getInstance().player))) {
             return false;
         }
-        MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
+        new Translation("minecraft_access.other.camera_locked").narrate(true);
         return true;
     }
 }

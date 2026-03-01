@@ -1,31 +1,22 @@
 package org.mcaccess.minecraftaccess.addon.statuses;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.Status;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class Health implements Status {
     @Override
     public @NotNull String message() {
         assert Minecraft.getInstance().player != null;
-        if (Minecraft.getInstance().player.getAbsorptionAmount() > 0) {
-            return I18n.get(
-                    "minecraft_access.player_status.health_with_absorption",
-                    NarrationUtils.narrateNumber(Minecraft.getInstance().player.getHealth() / 2.0),
-                    NarrationUtils.narrateNumber(Minecraft.getInstance().player.getMaxHealth() / 2.0),
-                    NarrationUtils.narrateNumber(Minecraft.getInstance().player.getAbsorptionAmount() / 2.0)
-            );
-        } else {
-            return I18n.get(
-                    "minecraft_access.player_status.health",
-                    NarrationUtils.narrateNumber(Minecraft.getInstance().player.getHealth() / 2.0),
-                    NarrationUtils.narrateNumber(Minecraft.getInstance().player.getMaxHealth() / 2.0)
-            );
-        }
+        return new Translation("minecraft_access.player_status.health")
+                .variant("with_absorption", Minecraft.getInstance().player.getAbsorptionAmount() > 0)
+                .variable("health").put(Minecraft.getInstance().player.getHealth() / 2.0)
+                .variable("max").put(Minecraft.getInstance().player.getMaxHealth() / 2.0)
+                .variable("absorption").put(Minecraft.getInstance().player.getAbsorptionAmount() / 2.0)
+                .getString();
     }
 
     @Override
