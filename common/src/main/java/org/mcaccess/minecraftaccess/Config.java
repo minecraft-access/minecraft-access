@@ -95,6 +95,7 @@ public final class Config implements ConfigData {
 
     public static final class SpeechSettings {
         public float speechRate = 50;
+        public boolean speakHints = true;
 
         private SpeechSettings() {
         }
