@@ -78,7 +78,7 @@ public class PlayerStatus implements BalmClientModule {
         new ServerChangeDetector<Boolean>().levelEvent(
                 (client, player, level) -> player.isCrouching(),
                 (client, player, level, previous, value) -> {
-                    if (!value && player.isSprinting()) {
+                    if (!Config.getInstance().features.crouchAndSprintCues || !value && player.isSprinting()) {
                         return;
                     }
                     level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, value ? 0.5f : 0.9f);
@@ -86,7 +86,7 @@ public class PlayerStatus implements BalmClientModule {
         );
 
         new ServerChangeDetector<Boolean>().levelEvent(
-                (client, player, level) -> player.isSprinting() && !player.isCrouching(),
+                (client, player, level) -> Config.getInstance().features.crouchAndSprintCues && player.isSprinting() && !player.isCrouching(),
                 (client, player, level, previous, value) -> level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, value ? 2.5f : 0.9f)
         );
 
