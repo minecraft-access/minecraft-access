@@ -18,7 +18,7 @@ import org.mcaccess.minecraftaccess.Config;
 abstract class NarrationElementOutputMixin {
     @Inject(method = "add", at = @At("HEAD"), cancellable = true)
     private void removePositionAndUsageNarrations(NarratedElementType type, NarrationThunk<?> contents, CallbackInfo ci) {
-        if (Config.getInstance().speechSettings.speakHints) {
+        if (Config.getInstance().speechSettings.narrateHints) {
             return;
         }
 
