@@ -89,7 +89,7 @@ public class PlayerStatus implements BalmClientModule {
                 (client, player, level) -> player.isSprinting() && !player.isCrouching(),
                 (client, player, level, previous, value) -> {
                     if (Config.getInstance().features.crouchAndSprintCues) {
-                        level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, value ? 2.5f : 0.9f)
+                        level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, value ? 2.5f : 0.9f);
                     }
                 }
         );
