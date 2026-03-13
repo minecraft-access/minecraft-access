@@ -78,6 +78,7 @@ public final class Config implements ConfigData {
         public boolean timeIndicatorEnabled = true;
         public boolean xpIndicatorEnabled = true;
         public boolean facingDirectionEnabled = true;
+        public boolean crouchAndSprintCues = true;
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public PickedUpItemNarration pickedUpItemNarration = PickedUpItemNarration.WHEN_FISHING;
         public boolean narrateHeldItemsCountWhenChanged = true;
@@ -95,6 +96,7 @@ public final class Config implements ConfigData {
 
     public static final class SpeechSettings {
         public float speechRate = 50;
+        public boolean narrateHints = true;
 
         private SpeechSettings() {
         }
