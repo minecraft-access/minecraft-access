@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import lombok.extern.slf4j.Slf4j;
-import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.balm.client.platform.util.SessionLocal;
 import net.minecraft.client.Minecraft;
