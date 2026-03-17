@@ -25,7 +25,7 @@ public class MouseSimulation implements BalmClientModule {
     private static ManagedKeyMapping keyMiddleMouseButton;
     private static ManagedKeyMapping keyRightMouseButton;
 
-    private Config.MouseSimulation config = Config.getInstance().mouseSimulation;
+    private final Config.MouseSimulation config = Config.getInstance().mouseSimulation;
     private long lastScrollUpTime = 0;
     private long lastScrollDownTime = 0;
 

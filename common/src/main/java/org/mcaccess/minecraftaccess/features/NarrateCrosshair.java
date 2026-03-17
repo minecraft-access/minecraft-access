@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.balm.client.platform.util.SessionLocal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -36,9 +37,9 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  */
 @Slf4j
 public class NarrateCrosshair implements BalmClientModule {
-    private @Nullable Object previousTarget = null;
-    private @Nullable String previousNarration = null;
-    private Vec3 previousSoundPos = null;
+    private final SessionLocal<@Nullable Object> previousTarget = new SessionLocal<>(() -> null);
+    private final SessionLocal<@Nullable String> previousNarration = new SessionLocal<>(() -> null);
+    private final SessionLocal<@Nullable Vec3> previousSoundPos = new SessionLocal<>(() -> null);
     private final Interval repetitionInterval = Interval.defaultDelay();
     private static final Config.NarrateCrosshair CONFIG = Config.getInstance().narrateCrosshair;
 
@@ -50,11 +51,6 @@ public class NarrateCrosshair implements BalmClientModule {
     @Override
     public void initialize() {
         ClientPlayingTick.AFTER.register(this::tick);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
-            previousTarget = null;
-            previousNarration = null;
-            previousSoundPos = null;
-        });
     }
 
     private void tick(Minecraft client, Player player, Level level) {
@@ -65,8 +61,8 @@ public class NarrateCrosshair implements BalmClientModule {
         WorldNarrator narrator = MainClass.registry(WorldNarrator.class).get(CONFIG.narrator);
         HitResult rayCast = narrator.rayCast();
         if (rayCast == null || rayCast.getType() == HitResult.Type.MISS) {
-            previousTarget = null;
-            previousNarration = null;
+            previousTarget.value = null;
+            previousNarration.value = null;
             return;
         }
 
@@ -77,13 +73,13 @@ public class NarrateCrosshair implements BalmClientModule {
             default -> rayCast;
         };
 
-        if (Objects.equals(target, previousTarget) && Objects.equals(narration, previousNarration) && !repetitionInterval.isReady()) {
-            previousTarget = target;
-            previousNarration = narration;
+        if (Objects.equals(target, previousTarget.value) && Objects.equals(narration, previousNarration.value) && !repetitionInterval.isReady()) {
+            previousTarget.value = target;
+            previousNarration.value = narration;
             return;
         }
-        previousTarget = target;
-        previousNarration = narration;
+        previousTarget.value = target;
+        previousNarration.value = narration;
 
         if (narration == null) {
             return;
@@ -96,13 +92,13 @@ public class NarrateCrosshair implements BalmClientModule {
                 case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();
                 default -> rayCast.getLocation();
             };
-            if (!Objects.equals(targetPosition, previousSoundPos)) {
+            if (!Objects.equals(targetPosition, previousSoundPos.value)) {
                 playRelativePositionSoundCue(targetPosition, rayCastDistance,
                         SoundEvents.NOTE_BLOCK_HARP,
                         CONFIG.relativePositionSoundCue.minSoundVolume,
                         CONFIG.relativePositionSoundCue.maxSoundVolume);
             }
-            previousSoundPos = targetPosition;
+            previousSoundPos.value = targetPosition;
         }
 
         if (!(rayCast instanceof BlockHitResult || rayCast instanceof EntityHitResult)) {
