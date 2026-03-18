@@ -441,7 +441,7 @@
     "text.autoconfig.minecraft-access.option.poi.marking": "Marking",
     "text.autoconfig.minecraft-access.option.poi.marking.suppressOtherWhenEnabled": "Suppress other POI while marking",
     "text.autoconfig.minecraft-access.option.poi.narrateDistance": "Narrate relative distance to target",
-    "text.autoconfig.minecraft-access.option.speechSettings.narra  teHints": "Narrate hints",
+    "text.autoconfig.minecraft-access.option.speechSettings.narrateHints": "Narrate hints",
     "text.autoconfig.minecraft-access.option.speechSettings.speechRate": "Speech rate (MacOS)",
     "text.autoconfig.minecraft-access.option.use12HourTimeFormat": "Use 12-hour time format",
     "text.autoconfig.minecraft-access.title": "Minecraft Access Settings"
