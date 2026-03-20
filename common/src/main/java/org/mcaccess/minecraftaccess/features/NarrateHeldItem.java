@@ -4,8 +4,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.balm.client.platform.util.SessionLocal;
 import net.blay09.mods.kuma.api.InputBinding;
 import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
@@ -26,9 +26,9 @@ import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
 public class NarrateHeldItem implements BalmClientModule {
-    private String previousItemName = null;
-    private Integer previousItemCount = null;
-    private Integer previousSelectedSlot = null;
+    private final SessionLocal<String> previousItemName = new SessionLocal<>(() -> null);
+    private final SessionLocal<Integer> previousItemCount = new SessionLocal<>(() -> null);
+    private final SessionLocal<Integer> previousSelectedSlot = new SessionLocal<>(() -> null);
 
     @Override
     public @NotNull Identifier getId() {
@@ -38,11 +38,6 @@ public class NarrateHeldItem implements BalmClientModule {
     @Override
     public void initialize() {
         ClientPlayingTick.AFTER.register(this::tick);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
-            previousItemName = null;
-            previousItemCount = null;
-            previousSelectedSlot = null;
-        });
 
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_held_item/mainhand"))
                 .withDefault(InputBinding.key(InputConstants.KEY_GRAVE))
@@ -73,9 +68,9 @@ public class NarrateHeldItem implements BalmClientModule {
 
         String itemNameWithCount = (currentItemStack.getCount() != 1 && !currentItemStack.isEmpty()) ? itemCount + " " + baseItemName : baseItemName;
 
-        boolean nameChanged = !Objects.equals(previousItemName, baseItemName);
-        boolean countChanged = !Objects.equals(itemCount, previousItemCount);
-        boolean slotChanged = !Objects.equals(selectedSlot, previousSelectedSlot);
+        boolean nameChanged = !Objects.equals(baseItemName, previousItemName.value);
+        boolean countChanged = !Objects.equals(itemCount, previousItemCount.value);
+        boolean slotChanged = !Objects.equals(selectedSlot, previousSelectedSlot.value);
 
         if (nameChanged || slotChanged) {
             MainClass.narrate(I18n.get("minecraft_access.other.selected", itemNameWithCount), true);
@@ -83,9 +78,9 @@ public class NarrateHeldItem implements BalmClientModule {
             MainClass.narrate(String.valueOf(itemCount), true);
         }
 
-        previousItemName = baseItemName;
-        previousItemCount = itemCount;
-        previousSelectedSlot = selectedSlot;
+        previousItemName.value = baseItemName;
+        previousItemCount.value = itemCount;
+        previousSelectedSlot.value = selectedSlot;
     }
 
     private String getItemName(ItemStack itemStack) {

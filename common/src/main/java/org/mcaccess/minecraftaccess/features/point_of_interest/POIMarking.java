@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.Getter;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.balm.client.platform.util.SessionLocal;
 import net.blay09.mods.kuma.api.InputBinding;
 import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
@@ -18,11 +19,10 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
-import org.mcaccess.minecraftaccess.utils.events.ServerLocal;
 
 public class POIMarking implements BalmClientModule {
     @Getter
-    private final ServerLocal<Object> markedObject = new ServerLocal<>(() -> null);
+    private final SessionLocal<Object> markedObject = new SessionLocal<>(() -> null);
 
     @Override
     public @NotNull Identifier getId() {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
+import net.blay09.mods.balm.client.platform.util.SessionLocal;
 import net.blay09.mods.kuma.api.InputBinding;
 import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
@@ -25,10 +26,9 @@ import org.mcaccess.minecraftaccess.mixin.BossHealthOverlayAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.events.ChangeDetector;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
-import org.mcaccess.minecraftaccess.utils.events.ServerLocal;
 
 public class HUDStatus implements BalmClientModule {
-    private final ServerLocal<Integer> bossIndex = new ServerLocal<>(() -> 0);
+    private final SessionLocal<Integer> bossIndex = new SessionLocal<>(() -> 0);
 
     @Override
     public @NotNull Identifier getId() {
