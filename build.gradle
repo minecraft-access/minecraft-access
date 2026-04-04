@@ -5,7 +5,7 @@ plugins {
     id 'java'
     alias libs.plugins.mavenPublish
     id 'net.fabricmc.fabric-loom'
-// id 'net.neoforged.gradle.userdev'
+    //id 'net.neoforged.gradle.userdev'
     alias libs.plugins.shadow
 }
 
@@ -63,15 +63,23 @@ dependencies {
     compileOnly libs.fabricLoader
     compileOnly libs.neoForge
 
-    compileOnly libs.lombok
-    annotationProcessor libs.lombok
     compileOnly libs.modMenu
-    implementation libs.tolk
     compileOnly libs.jadeFabric
-    implementation libs.balmCommon
+    compileOnly libs.balmCommon
     compileOnly libs.balmFabric
     compileOnly libs.balmNeoForge
-    implementation libs.clothConfigCommon
+    compileOnly libs.clothConfigCommon
+    implementation libs.tolk
+
+    include libs.fabricApi
+    include libs.balmFabric
+    include libs.clothConfigFabric
+
+    //jarJar libs.balmNeoForge
+    //jarJar libs.clothConfigNeoForge
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
 
     testImplementation libs.junitJupiter
     testImplementation libs.junitJupiterParams
