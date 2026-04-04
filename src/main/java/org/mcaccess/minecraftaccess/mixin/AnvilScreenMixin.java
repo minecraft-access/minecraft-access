@@ -1,7 +1,7 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,8 +22,8 @@ abstract class AnvilScreenMixin {
      * so there is a repeat check before narrating.
      * Let the original logic build the text, we don't want to repeat that.
      */
-    @Inject(method = "renderLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
-    private void narrateCost(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
+    @Inject(method = "renderLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(IIIII)V"))
+    private void narrateCost(GuiGraphicsExtractor context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
         if (text instanceof Component component) {
             String textString = component.getString();
             if (!textString.equals(previousText)) {
@@ -34,7 +34,7 @@ abstract class AnvilScreenMixin {
     }
 
     @Inject(method = "renderLabels", at = @At("RETURN"))
-    private void resetWhenCostDisappears(GuiGraphics context, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 2) int cost) {
+    private void resetWhenCostDisappears(GuiGraphicsExtractor context, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 2) int cost) {
         if (cost <= 0) {
             previousText = null;
         }

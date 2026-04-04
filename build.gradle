@@ -1,7 +1,12 @@
 plugins {
-    alias(libs.plugins.architecturyPlugin)
-    id 'dev.architectury.loom' apply false
-    alias(libs.plugins.gitVersion)
+    id 'checkstyle'
+    alias libs.plugins.gitVersion
+    id 'idea'
+    id 'java'
+    alias libs.plugins.loom
+    alias libs.plugins.mavenPublish
+//    alias libs.plugins.neogradle
+    alias libs.plugins.shadow
 }
 
 def git = versionDetails()
@@ -18,67 +23,267 @@ if (System.getenv('GITHUB_ACTIONS') == 'true') {
     version = "${tag}${tag.contains('-') ? '.' : '-'}SNAPSHOT"
 }
 
-architectury {
-    minecraft = libs.minecraft.get().version
+group = 'org.mcaccess'
+base.archivesName = 'minecraft-access'
+
+loom {
+    log4jConfigs.from(file('./log4j.xml'))
+    runs {
+//        fabric {
+//            inherit client
+//            runDir = './run/fabric/'
+//        }
+        remove client
+        remove server
+    }
+    runConfigs.configureEach {
+        vmArgs '-ea'
+    }
 }
 
-subprojects {
-    apply plugin: 'dev.architectury.loom'
-    version = "${rootProject.version}+${project.name}"
+//runs {
+//    neoforge {
+//        runType 'client'
+//        workingDirectory file('./run/neoforge/')
+//    }
+//    configureEach {
+//        jvmArguments '-ea'
+//    }
+//}
 
-    loom {
-        silentMojangMappingsLicense()
-        runs {
-            remove server
-        }
+idea {
+    module {
+        excludeDirs += file('./run/')
+        excludeDirs += file('./logs/')
     }
+}
 
-    idea {
-        module {
-            excludeDirs += file('./run/')
-        }
-    }
-
-    dependencies {
-        minecraft libs.minecraft
-        mappings loom.layered() {
-            officialMojangMappings()
-            parchment variantOf(libs.parchment) {
-                artifactType('zip')
+repositories {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Balm'
+                url = 'https://maven.twelveiterations.com/repository/maven-public/'
             }
         }
+        filter {
+            includeGroup 'net.blay09.mods'
+        }
+    }
 
-        compileOnly libs.lombok
-        annotationProcessor libs.lombok
-        testCompileOnly libs.lombok
-        testAnnotationProcessor libs.lombok
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Cloth Config'
+                url = 'https://maven.shedaniel.me/'
+            }
+        }
+        filter {
+            includeGroup 'me.shedaniel.cloth'
+        }
+    }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Fabric'
+                url = 'https://maven.fabricmc.net/'
+            }
+        }
+        filter {
+            includeGroup 'net.fabricmc'
+        }
+    }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Mod Menu'
+                url = 'https://maven.terraformersmc.com/'
+            }
+        }
+        filter {
+            includeGroup 'com.terraformersmc'
+        }
+    }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Neoforged'
+                url = 'https://maven.neoforged.net/releases/'
+            }
+        }
+        filter {
+            includeGroup 'net.neoforged'
+            includeGroup 'net.neoforged.accesstransformers'
+            includeGroup 'net.neoforged.fancymodloader'
+        }
+    }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Tolk'
+                url = 'https://repo.granny.dev/releases/'
+            }
+        }
+        filter {
+            includeGroup 'com.davykager.tolk'
+        }
+    }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Modrinth'
+                url = 'https://api.modrinth.com/maven'
+            }
+        }
+        filter {
+            includeGroup 'maven.modrinth'
+        }
+    }
+
+    mavenCentral()
+}
+
+dependencies {
+    minecraft libs.minecraft
+    compileOnly libs.fabricLoader
+    compileOnly libs.neoForge
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+    compileOnly libs.modMenu
+    implementation libs.tolk
+    compileOnly libs.jadeFabric
+    implementation libs.balmCommon
+    compileOnly libs.balmFabric
+    compileOnly libs.balmNeoForge
+    implementation libs.clothConfigCommon
+
+    testImplementation libs.junitJupiter
+    testImplementation libs.junitJupiterParams
+    testRuntimeOnly libs.junitPlatformLauncher
+    testImplementation libs.assertjCore
+    testImplementation libs.mockitoCore
+    testImplementation libs.mockitoJunitJupiter
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+
+    checkstyle libs.checkstyle
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.release = 25
+    options.compilerArgs << '-proc:full'
+}
+
+java {
+    withSourcesJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
-allprojects {
-    apply plugin: 'java'
-    apply plugin: libs.plugins.architecturyPlugin.get().pluginId
-    apply plugin: 'maven-publish'
-    apply plugin: 'checkstyle'
+checkstyle {
+    toolVersion = libs.checkstyle.get().version
+}
 
-    base.archivesName = 'minecraft-access'
+test {
+    useJUnitPlatform()
+    jvmArgs('-XX:+EnableDynamicAgentLoading')
+}
 
-    group = 'org.mcaccess'
-
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = 'UTF-8'
-        options.release = 21
+javadoc {
+    include 'org/mcaccess/minecraftaccess/api/**'
+    title = "Minecraft Access ${rootProject.version} API"
+    options {
+        tags(
+                'apiNote:a:API Note:',
+                'implSpec:a:Implementation Requirements:',
+                'implNote:a:Implementation Note:',
+        )
+        keyWords true
+        linkSource true
+        links(
+                'https://javadoc.io/doc/org.jetbrains/annotations/latest/',
+        )
     }
+}
 
-    java {
-        withSourcesJar()
-    }
-
-    dependencies {
-        checkstyle libs.checkstyle
-    }
-
-    checkstyle {
-        toolVersion = libs.checkstyle.get().version
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+    coordinates project.group, base.archivesName.get(), rootProject.version
+    pom {
+        name = 'Minecraft Access'
+        description = 'A mod for minecraft java (fabric/neoforge) that specifically helps visually impaired players play Minecraft.'
+        url = 'https://mcaccess.org/'
+        inceptionYear = '2022'
+        licenses {
+            license {
+                name = 'GPL-3.0-only'
+                url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+            }
+        }
+        organization {
+            name = 'Minecraft Access'
+            url = 'https://github.com/minecraft-access'
+        }
+        developers {
+            developer {
+                id = 'khanshoaib3'
+                name = 'Shoaib'
+                url = 'https://github.com/khanshoaib3'
+                roles = [
+                        'Owner',
+                ]
+            }
+            developer {
+                id = 'TheSuperGamer20578'
+                name = 'TheSuperGamer20578'
+                email = 'me@sgme.dev'
+                url = 'https://github.com/TheSuperGamer20578'
+                timezone = 'Australia/Sydney'
+                roles = [
+                        'Maintainer',
+                ]
+            }
+            developer {
+                id = 'BrailleBennett'
+                name = 'BrailleBennett'
+                url = 'https://github.com/BrailleBennett'
+            }
+        }
+        contributors {
+            contributor {
+                name = 'Boholder'
+                url = 'https://github.com/boholder'
+            }
+            contributor {
+                name = 'Molitvan'
+                url = 'https://github.com/Molitvan'
+            }
+            contributor {
+                name = 'emassey0135'
+                url = 'https://github.com/emassey0135'
+            }
+        }
+        issueManagement {
+            system = 'GitHub'
+            url = 'https://github.com/minecraft-access/minecraft-access/issues'
+        }
+        ciManagement {
+            system = 'GitHub Actions'
+            url = 'https://github.com/minecraft-access/minecraft-access/actions'
+        }
+        scm {
+            connection = 'scm:git:https://github.com/minecraft-access/minecraft-access'
+            developerConnection = 'scm:git:git@github.com:minecraft-access/minecraft-access'
+            url = 'https://github.com/minecraft-access/minecraft-access'
+        }
     }
 }

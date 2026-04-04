@@ -20,7 +20,7 @@ public class TimeIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        new ServerChangeDetector<Times>().levelEvent((client, player, level) -> Times.of(level.getDayTime()), this::onChange);
+        new ServerChangeDetector<Times>().levelEvent((client, player, level) -> Times.of(level.getGameTime()), this::onChange);
     }
 
     private void onChange(Minecraft client, Player player, Level level, Times previous, Times time) {

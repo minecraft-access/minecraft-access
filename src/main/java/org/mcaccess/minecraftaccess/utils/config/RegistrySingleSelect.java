@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
@@ -78,9 +78,9 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void render(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
             doneButton.active = selectionList.getSelected() != null;
-            super.render(guiGraphics, mouseX, mouseY, partialTick);
+            super.render(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
         private final class SelectionList extends ObjectSelectionList<SelectionList.RegistryEntry> {
@@ -109,8 +109,8 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
                 }
 
                 @Override
-                public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-                    guiGraphics.drawString(minecraft.font, getNarration(), getContentX() + 5, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
+                public void renderContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+                    GuiGraphicsExtractor.drawString(minecraft.font, getNarration(), getContentX() + 5, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
                 }
 
                 @Override
