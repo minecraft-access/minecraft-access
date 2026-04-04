@@ -146,17 +146,17 @@ mavenPublishing {
         developers {
             developer {
                 id = 'khanshoaib3'
-                name = 'Shoaib'
+                name = 'Mohammad Shoaib Khan'
                 url = 'https://github.com/khanshoaib3'
                 roles = [
                         'Owner',
                 ]
             }
             developer {
-                id = 'TheSuperGamer20578'
-                name = 'TheSuperGamer20578'
+                id = 'sgmedev'
+                name = 'Joel Hooimeyer'
                 email = 'me@sgme.dev'
-                url = 'https://github.com/TheSuperGamer20578'
+                url = 'https://github.com/sgmedev'
                 timezone = 'Australia/Sydney'
                 roles = [
                         'Maintainer',
@@ -164,8 +164,9 @@ mavenPublishing {
             }
             developer {
                 id = 'BrailleBennett'
-                name = 'BrailleBennett'
+                name = 'Braille Bennett'
                 url = 'https://github.com/BrailleBennett'
+                timezone = 'America/Chicago'
             }
         }
         contributors {
@@ -174,7 +175,7 @@ mavenPublishing {
                 url = 'https://github.com/boholder'
             }
             contributor {
-                name = 'Molitvan'
+                name = 'Vjeran Bezik'
                 url = 'https://github.com/Molitvan'
             }
             contributor {
