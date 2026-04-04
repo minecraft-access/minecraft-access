@@ -5,46 +5,27 @@ pluginManagement {
         exclusiveContent {
             forRepository {
                 maven {
-                    name = 'Architectury'
-                    url = 'https://maven.architectury.dev/'
+                    name = 'Fabric'
+                    url = 'https://maven.fabricmc.net/'
                 }
             }
             filter {
-                includeGroup 'dev.architectury'
-                includeGroup 'dev.architectury.loom'
-                includeGroup 'architectury-plugin'
-                includeGroup 'com.mojang'
+                includeGroupAndSubgroups 'net.fabricmc'
             }
         }
 
         exclusiveContent {
             forRepository {
                 maven {
-                    name = 'Fabric'
-                    url = 'https://maven.fabricmc.net/'
+                    name = 'Neoforged'
+                    url = 'https://maven.neoforged.net/releases/'
                 }
             }
             filter {
-                includeGroup 'net.fabricmc'
-                includeGroup 'net.fabricmc.unpick'
-                includeGroup 'net.fabricmc.fabric-loom'
+                includeGroupAndSubgroups 'net.neoforged'
+                includeGroup 'de.oceanlabs.mcp'
             }
         }
-
-//        exclusiveContent {
-//            forRepository {
-        maven {
-            name = 'Neoforged'
-            url = 'https://maven.neoforged.net/releases/'
-        }
-//            }
-//            filter {
-//                includeGroup 'net.neoforged'
-//                includeGroup 'net.neoforged.gradle.userdev'
-//                includeGroup 'net.minecraftforge'
-//                includeGroup 'de.oceanlabs.mcp'
-//            }
-//        }
 
         gradlePluginPortal()
     }
@@ -52,11 +33,9 @@ pluginManagement {
 
 plugins {
     id 'com.gradle.develocity' version '4.4.0'
-    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply false
+    id 'net.fabricmc.fabric-loom-repositories' version '1.15-SNAPSHOT'
     id 'net.neoforged.gradle.userdev' version '7.1.21'
 }
-
-plugins.apply(net.fabricmc.loom.LoomRepositoryPlugin)
 
 develocity {
     buildScan {
@@ -124,9 +103,7 @@ dependencyResolutionManagement {
                 }
             }
             filter {
-                includeGroup 'net.neoforged'
-                includeGroup 'net.neoforged.accesstransformers'
-                includeGroup 'net.neoforged.fancymodloader'
+                includeGroupAndSubgroups 'net.neoforged'
             }
         }
 
