@@ -38,7 +38,5 @@ checkstyle = "com.puppycrawl.tools:checkstyle:13.4.0"
 
 [plugins]
 gitVersion = { id = "com.palantir.git-version", version = "5.0.0" }
-loom = { id = "net.fabricmc.fabric-loom", version = "1.15-SNAPSHOT" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
-neogradle = { id = "net.neoforged.gradle.userdev", version = "7.1.21" }
 shadow = { id = "com.gradleup.shadow", version = "9.4.1" }

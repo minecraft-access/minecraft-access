@@ -33,10 +33,10 @@ pluginManagement {
 
 //        exclusiveContent {
 //            forRepository {
-                maven {
-                    name = 'Neoforged'
-                    url = 'https://maven.neoforged.net/releases/'
-                }
+        maven {
+            name = 'Neoforged'
+            url = 'https://maven.neoforged.net/releases/'
+        }
 //            }
 //            filter {
 //                includeGroup 'net.neoforged'
@@ -52,7 +52,11 @@ pluginManagement {
 
 plugins {
     id 'com.gradle.develocity' version '4.4.0'
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply false
+    id 'net.neoforged.gradle.userdev' version '7.1.21'
 }
+
+plugins.apply(net.fabricmc.loom.LoomRepositoryPlugin)
 
 develocity {
     buildScan {
@@ -61,7 +65,7 @@ develocity {
 }
 
 dependencyResolutionManagement {
-//    repositoriesMode = RepositoriesMode.PREFER_SETTINGS
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
 
     repositories {
         exclusiveContent {

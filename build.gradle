@@ -3,9 +3,9 @@ plugins {
     alias libs.plugins.gitVersion
     id 'idea'
     id 'java'
-    alias libs.plugins.loom
     alias libs.plugins.mavenPublish
-//    alias libs.plugins.neogradle
+    id 'net.fabricmc.fabric-loom'
+// id 'net.neoforged.gradle.userdev'
     alias libs.plugins.shadow
 }
 
@@ -56,96 +56,6 @@ idea {
         excludeDirs += file('./run/')
         excludeDirs += file('./logs/')
     }
-}
-
-repositories {
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Balm'
-                url = 'https://maven.twelveiterations.com/repository/maven-public/'
-            }
-        }
-        filter {
-            includeGroup 'net.blay09.mods'
-        }
-    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Cloth Config'
-                url = 'https://maven.shedaniel.me/'
-            }
-        }
-        filter {
-            includeGroup 'me.shedaniel.cloth'
-        }
-    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Fabric'
-                url = 'https://maven.fabricmc.net/'
-            }
-        }
-        filter {
-            includeGroup 'net.fabricmc'
-        }
-    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Mod Menu'
-                url = 'https://maven.terraformersmc.com/'
-            }
-        }
-        filter {
-            includeGroup 'com.terraformersmc'
-        }
-    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Neoforged'
-                url = 'https://maven.neoforged.net/releases/'
-            }
-        }
-        filter {
-            includeGroup 'net.neoforged'
-            includeGroup 'net.neoforged.accesstransformers'
-            includeGroup 'net.neoforged.fancymodloader'
-        }
-    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Tolk'
-                url = 'https://repo.granny.dev/releases/'
-            }
-        }
-        filter {
-            includeGroup 'com.davykager.tolk'
-        }
-    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Modrinth'
-                url = 'https://api.modrinth.com/maven'
-            }
-        }
-        filter {
-            includeGroup 'maven.modrinth'
-        }
-    }
-
-    mavenCentral()
 }
 
 dependencies {
