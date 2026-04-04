@@ -5,7 +5,7 @@ plugins {
     id 'java'
     alias libs.plugins.mavenPublish
     id 'net.fabricmc.fabric-loom'
-    //id 'net.neoforged.gradle.userdev'
+    //id 'net.neoforged.moddev'
     alias libs.plugins.shadow
 }
 
@@ -29,10 +29,10 @@ base.archivesName = 'minecraft-access'
 loom {
     log4jConfigs.from(file('./log4j.xml'))
     runs {
-//        fabric {
-//            inherit client
-//            runDir = './run/fabric/'
-//        }
+        fabric {
+            inherit client
+            runDir = './run/fabric/'
+        }
         remove client
         remove server
     }
@@ -41,15 +41,18 @@ loom {
     }
 }
 
-//runs {
-//    neoforge {
-//        runType 'client'
-//        workingDirectory file('./run/neoforge/')
+//neoForge {
+//        version = libs.neoForge.get().version
+//
+//        runs {
+//            neoClient {
+//                client()
+//                gameDirectory = project.file('./run/neoforge')
+//                jvmArguments = ["-ea"]
+//                ideName = "Run NeoForge"
+//            }
+//        }
 //    }
-//    configureEach {
-//        jvmArguments '-ea'
-//    }
-//}
 
 idea {
     module {
