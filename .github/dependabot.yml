@@ -33,5 +33,5 @@ updates:
     ignore:
       - dependency-name: "maven.modrinth:jade"
       - dependency-name: "net.neoforged.fancymodloader:loader"
-        versions: [ "47.x" ]
+        versions: [ ">= 47.0, < 48.0" ]
     multi-ecosystem-group: dependencies
