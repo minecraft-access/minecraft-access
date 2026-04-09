@@ -23,7 +23,7 @@ versionRange = "[${neoforge_version},)"
 [[dependencies.minecraft_access]]
 modId = "minecraft"
 type = "required"
-versionRange = "${minecraft_version}"
+versionRange = "${neoforge_minecraft_version_range}"
 
 [[dependencies.minecraft_access]]
 modId = "balm"

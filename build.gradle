@@ -109,6 +109,41 @@ compileJava {
     options.release = 25
 }
 
+processResources {
+    def modVersion = project.version.toString()
+    inputs.property 'version', modVersion
+
+    def minecraftVersion = libs.minecraft.get().version
+    def minecraftVersionMatch = minecraftVersion =~ /^(\d+)\.(\d+)/
+    assert minecraftVersionMatch.find(): "Unsupported Minecraft version format: ${minecraftVersion}"
+
+    def minecraftMajorMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2)}"
+    def nextMinecraftMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2).toInteger() + 1}"
+
+    filesMatching('fabric.mod.json') {
+        expand(
+                version: modVersion,
+                fabric_loader_version: libs.fabricLoader.get().version,
+                fabric_api_version: libs.fabricApi.get().version,
+                balm_version: libs.balmFabric.get().version.split('\\+')[0],
+                jade_fabric_version: libs.jadeFabric.get().version,
+                cloth_config_version: libs.clothConfigFabric.get().version,
+                fabric_minecraft_version_range: "~${minecraftMajorMinor}"
+        )
+    }
+
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand(
+                version: modVersion,
+                neoforge_version: libs.neoForge.get().version,
+                balm_version: libs.balmNeoForge.get().version.split('\\+')[0],
+                jade_neoforge_version: libs.jadeNeoForge.get().version,
+                cloth_config_version: libs.clothConfigNeoForge.get().version,
+                neoforge_minecraft_version_range: "[${minecraftMajorMinor}-,${nextMinecraftMinor})"
+        )
+    }
+}
+
 java {
     withSourcesJar()
     toolchain {
