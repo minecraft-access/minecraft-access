@@ -2,8 +2,8 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
@@ -50,11 +50,11 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  * 2. Alt key + Locking Key = Unlocks from the currently locked entity or block<br>
  */
 public class LockingHandler implements BalmClientModule {
-    private Config.POI.Locking config = Config.getInstance().poi.locking;
+    private final Config.POI.Locking config = Config.getInstance().poi.locking;
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlockPos = null;
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
-    private Stream<Property.Value<?>> entriesOfLockedOnBlock;
+    private Set<Property.Value<?>> entriesOfLockedOnBlock;
     private boolean aimAssistActive = false;
     // 0 = can't shoot, 1 = can shoot
     private int lastAimAssistCue = -1;
@@ -144,8 +144,7 @@ public class LockingHandler implements BalmClientModule {
             // Entries are different properties of blocks when they're in different states,
             // for example, opened chest and closed chest are different states of chest block,
             // they are different entries when invoking getEntries().
-            Stream<Property.Value<?>> entries = blockState.getValues();
-            boolean entriesOfLockedBlockNotChanged = entries.values() == entriesOfLockedOnBlock.values();
+            boolean entriesOfLockedBlockNotChanged = blockState.getValues().collect(Collectors.toSet()).equals(entriesOfLockedOnBlock);
 
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears) {
                 assert client.player != null;
@@ -321,7 +320,7 @@ public class LockingHandler implements BalmClientModule {
     private void lockOnBlock(BlockPos position) {
         assert Minecraft.getInstance().level != null;
         BlockState blockState = Minecraft.getInstance().level.getBlockState(position);
-        entriesOfLockedOnBlock = blockState.getValues();
+        entriesOfLockedOnBlock = blockState.getValues().collect(Collectors.toSet());
 
         Vec3 absolutePosition = switch (blockState.getBlock()) {
             case DoorBlock ignored -> NonCubeBlockAbsolutePositions.getDoorPos(position.getCenter());
