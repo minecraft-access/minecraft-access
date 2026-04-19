@@ -1,10 +1,9 @@
 package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -21,23 +20,10 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getTrapDoorPos(Vec3 blockPos) {
-        assert Minecraft.getInstance().level != null;
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
-
-        String half = "";
-        String facing = "";
-        String open = "";
-
-        for (Map.Entry<Property<?>, Comparable<?>> i : entries) {
-            if (i.getKey().getName().equalsIgnoreCase("half")) {
-                half = i.getValue().toString();
-            } else if (i.getKey().getName().equalsIgnoreCase("facing")) {
-                facing = i.getValue().toString();
-            } else if (i.getKey().getName().equalsIgnoreCase("open")) {
-                open = i.getValue().toString();
-            }
-
-        }
+        Map<String, String> props = getProperties(blockPos);
+        String half = props.getOrDefault("half", "");
+        String facing = props.getOrDefault("facing", "");
+        String open = props.getOrDefault("open", "");
 
         double x = blockPos.x();
         double y = blockPos.y();
@@ -65,21 +51,9 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getLeverPos(Vec3 blockPos) {
-        assert Minecraft.getInstance().level != null;
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
-
-        String face = "";
-        String facing = "";
-
-        for (Map.Entry<Property<?>, Comparable<?>> i : entries) {
-            if (i.getKey().getName().equalsIgnoreCase("face")) {
-                face = i.getValue().toString();
-
-            } else if (i.getKey().getName().equalsIgnoreCase("facing")) {
-                facing = i.getValue().toString();
-            }
-
-        }
+        Map<String, String> props = getProperties(blockPos);
+        String face = props.getOrDefault("face", "");
+        String facing = props.getOrDefault("facing", "");
 
         double x = blockPos.x();
         double y = blockPos.y();
@@ -105,19 +79,8 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getLadderPos(Vec3 blockPos) {
-        assert Minecraft.getInstance().level != null;
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
-
-        String facing = "";
-
-        for (Map.Entry<Property<?>, Comparable<?>> i : entries) {
-
-            if (i.getKey().getName().equalsIgnoreCase("facing")) {
-                facing = i.getValue().toString();
-                break;
-            }
-
-        }
+        Map<String, String> props = getProperties(blockPos);
+        String facing = props.getOrDefault("facing", "");
 
         double x = blockPos.x();
         double y = blockPos.y();
@@ -137,25 +100,13 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getButtonPos(Vec3 blockPos) {
-        assert Minecraft.getInstance().level != null;
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
+        Map<String, String> props = getProperties(blockPos);
+        String face = props.getOrDefault("face", "");
+        String facing = props.getOrDefault("facing", "");
 
         double x = blockPos.x();
         double y = blockPos.y();
         double z = blockPos.z();
-
-        String face = "";
-        String facing = "";
-
-        for (Map.Entry<Property<?>, Comparable<?>> i : entries) {
-
-            if (i.getKey().getName().equalsIgnoreCase("face")) {
-                face = i.getValue().toString();
-
-            } else if (i.getKey().getName().equalsIgnoreCase("facing")) {
-                facing = i.getValue().toString();
-            }
-        }
 
         if (face.equalsIgnoreCase("floor")) {
             y -= 0.4;
@@ -177,22 +128,10 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     public static Vec3 getDoorPos(Vec3 blockPos) {
-        assert Minecraft.getInstance().level != null;
-        Set<Map.Entry<Property<?>, Comparable<?>>> entries = getEntries(blockPos, Minecraft.getInstance().level);
-
-        String facing = "";
-        String hinge = "";
-        String open = "";
-
-        for (Map.Entry<Property<?>, Comparable<?>> i : entries) {
-            if (i.getKey().getName().equalsIgnoreCase("facing")) {
-                facing = i.getValue().toString();
-            } else if (i.getKey().getName().equalsIgnoreCase("hinge")) {
-                hinge = i.getValue().toString();
-            } else if (i.getKey().getName().equalsIgnoreCase("open")) {
-                open = i.getValue().toString();
-            }
-        }
+        Map<String, String> props = getProperties(blockPos);
+        String facing = props.getOrDefault("facing", "");
+        String hinge = props.getOrDefault("hinge", "");
+        String open = props.getOrDefault("open", "");
 
         double x = blockPos.x();
         double y = blockPos.y();
@@ -236,8 +175,12 @@ public final class NonCubeBlockAbsolutePositions {
     }
 
     @NotNull
-    private static Set<Map.Entry<Property<?>, Comparable<?>>> getEntries(Vec3 blockPos, ClientLevel world) {
-        BlockState blockState = world.getBlockState(BlockPos.containing(blockPos));
-        return blockState.getValues().entrySet();
+    private static Map<String, String> getProperties(Vec3 blockPos) {
+        assert Minecraft.getInstance().level != null;
+        BlockState blockState = Minecraft.getInstance().level.getBlockState(BlockPos.containing(blockPos));
+        return blockState.getValues().collect(Collectors.toMap(
+                v -> v.property().getName().toLowerCase(),
+                Property.Value::valueName
+        ));
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.navigation.ScreenDirection;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import org.jetbrains.annotations.Nullable;
 
 public final class NavigationUtils {
@@ -17,7 +18,7 @@ public final class NavigationUtils {
      * @return true if Tab backward or Arrow up, otherwise false
      */
     public static boolean isDirectionBackward(FocusNavigationEvent event) {
-        if (event instanceof FocusNavigationEvent.ArrowNavigation(ScreenDirection direction)) {
+        if (event instanceof FocusNavigationEvent.ArrowNavigation(ScreenDirection direction, ScreenRectangle ignored)) {
             return direction == ScreenDirection.UP;
         } else if (event instanceof FocusNavigationEvent.TabNavigation(boolean forward)) {
             return !forward;
