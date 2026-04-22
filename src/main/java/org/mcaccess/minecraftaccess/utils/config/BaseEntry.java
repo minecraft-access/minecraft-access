@@ -60,8 +60,8 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
-        super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
+        super.extractRenderState(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
         resetButton.active = isEditable() && !Objects.deepEquals(getValue(), defaultValue);
         resetButton.setY(y);
         widget.active = isEditable();
@@ -81,9 +81,9 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
             resetButton.setX(x + entryWidth - resetButton.getWidth());
             widget.setX(x + entryWidth - 150);
         }
-        label.render(graphics, mouseX, mouseY, delta);
-        widget.render(graphics, mouseX, mouseY, delta);
-        resetButton.render(graphics, mouseX, mouseY, delta);
+        label.extractRenderState(graphics, mouseX, mouseY, delta);
+        widget.extractRenderState(graphics, mouseX, mouseY, delta);
+        resetButton.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
     @Override

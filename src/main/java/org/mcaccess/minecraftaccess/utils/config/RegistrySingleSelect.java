@@ -78,9 +78,9 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
         }
 
         @Override
-        public void render(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+        public void extractRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
             doneButton.active = selectionList.getSelected() != null;
-            super.render(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
+            super.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
         private final class SelectionList extends ObjectSelectionList<SelectionList.RegistryEntry> {
@@ -109,8 +109,8 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
                 }
 
                 @Override
-                public void renderContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-                    GuiGraphicsExtractor.drawString(minecraft.font, getNarration(), getContentX() + 5, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
+                public void extractContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+                    GuiGraphicsExtractor.text(minecraft.font, getNarration(), getContentX() + 5, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
                 }
 
                 @Override

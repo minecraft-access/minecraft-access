@@ -90,8 +90,8 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
         }
 
         @Override
-        public void render(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
-            super.render(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
+        public void extractRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+            super.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
         private final class SelectionList extends ObjectSelectionList<SelectionList.BaseEntry> {
@@ -144,7 +144,7 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
             private abstract class BaseEntry extends ObjectSelectionList.Entry<BaseEntry> {
                 @Override
                 public int getWidth() {
-                    return super.getWidth() - (scrollbarVisible() ? 6 : 0);
+                    return super.getWidth() - (scrollable() ? 6 : 0);
                 }
             }
 
@@ -161,8 +161,8 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
                 }
 
                 @Override
-                public void renderContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-                    GuiGraphicsExtractor.drawCenteredString(minecraft.font, text, getX() + getWidth() / 2, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
+                public void extractContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+                    GuiGraphicsExtractor.centeredText(minecraft.font, text, getX() + getWidth() / 2, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
                 }
             }
 
@@ -205,8 +205,8 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
                 }
 
                 @Override
-                public void renderContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-                    GuiGraphicsExtractor.drawString(minecraft.font, getNarration(), getContentX() + 34, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
+                public void extractContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+                    GuiGraphicsExtractor.text(minecraft.font, getNarration(), getContentX() + 34, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
 
                     int relativeX = mouseX - getContentX();
                     int relativeY = mouseY - getContentY();
