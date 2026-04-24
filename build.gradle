@@ -74,6 +74,7 @@ dependencies {
     compileOnly libs.balmNeoForge
     compileOnly libs.clothConfigCommon
     implementation libs.tolk
+    include libs.tolk
 
     include libs.fabricApi
     include libs.balmFabric

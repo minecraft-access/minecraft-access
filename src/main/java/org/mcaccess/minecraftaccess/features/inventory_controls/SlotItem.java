@@ -101,7 +101,7 @@ public class SlotItem {
             Optional<RecipeHolder<StonecutterRecipe>> recipe = list.get(recipeOrTradeIndex + scrollOffset).recipe().recipe();
             if (recipe.isEmpty()) return "";
             StonecutterRecipe recipe1 = recipe.get().value();
-            ItemStack item = ((SingleItemRecipeAccessor) recipe1).getResult();
+            ItemStack item = ((SingleItemRecipeAccessor) recipe1).getResult().create();
             List<Component> toolTip = Screen.getTooltipFromItem(Minecraft.getInstance(), item);
             StringBuilder toolTipString = new StringBuilder();
             for (Component text : toolTip) {

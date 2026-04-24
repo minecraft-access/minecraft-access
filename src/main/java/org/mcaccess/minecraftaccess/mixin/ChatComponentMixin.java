@@ -13,7 +13,7 @@ import org.mcaccess.minecraftaccess.Config;
 
 @Mixin(ChatComponent.class)
 abstract class ChatComponentMixin {
-    @Inject(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", at = @At("HEAD"))
+    @Inject(method = "addMessage", at = @At("HEAD"))
     private void playChatSound(CallbackInfo ci) {
         if (Config.getInstance().features.playNewChatMessageSound) {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0f));
