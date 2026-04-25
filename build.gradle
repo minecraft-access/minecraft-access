@@ -61,6 +61,14 @@ idea {
     }
 }
 
+configurations {
+    shadow2
+}
+
+tasks.shadowJar {
+    configurations = [project.configurations.shadow2]
+}
+
 dependencies {
     minecraft libs.minecraft
     compileOnly libs.fabricLoader
@@ -104,6 +112,11 @@ dependencies {
 
     checkstyle libs.checkstyle
 }
+
+loom.nestJars(tasks.named('shadowJar', org.gradle.jvm.tasks.Jar), objects.fileCollection().tap {
+    it.setFrom(fileTree(tasks.processIncludeJars.outputDirectory))
+    it.builtBy(tasks.processIncludeJars)
+})
 
 compileJava {
     options.encoding = 'UTF-8'
