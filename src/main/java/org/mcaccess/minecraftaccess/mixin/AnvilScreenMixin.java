@@ -15,28 +15,28 @@ import org.mcaccess.minecraftaccess.MainClass;
 @Mixin(AnvilScreen.class)
 abstract class AnvilScreenMixin {
     @Unique
-    private String previousText;
+    private String previousLine;
 
     /*
      * The "drawForeground" method is continually triggered when enchant cost changes,
      * so there is a repeat check before narrating.
      * Let the original logic build the text, we don't want to repeat that.
      */
-    @Inject(method = "renderLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(IIIII)V"))
-    private void narrateCost(GuiGraphicsExtractor context, int mouseX, int mouseY, CallbackInfo ci, @Local Component text) {
-        if (text instanceof Component component) {
-            String textString = component.getString();
-            if (!textString.equals(previousText)) {
-                MainClass.narrate(textString, true);
-                previousText = textString;
+    @Inject(method = "extractLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(IIIII)V"))
+    private void narrateCost(GuiGraphicsExtractor context, int mouseX, int mouseY, CallbackInfo ci, @Local Component line) {
+        if (line instanceof Component component) {
+            String lineString = component.getString();
+            if (!lineString.equals(previousLine)) {
+                MainClass.narrate(lineString, true);
+                previousLine = lineString;
             }
         }
     }
 
-    @Inject(method = "renderLabels", at = @At("RETURN"))
+    @Inject(method = "extractLabels", at = @At("RETURN"))
     private void resetWhenCostDisappears(GuiGraphicsExtractor context, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 2) int cost) {
         if (cost <= 0) {
-            previousText = null;
+            previousLine = null;
         }
     }
 }
