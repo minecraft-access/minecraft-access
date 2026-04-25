@@ -22,9 +22,16 @@ updates:
     patterns: [ "*" ]
     multi-ecosystem-group: dependencies
 
+  - package-ecosystem: nix
+    directory: "/"
+    patterns: [ "*" ]
+    multi-ecosystem-group: dependencies
+
   - package-ecosystem: gradle
     directory: "/"
     patterns: [ "*" ]
     ignore:
       - dependency-name: "maven.modrinth:jade"
+      - dependency-name: "net.neoforged.fancymodloader:loader"
+        versions: [ "47.x" ]
     multi-ecosystem-group: dependencies
