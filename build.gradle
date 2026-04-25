@@ -88,8 +88,8 @@ dependencies {
     include libs.balmFabric
     include libs.clothConfigFabric
 
-    //jarJar libs.balmNeoForge
-    //jarJar libs.clothConfigNeoForge
+    include libs.balmNeoForge
+    include libs.clothConfigNeoForge
 
     compileOnly libs.jsr305
 
@@ -154,6 +154,14 @@ processResources {
                 jade_neoforge_version: libs.jadeNeoForge.get().version,
                 cloth_config_version: libs.clothConfigNeoForge.get().version,
                 neoforge_minecraft_version_range: "[${minecraftMajorMinor}-,${nextMinecraftMinor})"
+        )
+    }
+
+    filesMatching('META-INF/jarjar/metadata.json') {
+        expand(
+                tolk_version: libs.tolk.get().version,
+                balm_version: libs.balmNeoForge.get().version.split('\\+')[0],
+                cloth_config_version: libs.clothConfigNeoForge.get().version
         )
     }
 }
