@@ -98,12 +98,14 @@ dependencyResolutionManagement {
         exclusiveContent {
             forRepository {
                 maven {
-                    name = 'Neoforged'
+                    name = 'Neoforged Releases'
                     url = 'https://maven.neoforged.net/releases/'
                 }
             }
             filter {
                 includeGroupAndSubgroups 'net.neoforged'
+                includeGroupAndSubgroups 'net.minecraftforge'
+                includeGroupAndSubgroups 'cpw.mods'
             }
         }
 
