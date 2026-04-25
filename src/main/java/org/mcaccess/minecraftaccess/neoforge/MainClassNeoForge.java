@@ -42,6 +42,6 @@ public class MainClassNeoForge {
                     });
         }
         container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> AutoConfigClient.getConfigScreen(Config.class, parent).get());
-        BalmClient.initializeMod(MainClass.MOD_ID, new NeoForgeLoadContext(modEventBus), registrars -> MainClass.init(registrars, addons));
+        BalmClient.initializeMod(MainClass.MOD_ID, new NeoForgeLoadContext(container, modEventBus), registrars -> MainClass.init(registrars, addons));
     }
 }

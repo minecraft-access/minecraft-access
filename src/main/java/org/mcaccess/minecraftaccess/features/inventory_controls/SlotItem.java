@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.gui.screens.inventory.StonecutterScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
@@ -87,11 +88,10 @@ public class SlotItem {
             BannerPattern pattern = list.get(q).value();
 
             ItemStack dyeItemStack = ((LoomScreenAccessor) loomScreen).getDyeStack();
-            DyeItem dyeItem = (DyeItem) dyeItemStack.getItem();
-            DyeColor color = dyeItem.getDyeColor();
+            String dyeColor = dyeItemStack.getItem().components().get(DataComponents.DYE).getName();
 
             // banner pattern trans key = banner pattern name + color name
-            String transKey = pattern.translationKey() + '.' + color.name().toLowerCase();
+            String transKey = pattern.translationKey() + '.' + dyeColor;
             return I18n.get(transKey);
         }
 

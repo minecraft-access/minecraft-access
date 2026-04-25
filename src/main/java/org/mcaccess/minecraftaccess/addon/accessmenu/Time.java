@@ -18,7 +18,7 @@ public class Time implements AccessMenuFunction {
             return;
         }
 
-        long daytime = level.getDayTime() + 6000;
+        long daytime = level.getGameTime() + 6000;
         int hours = (int) (daytime / 1000) % 24;
         int minutes = (int) ((daytime % 1000) * 60 / 1000);
 

@@ -3,6 +3,7 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.event.callback.ClientLifecycleCallback;
@@ -53,7 +54,7 @@ public class LockingHandler implements BalmClientModule {
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlockPos = null;
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
-    private Map<Property<?>, Comparable<?>> entriesOfLockedOnBlock;
+    private Stream<Property.Value<?>> entriesOfLockedOnBlock;
     private boolean aimAssistActive = false;
     // 0 = can't shoot, 1 = can shoot
     private int lastAimAssistCue = -1;
@@ -143,7 +144,7 @@ public class LockingHandler implements BalmClientModule {
             // Entries are different properties of blocks when they're in different states,
             // for example, opened chest and closed chest are different states of chest block,
             // they are different entries when invoking getEntries().
-            Map<Property<?>, Comparable<?>> entries = blockState.getValues();
+            Stream<Property.Value<?>> entries = blockState.getValues();
             boolean entriesOfLockedBlockNotChanged = entries.values() == entriesOfLockedOnBlock.values();
 
             if (entriesOfLockedBlockNotChanged || isLockedOnWhereEyeOfEnderDisappears) {

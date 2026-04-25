@@ -593,7 +593,7 @@ public class InventoryControls implements BalmClientModule {
         }
 
         Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
-                .flatMap(jukeboxPlayable -> jukeboxPlayable.song().key())
+                .flatMap(jukeboxPlayable -> jukeboxPlayable.song().unwrapKey())
                 .ifPresent(discNumber -> toolTipString.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.identifier().getPath())));
 
         // <slot row col prefix> <count> <name> <description>

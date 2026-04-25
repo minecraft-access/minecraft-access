@@ -92,7 +92,7 @@ public class NarrateHeldItem implements BalmClientModule {
         itemName.append(itemStack.getHoverName().getString());
 
         Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
-                .flatMap(jukeboxPlayable -> jukeboxPlayable.song().key())
+                .flatMap(jukeboxPlayable -> jukeboxPlayable.song().unwrapKey())
                 .ifPresent(discNumber -> itemName.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.identifier().getPath())));
 
         return itemName.toString();

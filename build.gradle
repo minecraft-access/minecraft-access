@@ -83,7 +83,6 @@ dependencies {
     //jarJar libs.clothConfigNeoForge
 
     compileOnly libs.jsr305
-    annotationProcessor libs.jsr305
 
     compileOnly libs.lombok
     annotationProcessor libs.lombok
@@ -98,7 +97,6 @@ dependencies {
     testImplementation libs.mockitoJunitJupiter
 
     testCompileOnly libs.jsr305
-    testAnnotationProcessor libs.jsr305
 
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok

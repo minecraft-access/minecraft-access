@@ -532,7 +532,7 @@ public class MinecraftAccess implements WorldNarrator {
     private static String narrateFluidBlock(BlockPos pos) {
         assert Minecraft.getInstance().level != null;
         FluidState fluidState = Minecraft.getInstance().level.getFluidState(pos);
-        Optional<String> fluidName = NarrationUtils.getTranslatedName(fluidState.holder(), "block");
+        Optional<String> fluidName = NarrationUtils.getTranslatedName(fluidState.typeHolder(), "block");
         int level = fluidState.getAmount();
         String levelString = level < 8 ? I18n.get("minecraft_access.read_crosshair.fluid_level", level) : "";
         return fluidName.map(name -> String.format("%s %s", name, levelString)).orElse(levelString);
