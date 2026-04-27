@@ -55,7 +55,7 @@ jobs:
         run: |
           ./gradlew clean build ${{ inputs.central && 'publishAndReleaseToMavenCentral' || '' }} -x check
           shopt -s extglob
-          cp ./!(common)/build/libs/*+!(*-*).jar .
+          cp ./build/libs/*+!(*-*).jar .
       - uses: actions/upload-artifact@v7
         with:
           name: "minecraft-access"
