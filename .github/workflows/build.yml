@@ -54,8 +54,7 @@ jobs:
         # language=bash
         run: |
           ./gradlew clean build ${{ inputs.central && 'publishAndReleaseToMavenCentral' || '' }} -x check
-          shopt -s extglob
-          cp ./build/libs/*+!(*-*).jar .
+          cp $(ls -1 ./build/libs/minecraft-access-*.jar | awk '{ print length, $0 }' | sort -n | cut -d" " -f2- | head -n 1) .
       - uses: actions/upload-artifact@v7
         with:
           name: "minecraft-access"
