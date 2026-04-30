@@ -247,12 +247,11 @@ public class CameraControls implements BalmClientModule {
             player.turn(horizontalAngleDelta, verticalAngleDelta);
         }
 
-        String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
         if (Config.getInstance().features.facingDirectionEnabled) {
             if (direction.isRotatingHorizontal) {
                 PlayerPositionUtils.getHorizontalFacingDirectionInWords().narrate(true);
-            } else if (verticalDirection != null) {
-                MainClass.narrate(verticalDirection, true);
+            } else {
+                PlayerPositionUtils.getVerticalFacingDirectionInWords().narrate(true);
             }
         }
     }
@@ -277,7 +276,7 @@ public class CameraControls implements BalmClientModule {
             if (direction.in(Orientation.Layer.MIDDLE)) {
                 PlayerPositionUtils.getHorizontalFacingDirectionInWords().narrate(true);
             } else {
-                MainClass.narrate(PlayerPositionUtils.getVerticalFacingDirectionInWords(), true);
+                PlayerPositionUtils.getVerticalFacingDirectionInWords().narrate(true);
             }
         }
     }

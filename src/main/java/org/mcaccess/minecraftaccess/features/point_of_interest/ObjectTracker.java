@@ -268,11 +268,7 @@ public class ObjectTracker implements BalmClientModule {
 
         currentObject = validObjects.getFirst();
 
-        if (!atBoundary) {
-            MainClass.narrate(currentGroup.getTranslatedName(), true);
-        } else {
-            MainClass.narrate(currentGroup.getTranslatedName(), false);
-        }
+        currentGroup.name.narrate(!atBoundary);
 
         narrateCurrentObject(false);
     }

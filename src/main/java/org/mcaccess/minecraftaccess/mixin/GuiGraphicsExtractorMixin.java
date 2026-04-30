@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.minecraft.client.gui.Font;
@@ -17,28 +16,26 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.events.ChangeDetector;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Mixin(GuiGraphicsExtractor.class)
 abstract class GuiGraphicsExtractorMixin {
     @Unique
-    private static String previous;
+    private static ChangeDetector<String> previous;
 
     @Inject(at = @At("HEAD"), method = "setTooltipForNextFrameInternal")
     private void narrateTooltip(Font font, List<ClientTooltipComponent> list, int i, int j, ClientTooltipPositioner clientTooltipPositioner, @Nullable Identifier identifier, boolean bl, CallbackInfo ci) {
         if (Config.getInstance().inventoryControls.enabled) {
             return;
         }
-        String combined = list.stream()
+        Translation.Delimited combined = new Translation.Delimited('\n');
+        list.stream()
                 .flatMap(component -> component instanceof ClientTextTooltipAccessor text ? Stream.of(text) : Stream.empty())
                 .map(ClientTextTooltipAccessor::getText)
-                .map(NarrationUtils::formattedCharSequenceToString)
-                .collect(Collectors.joining("\n"));
-        if (combined.equals(previous)) {
-            return;
+                .forEach(combined::put);
+        if (previous.update(combined.getString())) {
+            combined.narrate(true);
         }
-        previous = combined;
-        MainClass.narrate(combined, true);
     }
 }

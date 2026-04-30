@@ -80,8 +80,8 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.mixin.WolfAccessor;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
+import org.mcaccess.minecraftaccess.utils.i18n.Narratable;
 import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 
@@ -325,7 +325,7 @@ public class MinecraftAccess implements WorldNarrator {
         String narration = Strings.isBlank(side) ? name : name + ' ' + side;
 
         if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
-            return narrateFluidBlock(blockPos);
+            return narrateFluidBlock(blockPos).getString();
         }
 
         if (blockEntity != null) {
@@ -393,7 +393,7 @@ public class MinecraftAccess implements WorldNarrator {
             }
         }
         if (!items.isEmpty()) {
-            narration = new Translation("minecraft_access.read_crosshair.equipped")
+            return new Translation("minecraft_access.read_crosshair.equipped")
                     .variable("entity").put(narration)
                     .variable("equipments").put(items)
                     .getString();
@@ -464,7 +464,7 @@ public class MinecraftAccess implements WorldNarrator {
                         .variable("block").put(currentNarration)
                         .variable("direction").put(new Translation("minecraft_access.direction")
                                 .variant(Orientation.getOppositeDirectionKey(facing.getName()).toLowerCase()))
-                        .variable("mode").put(mode);
+                        .variable("mode").put(mode.toString());
                 if (isReceivingPower) {
                     narration = new Translation("minecraft_access.block.property.powered").variable("block").put(narration).getString();
                 }
@@ -618,12 +618,13 @@ public class MinecraftAccess implements WorldNarrator {
      *      "narration" is the actual one to be narrated through Narrator,
      *      "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
-    private static String narrateFluidBlock(BlockPos pos) {
+    private static Narratable narrateFluidBlock(BlockPos pos) {
         assert Minecraft.getInstance().level != null;
         FluidState fluidState = Minecraft.getInstance().level.getFluidState(pos);
-        Optional<String> fluidName = NarrationUtils.getTranslatedName(fluidState.typeHolder(), "block");
         int level = fluidState.getAmount();
         String levelString = level < 8 ? new Translation("minecraft_access.block.fluid.level").variable("level").put(level).getString() : "";
-        return fluidName.map(name -> String.format("%s %s", name, levelString)).orElse(levelString);
+        return new Translation.Delimited(' ')
+                .put("block", fluidState.typeHolder())
+                .put(levelString);
     }
 }

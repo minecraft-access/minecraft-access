@@ -141,19 +141,27 @@ public class Translation implements Narratable {
     }
 
     public static class Delimited extends Formatter<@NotNull Delimited> implements Narratable {
-        private final @NotNull Translation delimeter;
+        private final @NotNull Narratable delimiter;
         private final @NotNull List<@NotNull Supplier<@NotNull String>> contents = new ArrayList<>();
 
-        public Delimited(@NotNull Translation delimeter) {
-            this.delimeter = delimeter;
+        public Delimited(@NotNull Narratable delimiter) {
+            this.delimiter = delimiter;
         }
 
-        public Delimited(@NotNull @Translatable String delimeter) {
-            this(new Translation(delimeter));
+        public Delimited(@NotNull @Translatable String delimiter) {
+            this(new Translation(delimiter));
+        }
+
+        public Delimited(char delimiter) {
+            this(Untranslated.FORMATTER.put(delimiter));
         }
 
         public Delimited() {
             this("minecraft_access.other.words_connection");
+        }
+
+        public boolean isEmpty() {
+            return contents.isEmpty();
         }
 
         @Override
@@ -168,7 +176,7 @@ public class Translation implements Narratable {
         public @NotNull String getString() {
             return contents.stream()
                     .map(Supplier::get)
-                    .collect(Collectors.joining(delimeter.getString()));
+                    .collect(Collectors.joining(delimiter.getString()));
         }
     }
 

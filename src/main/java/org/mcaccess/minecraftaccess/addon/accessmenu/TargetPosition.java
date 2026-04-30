@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.addon.accessmenu;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;

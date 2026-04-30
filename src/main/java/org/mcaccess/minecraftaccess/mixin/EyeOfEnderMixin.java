@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.EyeOfEnder;

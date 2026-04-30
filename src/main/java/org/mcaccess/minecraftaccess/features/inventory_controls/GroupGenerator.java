@@ -20,7 +20,6 @@ import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
@@ -407,8 +406,7 @@ public final class GroupGenerator {
                         .get(enchantmentId);
                 if (enchantment.isEmpty()) break;
 
-                // this breaks when using I18n.get() for some reason so Component.translatable() is being used instead
-                StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(enchantment.get(), level)).getString());
+                StringBuilder clueText = new StringBuilder(new Translation.Vanilla("container.enchant.clue").put(Enchantment.getFullname(enchantment.get(), level)).getString());
                 assert Minecraft.getInstance().gameMode != null;
                 if (Minecraft.getInstance().gameMode.getPlayerMode() != GameType.CREATIVE) {
                     if (Minecraft.getInstance().player.experienceLevel < requiredLevel) {

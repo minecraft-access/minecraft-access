@@ -33,7 +33,7 @@ public class PositionNarrator implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_V))
                 .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
                 .handleWorldInput(event -> {
-                    MainClass.narrate(PlayerPositionUtils.getNarratableXYZPosition(), true);
+                    PlayerPositionUtils.getNarratableXYZPosition().narrate(true);
                     return true;
                 })
                 .build();
@@ -42,7 +42,7 @@ public class PositionNarrator implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_X, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
                 .handleWorldInput(event -> {
-                    MainClass.narrate(PlayerPositionUtils.getNarratableXPos(), true);
+                    PlayerPositionUtils.getNarratableXPos().narrate(true);
                     return true;
                 })
                 .build();
@@ -51,7 +51,7 @@ public class PositionNarrator implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_C, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
                 .handleWorldInput(event -> {
-                    MainClass.narrate(PlayerPositionUtils.getNarratableYPos(), true);
+                    PlayerPositionUtils.getNarratableYPos().narrate(true);
                     return true;
                 })
                 .build();
@@ -60,7 +60,7 @@ public class PositionNarrator implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_Z, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
                 .handleWorldInput(event -> {
-                    MainClass.narrate(PlayerPositionUtils.getNarratableZPos(), true);
+                    PlayerPositionUtils.getNarratableZPos().narrate(true);
                     return true;
                 })
                 .build();

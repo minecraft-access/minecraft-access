@@ -4,34 +4,43 @@ import net.minecraft.client.Minecraft;
 
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.i18n.Translation;
+import org.mcaccess.minecraftaccess.utils.i18n.Untranslated;
 
 /**
  * Functions about getting player entity's position, facing direction etc.
  */
 public final class PlayerPositionUtils {
     private static final Minecraft CLIENT = Minecraft.getInstance();
-    private static final String POSITION_FORMAT = "{x}, {y}, {z}";
 
     private PlayerPositionUtils() {
     }
 
-    public static String getNarratableXYZPosition() {
-        return POSITION_FORMAT.replace("{x}", getNarratableXPos()).replace("{y}", getNarratableYPos()).replace("{z}", getNarratableZPos());
+    public static Translation.Delimited getNarratableXYZPosition() {
+        return new Translation.Delimited()
+                .put(getNarratableXPos())
+                .put(getNarratableYPos())
+                .put(getNarratableZPos());
     }
 
-    public static String getNarratableXPos() {
+    public static Translation.Delimited getNarratableXPos() {
         assert CLIENT.player != null;
-        return NarrationUtils.narrateNumber(CLIENT.player.position().x) + 'x';
+        return new Translation.Delimited(Untranslated.FORMATTER.put(""))
+                .put(CLIENT.player.position().x)
+                .put("x");
     }
 
-    public static String getNarratableYPos() {
+    public static Translation.Delimited getNarratableYPos() {
         assert CLIENT.player != null;
-        return NarrationUtils.narrateNumber(CLIENT.player.position().y) + 'y';
+        return new Translation.Delimited(Untranslated.FORMATTER.put(""))
+                .put(CLIENT.player.position().y)
+                .put("y");
     }
 
-    public static String getNarratableZPos() {
+    public static Translation.Delimited getNarratableZPos() {
         assert CLIENT.player != null;
-        return NarrationUtils.narrateNumber(CLIENT.player.position().z) + 'z';
+        return new Translation.Delimited(Untranslated.FORMATTER.put(""))
+                .put(CLIENT.player.position().z)
+                .put("z");
     }
 
     public static Translation getVerticalFacingDirectionInWords() {
