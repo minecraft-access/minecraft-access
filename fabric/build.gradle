@@ -10,7 +10,7 @@ idea {
 }
 
 loom {
-    log4jConfigs.from(file('./log4j.xml'))
+    log4jConfigs.from(file('../log4j.xml'))
     runs {
         remove server
         client {
