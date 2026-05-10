@@ -5,7 +5,7 @@ plugins {
     id 'java'
     alias libs.plugins.mavenPublish
     id 'net.fabricmc.fabric-loom'
-    //id 'net.neoforged.moddev'
+    id 'net.neoforged.moddev'
     alias libs.plugins.shadow
 }
 
@@ -27,37 +27,9 @@ group = 'org.mcaccess'
 base.archivesName = 'minecraft-access'
 
 loom {
-    log4jConfigs.from(file('./log4j.xml'))
     runs {
-        fabric {
-            inherit client
-            runDir = './run/fabric/'
-        }
         remove client
         remove server
-    }
-    runConfigs.configureEach {
-        vmArgs '-ea'
-    }
-}
-
-//neoForge {
-//        version = libs.neoForge.get().version
-//
-//        runs {
-//            neoClient {
-//                client()
-//                gameDirectory = project.file('./run/neoforge')
-//                jvmArguments = ["-ea"]
-//                ideName = "Run NeoForge"
-//            }
-//        }
-//    }
-
-idea {
-    module {
-        excludeDirs += file('./run/')
-        excludeDirs += file('./logs/')
     }
 }
 
@@ -81,15 +53,16 @@ dependencies {
     compileOnly libs.balmFabric
     compileOnly libs.balmNeoForge
     compileOnly libs.clothConfigCommon
-    implementation libs.tolk
-    include libs.tolk
+    compileOnly libs.tolk
 
     include libs.fabricApi
     include libs.balmFabric
     include libs.clothConfigFabric
+    include libs.tolk
 
-    include libs.balmNeoForge
-    include libs.clothConfigNeoForge
+    jarJar libs.balmNeoForge
+    jarJar libs.clothConfigNeoForge
+    jarJar libs.tolk
 
     compileOnly libs.jsr305
 

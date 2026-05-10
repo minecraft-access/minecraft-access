@@ -1,0 +1,31 @@
+plugins {
+    id 'idea'
+    id 'net.neoforged.moddev'
+}
+
+idea {
+    module {
+        excludeDirs += file('./run/')
+    }
+}
+
+neoForge {
+    version = libs.neoForge.get().version
+
+    runs {
+        client {
+            client()
+            //gameDirectory = project.file('./run/')
+            jvmArguments = ["-ea"]
+            ideName = "Run NeoForge"
+        }
+    }
+}
+
+tasks.named('downloadAssets', net.neoforged.nfrtgradle.DownloadAssets) {
+    javaExecutable = javaToolchains.launcherFor(java.toolchain).map { it.executablePath.asFile.absolutePath }
+}
+
+dependencies {
+    runtimeOnly project(':')
+}

@@ -34,7 +34,7 @@ pluginManagement {
 plugins {
     id 'com.gradle.develocity' version '4.4.0'
     id 'net.fabricmc.fabric-loom-repositories' version '1.16-SNAPSHOT'
-    //id 'net.neoforged.moddev.repositories' version '2.0.141'
+    id 'net.neoforged.moddev.repositories' version '2.0.141'
 }
 
 develocity {
@@ -103,7 +103,6 @@ dependencyResolutionManagement {
                 }
             }
             filter {
-                includeGroupAndSubgroups 'net.neoforged'
                 includeGroupAndSubgroups 'net.minecraftforge'
                 includeGroupAndSubgroups 'cpw.mods'
             }
@@ -138,3 +137,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'minecraft_access'
+include 'fabric'
+include 'neoforge'
