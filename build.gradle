@@ -107,18 +107,20 @@ processResources {
     def minecraftMajorMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2)}"
     def nextMinecraftMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2).toInteger() + 1}"
 
-    expand(
-            version: modVersion,
-            fabric_loader_version: libs.fabricLoader.get().version,
-            fabric_api_version: libs.fabricApi.get().version,
-            balm_version: libs.balmCommon.get().version.split('\\+')[0],
-            jade_fabric_version: libs.jadeFabric.get().version,
-            jade_neoforge_version: libs.jadeNeoForge.get().version,
-            cloth_config_version: libs.clothConfigCommon.get().version,
-            fabric_minecraft_version_range: "~${minecraftMajorMinor}",
-            neoforge_version: libs.neoForge.get().version,
-            neoforge_minecraft_version_range: "[${minecraftMajorMinor}-,${nextMinecraftMinor})",
-    )
+    filesMatching(['fabric.mod.json', 'META-INF/neoforge.mods.toml']) {
+        expand(
+                version: modVersion,
+                fabric_loader_version: libs.fabricLoader.get().version,
+                fabric_api_version: libs.fabricApi.get().version,
+                balm_version: libs.balmCommon.get().version.split('\\+')[0],
+                jade_fabric_version: libs.jadeFabric.get().version,
+                jade_neoforge_version: libs.jadeNeoForge.get().version,
+                cloth_config_version: libs.clothConfigCommon.get().version,
+                fabric_minecraft_version_range: "~${minecraftMajorMinor}",
+                neoforge_version: libs.neoForge.get().version,
+                neoforge_minecraft_version_range: "[${minecraftMajorMinor}-,${nextMinecraftMinor})",
+        )
+    }
 }
 
 java {
