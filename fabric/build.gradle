@@ -1,0 +1,35 @@
+plugins {
+    id 'idea'
+    id 'net.fabricmc.fabric-loom'
+}
+
+idea {
+    module {
+        excludeDirs += file('./run/')
+    }
+}
+
+loom {
+    log4jConfigs.from(file('../log4j.xml'))
+    runs {
+        remove server
+        client {
+            configName = 'Fabric Client'
+            ideConfigGenerated = true
+        }
+    }
+    runConfigs.configureEach {
+        vmArgs '-ea'
+    }
+}
+
+dependencies {
+    minecraft libs.minecraft
+    runtimeOnly project(':')
+    runtimeOnly libs.fabricLoader
+    runtimeOnly libs.modMenu
+    runtimeOnly libs.jadeFabric
+    runtimeOnly libs.balmFabric
+    runtimeOnly libs.fabricApi
+    runtimeOnly libs.clothConfigFabric
+}

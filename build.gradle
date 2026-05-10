@@ -5,7 +5,7 @@ plugins {
     id 'java'
     alias libs.plugins.mavenPublish
     id 'net.fabricmc.fabric-loom'
-    //id 'net.neoforged.moddev'
+    id 'net.neoforged.moddev'
     alias libs.plugins.shadow
 }
 
@@ -27,46 +27,10 @@ group = 'org.mcaccess'
 base.archivesName = 'minecraft-access'
 
 loom {
-    log4jConfigs.from(file('./log4j.xml'))
     runs {
-        fabric {
-            inherit client
-            runDir = './run/fabric/'
-        }
         remove client
         remove server
     }
-    runConfigs.configureEach {
-        vmArgs '-ea'
-    }
-}
-
-//neoForge {
-//        version = libs.neoForge.get().version
-//
-//        runs {
-//            neoClient {
-//                client()
-//                gameDirectory = project.file('./run/neoforge')
-//                jvmArguments = ["-ea"]
-//                ideName = "Run NeoForge"
-//            }
-//        }
-//    }
-
-idea {
-    module {
-        excludeDirs += file('./run/')
-        excludeDirs += file('./logs/')
-    }
-}
-
-configurations {
-    shadow2
-}
-
-tasks.shadowJar {
-    configurations = [project.configurations.shadow2]
 }
 
 dependencies {
@@ -82,14 +46,14 @@ dependencies {
     compileOnly libs.balmNeoForge
     compileOnly libs.clothConfigCommon
     implementation libs.tolk
-    include libs.tolk
+    shadow libs.tolk
 
     include libs.fabricApi
     include libs.balmFabric
     include libs.clothConfigFabric
 
-    include libs.balmNeoForge
-    include libs.clothConfigNeoForge
+    jarJar libs.balmNeoForge
+    jarJar libs.clothConfigNeoForge
 
     compileOnly libs.jsr305
     compileOnly libs.mcdevAnnotations
@@ -114,14 +78,14 @@ dependencies {
     checkstyle libs.checkstyle
 }
 
-loom.nestJars(tasks.named('shadowJar', org.gradle.jvm.tasks.Jar), objects.fileCollection().tap {
-    it.setFrom(fileTree(tasks.processIncludeJars.outputDirectory))
-    it.builtBy(tasks.processIncludeJars)
-})
-
 compileJava {
     options.encoding = 'UTF-8'
     options.release = 25
+}
+
+shadowJar {
+    archiveClassifier = null
+    configurations = [project.configurations.shadow]
 }
 
 processResources {
@@ -135,34 +99,18 @@ processResources {
     def minecraftMajorMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2)}"
     def nextMinecraftMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2).toInteger() + 1}"
 
-    filesMatching('fabric.mod.json') {
+    filesMatching(['fabric.mod.json', 'META-INF/neoforge.mods.toml']) {
         expand(
                 version: modVersion,
                 fabric_loader_version: libs.fabricLoader.get().version,
                 fabric_api_version: libs.fabricApi.get().version,
-                balm_version: libs.balmFabric.get().version.split('\\+')[0],
+                balm_version: libs.balmCommon.get().version.split('\\+')[0],
                 jade_fabric_version: libs.jadeFabric.get().version,
-                cloth_config_version: libs.clothConfigFabric.get().version,
-                fabric_minecraft_version_range: "~${minecraftMajorMinor}"
-        )
-    }
-
-    filesMatching('META-INF/neoforge.mods.toml') {
-        expand(
-                version: modVersion,
-                neoforge_version: libs.neoForge.get().version,
-                balm_version: libs.balmNeoForge.get().version.split('\\+')[0],
                 jade_neoforge_version: libs.jadeNeoForge.get().version,
-                cloth_config_version: libs.clothConfigNeoForge.get().version,
-                neoforge_minecraft_version_range: "[${minecraftMajorMinor}-,${nextMinecraftMinor})"
-        )
-    }
-
-    filesMatching('META-INF/jarjar/metadata.json') {
-        expand(
-                tolk_version: libs.tolk.get().version,
-                balm_version: libs.balmNeoForge.get().version.split('\\+')[0],
-                cloth_config_version: libs.clothConfigNeoForge.get().version
+                cloth_config_version: libs.clothConfigCommon.get().version,
+                fabric_minecraft_version_range: "~${minecraftMajorMinor}",
+                neoforge_version: libs.neoForge.get().version,
+                neoforge_minecraft_version_range: "[${minecraftMajorMinor}-,${nextMinecraftMinor})",
         )
     }
 }
