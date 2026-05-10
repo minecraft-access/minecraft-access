@@ -15,9 +15,10 @@ neoForge {
     runs {
         client {
             client()
-            //gameDirectory = project.file('./run/')
-            jvmArguments = ["-ea"]
-            ideName = "Run NeoForge"
+            ideName = 'NeoForge Client'
+        }
+        configureEach {
+            jvmArguments = ['-ea']
         }
     }
 }

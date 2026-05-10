@@ -13,6 +13,10 @@ loom {
     log4jConfigs.from(file('./log4j.xml'))
     runs {
         remove server
+        client {
+            configName = 'Fabric Client'
+            ideConfigGenerated = true
+        }
     }
     runConfigs.configureEach {
         vmArgs '-ea'
