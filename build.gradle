@@ -170,7 +170,7 @@ mavenPublishing {
         developers {
             developer {
                 id = 'khanshoaib3'
-                name = 'Mohammad Shoaib Khan'
+                name = 'Shoaib'
                 url = 'https://github.com/khanshoaib3'
                 roles = [
                         'Owner',
@@ -199,7 +199,7 @@ mavenPublishing {
                 url = 'https://github.com/boholder'
             }
             contributor {
-                name = 'Vjeran Bezik'
+                name = 'Molitvan'
                 url = 'https://github.com/Molitvan'
             }
             contributor {

@@ -5,6 +5,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
+import org.mcaccess.minecraftaccess.features.TimeIndicator;
 import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class Time implements AccessMenuFunction {
@@ -18,9 +19,9 @@ public class Time implements AccessMenuFunction {
             return;
         }
 
-        long daytime = level.getGameTime() + 6000;
-        int hours = (int) (daytime / 1000) % 24;
-        int minutes = (int) ((daytime % 1000) * 60 / 1000);
+        double daytime = TimeIndicator.getCurrentTime();
+        int hours = (int) daytime;
+        int minutes = (int) ((daytime % 1.0) * 60);
 
         new Translation("minecraft_access.access_menu.time_of_day")
                 .variant(hours >= 12 ? "pm" : "am", Config.getInstance().use12HourTimeFormat)
