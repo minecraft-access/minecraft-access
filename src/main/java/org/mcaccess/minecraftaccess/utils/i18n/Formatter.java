@@ -68,4 +68,8 @@ public abstract class Formatter<T> {
                 .<Supplier<String>>map(translation -> translation::getString)
                 .orElse(null));
     }
+
+    public final T putIfNotBlank(@NotNull String value) {
+        return value.isBlank() ? apply(null) : put(value);
+    }
 }

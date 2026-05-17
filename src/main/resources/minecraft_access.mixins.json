@@ -25,7 +25,6 @@
         "CreativeModeInventoryScreenAccessor",
         "EditBoxAccessor",
         "EditBoxMixin",
-        "EntityAccessor",
         "EyeOfEnderMixin",
         "GameModeIconAccessor",
         "GameModeSwitcherScreenMixin",

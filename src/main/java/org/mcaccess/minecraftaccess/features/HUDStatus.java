@@ -25,7 +25,6 @@ import org.mcaccess.minecraftaccess.mixin.BossHealthOverlayAccessor;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.events.ChangeDetector;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
-import org.mcaccess.minecraftaccess.utils.events.ServerLocal;
 import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class HUDStatus implements BalmClientModule {
