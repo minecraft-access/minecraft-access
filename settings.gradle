@@ -49,8 +49,8 @@ pluginManagement {
 }
 
 plugins {
-    id 'com.gradle.develocity' version '4.3.2'
-    id 'dev.architectury.loom' version '1.13.467'
+    id 'com.gradle.develocity' version '4.4.1'
+    id 'dev.architectury.loom' version '1.14.473'
 }
 
 develocity {
