@@ -9,10 +9,6 @@
     "key.minecraft_access.camera_controls.look/left": "Tecla para olhar para a esquerda",
     "key.minecraft_access.camera_controls.look/right": "Tecla para olhar para a direita",
     "key.minecraft_access.camera_controls.look/up": "Tecla para olhar para cima",
-    "key.minecraft_access.camera_controls.look_alternate/down": "Alternar a tecla para olhar para baixo",
-    "key.minecraft_access.camera_controls.look_alternate/left": "Alternar a tecla para olhar para a esquerda",
-    "key.minecraft_access.camera_controls.look_alternate/right": "Alternar a tecla para olhar para a direita",
-    "key.minecraft_access.camera_controls.look_alternate/up": "alternar a tecla usada para olhar para cima",
     "key.minecraft_access.camera_controls.look_direction/east": "Tecla para olhar para o leste",
     "key.minecraft_access.camera_controls.look_direction/north": "Tecla para olhar para o norte",
     "key.minecraft_access.camera_controls.look_direction/south": "Tecla para olhar para o sul",
@@ -256,8 +252,6 @@
     "text.autoconfig.minecraft-access.option.fallDetector.enabled": "Ativado",
     "text.autoconfig.minecraft-access.option.fallDetector.volume": "Volume",
     "text.autoconfig.minecraft-access.option.features.actionBarEnabled": "Narrar mensagens da barra de ação",
-    "text.autoconfig.minecraft-access.option.features.alwaysNarratePickedUpItems": "Sempre narrar os elementos recolhidos",
-    "text.autoconfig.minecraft-access.option.features.fishingHarvestEnabled": "Narrar a colheita da pesca",
     "text.autoconfig.minecraft-access.option.narrateCrosshair.disableNarratingConsecutiveBlocks": "Desativar falar blocos consecutivos com o mesmo nome",
     "text.autoconfig.minecraft-access.option.narrateCrosshair.filter": "Menu de configuração de fala parcial",
     "text.autoconfig.minecraft-access.option.narrateCrosshair.filter.fuzzy": "Modo de correspondência difusa",
@@ -269,6 +263,5 @@
     "text.autoconfig.minecraft-access.option.poi.blocks.detectFluidBlocks": "Detetar blocos fluente",
     "text.autoconfig.minecraft-access.option.poi.blocks.playSoundForOtherBlocks": "Reproduzir sons para outros blocos também",
     "text.autoconfig.minecraft-access.option.poi.locking.autoLockEyeOfEnderEntity": "Auto bloquear no olho do Ender quando usado",
-    "text.autoconfig.minecraft-access.option.poi.locking.unlockingSound": "Reproduzir som ao desbloquear",
     "text.autoconfig.minecraft-access.option.poi.narrateDistance": "Dizer a distância relativa entre entidades/Blocos"
 }

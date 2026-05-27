@@ -1,0 +1,23 @@
+{
+    "access_menu_function.minecraft_access.biome": "현재 바이옴",
+    "access_menu_function.minecraft_access.config": "설정 메뉴 열기",
+    "access_menu_function.minecraft_access.find_lava": "가장 가까운 용암 찾기",
+    "access_menu_function.minecraft_access.find_water": "가장 가까운 물 찾기",
+    "access_menu_function.minecraft_access.light_level": "밝기 수준",
+    "access_menu_function.minecraft_access.narrate_target": "블록 및 유체 대상 정보",
+    "access_menu_function.minecraft_access.refresh_screen_reader": "화면 낭독기 새로 고침",
+    "access_menu_function.minecraft_access.target_position": "블록과 및 유체 대상 위치",
+    "access_menu_function.minecraft_access.time": "하루 중 시간대",
+    "access_menu_function.minecraft_access.weather": "날씨",
+    "access_menu_function.minecraft_access.xp": "경험치 레벨",
+    "block.minecraft.flowing_lava": "흐르는 용암",
+    "block.minecraft.flowing_water": "흐르는 물",
+    "dimension.minecraft.overworld": "오버월드",
+    "dimension.minecraft.the_end": "엔드",
+    "dimension.minecraft.the_nether": "네더",
+    "key.category.minecraft_access.access_menu_functions": "Minecraft Access: 접근성 메뉴 기능",
+    "key.category.minecraft_access.camera_controls": "Minecraft Access: 카메라 컨트롤",
+    "key.category.minecraft_access.inventory_controls": "Minecraft Access: 인벤토리 컨트롤",
+    "key.category.minecraft_access.mouse_simulation": "Minecraft Access: 마우스 시뮬레이션",
+    "key.category.minecraft_access.object_tracker": "Minecraft Access: 오브젝트 추적기"
+}

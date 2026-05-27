@@ -1,4 +1,5 @@
 {
+    "access_menu_function.minecraft_access.weather": "Погода",
     "block.minecraft.flowing_lava": "Текучая лава",
     "block.minecraft.flowing_water": "Текучая вода",
     "minecraft_access.access_menu.light_level": "Уровень освещенности, %s",
