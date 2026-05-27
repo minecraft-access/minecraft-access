@@ -12,7 +12,7 @@
             {
                 devShells.default = pkgs.mkShell rec {
                     buildInputs = with pkgs; [
-                        jdk25
+                        jetbrains.jdk
                         libpulseaudio
                         libGL
                         openal
@@ -20,7 +20,7 @@
                         libx11
                     ];
                     nativeBuildInputs = with pkgs.buildPackages; [
-                        jdk25
+                        jetbrains.jdk
                         git
                         hugo
                         wlc
