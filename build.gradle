@@ -85,7 +85,17 @@ compileJava {
 shadowJar {
     archiveClassifier = null
     configurations = [project.configurations.shadow]
+    from(tasks.jarJar)
 }
+
+loom.nestJars(
+        tasks.named("shadowJar", Jar),
+        objects.fileCollection().from(
+                tasks.named("processIncludeJars", net.fabricmc.loom.build.nesting.NestableJarGenerationTask).map {
+                    objects.fileTree().from(it.outputDirectory)
+                }
+        )
+)
 
 processResources {
     def modVersion = project.version.toString()
