@@ -10,7 +10,7 @@ Currently, this mod [has enough features][features] to help visually impaired pl
 
 This mod supports:
 
-* Game version `1.21`, `1.20.6`, `1.20.4`, `1.20.1`, `1.19.3`
+* Game version `1.19.3` and later
 * On [Fabric] and [NeoForge] mod loaders
 * On Windows, Linux, and MacOS operating systems
   (on MacOS you may need to use an external monitor or decrease the GUI scale for inventory controls to work,
