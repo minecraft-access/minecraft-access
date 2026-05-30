@@ -43,7 +43,7 @@ jobs:
           fetch-tags: true
       - name: Javadoc
         run: |
-          ./gradlew :common:javadoc
+          ./gradlew :javadoc
       - uses: actions/configure-pages@v6
         id: pages
       - name: Build
