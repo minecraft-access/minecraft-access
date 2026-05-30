@@ -1,81 +1,35 @@
 plugins {
-    alias(libs.plugins.shadow)
+    id 'idea'
+    id 'net.fabricmc.fabric-loom'
 }
 
-architectury {
-    platformSetupLoomIde()
-    fabric()
+idea {
+    module {
+        excludeDirs += file('./run/')
+    }
 }
 
 loom {
     log4jConfigs.from(file('../log4j.xml'))
-}
-
-configurations {
-    common
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
-    compileClasspath.extendsFrom common
-    runtimeClasspath.extendsFrom common
-    developmentFabric.extendsFrom common
+    runs {
+        remove server
+        client {
+            configName = 'Fabric Client'
+            ideConfigGenerated = true
+        }
+    }
+    runConfigs.configureEach {
+        vmArgs '-ea'
+    }
 }
 
 dependencies {
-    modImplementation libs.fabricLoader
-
-    modRuntimeOnly libs.fabricApi
-    include libs.fabricApi
-
-    modImplementation libs.balmFabric
-    include libs.balmFabric
-
-    modImplementation libs.clothConfigFabric
-    include libs.clothConfigFabric
-
-    modImplementation libs.modMenu
-
-    implementation libs.tolk
-    include libs.tolk
-
-    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
-    shadowCommon(project(path: ':common', configuration: 'transformProductionFabric')) { transitive = false }
-}
-
-processResources {
-    def modVersion = project.version.toString()
-    inputs.property 'version', modVersion
-
-    filesMatching('fabric.mod.json') {
-        expand(
-                version: modVersion,
-                fabric_loader_version: libs.fabricLoader.get().version,
-                fabric_api_version: libs.fabricApi.get().version,
-                balm_version: libs.balmFabric.get().version.split('\\+')[0],
-                jade_fabric_version: libs.jadeFabric.get().version,
-                cloth_config_version: libs.clothConfigFabric.get().version,
-                minecraft_version: libs.minecraft.get().version
-        )
-    }
-}
-
-shadowJar {
-    configurations = [project.configurations.shadowCommon]
-    archiveClassifier = 'dev-shadow'
-}
-
-remapJar {
-    inputFile.set shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier = null
-}
-
-jar {
-    archiveClassifier = 'dev'
-}
-
-sourcesJar {
-    def commonSources = project(':common').sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map {
-        zipTree(it)
-    }
+    minecraft libs.minecraft
+    runtimeOnly project(':')
+    runtimeOnly libs.fabricLoader
+    runtimeOnly libs.modMenu
+    runtimeOnly libs.jadeFabric
+    runtimeOnly libs.balmFabric
+    runtimeOnly libs.fabricApi
+    runtimeOnly libs.clothConfigFabric
 }

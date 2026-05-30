@@ -73,7 +73,7 @@ by the way this mod is a pure client side mod for now.
 
 ## Setting up Local Environment
 
-Java 21 is required to be pre-installed for this project.
+A Java JDK is required to be pre-installed for this project.
 IntelliJ IDEA is recommended since it has some convenient Minecraft modding plugins:
 [Architectury][architectury-idea] and [Minecraft Development].
 Can't find corresponding vscode extensions, but since Gradle is platform-independent, you can use any IDE as you like.

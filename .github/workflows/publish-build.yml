@@ -78,5 +78,4 @@ jobs:
             }' \
           | curl --fail-with-body -X POST ${{ secrets.SNAPSHOT_WEBHOOK }} \
             -F "payload_json=<-;type=application/json" \
-            -F files[0]=@$(ls -1 ./*+fabric.jar | head -n 1) \
-            -F files[1]=@$(ls -1 ./*+neoforge.jar | head -n 1)
+            -F files[0]=@$(ls -1 ./*.jar | head -n 1)

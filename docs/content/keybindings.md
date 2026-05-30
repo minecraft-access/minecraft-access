@@ -37,7 +37,7 @@ You may want to take a look at [all the original game controls][controls] as wel
 | Look West                       | `Control` + `J`    | Turn the camera to the west                                                                                                                         |
 | Look Behind                     | `Alt` + `,`        | Look straight back: Turn the camera to the opposite of the closest of the eight cardinal directions and reset vertical angle to horizontal position |
 | Look Straight up                | `Alt` + `.`        | Turn the camera to the look above head direction                                                                                                    |
-| Speak Facing Vertacle Direction | `Alt` + `Numpad 0` | Speak current vertical facing direction                                                                                                             |
+| Speak Facing Vertacle Direction | `Alt` + `H`        | Speak current vertical facing direction                                                                                                             |
 
 See also: [Feature Description]({{% relref "/features#camera-controls" %}}),
 [Configuration]({{% relref "/config#camera-controls" %}})

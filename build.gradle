@@ -1,7 +1,12 @@
 plugins {
-    alias(libs.plugins.architecturyPlugin)
-    id 'dev.architectury.loom' apply false
-    alias(libs.plugins.gitVersion)
+    id 'checkstyle'
+    alias libs.plugins.gitVersion
+    id 'idea'
+    id 'java'
+    alias libs.plugins.mavenPublish
+    id 'net.fabricmc.fabric-loom'
+    id 'net.neoforged.moddev'
+    alias libs.plugins.shadow
 }
 
 def git = versionDetails()
@@ -18,67 +23,205 @@ if (System.getenv('GITHUB_ACTIONS') == 'true') {
     version = "${tag}${tag.contains('-') ? '.' : '-'}SNAPSHOT"
 }
 
-architectury {
-    minecraft = libs.minecraft.get().version
+group = 'org.mcaccess'
+base.archivesName = 'minecraft-access'
+
+loom {
+    runs {
+        remove client
+        remove server
+    }
+
+    nestJars tasks.named('shadowJar', Jar), processIncludeJars.outputDirectory.asFileTree
 }
 
-subprojects {
-    apply plugin: 'dev.architectury.loom'
-    version = "${rootProject.version}+${project.name}"
+dependencies {
+    minecraft libs.minecraft
+    compileOnly libs.fabricLoader
+    compileOnly libs.neoForge
+    compileOnly libs.neoforgeFancymodloaderLoader
 
-    loom {
-        silentMojangMappingsLicense()
-        runs {
-            remove server
-        }
+    compileOnly libs.modMenu
+    compileOnly libs.jadeFabric
+    compileOnly libs.balmCommon
+    compileOnly libs.balmFabric
+    compileOnly libs.balmNeoForge
+    compileOnly libs.clothConfigCommon
+    implementation libs.tolk
+    shadow libs.tolk
+
+    include libs.fabricApi
+    include libs.balmFabric
+    include libs.clothConfigFabric
+
+    jarJar libs.balmNeoForge
+    jarJar libs.clothConfigNeoForge
+
+    compileOnly libs.jsr305
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    testImplementation libs.junitJupiter
+    testImplementation libs.junitJupiterParams
+    testRuntimeOnly libs.junitPlatformLauncher
+
+    testImplementation libs.assertjCore
+
+    testImplementation libs.mockitoCore
+    testImplementation libs.mockitoJunitJupiter
+
+    testCompileOnly libs.jsr305
+
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+
+    checkstyle libs.checkstyle
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+jar.enabled false
+shadowJar {
+    archiveClassifier = null
+    configurations = [project.configurations.shadow]
+    from tasks.jarJar
+}
+
+processResources {
+    def modVersion = project.version.toString()
+    inputs.property 'version', modVersion
+
+    def minecraftVersion = libs.minecraft.get().version
+    def minecraftVersionMatch = minecraftVersion =~ /^(\d+)\.(\d+)/
+    assert minecraftVersionMatch.find(): "Unsupported Minecraft version format: ${minecraftVersion}"
+
+    def minecraftMajorMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2)}"
+    def nextMinecraftMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2).toInteger() + 1}"
+
+    filesMatching(['fabric.mod.json', 'META-INF/neoforge.mods.toml']) {
+        expand(
+                version: modVersion,
+                fabric_loader_version: libs.fabricLoader.get().version,
+                fabric_api_version: libs.fabricApi.get().version,
+                balm_version: libs.balmCommon.get().version.split('\\+')[0],
+                jade_fabric_version: libs.jadeFabric.get().version,
+                jade_neoforge_version: libs.jadeNeoForge.get().version,
+                cloth_config_version: libs.clothConfigCommon.get().version,
+                fabric_minecraft_version_range: "~${minecraftMajorMinor}",
+                neoforge_version: libs.neoForge.get().version,
+                neoforge_minecraft_version_range: "[${minecraftMajorMinor}-,${nextMinecraftMinor})",
+        )
     }
+}
 
-    idea {
-        module {
-            excludeDirs += file('./run/')
-        }
+java {
+    withSourcesJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
     }
+}
 
-    dependencies {
-        minecraft libs.minecraft
-        mappings loom.layered() {
-            officialMojangMappings()
-            parchment variantOf(libs.parchment) {
-                artifactType('zip')
+checkstyle {
+    toolVersion = libs.checkstyle.get().version
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgs('-XX:+EnableDynamicAgentLoading')
+}
+
+javadoc {
+    include 'org/mcaccess/minecraftaccess/api/**'
+    title = "Minecraft Access ${rootProject.version} API"
+    options {
+        tags(
+                'apiNote:a:API Note:',
+                'implSpec:a:Implementation Requirements:',
+                'implNote:a:Implementation Note:',
+        )
+        keyWords true
+        linkSource true
+        links(
+                'https://javadoc.io/doc/org.jetbrains/annotations/latest/',
+        )
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+    coordinates project.group, base.archivesName.get(), rootProject.version
+    pom {
+        name = 'Minecraft Access'
+        description = 'A mod for minecraft java (fabric/neoforge) that specifically helps visually impaired players play Minecraft.'
+        url = 'https://mcaccess.org/'
+        inceptionYear = '2022'
+        licenses {
+            license {
+                name = 'GPL-3.0-only'
+                url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
             }
         }
-
-        compileOnly libs.lombok
-        annotationProcessor libs.lombok
-        testCompileOnly libs.lombok
-        testAnnotationProcessor libs.lombok
-    }
-}
-
-allprojects {
-    apply plugin: 'java'
-    apply plugin: libs.plugins.architecturyPlugin.get().pluginId
-    apply plugin: 'maven-publish'
-    apply plugin: 'checkstyle'
-
-    base.archivesName = 'minecraft-access'
-
-    group = 'org.mcaccess'
-
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = 'UTF-8'
-        options.release = 21
-    }
-
-    java {
-        withSourcesJar()
-    }
-
-    dependencies {
-        checkstyle libs.checkstyle
-    }
-
-    checkstyle {
-        toolVersion = libs.checkstyle.get().version
+        organization {
+            name = 'Minecraft Access'
+            url = 'https://github.com/minecraft-access'
+        }
+        developers {
+            developer {
+                id = 'khanshoaib3'
+                name = 'Shoaib'
+                url = 'https://github.com/khanshoaib3'
+                roles = [
+                        'Owner',
+                ]
+            }
+            developer {
+                id = 'sgmedev'
+                name = 'Joel Hooimeyer'
+                email = 'me@sgme.dev'
+                url = 'https://github.com/sgmedev'
+                timezone = 'Australia/Sydney'
+                roles = [
+                        'Maintainer',
+                ]
+            }
+            developer {
+                id = 'BrailleBennett'
+                name = 'Braille Bennett'
+                url = 'https://github.com/BrailleBennett'
+                timezone = 'America/Chicago'
+            }
+        }
+        contributors {
+            contributor {
+                name = 'Boholder'
+                url = 'https://github.com/boholder'
+            }
+            contributor {
+                name = 'Molitvan'
+                url = 'https://github.com/Molitvan'
+            }
+            contributor {
+                name = 'emassey0135'
+                url = 'https://github.com/emassey0135'
+            }
+        }
+        issueManagement {
+            system = 'GitHub'
+            url = 'https://github.com/minecraft-access/minecraft-access/issues'
+        }
+        ciManagement {
+            system = 'GitHub Actions'
+            url = 'https://github.com/minecraft-access/minecraft-access/actions'
+        }
+        scm {
+            connection = 'scm:git:https://github.com/minecraft-access/minecraft-access'
+            developerConnection = 'scm:git:git@github.com:minecraft-access/minecraft-access'
+            url = 'https://github.com/minecraft-access/minecraft-access'
+        }
     }
 }

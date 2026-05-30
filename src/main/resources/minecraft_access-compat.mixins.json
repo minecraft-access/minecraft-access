@@ -1,0 +1,21 @@
+{
+    "required": false,
+    "minVersion": "0.8",
+    "package": "org.mcaccess.minecraftaccess.compat.mixin",
+    "compatibilityLevel": "JAVA_25",
+    "client": [
+        "clothconfig.AbstractConfigListEntryMixin",
+        "clothconfig.CategoryLabelWidgetMixin",
+        "clothconfig.CleanMouseClickingFocus",
+        "clothconfig.ClothConfigScreenAccessor",
+        "clothconfig.ClothConfigScreenMixin",
+        "clothconfig.ClothConfigTabButtonMixin",
+        "clothconfig.ContainerEventHandlerMixin",
+        "clothconfig.ListWidgetMixin",
+        "clothconfig.ScreenNarrationCollectorOutputMixin",
+        "clothconfig.SubCategoryListEntryMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

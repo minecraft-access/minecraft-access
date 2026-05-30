@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Validate Input
         id: version
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           # language=javascript
           script: |
@@ -82,7 +82,7 @@ jobs:
           result-encoding: string
       - name: Collate Changelog
         id: changelog
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           # language=javascript
           script: |
@@ -202,18 +202,11 @@ jobs:
       centralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       gpgKey: ${{ secrets.GPG_KEY }}
   release:
-    name: Release (${{ matrix.loader.name }})
+    name: Release
     needs:
       - prepare
       - build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        loader:
-          - name: Fabric
-            slug: fabric
-          - name: NeoForge
-            slug: neoforge
     steps:
       - uses: actions/download-artifact@v8
       - uses: Kir-Antipov/mc-publish@v3.3
@@ -225,9 +218,9 @@ jobs:
           github-tag: v${{ needs.prepare.outputs.version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-name: Minecraft Access v${{ needs.prepare.outputs.version }}
-          files: ./*+${{ matrix.loader.slug }}.jar
-          name: Minecraft Access v${{ needs.prepare.outputs.version }} for ${{ matrix.loader.name }}
-          version: ${{ needs.prepare.outputs.version }}+${{ matrix.loader.slug }}
+          files: ./*.jar
+          name: Minecraft Access v${{ needs.prepare.outputs.version }}
+          version: ${{ needs.prepare.outputs.version }}
           changelog: ${{ needs.prepare.outputs.changelog }}
   discord-builds:
     name: Publish Build on Discord
@@ -248,7 +241,7 @@ jobs:
         [
           {
             "name": "Downloads",
-            "value": "GitHub: [Fabric & NeoForge](https://github.com/${{ github.repository }}/releases/tag/v${{ needs.prepare.outputs.version }})\nModrinth: [Fabric](https://modrinth.com/mod/${{ vars.MODRINTH_PROJECT }}/version/${{ needs.prepare.outputs.version }}+fabric) [NeoForge](https://modrinth.com/mod/${{ vars.MODRINTH_PROJECT }}/version/${{ needs.prepare.outputs.version }}+neoforge)",
+            "value": "GitHub: [Fabric & NeoForge](https://github.com/${{ github.repository }}/releases/tag/v${{ needs.prepare.outputs.version }})\nModrinth: [Fabric & NeoForge](https://modrinth.com/mod/${{ vars.MODRINTH_PROJECT }}/version/${{ needs.prepare.outputs.version }})",
             "inline": false
           }
         ]
@@ -282,7 +275,7 @@ jobs:
                   "fields": [
                     {
                       "name": "Downloads",
-                      "value": "GitHub: [Fabric & NeoForge](https://github.com/\($repo)/releases/tag/v\($version))\nModrinth: [Fabric](https://modrinth.com/mod/\($modrinth_project)/version/\($version)+fabric) [NeoForge](https://modrinth.com/mod/\($modrinth_project)/version/\($version)+neoforge)",
+                      "value": "GitHub: [Fabric & NeoForge](https://github.com/\($repo)/releases/tag/v\($version))\nModrinth: [Fabric & NeoForge](https://modrinth.com/mod/\($modrinth_project)/version/\($version))",
                       "inline": false
                     }
                   ],

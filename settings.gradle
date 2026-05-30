@@ -5,28 +5,12 @@ pluginManagement {
         exclusiveContent {
             forRepository {
                 maven {
-                    name = 'Architectury'
-                    url = 'https://maven.architectury.dev/'
-                }
-            }
-            filter {
-                includeGroup 'dev.architectury'
-                includeGroup 'dev.architectury.loom'
-                includeGroup 'architectury-plugin'
-                includeGroup 'com.mojang'
-            }
-        }
-
-        exclusiveContent {
-            forRepository {
-                maven {
                     name = 'Fabric'
                     url = 'https://maven.fabricmc.net/'
                 }
             }
             filter {
-                includeGroup 'net.fabricmc'
-                includeGroup 'net.fabricmc.unpick'
+                includeGroupAndSubgroups 'net.fabricmc'
             }
         }
 
@@ -38,8 +22,7 @@ pluginManagement {
                 }
             }
             filter {
-                includeGroup 'net.neoforged'
-                includeGroup 'net.minecraftforge'
+                includeGroupAndSubgroups 'net.neoforged'
                 includeGroup 'de.oceanlabs.mcp'
             }
         }
@@ -49,8 +32,9 @@ pluginManagement {
 }
 
 plugins {
-    id 'com.gradle.develocity' version '4.3.2'
-    id 'dev.architectury.loom' version '1.13.467'
+    id 'com.gradle.develocity' version '4.4.2'
+    id 'net.fabricmc.fabric-loom-repositories' version '1.16.2'
+    id 'net.neoforged.moddev.repositories' version '2.0.141'
 }
 
 develocity {
@@ -60,7 +44,7 @@ develocity {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode = RepositoriesMode.PREFER_SETTINGS
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
 
     repositories {
         exclusiveContent {
@@ -114,26 +98,13 @@ dependencyResolutionManagement {
         exclusiveContent {
             forRepository {
                 maven {
-                    name = 'Neoforged'
+                    name = 'Neoforged Releases'
                     url = 'https://maven.neoforged.net/releases/'
                 }
             }
             filter {
-                includeGroup 'net.neoforged'
-                includeGroup 'net.neoforged.accesstransformers'
-                includeGroup 'net.neoforged.fancymodloader'
-            }
-        }
-
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'ParchmentMC'
-                    url = 'https://maven.parchmentmc.org'
-                }
-            }
-            filter {
-                includeGroup 'org.parchmentmc.data'
+                includeGroupAndSubgroups 'net.minecraftforge'
+                includeGroupAndSubgroups 'cpw.mods'
             }
         }
 
@@ -165,8 +136,6 @@ dependencyResolutionManagement {
     }
 }
 
-include 'common'
+rootProject.name = 'minecraft_access'
 include 'fabric'
 include 'neoforge'
-
-rootProject.name = 'minecraft_access'

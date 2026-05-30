@@ -70,7 +70,7 @@ Minecraft has a long history since 2009, and there are many tutorials about it,
 almost every question has already been answered several times on the Internet.
 But due to this long history, there is lots of outdated information about this game as well,
 keep in mind to add game variant and game version as keywords while searching.
-(example: java 1.21)
+(example: java 26.1)
 
 * Wiki website in multiple languages, continually updated: [Minecraft Wiki](https://minecraft.wiki/w/Minecraft_Wiki)
   by hardworking volunteers. Has details and guides on everything about Minecraft,

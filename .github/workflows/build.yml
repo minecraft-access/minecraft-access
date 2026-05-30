@@ -18,7 +18,7 @@ on:
         required: false
 
 env:
-  JAVA_VERSION: 21
+  JAVA_VERSION: 25
   JAVA_DISTRIBUTION: temurin
   PULL_REQUEST: ${{ (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.number || null }}
 
@@ -41,7 +41,7 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
         with:
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
@@ -54,8 +54,7 @@ jobs:
         # language=bash
         run: |
           ./gradlew clean build ${{ inputs.central && 'publishAndReleaseToMavenCentral' || '' }} -x check
-          shopt -s extglob
-          cp ./!(common)/build/libs/*+!(*-*).jar .
+          cp $(ls -1 ./build/libs/minecraft-access-*.jar | awk '{ print length, $0 }' | sort -n | cut -d" " -f2- | head -n 1) .
       - uses: actions/upload-artifact@v7
         with:
           name: "minecraft-access"

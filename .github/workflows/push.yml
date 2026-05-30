@@ -4,7 +4,7 @@ on:
   pull_request:
 
 env:
-  JAVA_VERSION: 21
+  JAVA_VERSION: 25
   JAVA_DISTRIBUTION: temurin
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
         with:
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"

@@ -7,7 +7,6 @@
         <plugin id="com.demonwav.minecraft-dev"/>
         <plugin id="com.gradle.develocity.ide"/>
         <plugin id="com.intellij.gradle"/>
-        <plugin id="com.intellij.grazie.pro"/>
         <plugin id="com.intellij.java"/>
         <plugin id="com.intellij.modules.json"/>
         <plugin id="org.editorconfig.editorconfigjetbrains"/>
