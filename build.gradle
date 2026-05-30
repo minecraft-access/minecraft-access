@@ -84,7 +84,7 @@ compileJava {
     options.release = 25
 }
 
-jar.enabled false
+jar.enabled = false
 shadowJar {
     archiveClassifier = null
     configurations = [project.configurations.shadow]
