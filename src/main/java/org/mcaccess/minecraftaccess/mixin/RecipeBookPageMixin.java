@@ -14,7 +14,7 @@ import org.mcaccess.minecraftaccess.features.inventory_controls.GroupGenerator;
 @Mixin(RecipeBookPage.class)
 abstract class RecipeBookPageMixin {
     @Inject(at = @At("HEAD"), method = "updateCollections")
-    private void saveResultsForRecipeGroupGenerating(List<RecipeCollection> resultCollections, boolean resetCurrentPage, boolean filteringCraftable, CallbackInfo ci) {
-        GroupGenerator.recipesOnTheScreen = resultCollections;
+    private void saveResultsForRecipeGroupGenerating(List<RecipeCollection> recipeCollections, boolean resetPage, boolean isFiltering, CallbackInfo ci) {
+        GroupGenerator.recipesOnTheScreen = recipeCollections;
     }
 }

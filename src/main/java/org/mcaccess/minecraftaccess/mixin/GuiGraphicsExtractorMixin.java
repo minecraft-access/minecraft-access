@@ -26,11 +26,11 @@ abstract class GuiGraphicsExtractorMixin {
     private static String previous;
 
     @Inject(at = @At("HEAD"), method = "setTooltipForNextFrameInternal")
-    private void narrateTooltip(Font font, List<ClientTooltipComponent> list, int i, int j, ClientTooltipPositioner clientTooltipPositioner, @Nullable Identifier identifier, boolean bl, CallbackInfo ci) {
+    private void narrateTooltip(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, @Nullable Identifier style, boolean replaceExisting, CallbackInfo ci) {
         if (Config.getInstance().inventoryControls.enabled) {
             return;
         }
-        String combined = list.stream()
+        String combined = lines.stream()
                 .flatMap(component -> component instanceof ClientTextTooltipAccessor text ? Stream.of(text) : Stream.empty())
                 .map(ClientTextTooltipAccessor::getText)
                 .map(NarrationUtils::formattedCharSequenceToString)

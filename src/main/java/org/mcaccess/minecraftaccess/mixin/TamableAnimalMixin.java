@@ -12,9 +12,9 @@ import org.mcaccess.minecraftaccess.MainClass;
 @Mixin(TamableAnimal.class)
 abstract class TamableAnimalMixin {
     @Inject(at = @At("HEAD"), method = "spawnTamingParticles")
-    private void narrateEmotion(boolean positive, CallbackInfo ci) {
+    private void narrateEmotion(boolean success, CallbackInfo ci) {
         String name = ((EntityAccessor) this).callGetName().getString();
-        if (positive) {
+        if (success) {
             MainClass.narrate(I18n.get("minecraft_access.read_crosshair.like_your_behavior", name), true);
         } else {
             MainClass.narrate(I18n.get("minecraft_access.read_crosshair.dislike_your_behavior", name), true);

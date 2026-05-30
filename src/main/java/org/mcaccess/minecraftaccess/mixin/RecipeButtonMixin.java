@@ -33,7 +33,7 @@ abstract class RecipeButtonMixin {
     public abstract ItemStack getDisplayStack();
 
     @Inject(at = @At("HEAD"), method = "updateWidgetNarration", cancellable = true)
-    private void updateWidgetNarrationsMixin(CallbackInfo callbackInfo) {
+    private void updateWidgetNarrationsMixin(CallbackInfo ci) {
         ItemStack itemStack = getDisplayStack();
         String itemName = itemStack.getHoverName().getString();
 
@@ -52,7 +52,7 @@ abstract class RecipeButtonMixin {
         }
 
         shakeTheMouse();
-        callbackInfo.cancel();
+        ci.cancel();
     }
 
     /**

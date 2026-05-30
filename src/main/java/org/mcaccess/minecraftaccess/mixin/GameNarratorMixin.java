@@ -19,11 +19,11 @@ abstract class GameNarratorMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "narrateMessage", cancellable = true)
-    private void narrateMessage(String text, boolean interrupt, CallbackInfo callbackInfo) {
+    private void narrateMessage(String message, boolean interrupt, CallbackInfo ci) {
         if (MainClass.getScreenReader() == null || !MainClass.getScreenReader().isInitialized()) {
             return;
         }
-        MainClass.getScreenReader().narrate(text, interrupt);
-        callbackInfo.cancel();
+        MainClass.getScreenReader().narrate(message, interrupt);
+        ci.cancel();
     }
 }

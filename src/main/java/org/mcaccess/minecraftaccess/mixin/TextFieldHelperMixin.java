@@ -101,8 +101,8 @@ abstract class TextFieldHelperMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "removeCharsFromCursor")
-    private void narrateErasedText(int offset, CallbackInfo ci) {
-        int cursorPos = Util.offsetByCodepoints(getMessageFn.get(), this.cursorPos, offset);
+    private void narrateErasedText(int count, CallbackInfo ci) {
+        int cursorPos = Util.offsetByCodepoints(getMessageFn.get(), this.cursorPos, count);
         // select all text (ctrl+a) will not change the cursor position,
         // if we delete all text then, the erasedText will be a wrong value (one char ahead of cursor)
         // don't narrate under this condition

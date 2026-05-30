@@ -25,12 +25,12 @@ abstract class EyeOfEnderMixin extends Entity implements ItemSupplier {
     @Shadow
     private int life;
 
-    protected EyeOfEnderMixin(EntityType<?> type, Level world) {
-        super(type, world);
+    protected EyeOfEnderMixin(EntityType<? extends EyeOfEnder> type, Level level) {
+        super(type, level);
     }
 
-    @Inject(at = @At("HEAD"), method = "tick")
-    private void tick(CallbackInfo callbackInfo) {
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void tick(CallbackInfo ci) {
         if (life != 1) return;
         if (!Config.getInstance().poi.locking.autoLockEyeOfEnderEntity) {
             return;

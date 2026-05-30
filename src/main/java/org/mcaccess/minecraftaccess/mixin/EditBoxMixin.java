@@ -125,8 +125,8 @@ abstract class EditBoxMixin extends AbstractWidget {
     }
 
     @Inject(at = @At("HEAD"), method = "deleteChars")
-    private void narrateErasedText(int characterOffset, CallbackInfo ci) {
-        int cursorPos = getCursorPos(characterOffset);
+    private void narrateErasedText(int dir, CallbackInfo ci) {
+        int cursorPos = getCursorPos(dir);
         // select all text (ctrl+a) will not change the cursor position,
         // if we delete all text then, the erasedText will be a wrong value (one char ahead of cursor)
         // don't narrate under this condition
