@@ -62,7 +62,6 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
 
         @Override
         protected void init() {
-            assert minecraft != null;
             layout = new HeaderAndFooterLayout(this);
             layout.addTitleHeader(title, minecraft.font);
             availableList = addRenderableWidget(new SelectionList(false));
@@ -90,8 +89,8 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
         }
 
         @Override
-        public void extractRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
-            super.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
+        public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+            super.extractRenderState(guiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
         private final class SelectionList extends ObjectSelectionList<SelectionList.BaseEntry> {
@@ -161,8 +160,8 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
                 }
 
                 @Override
-                public void extractContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-                    GuiGraphicsExtractor.centeredText(minecraft.font, text, getX() + getWidth() / 2, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
+                public void extractContent(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+                    guiGraphicsExtractor.centeredText(minecraft.font, text, getX() + getWidth() / 2, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
                 }
             }
 
@@ -205,13 +204,13 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
                 }
 
                 @Override
-                public void extractContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-                    GuiGraphicsExtractor.text(minecraft.font, getNarration(), getContentX() + 34, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
+                public void extractContent(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+                    guiGraphicsExtractor.text(minecraft.font, getNarration(), getContentX() + 34, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
 
                     int relativeX = mouseX - getContentX();
                     int relativeY = mouseY - getContentY();
                     if (isSelectedList) {
-                        GuiGraphicsExtractor.blitSprite(
+                        guiGraphicsExtractor.blitSprite(
                                 RenderPipelines.GUI_TEXTURED,
                                 isHovering && relativeX < 16
                                         ? Identifier.withDefaultNamespace("transferable_list/unselect_highlighted")
@@ -220,7 +219,7 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
                                 32, 32
                         );
                         if (!Objects.equals(selection.getFirst(), value)) {
-                            GuiGraphicsExtractor.blitSprite(
+                            guiGraphicsExtractor.blitSprite(
                                     RenderPipelines.GUI_TEXTURED,
                                     isHovering && relativeX > 16 && relativeX < 32 && relativeY < 16
                                             ? Identifier.withDefaultNamespace("transferable_list/move_up_highlighted")
@@ -230,7 +229,7 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
                             );
                         }
                         if (!Objects.equals(selection.getLast(), value)) {
-                            GuiGraphicsExtractor.blitSprite(
+                            guiGraphicsExtractor.blitSprite(
                                     RenderPipelines.GUI_TEXTURED,
                                     isHovering && relativeX > 16 && relativeX < 32 && relativeY > 16
                                             ? Identifier.withDefaultNamespace("transferable_list/move_down_highlighted")
@@ -240,7 +239,7 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
                             );
                         }
                     } else {
-                        GuiGraphicsExtractor.blitSprite(
+                        guiGraphicsExtractor.blitSprite(
                                 RenderPipelines.GUI_TEXTURED,
                                 isHovering && relativeX < 32
                                         ? Identifier.withDefaultNamespace("transferable_list/select_highlighted")
@@ -276,7 +275,7 @@ class RegistryReorderable extends BaseEntry<Identifier[], Button> {
                 }
 
                 @Override
-                public boolean keyPressed(KeyEvent event) {
+                public boolean keyPressed(@NotNull KeyEvent event) {
                     if (isSelectedList) {
                         if (event.isConfirmation()) {
                             disable();
