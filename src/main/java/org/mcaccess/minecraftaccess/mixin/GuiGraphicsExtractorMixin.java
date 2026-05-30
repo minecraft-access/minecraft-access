@@ -26,7 +26,8 @@ abstract class GuiGraphicsExtractorMixin {
     private static String previous;
 
     @Inject(method = "setTooltipForNextFrameInternal", at = @At("HEAD"))
-    private void narrateTooltip(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, @Nullable Identifier style, boolean replaceExisting, CallbackInfo ci) {
+    private void narrateTooltip(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, @Nullable Identifier style,
+                                boolean replaceExisting, CallbackInfo ci) {
         if (Config.getInstance().inventoryControls.enabled) {
             return;
         }

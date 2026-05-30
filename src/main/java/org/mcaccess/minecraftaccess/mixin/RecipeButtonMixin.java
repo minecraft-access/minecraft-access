@@ -17,17 +17,14 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 @Mixin(RecipeButton.class)
 abstract class RecipeButtonMixin {
-    @Shadow
-    private RecipeCollection collection;
-
-    @Unique
-    private boolean vibratingFlag = false;
-
-    @Unique
-    private String previousItemName = "";
-
     @Unique
     private final Interval interval = Interval.ms(5000);
+    @Shadow
+    private RecipeCollection collection;
+    @Unique
+    private boolean vibratingFlag = false;
+    @Unique
+    private String previousItemName = "";
 
     @Shadow
     public abstract ItemStack getDisplayStack();
