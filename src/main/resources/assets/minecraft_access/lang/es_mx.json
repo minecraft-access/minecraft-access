@@ -9,10 +9,6 @@
     "key.minecraft_access.camera_controls.look/left": "Mirar a la izquierda",
     "key.minecraft_access.camera_controls.look/right": "Mira a la derecha",
     "key.minecraft_access.camera_controls.look/up": "Buscar",
-    "key.minecraft_access.camera_controls.look_alternate/down": "Cámara alternativa hacia abajo",
-    "key.minecraft_access.camera_controls.look_alternate/left": "Cámara alternativa a la izquierda",
-    "key.minecraft_access.camera_controls.look_alternate/right": "Cámara alternativa a la derecha",
-    "key.minecraft_access.camera_controls.look_alternate/up": "Búsqueda alternativa",
     "key.minecraft_access.camera_controls.look_direction/east": "Mirar directamente al este",
     "key.minecraft_access.camera_controls.look_direction/north": "Mira directamente al norte",
     "key.minecraft_access.camera_controls.look_direction/south": "Mirar directamente al sur",
@@ -207,7 +203,6 @@
     "text.autoconfig.minecraft-access.option.poi.locking.aimAssistAudioCuesVolume": "Volumen del sonido de la asistencia de puntería: %f",
     "text.autoconfig.minecraft-access.option.poi.locking.aimAssistEnabled": "Asistencia para apuntar con arco",
     "text.autoconfig.minecraft-access.option.poi.locking.autoLockEyeOfEnderEntity": "Bloqueo automático en el Ojo de Ender cuando se usa",
-    "text.autoconfig.minecraft-access.option.poi.locking.unlockingSound": "Reproducir sonido",
     "text.autoconfig.minecraft-access.option.poi.marking": "Menú de configuraciones de funciones de marcado",
     "text.autoconfig.minecraft-access.option.poi.marking.suppressOtherWhenEnabled": "Suprimir otros puntos de interés que hablan y bloquean al marcar",
     "text.autoconfig.minecraft-access.option.poi.narrateDistance": "Anunciar distancia a bloque"
