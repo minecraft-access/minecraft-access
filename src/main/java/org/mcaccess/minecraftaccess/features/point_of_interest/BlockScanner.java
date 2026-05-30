@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * @implNote uses DFS algorithm
@@ -20,8 +21,7 @@ public class BlockScanner {
 
     /**
      * Scan blocks around given center position and apply consumer to them.
-     * Note that the "scan wave" won't "penetrate" through non-air blocks,
-     * image blow up a balloon in a bottle, the balloon will fit the shape of the bottle.
+     * Note that the "scan wave" won't penetrate through non-air blocks or fluid blocks if the player isn't in a liquid
      *
      * @param blockPos center position
      * @param range    range
@@ -32,7 +32,10 @@ public class BlockScanner {
 
         int nextStepRange = range - 1;
         assert Minecraft.getInstance().level != null;
-        if (Minecraft.getInstance().level.getBlockState(blockPos).isAir() && nextStepRange >= 0) {
+        BlockState currentBlockState = Minecraft.getInstance().level.getBlockState(blockPos);
+        if ((currentBlockState.isAir()
+                || !currentBlockState.getFluidState().isEmpty() && Minecraft.getInstance().player.isInLiquid())
+                && nextStepRange >= 0) {
             scanAndQualifyBlocksExposedInAirAround(blockPos.north(), nextStepRange);
             scanAndQualifyBlocksExposedInAirAround(blockPos.south(), nextStepRange);
             scanAndQualifyBlocksExposedInAirAround(blockPos.west(), nextStepRange);
