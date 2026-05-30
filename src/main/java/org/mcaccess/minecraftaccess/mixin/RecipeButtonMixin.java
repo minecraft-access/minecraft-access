@@ -32,7 +32,7 @@ abstract class RecipeButtonMixin {
     @Shadow
     public abstract ItemStack getDisplayStack();
 
-    @Inject(at = @At("HEAD"), method = "updateWidgetNarration", cancellable = true)
+    @Inject(method = "updateWidgetNarration", at = @At("HEAD"), cancellable = true)
     private void updateWidgetNarrationsMixin(CallbackInfo ci) {
         ItemStack itemStack = getDisplayStack();
         String itemName = itemStack.getHoverName().getString();

@@ -11,7 +11,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 
 @Mixin(TamableAnimal.class)
 abstract class TamableAnimalMixin {
-    @Inject(at = @At("HEAD"), method = "spawnTamingParticles")
+    @Inject(method = "spawnTamingParticles", at = @At("HEAD"))
     private void narrateEmotion(boolean success, CallbackInfo ci) {
         String name = ((EntityAccessor) this).callGetName().getString();
         if (success) {

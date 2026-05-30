@@ -30,7 +30,7 @@ abstract class GuiMixin {
     @Unique
     private String previousActionBarContent = "";
 
-    @Inject(at = @At("HEAD"), method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V")
+    @Inject(method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V", at = @At("HEAD"))
     private void narrateActionbar(Component string, boolean animate, CallbackInfo ci) {
         Config config = Config.getInstance();
         if (config.features.actionBarEnabled) {

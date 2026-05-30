@@ -22,7 +22,7 @@ abstract class I18nMixin {
      * when translation key has "{}".
      */
     @SuppressWarnings("unchecked")
-    @Inject(at = @At("HEAD"), method = "get", cancellable = true)
+    @Inject(method = "get", at = @At("HEAD"), cancellable = true)
     private static void useNamedFormatter(String key, Object[] args, CallbackInfoReturnable<String> cir) {
         if (args.length == 1 && args[0] instanceof Map) {
             Map<String, Object> params = (Map<String, Object>) args[0];

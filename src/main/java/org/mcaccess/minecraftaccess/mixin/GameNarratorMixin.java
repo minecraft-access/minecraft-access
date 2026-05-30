@@ -18,7 +18,7 @@ abstract class GameNarratorMixin {
         return new NarratorDummy();
     }
 
-    @Inject(at = @At("HEAD"), method = "narrateMessage", cancellable = true)
+    @Inject(method = "narrateMessage", at = @At("HEAD"), cancellable = true)
     private void narrateMessage(String message, boolean interrupt, CallbackInfo ci) {
         if (MainClass.getScreenReader() == null || !MainClass.getScreenReader().isInitialized()) {
             return;
