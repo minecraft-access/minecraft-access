@@ -49,7 +49,6 @@ Here are licenses of modules that this mod packages into its jar file for distri
 
 - **cloth-config**:
   [GNU Lesser General Public License 3.0](https://github.com/shedaniel/cloth-config/blob/v8/LICENSE.md)
-- **ModMenu**: [MIT License](https://github.com/TerraformersMC/ModMenu/blob/1.21.4/LICENSE)
 
 [Weblate]: https://hosted.weblate.org/engage/minecraft-access/
 [Minecraft]: https://minecraft.net

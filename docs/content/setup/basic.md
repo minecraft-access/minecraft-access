@@ -24,28 +24,13 @@ If you know where this tutorial could be improved, please also let us know.
 
 ### Purchase the Game
 
-Before you purchase the game, make sure you have a computer with a 64-bit processor,
-[Minecraft no longer supports 32-bit computers around 2022][32-bit].
-Below are system requirements from [the official website][minecraft]:
-
-1. Minimum:
-    * OS: Windows 7 and up OR macOS 10.14.5 Mojave and up
-    * Architecture: ARM, x64, x86
-    * Memory: 2 GB
-    * Processor: Intel Core i3-3210 3.2 GHz | AMD A8-7600 APU 3.1 GHz | Apple M1 or equivalent
-    * Graphics: Intel HD Graphics 4000 | AMD Radeon R5
-
-2. Optimum:
-    * OS: Windows 10 and up OR macOS 10.14.5 Mojave and up
-    * Architecture: ARM, x64, x86
-    * Memory: 4 GB
-    * Processor: Intel Core i5-4690 3.5 GHz | AMD A10-7800 APU 3.5 GHz | Apple M1 or equivalent
-    * Graphics: NVIDIA GeForce 700 series or AMD Radeon Rx 200 series (excluding integrated chipsets) with OpenGL 4.45
-
-There are two editions of Minecraft: Minecraft: Java Edition and Minecraft for Windows/Bedrock Edition
+There are two editions of Minecraft. Minecraft: Java Edition and Minecraft: Bedrock Edition
 (usually just referred to as Minecraft).
 This Mod is only available for the Java Edition.
 Don't worry about buying the wrong one, the two editions are sold in a bundle.
+
+Before you purchase the game,
+make sure you have a computer that meets the [minimum requirements] of Minecraft: Java Edition!
 
 > While we needn't concern ourselves with the Bedrock Edition,
 > I would like you to know the differences between the two editions:
@@ -323,8 +308,8 @@ then add them back to the Mods folder one by one, try to start the game every ti
 
 [releases page]: https://github.com/minecraft-access/minecraft-access/releases/latest
 [our discord server]: https://discord.mcaccess.org/
-[32-bit]: https://www.minecraftforum.net/forums/minecraft-java-edition/recent-updates-and-snapshots/3140967-the-end-of-minecraft-32-bit
 [minecraft]: https://www.minecraft.net/en-us/store/minecraft-java-bedrock-edition-pc
+[minimum requirements]: https://help.minecraft.net/hc/en-us/articles/4409225939853-System-Requirements-for-Minecraft-Java-Edition
 [redeem]: https://www.minecraft.net/en-us/redeem
 [the Deluxe Collection]: https://www.minecraft.net/en-us/store/minecraft-deluxe-collection-pc
 [the bare game]: https://www.minecraft.net/store/minecraft-java-bedrock-edition-pc
@@ -335,7 +320,7 @@ then add them back to the Mods folder one by one, try to start the game every ti
 [Speech Dispatcher]: https://freebsoft.org/speechd
 [eSpeak NG]: https://github.com/espeak-ng/espeak-ng
 [fabric]: https://fabricmc.net/use/installer/
-[adoptium]: https://adoptium.net/temurin/releases/?os=any&arch=x64&version=21&package=jdk
+[adoptium]: https://adoptium.net/temurin/releases/?os=any&arch=x64&package=jdk
 [releases page]: https://github.com/minecraft-access/minecraft-access/releases/latest
 [advanced guide]: {{% relref "./advanced" %}}
 [Modrinth]: https://modrinth.com/mods
