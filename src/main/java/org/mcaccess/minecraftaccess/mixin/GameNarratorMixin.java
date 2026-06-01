@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
 import org.mcaccess.minecraftaccess.utils.NarratorDummy;
 
 @Mixin(GameNarrator.class)
@@ -20,10 +20,10 @@ abstract class GameNarratorMixin {
 
     @Inject(at = @At("HEAD"), method = "narrateMessage", cancellable = true)
     private void narrateMessage(String text, boolean interrupt, CallbackInfo callbackInfo) {
-        if (MainClass.getScreenReader() == null || !MainClass.getScreenReader().isInitialized()) {
+        if (!ScreenReaderController.isInitialized()) {
             return;
         }
-        MainClass.getScreenReader().narrate(text, interrupt);
+        ScreenReaderController.narrate(text, interrupt);
         callbackInfo.cancel();
     }
 }

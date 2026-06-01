@@ -93,20 +93,22 @@ The first time you start the launcher, it will require you to sign in with your 
 
 ## Dependencies for Speech
 
-On Windows, you must have either [NVDA] or [JAWS] running for the mod to speak.
-NVDA is free and open source while JAWS is proprietary and costs money.
-If you use Microsoft Narrator, or don't use a screen reader, you will not hear things like UI controls, inventory items,
-block and entity names, or chat messages read out.
+The mod uses [whisp-rs] for speech output on every platform.
+The required libraries and an eSpeak NG fallback are bundled inside the mod jar,
+so no extra files need to be downloaded into the game folder.
 
-On Linux, the mod uses [Speech Dispatcher] for speech output.
+On Windows, the mod will speak through whichever screen reader you have running (NVDA or JAWS) and fall back to OneCore, SAPI, then eSpeak NG if none is running.
+NVDA is free and open source while JAWS is proprietary and costs money.
+
+On Linux, the mod uses [Speech Dispatcher] when it is available.
 You should be able to install it with your distribution's package manager,
 probably under the name `speech-dispatcher` or `speechd`.
-You may also have to install [eSpeak NG] for speech to work.
 If you do not hear speech,
 run the `spd-say test` command before you start the game to make sure Speech Dispatcher has started and is working.
 If you do not hear anything after running that command,
 check your Speech Dispatcher configuration in either `~/.config/speech-dispatcher/` or `/etc/speech-dispatcher/`,
 and kill the `speech-dispatcher` process before testing again. If you use Orca, it will already be installed and set up.
+If Speech Dispatcher is not available the mod will fall back to the bundled eSpeak NG.
 
 ## Choose and Install Your Chosen Mod Loader
 
@@ -256,20 +258,20 @@ from not being able to hear the narration to a full game crash.
 
 ## Changing Speech Settings
 
-On Windows, Minecraft Access will use the same speech settings as your screen reader (JAWS or NVDA).
-On Linux, it will use your default Speech Dispatcher settings
-(usually found in `~/.config/speech-dispatcher/speechd.conf` or `/etc/speech-dispatcher/speechd.conf`)
-You must restart Speech Dispatcher for changes to take effect.
+By default, Minecraft Access will use whatever speech settings the active back-end provides:
+on Windows that is the active screen reader (NVDA or JAWS) or your OneCore or SAPI defaults,
+on Linux it is your Speech Dispatcher configuration
+(usually found in `~/.config/speech-dispatcher/speechd.conf` or `/etc/speech-dispatcher/speechd.conf`,
+and Speech Dispatcher must be restarted for changes to take effect),
+and on MacOS it is the voice configured in System Settings > Accessibility > Spoken Content.
 
-On MacOS, to change the voice, pitch, and volume the mod uses, open System Settings > Accessibility > Spoken Content,
-and change the settings there.
-Changing your default speech rate will not affect Minecraft Access, so you must change that from the configuration menu.
+To override the speech rate, volume, or pitch from the mod's own configuration menu:
 
 1. Open Minecraft and enter a world
 2. Press F4 followed by 0 to open the config menu
 3. Press Control+Tab until you hear "Speech Tab"
-4. Press tab until you hear "Speech Rate (MacOS)"
-5. Type in a new percentage and press tab
+4. Press tab until you reach "Rate", "Volume", or "Pitch"
+5. Type in a value between 0 and 100, or leave the field blank to use the back-end's default
 6. Exit the config menu by pressing escape
 
 ## Update the Game and Mods
@@ -318,7 +320,7 @@ then add them back to the Mods folder one by one, try to start the game every ti
 [NVDA]: https://nvaccess.org/download/
 [JAWS]: https://support.freedomscientific.com/Downloads/JAWS
 [Speech Dispatcher]: https://freebsoft.org/speechd
-[eSpeak NG]: https://github.com/espeak-ng/espeak-ng
+[whisp-rs]: https://github.com/minecraft-access/whisp-rs
 [fabric]: https://fabricmc.net/use/installer/
 [adoptium]: https://adoptium.net/temurin/releases/?os=any&arch=x64&package=jdk
 [releases page]: https://github.com/minecraft-access/minecraft-access/releases/latest

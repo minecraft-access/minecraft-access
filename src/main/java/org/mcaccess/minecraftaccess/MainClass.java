@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
@@ -23,7 +22,6 @@ import org.jetbrains.annotations.UnmodifiableView;
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 import org.mcaccess.minecraftaccess.features.AccessMenu;
-import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.features.CameraControls;
 import org.mcaccess.minecraftaccess.features.FallDetector;
@@ -40,14 +38,11 @@ import org.mcaccess.minecraftaccess.features.inventory_controls.InventoryControl
 import org.mcaccess.minecraftaccess.features.point_of_interest.POIManager;
 import org.mcaccess.minecraftaccess.mixin.GameNarratorAccessor;
 import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderController;
-import org.mcaccess.minecraftaccess.screen_reader.ScreenReaderInterface;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
 @Slf4j
 public final class MainClass {
     public static final String MOD_ID = "minecraft_access";
-    @Getter
-    private static ScreenReaderInterface screenReader = null;
     private static final Map<Class<?>, Map<Identifier, Object>> REGISTRY = new HashMap<>();
     private static boolean frozen = false;
 
@@ -82,8 +77,6 @@ public final class MainClass {
         String startupMessage = "Initializing Minecraft Access: version " + Balm.platform().getModInfo(MOD_ID).get().versionString();
         log.info(startupMessage);
 
-        new AutoLibrarySetup().initialize();
-
         ClientPlayingTick.AFTER.configureMapping((priority, callback) -> {
             ClientTickCallback.AFTER.register(priority, client -> {
                 if (client.player != null && client.level != null) {
@@ -112,11 +105,7 @@ public final class MainClass {
         }
 
         // This executes when minecraft closes
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (getScreenReader() != null && getScreenReader().isInitialized()) {
-                getScreenReader().closeScreenReader();
-            }
-        }, "Shutdown-thread"));
+        Runtime.getRuntime().addShutdownHook(new Thread(ScreenReaderController::close, "Shutdown-thread"));
 
         for (Addon addon : addons) {
             addon.addon().init(new AddonRegistry(addon.modid()));
@@ -124,9 +113,9 @@ public final class MainClass {
         frozen = true;
         Config.init();
 
-        ScreenReaderController.refreshScreenReader();
-        if (getScreenReader() != null && getScreenReader().isInitialized()) {
-            getScreenReader().narrate(startupMessage, true);
+        ScreenReaderController.initialize();
+        if (ScreenReaderController.isInitialized()) {
+            ScreenReaderController.narrate(startupMessage, true);
         }
 
         registrars.registerModule(new AccessMenu());
@@ -171,10 +160,6 @@ public final class MainClass {
         } else if (log.isDebugEnabled()) {
             Configurator.setLevel("org.mcaccess.minecraftaccess", Level.INFO);
         }
-    }
-
-    public static void setScreenReader(ScreenReaderInterface screenReader) {
-        MainClass.screenReader = screenReader;
     }
 
     public static void narrate(String text, boolean interrupt) {
