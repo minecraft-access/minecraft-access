@@ -95,12 +95,12 @@ public final class Config implements ConfigData {
     }
 
     public static final class SpeechSettings {
-        @org.jetbrains.annotations.Nullable
-        public Byte rate = null;
-        @org.jetbrains.annotations.Nullable
-        public Byte volume = null;
-        @org.jetbrains.annotations.Nullable
-        public Byte pitch = null;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int rate = 50;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int volume = 100;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int pitch = 50;
         public boolean narrateHints = true;
 
         private SpeechSettings() {

@@ -42,7 +42,7 @@ public final class ScreenReaderController {
         }
         String narration = formatNarration(text);
         Config.SpeechSettings s = Config.getInstance().speechSettings;
-        whisprs.output(null, null, null, s.rate, s.volume, s.pitch, null, narration, interrupt);
+        whisprs.output(null, null, null, (byte) s.rate, (byte) s.volume, (byte) s.pitch, null, narration, interrupt);
         log.info("Narrating(interrupt:{})= {}", interrupt, narration);
     }
 
