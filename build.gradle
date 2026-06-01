@@ -47,8 +47,8 @@ dependencies {
     compileOnly libs.balmFabric
     compileOnly libs.balmNeoForge
     compileOnly libs.clothConfigCommon
-    implementation libs.tolk
-    shadow libs.tolk
+    implementation libs.whisprs
+    shadow libs.whisprs
 
     include libs.fabricApi
     include libs.balmFabric

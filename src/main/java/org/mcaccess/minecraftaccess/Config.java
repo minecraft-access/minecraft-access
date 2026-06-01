@@ -95,7 +95,12 @@ public final class Config implements ConfigData {
     }
 
     public static final class SpeechSettings {
-        public float speechRate = 50;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int rate = 50;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int volume = 100;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int pitch = 50;
         public boolean narrateHints = true;
 
         private SpeechSettings() {
