@@ -19,12 +19,12 @@ abstract class GameModeSwitcherScreenMixin {
     private GameModeIconAccessor previous;
 
     @WrapOperation(
+            method = {"init", "keyPressed", "render"},
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/client/gui/screens/debug/GameModeSwitcherScreen;currentlyHovered:Lnet/minecraft/client/gui/screens/debug/GameModeSwitcherScreen$GameModeIcon;",
                     opcode = Opcodes.PUTFIELD
-            ),
-            method = {"init", "keyPressed", "render"}
+            )
     )
     private void narrateGameMode(GameModeSwitcherScreen instance, @Coerce GameModeIconAccessor value, Operation<Void> original) {
         original.call(instance, value);

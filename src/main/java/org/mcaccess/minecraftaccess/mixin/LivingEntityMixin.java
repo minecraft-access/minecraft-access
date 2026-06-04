@@ -22,19 +22,19 @@ import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 @Mixin(LivingEntity.class)
 abstract class LivingEntityMixin {
     @Inject(method = "onEffectUpdated", at = @At("TAIL"))
-    private void narrateEffectApplication(MobEffectInstance effectInstance, boolean forced, Entity entity, CallbackInfo ci) {
+    private void narrateEffectApplication(MobEffectInstance effect, boolean doRefreshAttributes, Entity source, CallbackInfo ci) {
         if (Objects.equals(Minecraft.getInstance().player, this)) {
-            if (Minecraft.getInstance().player.hasEffect(effectInstance.getEffect())) return;
-            String effectName = NarrationUtils.narrateEffect(effectInstance);
+            if (Minecraft.getInstance().player.hasEffect(effect.getEffect())) return;
+            String effectName = NarrationUtils.narrateEffect(effect);
             MainClass.narrate(I18n.get("minecraft_access.effect_narration.gained") + ' ' + effectName, false);
         }
     }
 
     @Inject(method = "onEffectAdded", at = @At("TAIL"))
-    private void narrateEffectApplication2(MobEffectInstance effectInstance, Entity entity, CallbackInfo ci) {
+    private void narrateEffectApplication2(MobEffectInstance effect, Entity source, CallbackInfo ci) {
         if (Objects.equals(Minecraft.getInstance().player, this)) {
-            if (Minecraft.getInstance().player.hasEffect(effectInstance.getEffect())) return;
-            String effectName = NarrationUtils.narrateEffect(effectInstance);
+            if (Minecraft.getInstance().player.hasEffect(effect.getEffect())) return;
+            String effectName = NarrationUtils.narrateEffect(effect);
             MainClass.narrate(I18n.get("minecraft_access.effect_narration.gained") + ' ' + effectName, false);
         }
     }

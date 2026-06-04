@@ -29,30 +29,6 @@ abstract class ChatScreenMixin {
     @Shadow
     protected EditBox input;
 
-    @Inject(at = @At("HEAD"), method = "init")
-    private void init(CallbackInfo ci) {
-        currentChatMessagePage = 0;
-    }
-
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;getValue()Ljava/lang/String;"), method = "updateNarrationState")
-    private String suppressContent(EditBox instance) {
-        return "";
-    }
-
-    /**
-     * Add custom keystroke handling for chat screen.
-     */
-    @Inject(at = @At("HEAD"), method = "keyPressed", cancellable = true)
-    private void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (!repeatPreviousChatMessage(event.key())) return;
-
-        // Method executes to here means one of custom keystroke handling above is triggered,
-        // so we want to cancel the logic in injected original method,
-        // since its logic is also return after one handling triggered.
-        cir.setReturnValue(true);
-        cir.cancel();
-    }
-
     /**
      * This method checks if the key code corresponds to a numeric key or numeric keypad key between 0 and 9,
      * while Alt key is pressed too.
@@ -119,8 +95,32 @@ abstract class ChatScreenMixin {
         MainClass.narrate(messages.get(indexOffset).content().getString(), true);
     }
 
+    @Inject(method = "init", at = @At("HEAD"))
+    private void init(CallbackInfo ci) {
+        currentChatMessagePage = 0;
+    }
+
+    @Redirect(method = "updateNarrationState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;getValue()Ljava/lang/String;"))
+    private String suppressContent(EditBox instance) {
+        return "";
+    }
+
+    /**
+     * Add custom keystroke handling for chat screen.
+     */
+    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    private void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
+        if (!repeatPreviousChatMessage(event.key())) return;
+
+        // Method executes to here means one of custom keystroke handling above is triggered,
+        // so we want to cancel the logic in injected original method,
+        // since its logic is also return after one handling triggered.
+        cir.setReturnValue(true);
+        cir.cancel();
+    }
+
     // Since there is no text modifying narration, we want to manually narrate when the chat history is switched.
-    @Inject(at = @At("TAIL"), method = "moveInHistory")
+    @Inject(method = "moveInHistory", at = @At("TAIL"))
     private void narrateSwitchedChatHistory(CallbackInfo ci) {
         MainClass.narrate(input.getValue(), true);
     }

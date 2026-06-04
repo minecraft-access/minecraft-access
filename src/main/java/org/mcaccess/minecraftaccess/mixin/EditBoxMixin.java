@@ -28,10 +28,13 @@ import org.mcaccess.minecraftaccess.MainClass;
 abstract class EditBoxMixin extends AbstractWidget {
     @Shadow
     private String value;
+
     @Shadow
     private int cursorPos;
+
     @Shadow
     private int highlightPos;
+
     @Shadow
     private @Nullable String suggestion;
 
@@ -63,7 +66,7 @@ abstract class EditBoxMixin extends AbstractWidget {
      * Prevents any character input if alt is held down.
      * This logic is for "alt + num key to repeat chat message" function in {@link ChatScreenMixin}
      */
-    @Inject(at = @At("HEAD"), method = "charTyped", cancellable = true)
+    @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
     private void charTyped(CallbackInfoReturnable<Boolean> cir) {
         if (!Minecraft.getInstance().hasAltDown()) return;
 
@@ -71,7 +74,7 @@ abstract class EditBoxMixin extends AbstractWidget {
         cir.cancel();
     }
 
-    @Inject(at = @At("HEAD"), method = "keyPressed")
+    @Inject(method = "keyPressed", at = @At("HEAD"))
     private void narrateCursorHoverOverText(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (!canConsumeInput()) {
             return;
@@ -113,7 +116,7 @@ abstract class EditBoxMixin extends AbstractWidget {
         }
     }
 
-    @Inject(at = @At("RETURN"), method = "keyPressed")
+    @Inject(method = "keyPressed", at = @At("RETURN"))
     private void narrateSelectedText(CallbackInfoReturnable<Boolean> cir) {
         if (!canConsumeInput()) {
             return;
@@ -124,9 +127,9 @@ abstract class EditBoxMixin extends AbstractWidget {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "deleteChars")
-    private void narrateErasedText(int characterOffset, CallbackInfo ci) {
-        int cursorPos = getCursorPos(characterOffset);
+    @Inject(method = "deleteChars", at = @At("HEAD"))
+    private void narrateErasedText(int dir, CallbackInfo ci) {
+        int cursorPos = getCursorPos(dir);
         // select all text (ctrl+a) will not change the cursor position,
         // if we delete all text then, the erasedText will be a wrong value (one char ahead of cursor)
         // don't narrate under this condition

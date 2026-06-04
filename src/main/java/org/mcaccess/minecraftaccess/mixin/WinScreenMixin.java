@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(WinScreen.class)
 abstract class WinScreenMixin {
-    @ModifyReturnValue(at = @At("RETURN"), method = "getNarrationMessage")
+    @ModifyReturnValue(method = "getNarrationMessage", at = @At("RETURN"))
     private Component addCreditsTip(Component original) {
         return Component.translatable("minecraft_access.credits_screen.started_tip")
                 .append(Component.translatable("minecraft_access.other.words_connection"))

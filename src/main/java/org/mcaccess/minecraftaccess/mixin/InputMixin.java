@@ -25,12 +25,12 @@ abstract class InputMixin {
                     target = "Lnet/minecraft/client/gui/narration/NarrationElementOutput;add(Lnet/minecraft/client/gui/narration/NarratedElementType;Lnet/minecraft/network/chat/Component;)V"
             )
     )
-    private void setDeduplication(NarrationElementOutput instance, NarratedElementType type, Component contents) {
+    private void setDeduplication(NarrationElementOutput output, NarratedElementType type, Component contents) {
         NarrationThunk<?> thunk = NarrationThunk.from(contents);
         ((NarrationThunkExt) thunk).setDeduplication(switch (Minecraft.getInstance().screen) {
             case BookEditScreenAccessor bookEditScreen -> bookEditScreen.getCurrentPage();
             case null, default -> this;
         });
-        instance.add(type, thunk);
+        output.add(type, thunk);
     }
 }

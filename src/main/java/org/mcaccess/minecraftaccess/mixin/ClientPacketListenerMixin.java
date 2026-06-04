@@ -28,7 +28,7 @@ abstract class ClientPacketListenerMixin implements TickablePacketListener, Clie
     @Shadow
     private ClientLevel level;
 
-    @Inject(at = @At("HEAD"), method = "handleTakeItemEntity")
+    @Inject(method = "handleTakeItemEntity", at = @At("HEAD"))
     private void handleTakeItemEntity(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.player;

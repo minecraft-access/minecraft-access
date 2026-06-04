@@ -20,7 +20,7 @@ abstract class NowPlayingToastMixin {
         throw new AssertionError();
     }
 
-    @Inject(at = @At("TAIL"), method = "showToast")
+    @Inject(method = "showToast", at = @At("TAIL"))
     private void narrateSong(CallbackInfo ci) {
         String toastTextBuilder = I18n.get("minecraft_access.toast.shown")
                 + I18n.get("minecraft_access.other.words_connection")
