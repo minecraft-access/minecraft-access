@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Validate Input
         id: version
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           # language=javascript
           script: |
@@ -82,7 +82,7 @@ jobs:
           result-encoding: string
       - name: Collate Changelog
         id: changelog
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           # language=javascript
           script: |
@@ -152,7 +152,7 @@ jobs:
             core.summary.write();
             return changelog.trim();
           result-encoding: string
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
         with:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }}
@@ -208,8 +208,8 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v8
-      - uses: Kir-Antipov/mc-publish@v3.3
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+      - uses: Kir-Antipov/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659
         with:
           modrinth-id: ${{ vars.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
