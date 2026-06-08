@@ -31,17 +31,17 @@ jobs:
       contents: read
       attestations: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
-      - uses: gradle/actions/setup-gradle@v6
+      - uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e
         with:
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
@@ -55,11 +55,11 @@ jobs:
         run: |
           ./gradlew clean build ${{ inputs.central && 'publishAndReleaseToMavenCentral' || '' }} -x check
           cp $(ls -1 ./build/libs/minecraft-access-*.jar | awk '{ print length, $0 }' | sort -n | cut -d" " -f2- | head -n 1) .
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: "minecraft-access"
           path: "./*.jar"
-      - uses: actions/attest-build-provenance@v4
+      - uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32
         if: github.event_name != 'pull_request'
         with:
           subject-path: "./*.jar"
