@@ -13,7 +13,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
-      - uses: dbelyaev/action-checkstyle@ebd9df2e22f6696655aeba7c6d26956e7f41e1cc
+      - uses: dbelyaev/action-checkstyle@160efa03c2f62cc50646c44df9f05672cf00bbd0
         with:
           checkstyle_config: ./config/checkstyle/checkstyle.xml
           properties_file: ./config/checkstyle/checkstyle.properties

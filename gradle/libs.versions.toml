@@ -3,7 +3,7 @@
 # https://fabricmc.net/develop
 
 [versions]
-balm = "26.1.2.6"
+balm = "26.1.2.7"
 clothConfig = "26.1.154"
 junit = "6.1.0"
 mockito = "5.23.0"
@@ -15,16 +15,16 @@ balmNeoForge = { module = "net.blay09.mods:balm-neoforge", version.ref = "balm" 
 clothConfigCommon = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-fabricApi = "net.fabricmc.fabric-api:fabric-api:0.150.0+26.1.2"
-fabricLoader = "net.fabricmc:fabric-loader:0.19.2"
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.152.0+"
+fabricLoader = "net.fabricmc:fabric-loader:0.19.3"
 jadeFabric = "maven.modrinth:jade:26.1.0+fabric"
 jadeNeoForge = "maven.modrinth:jade:26.1.1+neoforge"
 jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 lombok = "org.projectlombok:lombok:1.18.46"
 minecraft = "com.mojang:minecraft:26.1.2"
-modMenu = "com.terraformersmc:modmenu:18.0.0-beta.1"
-neoForge = "net.neoforged:neoforge:26.1.2.67-beta"
-neoforgeFancymodloaderLoader = "net.neoforged.fancymodloader:loader:11.0.13"
+modMenu = "com.terraformersmc:modmenu:20.0.0-beta.2"
+neoForge = "net.neoforged:neoforge:26.1.2.76"
+neoforgeFancymodloaderLoader = "net.neoforged.fancymodloader:loader:11.0.14"
 tolk = "com.davykager.tolk:Tolk:1.0.0"
 
 assertjCore = "org.assertj:assertj-core:3.27.7"
@@ -34,9 +34,9 @@ junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher",
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:13.4.2"
+checkstyle = "com.puppycrawl.tools:checkstyle:13.5.0"
 
 [plugins]
 gitVersion = { id = "com.palantir.git-version", version = "5.0.0" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
-shadow = { id = "com.gradleup.shadow", version = "9.4.1" }
+shadow = { id = "com.gradleup.shadow", version = "9.4.2" }
