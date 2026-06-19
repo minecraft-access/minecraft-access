@@ -44,7 +44,7 @@ public class AccessMenu implements BalmClientModule {
                     if (keyAccessMenu.getBinding().key().getValue() == InputConstants.KEY_F4 && InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_F3)) {
                         return false;
                     } else {
-                        client.setScreen(new GUI());
+                        client.gui.setScreen(new GUI());
                         return true;
                     }
                 })

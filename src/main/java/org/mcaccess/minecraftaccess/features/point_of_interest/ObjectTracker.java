@@ -24,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -151,7 +152,7 @@ public class ObjectTracker implements BalmClientModule {
     }
 
     private void tick(Minecraft client, Player player, Level level) {
-        if (client.screen != null) return;
+        if (client.gui.screen() != null) return;
 
         updateGroups();
     }
@@ -349,7 +350,7 @@ public class ObjectTracker implements BalmClientModule {
 
         List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults()
                 .stream()
-                .sorted(Comparator.comparingDouble(a -> client.player.getEyePosition().distanceTo(a.getCenter())))
+                .sorted(Comparator.comparingDouble(a -> client.player.getEyePosition().distanceTo(Vec3.atCenterOf(a))))
                 .toList();
 
         if (entities.isEmpty() && blocks.isEmpty()) {
@@ -361,7 +362,7 @@ public class ObjectTracker implements BalmClientModule {
             currentObject = blocks.getFirst();
         } else if (blocks.isEmpty()) {
             currentObject = entities.getFirst();
-        } else if (client.player.getEyePosition().distanceTo(blocks.getFirst().getCenter())
+        } else if (client.player.getEyePosition().distanceTo(Vec3.atCenterOf(blocks.getFirst()))
                 < client.player.distanceTo(entities.getFirst())) {
             currentObject = blocks.getFirst();
         } else {
@@ -378,7 +379,7 @@ public class ObjectTracker implements BalmClientModule {
 
         List<BlockPos> blocks = MainClass.poiManager.poiBlocks.getLastScanResults()
                 .stream()
-                .sorted(Comparator.comparingDouble(a -> client.player.getEyePosition().distanceTo(a.getCenter())))
+                .sorted(Comparator.comparingDouble(a -> client.player.getEyePosition().distanceTo(Vec3.atCenterOf(a))))
                 .toList();
 
         if (blocks.isEmpty()) {

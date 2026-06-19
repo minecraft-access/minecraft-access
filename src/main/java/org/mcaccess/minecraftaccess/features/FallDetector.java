@@ -47,7 +47,7 @@ public class FallDetector implements BalmClientModule {
     private void tick(Minecraft client, Player player, Level level) {
         if (!config.enabled) return;
 
-        if (client.screen != null) return;
+        if (client.gui.screen() != null) return;
         if (!player.onGround()) return;
         if (player.isUnderWater()) return;
         if (player.isSwimming()) return;

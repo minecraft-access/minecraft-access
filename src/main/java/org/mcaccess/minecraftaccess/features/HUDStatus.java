@@ -56,7 +56,7 @@ public class HUDStatus implements BalmClientModule {
                 .build();
 
         new ChangeDetector<Boolean>().clientEvent(
-                client -> client.options.hideGui,
+                client -> client.gui.hud.isHidden(),
                 (client, previous, value) -> MainClass.narrate(
                         I18n.get(String.format("minecraft_access.hud_status.announce_%s", value ? "hidden" : "shown")),
                         true
@@ -67,7 +67,7 @@ public class HUDStatus implements BalmClientModule {
     }
 
     private void attackIndicator(Minecraft client, Player player, Level level, Boolean previous, Boolean value) {
-        if (!value || client.options.hideGui || client.options.attackIndicator().get() == AttackIndicatorStatus.OFF || player.isSpectator()) {
+        if (!value || client.gui.hud.isHidden() || client.options.attackIndicator().get() == AttackIndicatorStatus.OFF || player.isSpectator()) {
             return;
         }
         level.playPlayerSound(SoundEvents.NOTE_BLOCK_HAT.value(), SoundSource.PLAYERS, 0.6f, 1.0f);
@@ -75,7 +75,7 @@ public class HUDStatus implements BalmClientModule {
 
     private void narrateBossBars(boolean isShiftDown) {
         List<LerpingBossEvent> bosses = new ArrayList<>(
-                ((BossHealthOverlayAccessor) Minecraft.getInstance().gui.getBossOverlay()).getEvents().values()
+                ((BossHealthOverlayAccessor) Minecraft.getInstance().gui.hud.getBossOverlay()).getEvents().values()
         );
 
         if (bosses.isEmpty()) {

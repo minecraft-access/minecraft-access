@@ -86,7 +86,7 @@ public class POIEntities implements BalmClientModule {
         if (!CONFIG.enabled) return;
         if (!interval.isReady()) return;
 
-        if (client.screen != null) return; //Prevent running if any screen is opened
+        if (client.gui.screen() != null) return; //Prevent running if any screen is opened
 
         log.trace("POIEntities started");
         scanEntitiesAroundPlayer();
@@ -121,7 +121,7 @@ public class POIEntities implements BalmClientModule {
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
         if (CONFIG.volume == 0.0f) return;
-        Function<Entity, Vec3> mapper = e -> e.blockPosition().getCenter();
+        Function<Entity, Vec3> mapper = e -> Vec3.atCenterOf(e.blockPosition());
         if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
             markedGroup.playSoundForGroupItems(mapper, CONFIG.volume);
         } else if (CONFIG.playSound) {

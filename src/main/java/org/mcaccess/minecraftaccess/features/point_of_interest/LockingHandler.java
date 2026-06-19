@@ -111,7 +111,7 @@ public class LockingHandler implements BalmClientModule {
     }
 
     private void tick(Minecraft client, Player player, Level level) {
-        if (client.screen != null) return;
+        if (client.gui.screen() != null) return;
 
         if (isPlayerLocked()) {
             lookAtLockedTarget();
@@ -256,7 +256,7 @@ public class LockingHandler implements BalmClientModule {
 
             assert Minecraft.getInstance().player != null;
             Vec3 playerPos = Minecraft.getInstance().player.position();
-            double distance = lockedOnBlockPos.getCenter().distanceTo(playerPos);
+            double distance = Vec3.atCenterOf(lockedOnBlockPos).distanceTo(playerPos);
             if (distance <= 0.5) {
                 unlock(true, true);
                 return true;
@@ -323,12 +323,12 @@ public class LockingHandler implements BalmClientModule {
         entriesOfLockedOnBlock = blockState.getValues().collect(Collectors.toSet());
 
         Vec3 absolutePosition = switch (blockState.getBlock()) {
-            case DoorBlock ignored -> NonCubeBlockAbsolutePositions.getDoorPos(position.getCenter());
-            case TrapDoorBlock ignored -> NonCubeBlockAbsolutePositions.getTrapDoorPos(position.getCenter());
-            case ButtonBlock ignored -> NonCubeBlockAbsolutePositions.getButtonPos(position.getCenter());
-            case LadderBlock ignored -> NonCubeBlockAbsolutePositions.getLadderPos(position.getCenter());
-            case LeverBlock ignored -> NonCubeBlockAbsolutePositions.getLeverPos(position.getCenter());
-            default -> position.getCenter();
+            case DoorBlock ignored -> NonCubeBlockAbsolutePositions.getDoorPos(Vec3.atCenterOf(position));
+            case TrapDoorBlock ignored -> NonCubeBlockAbsolutePositions.getTrapDoorPos(Vec3.atCenterOf(position));
+            case ButtonBlock ignored -> NonCubeBlockAbsolutePositions.getButtonPos(Vec3.atCenterOf(position));
+            case LadderBlock ignored -> NonCubeBlockAbsolutePositions.getLadderPos(Vec3.atCenterOf(position));
+            case LeverBlock ignored -> NonCubeBlockAbsolutePositions.getLeverPos(Vec3.atCenterOf(position));
+            default -> Vec3.atCenterOf(position);
         };
 
         lockedOnBlockPos = new BlockPos3d(position, absolutePosition);

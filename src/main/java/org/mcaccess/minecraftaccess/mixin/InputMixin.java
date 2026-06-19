@@ -27,7 +27,7 @@ abstract class InputMixin {
     )
     private void setDeduplication(NarrationElementOutput output, NarratedElementType type, Component contents) {
         NarrationThunk<?> thunk = NarrationThunk.from(contents);
-        ((NarrationThunkExt) thunk).setDeduplication(switch (Minecraft.getInstance().screen) {
+        ((NarrationThunkExt) thunk).setDeduplication(switch (Minecraft.getInstance().gui.screen()) {
             case BookEditScreenAccessor bookEditScreen -> bookEditScreen.getCurrentPage();
             case null, default -> this;
         });

@@ -244,7 +244,7 @@ public class InventoryControls implements BalmClientModule {
                         return true;
                     } else if (isRecipeBookOpen()) {
                         // resolve can-not-enter-characters-issue https://github.com/minecraft-access/minecraft-access/issues/67
-                        Minecraft.getInstance().screen.setFocused(currentRecipeBookWidget);
+                        Minecraft.getInstance().gui.screen().setFocused(currentRecipeBookWidget);
                         setSearchBoxFocus(((RecipeBookComponentAccessor) currentRecipeBookWidget).getSearchBox(), true);
                         return true;
                     }
@@ -296,7 +296,7 @@ public class InventoryControls implements BalmClientModule {
         if (!interval.isReady()) return;
 
         if (client.player == null) return;
-        if (client.screen == null) {
+        if (client.gui.screen() == null) {
             previousScreen = null;
             currentScreen = null;
             currentGroupIndex = 0;
@@ -304,14 +304,14 @@ public class InventoryControls implements BalmClientModule {
             currentRecipeBookWidget = null;
             return;
         }
-        if (!(client.screen instanceof AbstractContainerScreen)) return;
+        if (!(client.gui.screen() instanceof AbstractContainerScreen)) return;
         if (!config.enabled) {
             return;
         }
 
         loadConfig();
-        currentScreen = (AbstractContainerScreenAccessor) client.screen;
-        currentRecipeBookWidget = getRecipeBookWidget(client.screen);
+        currentScreen = (AbstractContainerScreenAccessor) client.gui.screen();
+        currentRecipeBookWidget = getRecipeBookWidget(client.gui.screen());
         currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
 
         interval.adjustNextReadyTimeBy(keyListener());

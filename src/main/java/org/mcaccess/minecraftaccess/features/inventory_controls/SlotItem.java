@@ -76,7 +76,7 @@ public class SlotItem {
     }
 
     public String getNarratableText() {
-        if (Minecraft.getInstance().screen instanceof LoomScreen loomScreen) {
+        if (Minecraft.getInstance().gui.screen() instanceof LoomScreen loomScreen) {
             List<Holder<BannerPattern>> list = loomScreen.getMenu().getSelectablePatterns();
             if (list.isEmpty()) return "";
 
@@ -93,7 +93,7 @@ public class SlotItem {
             return I18n.get(transKey);
         }
 
-        if (Minecraft.getInstance().screen instanceof StonecutterScreen stonecutterScreen) {
+        if (Minecraft.getInstance().gui.screen() instanceof StonecutterScreen stonecutterScreen) {
             List<SelectableRecipe.SingleInputEntry<StonecutterRecipe>> list = stonecutterScreen.getMenu().getVisibleRecipes().entries();
             if (list.isEmpty()) return "";
 
@@ -111,7 +111,7 @@ public class SlotItem {
             return "%s %s".formatted(item.getCount(), toolTipString);
         }
 
-        if (Minecraft.getInstance().screen instanceof MerchantScreen merchantScreen) {
+        if (Minecraft.getInstance().gui.screen() instanceof MerchantScreen merchantScreen) {
             MerchantOffers tradeOfferList = merchantScreen.getMenu().getOffers();
             if (tradeOfferList.isEmpty()) return I18n.get("minecraft_access.inventory_controls.Unknown");
             MerchantOffer tradeOffer = tradeOfferList.get(recipeOrTradeIndex + ((MerchantScreenAccessor) merchantScreen).getScrollOff());
