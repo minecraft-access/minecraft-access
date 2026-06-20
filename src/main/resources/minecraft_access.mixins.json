@@ -36,7 +36,6 @@
         "GameNarratorMixin",
         "GuiGraphicsExtractorMixin",
         "HudMixin",
-        "I18NAccessor",
         "I18nMixin",
         "InputMixin",
         "ItemStackMixin",

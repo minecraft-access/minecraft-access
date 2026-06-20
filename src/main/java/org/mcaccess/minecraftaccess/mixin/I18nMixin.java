@@ -27,7 +27,7 @@ abstract class I18nMixin {
         if (args.length == 1 && args[0] instanceof Map) {
             Map<String, Object> params = (Map<String, Object>) args[0];
 
-            String pattern = I18NAccessor.getLanguage().getOrDefault(key);
+            String pattern = Language.getInstance().getOrDefault(key);
             String result = NamedFormatter.format(pattern, params);
 
             // fallback to English
