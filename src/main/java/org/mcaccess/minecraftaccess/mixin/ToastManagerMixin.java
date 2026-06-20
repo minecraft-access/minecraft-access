@@ -34,7 +34,9 @@ abstract class ToastManagerMixin {
             case RecipeToast ignored -> toastTextBuilder.append(I18n.get("recipe.toast.title"))
                     .append(". ")
                     .append(I18n.get("recipe.toast.description"));
-            case SystemToast systemToast -> toastTextBuilder.append(((SystemToastAccessor) systemToast).getTitle().getString())
+            case SystemToast systemToast -> toastTextBuilder.append(((SystemToastAccessor) systemToast).getTitleLines().stream()
+                            .map(NarrationUtils::formattedCharSequenceToString)
+                            .collect(Collectors.joining(" ")))
                     .append(". ")
                     .append(((SystemToastAccessor) systemToast).getMessageLines().stream()
                             .map(NarrationUtils::formattedCharSequenceToString)
