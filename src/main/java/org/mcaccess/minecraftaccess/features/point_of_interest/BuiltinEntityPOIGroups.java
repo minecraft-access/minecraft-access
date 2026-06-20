@@ -35,7 +35,7 @@ public enum BuiltinEntityPOIGroups {
                     LocalPlayer player = Minecraft.getInstance().player;
                     assert player != null;
                     boolean mobAttackedPlayer = mob.equals(player.getLastHurtByMob());
-                    boolean mobAngryAtPlayer = player.getUUID().equals(mob.getPersistentAngerTarget());
+                    boolean mobAngryAtPlayer = player.getUUID().equals(mob.getPersistentAngerTarget().getUUID());
                     return mobAttackedPlayer || mobAngryAtPlayer;
                 }
                 return false;

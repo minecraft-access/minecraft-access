@@ -33,9 +33,7 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
 
     @Override
     protected Button initWidget() {
-        return Button.builder(Component.empty(), b -> {
-            Minecraft.getInstance().gui.setScreen(new SelectionScreen(Minecraft.getInstance().gui.screen()));
-        }).build();
+        return Button.builder(Component.empty(), b -> Minecraft.getInstance().gui.setScreen(new SelectionScreen(Minecraft.getInstance().gui.screen()))).build();
     }
 
     @Override

@@ -57,7 +57,7 @@ public class ObjectTracker implements BalmClientModule {
     @Override
     public void initialize() {
         ClientPlayingTick.AFTER.register(this::tick);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(_ -> {
             currentObject = null;
             currentGroup = null;
             groups = new ArrayList<>();
@@ -66,7 +66,7 @@ public class ObjectTracker implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.narrate_current_object"))
                 .withDefault(InputBinding.key(InputConstants.KEY_HOME))
                 .overrideCategory(KeyMappingCategories.OBJECT_TRACKER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     narrateCurrentObject(true);
                     return true;
                 })
@@ -75,7 +75,7 @@ public class ObjectTracker implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.target_nearest/any"))
                 .withDefault(InputBinding.key(InputConstants.KEY_END))
                 .overrideCategory(KeyMappingCategories.OBJECT_TRACKER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     targetNearestAny();
                     return true;
                 })
@@ -84,7 +84,7 @@ public class ObjectTracker implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.target_nearest/block"))
                 .withDefault(InputBinding.key(InputConstants.KEY_END, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.OBJECT_TRACKER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     targetNearestBlock();
                     return true;
                 })
@@ -93,7 +93,7 @@ public class ObjectTracker implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.target_nearest/entity"))
                 .withDefault(InputBinding.key(InputConstants.KEY_END, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.OBJECT_TRACKER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     targetNearestEntity();
                     return true;
                 })
@@ -102,7 +102,7 @@ public class ObjectTracker implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.move_item/previous"))
                 .withDefault(InputBinding.key(InputConstants.KEY_PAGEUP))
                 .overrideCategory(KeyMappingCategories.OBJECT_TRACKER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     moveObject(-1);
                     return true;
                 })
@@ -111,7 +111,7 @@ public class ObjectTracker implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.move_item/next"))
                 .withDefault(InputBinding.key(InputConstants.KEY_PAGEDOWN))
                 .overrideCategory(KeyMappingCategories.OBJECT_TRACKER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     moveObject(1);
                     return true;
                 })
@@ -120,7 +120,7 @@ public class ObjectTracker implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.move_group/previous"))
                 .withDefault(InputBinding.key(InputConstants.KEY_PAGEUP, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.OBJECT_TRACKER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     moveGroup(-1);
                     return true;
                 })
@@ -129,7 +129,7 @@ public class ObjectTracker implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "object_tracker.move_group/next"))
                 .withDefault(InputBinding.key(InputConstants.KEY_PAGEDOWN, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.OBJECT_TRACKER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     moveGroup(1);
                     return true;
                 })
@@ -267,27 +267,24 @@ public class ObjectTracker implements BalmClientModule {
             return;
         }
 
-        currentObject = validObjects.getFirst();
-
-        if (!atBoundary) {
-            MainClass.narrate(currentGroup.getTranslatedName(), true);
-        } else {
-            MainClass.narrate(currentGroup.getTranslatedName(), false);
-        }
-
+        MainClass.narrate(currentGroup.getTranslatedName(), !atBoundary);
         narrateCurrentObject(false);
     }
 
     public boolean isObjectValid(Object object) {
-        if (object == null) return false;
-
-        if (object instanceof Entity entity) {
-            return entity.isAlive();
-        }
-
-        if (object instanceof BlockPos pos) {
-            if (Minecraft.getInstance().level == null) return false;
-            return !(Minecraft.getInstance().level.getBlockState(pos).getBlock() instanceof AirBlock);
+        switch (object) {
+            case null -> {
+                return false;
+            }
+            case Entity entity -> {
+                return entity.isAlive();
+            }
+            case BlockPos pos -> {
+                if (Minecraft.getInstance().level == null) return false;
+                return !(Minecraft.getInstance().level.getBlockState(pos).getBlock() instanceof AirBlock);
+            }
+            default -> {
+            }
         }
 
         return false;

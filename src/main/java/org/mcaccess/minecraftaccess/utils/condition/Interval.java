@@ -24,14 +24,6 @@ public class Interval {
     }
 
     /**
-     * In seconds.
-     */
-    public static Interval sec(long delay) {
-        // 1 seconds = 1*10^9 nanoseconds
-        return new Interval(System.nanoTime(), Unit.SECOND.toNano(delay));
-    }
-
-    /**
      * Use the value of {@link Config#multipleClickSpeedMilliseconds} as delay.
      */
     public static Interval defaultDelay() {

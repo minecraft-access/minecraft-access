@@ -141,14 +141,14 @@ public class POIBlocks implements BalmClientModule {
     private void playerSoundAtFoundPOI(boolean isMarking) {
         if (CONFIG.volume == 0.0f) return;
         if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
-            markedGroup.playSoundForGroupItems(pos -> Vec3.atCenterOf(pos), CONFIG.volume);
+            markedGroup.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
         } else if (CONFIG.playSound) {
             if (CONFIG.playSoundForOtherBlocks) {
                 for (POIGroup<BlockPos> group : groups) {
-                    group.playSoundForGroupItems(pos -> Vec3.atCenterOf(pos), CONFIG.volume);
+                group.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
                 }
             } else {
-                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(pos -> Vec3.atCenterOf(pos), CONFIG.volume);
+                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
             }
         }
     }
