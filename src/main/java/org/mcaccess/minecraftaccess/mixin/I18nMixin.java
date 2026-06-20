@@ -23,16 +23,16 @@ abstract class I18nMixin {
      */
     @SuppressWarnings("unchecked")
     @Inject(method = "get", at = @At("HEAD"), cancellable = true)
-    private static void useNamedFormatter(String key, Object[] args, CallbackInfoReturnable<String> cir) {
+    private static void useNamedFormatter(String id, Object[] args, CallbackInfoReturnable<String> cir) {
         if (args.length == 1 && args[0] instanceof Map) {
             Map<String, Object> params = (Map<String, Object>) args[0];
 
-            String pattern = Language.getInstance().getOrDefault(key);
+            String pattern = Language.getInstance().getOrDefault(id);
             String result = NamedFormatter.format(pattern, params);
 
             // fallback to English
             if (result.startsWith("minecraft_access")) {
-                pattern = getEnglishI18Nof(key);
+                pattern = getEnglishI18Nof(id);
                 result = NamedFormatter.format(pattern, params);
             }
 

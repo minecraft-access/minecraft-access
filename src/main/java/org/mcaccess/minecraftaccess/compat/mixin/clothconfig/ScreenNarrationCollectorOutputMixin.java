@@ -23,12 +23,12 @@ abstract class ScreenNarrationCollectorOutputMixin {
     @Unique
     private static int whiteSpaceCount = 0;
 
-    @ModifyVariable(method = "add", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(method = "add", at = @At("HEAD"), argsOnly = true, name = "contents")
     private NarrationThunk<?> makeSameOptionValuesBeingNarrated(NarrationThunk<?> contents) {
         boolean clothScreenOpening = Minecraft.getInstance().gui.screen() instanceof ClothConfigScreen;
         boolean mightBeValueDepth = depth > 1;
         if (clothScreenOpening && mightBeValueDepth && ((NarrationThunkAccessor) contents).getContents() instanceof String content) {
-            String prefix = IntStream.range(0, whiteSpaceCount).mapToObj(i -> " ").reduce("", String::concat);
+            String prefix = IntStream.range(0, whiteSpaceCount).mapToObj(_ -> " ").reduce("", String::concat);
             whiteSpaceCount = (whiteSpaceCount + 1) % 5;
             return NarrationThunk.from(content + prefix);
         }

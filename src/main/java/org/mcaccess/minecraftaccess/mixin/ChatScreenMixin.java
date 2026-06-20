@@ -66,7 +66,10 @@ abstract class ChatScreenMixin {
 
             if (newChatMessagePage != currentChatMessagePage) {
                 currentChatMessagePage = newChatMessagePage;
-                MainClass.narrate(I18n.get("minecraft_access.gui.chat_screen.showing_message_range", (newChatMessagePage * 10) + 1, (newChatMessagePage + 1) * 10), true);
+                MainClass.narrate(
+                        I18n.get("minecraft_access.gui.chat_screen.showing_message_range", (newChatMessagePage * 10) + 1, (newChatMessagePage + 1) * 10),
+                        true
+                );
             }
 
             for (int i = 1; i <= 9; i++) {
