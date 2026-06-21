@@ -23,7 +23,6 @@ public class Weather implements AccessMenuFunction {
         if (Minecraft.getInstance().player == null) return;
         if (level == null) return;
         if (currentBiome == null) return;
-        Minecraft.getInstance().player.clientSideCloseContainer();
 
         Biome.Precipitation currentPrecipitation = currentBiome.value()
                 .getPrecipitationAt(Minecraft.getInstance().player.getOnPos(), level.getSeaLevel());

@@ -1,9 +1,7 @@
 package org.mcaccess.minecraftaccess.utils;
 
-import java.io.IOException;
 import java.util.Objects;
 
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -14,7 +12,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -23,7 +20,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-@Slf4j
 public final class PlayerUtils {
     // A way to get exactly at what part of the entity the player is looking when locked on it
     public static Vec3 currentEntityLookingAtPosition = null;
@@ -88,18 +84,11 @@ public final class PlayerUtils {
     }
 
     public static boolean isVisibleToPlayer(Vec3 playerEyePos, Vec3 somewhereOnEntity, Entity entity) {
-        try (Level level = entity.level()) {
-            BlockHitResult hitResult = level.clip(
-                    new ClipContext(somewhereOnEntity, playerEyePos,
-                            ClipContext.Block.COLLIDER,
-                            ClipContext.Fluid.NONE, entity));
-            return hitResult.getType() == HitResult.Type.MISS;
-        } catch (IOException e) {
-            log.error("IoException in PlayerUtils from isVissibleToPlayer");
-            e.printStackTrace();
-        }
-
-        return false;
+        BlockHitResult hitResult = entity.level().clip(
+                new ClipContext(somewhereOnEntity, playerEyePos,
+                        ClipContext.Block.COLLIDER,
+                        ClipContext.Fluid.NONE, entity));
+        return hitResult.getType() == HitResult.Type.MISS;
     }
 
     public static boolean isInFluid() {

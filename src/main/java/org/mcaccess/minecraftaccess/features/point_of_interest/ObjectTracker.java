@@ -267,27 +267,23 @@ public class ObjectTracker implements BalmClientModule {
             return;
         }
 
+        currentObject = validObjects.getFirst();
         MainClass.narrate(currentGroup.getTranslatedName(), !atBoundary);
         narrateCurrentObject(false);
     }
 
     public boolean isObjectValid(Object object) {
-        switch (object) {
-            case null -> {
-                return false;
-            }
-            case Entity entity -> {
-                return entity.isAlive();
-            }
+        return switch (object) {
+            case Entity entity -> entity.isAlive();
             case BlockPos pos -> {
-                if (Minecraft.getInstance().level == null) return false;
-                return !(Minecraft.getInstance().level.getBlockState(pos).getBlock() instanceof AirBlock);
+                if (Minecraft.getInstance().level == null) {
+                    yield false;
+                } else {
+                    yield !(Minecraft.getInstance().level.getBlockState(pos).getBlock() instanceof AirBlock);
+                }
             }
-            default -> {
-            }
-        }
-
-        return false;
+            default -> false;
+        };
     }
 
     private void moveObject(int step) {

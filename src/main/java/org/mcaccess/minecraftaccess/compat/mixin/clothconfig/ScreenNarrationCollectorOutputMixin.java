@@ -28,7 +28,7 @@ abstract class ScreenNarrationCollectorOutputMixin {
         boolean clothScreenOpening = Minecraft.getInstance().gui.screen() instanceof ClothConfigScreen;
         boolean mightBeValueDepth = depth > 1;
         if (clothScreenOpening && mightBeValueDepth && ((NarrationThunkAccessor) contents).getContents() instanceof String content) {
-            String prefix = IntStream.range(0, whiteSpaceCount).mapToObj(_ -> " ").reduce("", String::concat);
+            String prefix = " ".repeat(whiteSpaceCount);
             whiteSpaceCount = (whiteSpaceCount + 1) % 5;
             return NarrationThunk.from(content + prefix);
         }

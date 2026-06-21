@@ -84,11 +84,13 @@ public final class MainClass {
 
         new AutoLibrarySetup().initialize();
 
-        ClientPlayingTick.AFTER.configureMapping((priority, callback) -> ClientTickCallback.AFTER.register(priority, client -> {
-            if (client.player != null && client.level != null) {
-                callback.handle(client, client.player, client.level);
-            }
-        }));
+        ClientPlayingTick.AFTER.configureMapping((priority, callback) -> {
+            ClientTickCallback.AFTER.register(priority, client -> {
+                if (client.player != null && client.level != null) {
+                    callback.handle(client, client.player, client.level);
+                }
+            });
+        });
 
         ClientTickCallback.AFTER.register(MainClass::clientTickEventsMethod);
 

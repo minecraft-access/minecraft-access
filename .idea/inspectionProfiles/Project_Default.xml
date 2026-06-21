@@ -10,6 +10,10 @@
         <inspection_tool class="AssignmentToForLoopParameter" enabled="true" level="WARNING" enabled_by_default="true">
             <option name="m_checkForeachParameters" value="true"/>
         </inspection_tool>
+        <inspection_tool class="AutoCloseableResource" enabled="true" level="WARNING" enabled_by_default="true">
+            <option name="METHOD_MATCHER_CONFIG"
+                    value="java.util.Formatter,format,java.io.Writer,append,com.google.common.base.Preconditions,checkNotNull,org.hibernate.Session,close,java.io.PrintWriter,printf,java.io.PrintStream,printf,java.lang.foreign.Arena,ofAuto,java.lang.foreign.Arena,global,net.minecraft.world.entity.Entity,level"/>
+        </inspection_tool>
         <inspection_tool class="BadOddness" enabled="true" level="WARNING" enabled_by_default="true"/>
         <inspection_tool class="BlockMarkerComments" enabled="true" level="WARNING" enabled_by_default="true"/>
         <inspection_tool class="BooleanExpressionMayBeConditional" enabled="true" level="WARNING" enabled_by_default="true"
