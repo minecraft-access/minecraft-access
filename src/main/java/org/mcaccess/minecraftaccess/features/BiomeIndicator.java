@@ -52,7 +52,7 @@ public class BiomeIndicator implements BalmClientModule {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private void onChange(Minecraft client, Player player, Level level, Optional<Holder<@NotNull Biome>> previous, Optional<Holder<@NotNull Biome>> biome) {
-        if (!Config.getInstance().features.biomeIndicatorEnabled) {
+        if (!Config.getInstance().features.biomeIndicatorEnabled || biome.isEmpty()) {
             dimension.update(Optional.of(level.dimension()));
             return;
         }
