@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -91,15 +90,6 @@ public final class PlayerUtils {
         return hitResult.getType() == HitResult.Type.MISS;
     }
 
-    public static boolean isInFluid() {
-        LocalPlayer player = CLIENT.player;
-        assert player != null;
-        return player.isSwimming()
-                || player.isUnderWater()
-                || player.isInWater()
-                || player.isInLava();
-    }
-
     /**
      * The value of MinecraftClient.crosshairTarget field is ray cast result that not including the fluid blocks.
      * So use this method to get what fluid the player might be looking at.
@@ -109,7 +99,8 @@ public final class PlayerUtils {
      */
     public static HitResult crosshairTarget(double rayCastDistance) {
         BlockHitResult fluidHitResult = crosshairFluidTarget(rayCastDistance);
-        if (fluidHitResult.getType() == HitResult.Type.BLOCK && !isInFluid()) {
+        assert Minecraft.getInstance().player != null;
+        if (fluidHitResult.getType() == HitResult.Type.BLOCK && !Minecraft.getInstance().player.isInLiquid()) {
             return fluidHitResult;
         } else {
             return CLIENT.hitResult;

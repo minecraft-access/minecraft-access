@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 
 public enum BuiltinBlockPOIGroups {
     ORE(new POIGroup<>(
@@ -76,12 +75,13 @@ public enum BuiltinBlockPOIGroups {
             "minecraft_access.point_of_interest.group.fluid",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                Level world = Minecraft.getInstance().level;
+                Level level = Minecraft.getInstance().level;
                 boolean configEnabled = Config.getInstance().poi.blocks.detectFluidBlocks;
-                assert world != null;
-                boolean isSource = world.getFluidState(pos).getAmount() == 8;
-                boolean isLiquid = world.getBlockState(pos).getBlock() instanceof LiquidBlock;
-                return configEnabled && isLiquid && !PlayerUtils.isInFluid() && isSource;
+                assert level != null;
+                boolean isSource = level.getFluidState(pos).getAmount() == 8;
+                boolean isLiquid = level.getBlockState(pos).getBlock() instanceof LiquidBlock;
+                assert Minecraft.getInstance().player != null;
+                return configEnabled && isLiquid && !Minecraft.getInstance().player.isInLiquid() && isSource;
             }
     )),
     HAVE_INTERFACE(new POIGroup<>(
@@ -94,6 +94,7 @@ public enum BuiltinBlockPOIGroups {
                     // intentionally ignore LEFT so two-blocks-size big chest can be detected as single chest
                     return chestType == ChestType.SINGLE || chestType == ChestType.RIGHT;
                 } else {
+                    assert Minecraft.getInstance().level != null;
                     return state.getMenuProvider(Minecraft.getInstance().level, pos) != null;
                 }
             }
