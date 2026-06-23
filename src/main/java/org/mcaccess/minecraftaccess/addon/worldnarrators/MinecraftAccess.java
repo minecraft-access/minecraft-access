@@ -204,10 +204,8 @@ public class MinecraftAccess implements WorldNarrator {
                 String itemName = itemDisplay.itemRenderState().itemStack().getItemName().getString();
                 yield I18n.get("minecraft_access.point_of_interest.locking.display_item", itemName);
             }
-            case Display.TextDisplay textDisplay when textDisplay.textRenderState() != null -> {
-                //noinspection DataFlowIssue
-                yield textDisplay.textRenderState().text().getString();
-            }
+            case Display.TextDisplay textDisplay when textDisplay.textRenderState() != null -> //noinspection DataFlowIssue
+                    textDisplay.textRenderState().text().getString();
             case Display.BlockDisplay blockDisplay when blockDisplay.blockRenderState() != null -> {
                 @SuppressWarnings("DataFlowIssue")
                 Block ghostBlock = blockDisplay.blockRenderState().blockState().getBlock();

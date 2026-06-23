@@ -45,7 +45,7 @@ public class POIEntities implements BalmClientModule {
 
     private final POIGroup<Entity> otherEntitiesGroup = new POIGroup<>(
             "minecraft_access.point_of_interest.group.otherEntities",
-            entity -> true
+            _ -> true
     );
 
     @SuppressWarnings("unchecked")
@@ -67,7 +67,7 @@ public class POIEntities implements BalmClientModule {
     @Override
     public void initialize() {
         ClientPlayingTick.AFTER.register(this::tick);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(_ -> {
             markedEntity = null;
             lastScanResults = new ArrayList<>();
         });

@@ -95,7 +95,7 @@ public final class PlayerUtils {
      * So use this method to get what fluid the player might be looking at.
      *
      * @return fluid block if player isn't in fluid and is looking at a fluid block,
-     * or MinecraftClient.crosshairTarget otherwise
+     *     or MinecraftClient.crosshairTarget otherwise
      */
     public static HitResult crosshairTarget(double rayCastDistance) {
         BlockHitResult fluidHitResult = crosshairFluidTarget(rayCastDistance);

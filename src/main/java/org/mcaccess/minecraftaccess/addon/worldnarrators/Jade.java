@@ -50,7 +50,7 @@ public class Jade implements WorldNarrator {
         Tooltip tooltip = new Tooltip();
         WailaClientRegistration.instance()
                 .getAccessorHandler(accessor.getAccessorType())
-                .gatherComponents(accessor, provider -> tooltip);
+                .gatherComponents(accessor, _ -> tooltip);
         return tooltip.getNarration();
     }
 
@@ -64,7 +64,7 @@ public class Jade implements WorldNarrator {
         Tooltip tooltip = new Tooltip();
         WailaClientRegistration.instance()
                 .getAccessorHandler(accessor.getAccessorType())
-                .gatherComponents(accessor, provider -> tooltip);
+                .gatherComponents(accessor, _ -> tooltip);
         return tooltip.getNarration();
     }
 }

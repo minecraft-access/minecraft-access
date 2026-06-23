@@ -154,6 +154,15 @@ public class NarrateCrosshair implements BalmClientModule {
         float volume = (float) (minVolume + (maxDistance - distance) * volumeDeltaPerBlock);
 
         assert Minecraft.getInstance().level != null;
-        Minecraft.getInstance().level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
+        Minecraft.getInstance().level.playLocalSound(
+                targetPosition.x,
+                targetPosition.y,
+                targetPosition.z,
+                sound.value(),
+                SoundSource.BLOCKS,
+                volume,
+                pitch,
+                true
+        );
     }
 }

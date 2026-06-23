@@ -134,7 +134,12 @@ public class SlotItem {
             if (secondBuyItem.isEmpty()) {
                 tradeText = I18n.get("minecraft_access.inventory_controls.trade_text_format", firstBuyItemString, sellItemString);
             } else {
-                tradeText = I18n.get("minecraft_access.inventory_controls.trade_text_format_with_second_item", firstBuyItemString, secondBuyItemString, sellItemString);
+                tradeText = I18n.get(
+                        "minecraft_access.inventory_controls.trade_text_format_with_second_item",
+                        firstBuyItemString,
+                        secondBuyItemString,
+                        sellItemString
+                );
             }
 
             return tradeText;

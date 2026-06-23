@@ -32,7 +32,7 @@ public class PositionNarrator implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_position.narrate_player_position"))
                 .withDefault(InputBinding.key(InputConstants.KEY_V))
                 .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     MainClass.narrate(PlayerPositionUtils.getNarratableXYZPosition(), true);
                     return true;
                 })
@@ -41,7 +41,7 @@ public class PositionNarrator implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_position.narrate_coordinate/x"))
                 .withDefault(InputBinding.key(InputConstants.KEY_X, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     MainClass.narrate(PlayerPositionUtils.getNarratableXPos(), true);
                     return true;
                 })
@@ -50,7 +50,7 @@ public class PositionNarrator implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_position.narrate_coordinate/y"))
                 .withDefault(InputBinding.key(InputConstants.KEY_C, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     MainClass.narrate(PlayerPositionUtils.getNarratableYPos(), true);
                     return true;
                 })
@@ -59,7 +59,7 @@ public class PositionNarrator implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_position.narrate_coordinate/z"))
                 .withDefault(InputBinding.key(InputConstants.KEY_Z, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.PLAYER_POSITION)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     MainClass.narrate(PlayerPositionUtils.getNarratableZPos(), true);
                     return true;
                 })

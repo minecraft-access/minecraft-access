@@ -43,7 +43,7 @@ public class PlayerStatus implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_status.player_status/normal"))
                 .withDefault(InputBinding.key(InputConstants.KEY_R))
                 .overrideCategory(KeyMappingCategories.PLAYER_STATUS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     narratePlayerStatus(false);
                     return true;
                 })
@@ -52,7 +52,7 @@ public class PlayerStatus implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_status.player_status/important"))
                 .withDefault(InputBinding.key(InputConstants.KEY_R, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.PLAYER_STATUS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     narratePlayerStatus(true);
                     return true;
                 })
@@ -61,7 +61,7 @@ public class PlayerStatus implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "player_status.player_effects"))
                 .withDefault(InputBinding.key(InputConstants.KEY_R, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.PLAYER_STATUS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     assert Minecraft.getInstance().player != null;
                     Collection<MobEffectInstance> effects = Minecraft.getInstance().player.getActiveEffects();
                     if (effects.isEmpty()) {
@@ -76,8 +76,8 @@ public class PlayerStatus implements BalmClientModule {
                 .build();
 
         new ServerChangeDetector<Boolean>().levelEvent(
-                (client, player, level) -> player.isCrouching(),
-                (client, player, level, previous, value) -> {
+                (_, player, _) -> player.isCrouching(),
+                (_, player, level, _, value) -> {
                     if (!Config.getInstance().features.crouchAndSprintCues || !value && player.isSprinting()) {
                         return;
                     }
@@ -86,8 +86,8 @@ public class PlayerStatus implements BalmClientModule {
         );
 
         new ServerChangeDetector<Boolean>().levelEvent(
-                (client, player, level) -> player.isSprinting() && !player.isCrouching(),
-                (client, player, level, previous, value) -> {
+                (_, player, _) -> player.isSprinting() && !player.isCrouching(),
+                (_, _, level, _, value) -> {
                     if (Config.getInstance().features.crouchAndSprintCues) {
                         level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, value ? 2.5f : 0.9f);
                     }
@@ -96,8 +96,8 @@ public class PlayerStatus implements BalmClientModule {
 
         for (Map.Entry<Identifier, Status> entry : MainClass.registry(Status.class).entrySet()) {
             new ServerChangeDetector<>(() -> Status.WarningLevel.NONE).levelEvent(
-                    (client, player, level) -> entry.getValue().warning(),
-                    (client, player, level, previous, value) -> {
+                    (_, _, _) -> entry.getValue().warning(),
+                    (_, _, level, previous, value) -> {
                         if (!Config.getInstance().playerWarnings.enabled
                                 || !Arrays.asList(Config.getInstance().playerWarnings.statuses).contains(entry.getKey())
                                 || value.ordinal() <= previous.ordinal()

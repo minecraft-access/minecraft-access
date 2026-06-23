@@ -38,7 +38,7 @@ public final class ConfigExtension {
 
     public static void apply(GuiRegistry registry) {
         registry.registerAnnotationProvider(
-                (i18n, field, config, defaults, guiProvider) -> {
+                (i18n, field, config, defaults, _) -> {
                     Registry annotation = field.getAnnotation(Registry.class);
                     return Collections.singletonList(new RegistrySingleSelect(annotation.registry(), annotation.i18n(), i18n, field, config, defaults));
                 },
@@ -46,7 +46,7 @@ public final class ConfigExtension {
                 Registry.class
         );
         registry.registerAnnotationProvider(
-                (i18n, field, config, defaults, guiProvider) -> {
+                (i18n, field, config, defaults, _) -> {
                     Registry annotation = field.getAnnotation(Registry.class);
                     return Collections.singletonList(new RegistryReorderable(annotation.registry(), annotation.i18n(), i18n, field, config, defaults));
                 },
@@ -54,7 +54,7 @@ public final class ConfigExtension {
                 Registry.class
         );
         registry.registerAnnotationTransformer(
-                (guis, i18n, field, config, defaults, registryAccess) -> {
+                (guis, _, field, _, _, _) -> {
                     FormatString annotation = field.getAnnotation(FormatString.class);
                     return guis.stream()
                             .peek(gui -> {
@@ -77,7 +77,9 @@ public final class ConfigExtension {
 
     public static <T> void validate(T config, T defaults) {
         for (Field field : config.getClass().getFields()) {
-            if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class)) {
+            if (Modifier.isTransient(field.getModifiers())
+                    || Modifier.isStatic(field.getModifiers())
+                    || field.isAnnotationPresent(ConfigEntry.Gui.Excluded.class)) {
                 continue;
             }
             if (field.isAnnotationPresent(ConfigEntry.Gui.TransitiveObject.class) || field.isAnnotationPresent(ConfigEntry.Gui.CollapsibleObject.class)) {
@@ -113,7 +115,7 @@ public final class ConfigExtension {
         }
     }
 
-    public static <T extends ConfigData> ConfigSerializer<T> serialiser(Config definition, Class<T> configClass) {
+    public static <T extends ConfigData> ConfigSerializer<T> serializer(Config definition, Class<T> configClass) {
         Gson gson = new GsonBuilder()
                 .setFormattingStyle(FormattingStyle.PRETTY.withIndent("    "))
                 .registerTypeAdapter(Identifier.class, new IdentifierAdapter())

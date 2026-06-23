@@ -72,7 +72,7 @@ public class LockingHandler implements BalmClientModule {
     @Override
     public void initialize() {
         ClientPlayingTick.AFTER.register(this::tick);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(_ -> {
             lockedOnEntity = null;
             lockedOnBlockPos = null;
             isLockedOnWhereEyeOfEnderDisappears = false;
@@ -85,7 +85,7 @@ public class LockingHandler implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.locking/lock"))
                 .withDefault(InputBinding.key(InputConstants.KEY_Y))
                 .overrideCategory(KeyMappingCategories.OTHER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     Minecraft client = Minecraft.getInstance();
                     assert client.getCameraEntity() != null;
                     assert client.player != null;
@@ -101,7 +101,7 @@ public class LockingHandler implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.locking/unlock"))
                 .withDefault(InputBinding.key(InputConstants.KEY_Y, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.OTHER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     if (isPlayerLocked()) {
                         unlock(true, true);
                     }

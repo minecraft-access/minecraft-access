@@ -40,7 +40,7 @@ public class HUDStatus implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbar/next"))
                 .withDefault(InputBinding.key(InputConstants.KEY_U))
                 .overrideCategory(KeyMappingCategories.OTHER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     narrateBossBars(false);
                     return true;
                 })
@@ -49,7 +49,7 @@ public class HUDStatus implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbar/previous"))
                 .withDefault(InputBinding.key(InputConstants.KEY_U, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.OTHER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     narrateBossBars(true);
                     return true;
                 })
@@ -57,13 +57,13 @@ public class HUDStatus implements BalmClientModule {
 
         new ChangeDetector<Boolean>().clientEvent(
                 client -> client.gui.hud.isHidden(),
-                (client, previous, value) -> MainClass.narrate(
+                (_, _, value) -> MainClass.narrate(
                         I18n.get(String.format("minecraft_access.hud_status.announce_%s", value ? "hidden" : "shown")),
                         true
                 )
         );
 
-        new ServerChangeDetector<>(() -> false).levelEvent((client, player, level) -> player.getAttackStrengthScale(0) >= 1, this::attackIndicator);
+        new ServerChangeDetector<>(() -> false).levelEvent((_, player, _) -> player.getAttackStrengthScale(0) >= 1, this::attackIndicator);
     }
 
     private void attackIndicator(Minecraft client, Player player, Level level, Boolean previous, Boolean value) {

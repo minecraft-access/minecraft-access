@@ -107,7 +107,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.change_group/previous"))
                 .withDefault(InputBinding.key(InputConstants.KEY_C, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     log.debug("Group key pressed");
                     changeGroup(false);
                     return true;
@@ -117,7 +117,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.change_group/next"))
                 .withDefault(InputBinding.key(InputConstants.KEY_C))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     log.debug("Group key pressed");
                     changeGroup(true);
                     return true;
@@ -127,7 +127,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_tab/previous"))
                 .withDefault(InputBinding.key(InputConstants.KEY_V, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     log.debug("Switch Tab key pressed");
                     if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen) {
                         changeRecipeTab(false);
@@ -143,7 +143,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_tab/next"))
                 .withDefault(InputBinding.key(InputConstants.KEY_V))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     log.debug("Switch Tab key pressed");
                     if (currentScreen instanceof InventoryScreen || currentScreen instanceof CraftingScreen) {
                         changeRecipeTab(true);
@@ -159,7 +159,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.move/left"))
                 .withDefault(InputBinding.key(InputConstants.KEY_J))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     log.debug("Left key pressed");
                     focusSlotItemAt(FocusDirection.LEFT);
                     return true;
@@ -169,7 +169,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.move/right"))
                 .withDefault(InputBinding.key(InputConstants.KEY_L))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     log.debug("Right key pressed");
                     focusSlotItemAt(FocusDirection.RIGHT);
                     return true;
@@ -179,7 +179,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.move/up"))
                 .withDefault(InputBinding.key(InputConstants.KEY_I))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     log.debug("Up key pressed");
                     focusSlotItemAt(FocusDirection.UP);
                     return true;
@@ -189,16 +189,15 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_recipe_book_page/previous"))
                 .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     if (currentGroup.isScrollable) {
                         log.debug("Previous Recipe Book page key pressed");
                         if (isRecipeBookOpen()) {
                             clickPreviousRecipeBookPage();
-                            return true;
                         } else {
                             MouseUtils.Wheel.UP.scroll();
-                            return true;
                         }
+                        return true;
                     }
                     return false;
                 })
@@ -207,7 +206,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.move/down"))
                 .withDefault(InputBinding.key(InputConstants.KEY_K))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     log.debug("Down key pressed");
                     focusSlotItemAt(FocusDirection.DOWN);
                     return true;
@@ -217,16 +216,15 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.switch_recipe_book_page/next"))
                 .withDefault(InputBinding.key(InputConstants.KEY_K, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     if (currentGroup.isScrollable) {
                         log.debug("Next Recipe Book page key pressed");
                         if (isRecipeBookOpen()) {
                             clickNextRecipeBookPage();
-                            return true;
                         } else {
                             MouseUtils.Wheel.DOWN.scroll();
-                            return true;
                         }
+                        return true;
                     }
                     return false;
                 })
@@ -235,8 +233,9 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.jump_to_textbox"))
                 .withDefault(InputBinding.key(InputConstants.KEY_T))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
-                    if (CreativeModeInventoryScreenAccessor.getSelectedTab().getType() == CreativeModeTab.Type.SEARCH && currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
+                .handleScreenInput(_ -> {
+                    if (CreativeModeInventoryScreenAccessor.getSelectedTab().getType() == CreativeModeTab.Type.SEARCH
+                            && currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
                         setSearchBoxFocus(((CreativeModeInventoryScreenAccessor) creativeInventoryScreen).getSearchBox(), true);
                         return true;
                     } else if (currentScreen instanceof AnvilScreen anvilScreen) {
@@ -255,7 +254,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.toggle_craftable"))
                 .withDefault(InputBinding.key(InputConstants.KEY_R))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     if (currentRecipeBookWidget == null) return false;
                     if (!currentRecipeBookWidget.isVisible()) return false;
 
@@ -274,7 +273,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.fuel_status"))
                 .withDefault(InputBinding.key(InputConstants.KEY_U))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
-                .handleScreenInput(event -> {
+                .handleScreenInput(_ -> {
                     if (currentScreen.getMenu() instanceof AbstractFurnaceMenu furnace) {
                         MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
                                 Math.round(furnace.getLitProgress() * 100),

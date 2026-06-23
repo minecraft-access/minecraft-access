@@ -83,7 +83,7 @@ public class POIBlocks implements BalmClientModule {
     @Override
     public void initialize() {
         ClientPlayingTick.AFTER.register(this::tick);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(_ -> {
             markedBlock = null;
             lastScanResults = new ArrayList<>();
         });
@@ -145,7 +145,7 @@ public class POIBlocks implements BalmClientModule {
         } else if (CONFIG.playSound) {
             if (CONFIG.playSoundForOtherBlocks) {
                 for (POIGroup<BlockPos> group : groups) {
-                group.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
+                    group.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
                 }
             } else {
                 BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
