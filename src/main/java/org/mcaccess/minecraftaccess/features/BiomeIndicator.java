@@ -35,7 +35,7 @@ public class BiomeIndicator implements BalmClientModule {
     @Override
     public void initialize() {
         new ServerChangeDetector<Optional<Holder<@NotNull Biome>>>()
-                .levelEvent((client, player, level) -> Optional.ofNullable(getCurrentBiome()), this::onChange);
+                .levelEvent((_, _, _) -> Optional.ofNullable(getCurrentBiome()), this::onChange);
     }
 
     @Nullable

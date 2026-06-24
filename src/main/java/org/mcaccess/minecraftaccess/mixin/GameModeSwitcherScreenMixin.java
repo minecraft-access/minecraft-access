@@ -19,7 +19,7 @@ abstract class GameModeSwitcherScreenMixin {
     private GameModeIconAccessor previous;
 
     @WrapOperation(
-            method = {"init", "keyPressed", "render"},
+            method = {"init", "keyPressed", "extractRenderState"},
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/client/gui/screens/debug/GameModeSwitcherScreen;currentlyHovered:Lnet/minecraft/client/gui/screens/debug/GameModeSwitcherScreen$GameModeIcon;",

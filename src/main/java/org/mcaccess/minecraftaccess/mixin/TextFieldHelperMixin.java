@@ -38,7 +38,7 @@ abstract class TextFieldHelperMixin {
     private int selectionPos;
 
     @Shadow
-    protected abstract String getSelected(String string);
+    protected abstract String getSelected(String text);
 
     @Inject(method = "setCursorToEnd()V", at = @At("TAIL"))
     private void narrateTextOfSwitchedLine(CallbackInfo ci) {

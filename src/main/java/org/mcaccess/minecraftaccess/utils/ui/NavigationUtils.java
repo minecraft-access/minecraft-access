@@ -28,7 +28,7 @@ public final class NavigationUtils {
 
     /**
      * Recursively find the focus path.
-     * Ignoring focusable children and return early with an incomplete path may cause unexpected navigation behaviour.
+     * Ignoring focusable children and returning early with an incomplete path may cause unexpected navigation behavior.
      *
      * @param root  from input component
      * @param event original event

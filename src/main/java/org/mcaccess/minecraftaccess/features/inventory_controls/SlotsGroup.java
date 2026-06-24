@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -133,7 +134,7 @@ public class SlotsGroup {
 
     public String getGroupName() {
         String key = String.format("minecraft_access.slot_group.%s", groupKey);
-        String translation = groupName == null || I18n.exists(key) ? I18n.get(key) : groupName;
+        String translation = groupName == null || Language.getInstance().has(key) ? I18n.get(key) : groupName;
         return index == null ? translation : String.format("%s %d", translation, index);
     }
 }

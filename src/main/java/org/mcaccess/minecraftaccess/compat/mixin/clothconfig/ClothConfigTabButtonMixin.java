@@ -37,15 +37,15 @@ abstract class ClothConfigTabButtonMixin extends AbstractButton {
      *         So we need to re-enable remap=true for this method, or it will fail finding target on production.
      */
     @Inject(at = @At("HEAD"), method = "updateWidgetNarration", remap = true)
-    private void updateWidgetNarration(NarrationElementOutput builder, CallbackInfo ci) {
-        builder.add(NarratedElementType.TITLE, Component.translatable("minecraft_access.gui.tab", getMessage()));
-        builder.add(NarratedElementType.USAGE, Component.translatable("narration.tab_navigation.usage"));
+    private void updateWidgetNarration(NarrationElementOutput narrationElementOutput, CallbackInfo ci) {
+        narrationElementOutput.add(NarratedElementType.TITLE, Component.translatable("minecraft_access.gui.tab", getMessage()));
+        narrationElementOutput.add(NarratedElementType.USAGE, Component.translatable("narration.tab_navigation.usage"));
 
         if (position == null) {
             List<ClothConfigTabButton> buttons = ((ClothConfigScreenAccessor) screen).getTabButtons();
             //noinspection SuspiciousMethodCalls
             position = new NarrationMessages.Position(buttons.indexOf(this), buttons.size(), NarrationMessages.Position.Type.TAB);
         }
-        builder.add(NarratedElementType.POSITION, position.toComponent());
+        narrationElementOutput.add(NarratedElementType.POSITION, position.toComponent());
     }
 }

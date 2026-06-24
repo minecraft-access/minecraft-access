@@ -21,11 +21,12 @@ public class Air implements Status {
 
     @Override
     public @NotNull Visibility visibility() {
-        assert Minecraft.getInstance().gameMode != null;
-        assert Minecraft.getInstance().player != null;
-        return Minecraft.getInstance().gameMode.canHurtPlayer()
-                && !Minecraft.getInstance().player.canBreatheUnderwater()
-                && (Minecraft.getInstance().player.isUnderWater() || Minecraft.getInstance().player.getAirSupply() < Minecraft.getInstance().player.getMaxAirSupply())
+        Minecraft client = Minecraft.getInstance();
+        assert client.gameMode != null;
+        assert client.player != null;
+        return client.gameMode.canHurtPlayer()
+                && !client.player.canBreatheUnderwater()
+                && (client.player.isUnderWater() || client.player.getAirSupply() < Minecraft.getInstance().player.getMaxAirSupply())
                 ? Visibility.IMPORTANT
                 : Visibility.NONE;
     }

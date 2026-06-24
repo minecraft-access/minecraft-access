@@ -129,7 +129,7 @@ public final class NarrationUtils {
      *
      * @param holder the holder's registry entry
      * @param type   the type of holder you want the translated name for
-     * @return the holder's human readable name as an Optional
+     * @return the holder's human-readable name as an Optional
      */
     public static Optional<String> getTranslatedName(Holder<?> holder, String type) {
         Optional<String> translatedName = holder.unwrapKey().map(key -> I18n.get(key.identifier().toLanguageKey(type)));
@@ -142,7 +142,7 @@ public final class NarrationUtils {
     @Contract(pure = true)
     public static @NotNull String formattedCharSequenceToString(@NotNull FormattedCharSequence charSequence) {
         StringBuilder builder = new StringBuilder();
-        charSequence.accept((index, style, codePoint) -> {
+        charSequence.accept((_, _, codePoint) -> {
             builder.appendCodePoint(codePoint);
             return true;
         });

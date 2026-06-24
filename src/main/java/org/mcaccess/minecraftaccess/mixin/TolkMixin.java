@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Tolk.class)
 abstract class TolkMixin {
     @WrapWithCondition(method = "<clinit>", at = @At(value = "INVOKE", target = "Ljava/lang/System;loadLibrary(Ljava/lang/String;)V"))
-    private static boolean cancelLibInit(String libName) {
+    private static boolean cancelLibInit(String libname) {
         return false;
     }
 }

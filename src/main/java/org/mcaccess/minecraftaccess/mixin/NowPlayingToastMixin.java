@@ -16,7 +16,7 @@ import org.mcaccess.minecraftaccess.MainClass;
 @Mixin(NowPlayingToast.class)
 abstract class NowPlayingToastMixin {
     @Shadow
-    private static Component getNowPlayingString(@Nullable String string) {
+    private static Component getNowPlayingString(@Nullable String currentSongKey) {
         throw new AssertionError();
     }
 
