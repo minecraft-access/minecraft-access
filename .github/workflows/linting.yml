@@ -13,6 +13,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
+          allow-unsafe-pr-checkout: true
       - uses: dbelyaev/action-checkstyle@bb41bd6758ebb04dfb87df6afa9f577634624dc0
         with:
           checkstyle_config: ./config/checkstyle/checkstyle.xml
@@ -31,6 +32,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
+          allow-unsafe-pr-checkout: true
       - name: Check Translation Sorting
         # language=bash
         run: |
@@ -54,6 +56,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
+          allow-unsafe-pr-checkout: true
       - name: Setup Git
         # language=bash
         run: |
