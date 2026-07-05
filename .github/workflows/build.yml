@@ -37,6 +37,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
+          allow-unsafe-pr-checkout: true
       - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           java-version: ${{ env.JAVA_VERSION }}
