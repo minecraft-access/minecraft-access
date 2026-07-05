@@ -91,6 +91,17 @@ shadowJar {
     from tasks.jarJar
 }
 
+configurations {
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact shadowJar
+    }
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact shadowJar
+    }
+}
+
 processResources {
     def modVersion = project.version.toString()
     inputs.property 'version', modVersion

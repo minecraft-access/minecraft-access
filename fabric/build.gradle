@@ -25,7 +25,7 @@ loom {
 
 dependencies {
     minecraft libs.minecraft
-    runtimeOnly project(':')
+    runtimeOnly rootProject
     runtimeOnly libs.fabricLoader
     runtimeOnly libs.modMenu
     runtimeOnly libs.jadeFabric
