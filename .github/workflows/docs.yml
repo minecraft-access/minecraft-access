@@ -44,6 +44,8 @@ jobs:
       - name: Javadoc
         run: |
           ./gradlew :javadoc
+          mkdir -p ./docs/static/api/client/
+          cp -r ./build/docs/javadoc ./docs/static/api/client/
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d
         id: pages
       - name: Build
