@@ -1,6 +1,8 @@
 package org.mcaccess.minecraftaccess.features;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -24,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
+import org.mcaccess.minecraftaccess.api.AddonRegistry;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 
 public class AccessMenu implements BalmClientModule {
@@ -67,7 +70,7 @@ public class AccessMenu implements BalmClientModule {
         }
 
         for (Map.Entry<Identifier, AccessMenuFunction> function : MainClass.registry(AccessMenuFunction.class).entrySet()) {
-            Kuma.createKeyMapping(function.getKey())
+            ManagedKeyMapping.RegistrationBuilder mapping = Kuma.createKeyMapping(function.getKey())
                     .overrideName(identifier -> identifier.toLanguageKey("access_menu_function"))
                     .overrideCategory(KeyMappingCategories.ACCESS_MENU_FUNCTIONS)
                     .handleWorldInput(_ -> {
@@ -76,8 +79,21 @@ public class AccessMenu implements BalmClientModule {
                             return true;
                         }
                         return false;
-                    })
-                    .build();
+                    });
+            Optional.ofNullable(MainClass.registry(AddonRegistry.AccessMenuFunctionRegistration.DefaultKeybind.class).get(function.getKey()))
+                    .ifPresent(defaultKeybind -> {
+                        KeyModifiers modifiers = KeyModifiers.none();
+                        for (int modifier : defaultKeybind.modifiers) {
+                            switch (modifier) {
+                                case InputConstants.MOD_SHIFT -> modifiers.addModifier(KeyModifier.SHIFT);
+                                case InputConstants.MOD_CONTROL -> modifiers.addModifier(KeyModifier.CONTROL);
+                                case InputConstants.MOD_ALT -> modifiers.addModifier(KeyModifier.ALT);
+                                default -> modifiers.addCustomModifier(modifier);
+                            }
+                        }
+                        mapping.withDefault(InputBinding.key(defaultKeybind.keycode, modifiers));
+                    });
+            mapping.build();
         }
     }
 
