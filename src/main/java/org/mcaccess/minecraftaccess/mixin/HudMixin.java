@@ -3,7 +3,7 @@ package org.mcaccess.minecraftaccess.mixin;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,8 +19,8 @@ import org.mcaccess.minecraftaccess.MainClass;
  * Narrates the currently selected hotbar item's name and the action bar.
  * Narrates titles
  */
-@Mixin(Gui.class)
-abstract class GuiMixin {
+@Mixin(Hud.class)
+abstract class HudMixin {
     @Shadow
     private Component title;
 

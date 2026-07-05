@@ -20,9 +20,9 @@ abstract class NarrationThunkMixin implements NarrationThunkExt {
     }
 
     @Inject(method = "equals", at = @At("HEAD"), cancellable = true)
-    private void useDeduplicationForEquals(Object other, CallbackInfoReturnable<Boolean> cir) {
+    private void useDeduplicationForEquals(Object o, CallbackInfoReturnable<Boolean> cir) {
         if (deduplication != null) {
-            cir.setReturnValue(other instanceof NarrationThunkMixin thunk && deduplication == thunk.deduplication);
+            cir.setReturnValue(o instanceof NarrationThunkMixin thunk && deduplication == thunk.deduplication);
         }
     }
 }

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,7 +83,7 @@ public class POIBlocks implements BalmClientModule {
     @Override
     public void initialize() {
         ClientPlayingTick.AFTER.register(this::tick);
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> {
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(_ -> {
             markedBlock = null;
             lastScanResults = new ArrayList<>();
         });
@@ -101,7 +102,7 @@ public class POIBlocks implements BalmClientModule {
         if (!CONFIG.enabled) return;
         if (!interval.isReady()) return;
 
-        if (client.screen != null) return; //Prevent running if any screen is opened
+        if (client.gui.screen() != null) return; //Prevent running if any screen is opened
 
         log.trace("POIBlock started");
         scanBlocksAroundPlayer();
@@ -140,14 +141,14 @@ public class POIBlocks implements BalmClientModule {
     private void playerSoundAtFoundPOI(boolean isMarking) {
         if (CONFIG.volume == 0.0f) return;
         if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
-            markedGroup.playSoundForGroupItems(BlockPos::getCenter, CONFIG.volume);
+            markedGroup.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
         } else if (CONFIG.playSound) {
             if (CONFIG.playSoundForOtherBlocks) {
                 for (POIGroup<BlockPos> group : groups) {
-                    group.playSoundForGroupItems(BlockPos::getCenter, CONFIG.volume);
+                    group.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
                 }
             } else {
-                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(BlockPos::getCenter, CONFIG.volume);
+                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
             }
         }
     }

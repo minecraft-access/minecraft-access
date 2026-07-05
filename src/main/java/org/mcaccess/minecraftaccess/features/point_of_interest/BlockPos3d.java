@@ -20,7 +20,7 @@ public class BlockPos3d extends BlockPos {
 
     public BlockPos3d(BlockPos position) {
         super(position.getX(), position.getY(), position.getZ());
-        accuratePosition = position.getCenter();
+        accuratePosition = Vec3.atCenterOf(position);
     }
 
     public BlockPos3d(BlockPos position, Vec3 accuratePosition) {

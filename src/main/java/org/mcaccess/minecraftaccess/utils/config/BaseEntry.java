@@ -35,7 +35,7 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
         defaultValue = ConfigExtension.getField(defaults, field);
         value = ConfigExtension.getField(config, field);
         label = new StringWidget(getDisplayedFieldName(), Minecraft.getInstance().font);
-        resetButton = Button.builder(Component.translatable("text.cloth-config.reset_value"), b -> value = defaultValue)
+        resetButton = Button.builder(Component.translatable("text.cloth-config.reset_value"), _ -> value = defaultValue)
                 .width(Minecraft.getInstance().font.width(Component.translatable("text.cloth-config.reset_value")) + 6)
                 .build();
     }

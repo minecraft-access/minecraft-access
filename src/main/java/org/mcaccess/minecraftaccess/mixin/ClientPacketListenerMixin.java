@@ -37,7 +37,8 @@ abstract class ClientPacketListenerMixin implements TickablePacketListener, Clie
         PacketUtils.ensureRunningOnSameThread(packet, this, client.packetProcessor());
         Config.Features config = Config.getInstance().features;
         if (config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.ALWAYS
-                || config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.WHEN_FISHING && player.getMainHandItem().getItem() instanceof FishingRodItem) {
+                || config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.WHEN_FISHING
+                && player.getMainHandItem().getItem() instanceof FishingRodItem) {
             int cId = packet.getPlayerId();
             int pId = player.getId();
             // Is this item picked by "me" or other players?

@@ -25,7 +25,7 @@ public class TimeIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        new ServerChangeDetector<Times>().levelEvent((client, player, level) -> Times.of(getCurrentTime()), this::onChange);
+        new ServerChangeDetector<Times>().levelEvent((_, _, _) -> Times.of(getCurrentTime()), this::onChange);
     }
 
     private void onChange(Minecraft client, Player player, Level level, Times previous, Times time) {
@@ -33,11 +33,7 @@ public class TimeIndicator implements BalmClientModule {
         assert Minecraft.getInstance().player != null;
         if (!level.canSeeSky(BlockPos.containing(Minecraft.getInstance().player.getEyePosition()))) return;
 
-        switch (time) {
-            case AFTERNOON -> MainClass.narrate(I18n.get("minecraft_access.time.afternoon"), false);
-            case DAY -> MainClass.narrate(I18n.get("minecraft_access.time.day"), false);
-            case NIGHT -> MainClass.narrate(I18n.get("minecraft_access.time.night"), false);
-        }
+        MainClass.narrate(I18n.get("minecraft_access.time." + time.toString()), false);
     }
 
     public static double getCurrentTime() {
@@ -47,13 +43,19 @@ public class TimeIndicator implements BalmClientModule {
         long current = timeline.getCurrentTicks(clockManager);
         Integer total = timeline.periodTicks().orElseThrow();
 
-        return ((current + (total / 4)) % total / (double) total) * 24.0;
+        return ((current + ((double) total / 4)) % total / (double) total) * 24.0;
     }
 
     private enum Times {
-        DAY,
-        AFTERNOON,
-        NIGHT;
+        DAY("day"),
+        AFTERNOON("afternoon"),
+        NIGHT("night");
+
+        private final String keySuffix;
+
+        Times(String keySuffix) {
+            this.keySuffix = keySuffix;
+        }
 
         private static Times of(double time) {
             if (time >= 12.00 && time < 19.00) {
@@ -63,6 +65,11 @@ public class TimeIndicator implements BalmClientModule {
             } else {
                 return DAY;
             }
+        }
+
+        @Override
+        public String toString() {
+            return keySuffix;
         }
     }
 }

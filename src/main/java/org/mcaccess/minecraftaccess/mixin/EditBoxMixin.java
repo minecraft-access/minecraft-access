@@ -47,10 +47,10 @@ abstract class EditBoxMixin extends AbstractWidget {
     public abstract boolean canConsumeInput();
 
     @Shadow
-    public abstract int getWordPosition(int wordOffset);
+    public abstract int getWordPosition(int dir);
 
     @Shadow
-    protected abstract int getCursorPos(int offset);
+    protected abstract int getCursorPos(int dir);
 
     @Shadow
     public abstract String getHighlighted();

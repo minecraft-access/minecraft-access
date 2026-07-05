@@ -27,25 +27,21 @@ public class Weather implements AccessMenuFunction {
         Biome.Precipitation currentPrecipitation = currentBiome.value()
                 .getPrecipitationAt(Minecraft.getInstance().player.getOnPos(), level.getSeaLevel());
 
-        Minecraft.getInstance().player.clientSideCloseContainer();
-
         String weather;
         if (level.isRaining()) {
-            weather = switch (currentPrecipitation) {
-                case NONE -> I18n.get("minecraft_access.weather.clear");
+            String currentPrecipitationStatus = switch (currentPrecipitation) {
+                case NONE -> "clear";
                 case RAIN -> {
                     if (level.isThundering()) {
-                        yield I18n.get("minecraft_access.weather.thunder");
+                        yield "thunder";
                     } else {
-                        yield I18n.get("minecraft_access.weather.rain");
+                        yield "rain";
                     }
                 }
-                case SNOW -> I18n.get("minecraft_access.weather.snow");
-                default -> {
-                    log.warn("Unexpected Precipitation type in weather status.");
-                    yield "";
-                }
+                case SNOW -> "snow";
             };
+
+            weather = I18n.get("minecraft_access.weather." + currentPrecipitationStatus);
         } else {
             weather = I18n.get("minecraft_access.weather.clear");
         }

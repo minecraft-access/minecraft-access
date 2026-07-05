@@ -42,12 +42,13 @@ public class AccessMenu implements BalmClientModule {
         keyAccessMenu = Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.access_menu"))
                 .withDefault(InputBinding.key(InputConstants.KEY_F4))
                 .overrideCategory(KeyMappingCategories.OTHER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     Minecraft client = Minecraft.getInstance();
-                    if (keyAccessMenu.getBinding().key().getValue() == InputConstants.KEY_F4 && InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_F3)) {
+                    if (keyAccessMenu.getBinding().key().getValue() == InputConstants.KEY_F4
+                            && InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_F3)) {
                         return false;
                     } else {
-                        client.setScreen(new GUI());
+                        client.gui.setScreen(new GUI());
                         return true;
                     }
                 })
@@ -58,7 +59,7 @@ public class AccessMenu implements BalmClientModule {
             Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "access_menu.shortcuts_bar/" + index))
                     .withDefault(InputBinding.key(InputConstants.KEY_0 + i, KeyModifiers.of(KeyModifier.ALT)))
                     .skipRegistration()
-                    .handleWorldInput(event -> {
+                    .handleWorldInput(_ -> {
                         AccessMenuFunction function = getShortcuts()[index];
                         if (function.enabled()) {
                             function.execute();
@@ -72,7 +73,7 @@ public class AccessMenu implements BalmClientModule {
             ManagedKeyMapping.RegistrationBuilder mapping = Kuma.createKeyMapping(function.getKey())
                     .overrideName(identifier -> identifier.toLanguageKey("access_menu_function"))
                     .overrideCategory(KeyMappingCategories.ACCESS_MENU_FUNCTIONS)
-                    .handleWorldInput(event -> {
+                    .handleWorldInput(_ -> {
                         if (function.getValue().enabled()) {
                             function.getValue().execute();
                             return true;
@@ -127,7 +128,7 @@ public class AccessMenu implements BalmClientModule {
                         label.append(Component.literal(String.format(" [%d]", i)).withColor(0xbbbbbb));
                     }
                 }
-                Button button = Button.builder(label, b -> {
+                Button button = Button.builder(label, _ -> {
                     onClose();
                     function.execute();
                 }).width(Math.min(Button.BIG_WIDTH, width / 2 - 15)).build();

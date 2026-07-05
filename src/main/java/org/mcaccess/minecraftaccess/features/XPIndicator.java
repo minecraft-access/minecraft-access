@@ -24,7 +24,7 @@ public class XPIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        new ServerChangeDetector<Integer>().levelEvent((client, player, level) -> {
+        new ServerChangeDetector<Integer>().levelEvent((_, _, _) -> {
             assert Minecraft.getInstance().player != null;
             return Minecraft.getInstance().player.experienceLevel;
         }, this::onChange);

@@ -9,6 +9,6 @@ import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 public class OpenConfig implements AccessMenuFunction {
     @Override
     public void execute() {
-        Minecraft.getInstance().setScreen(AutoConfigClient.getConfigScreen(Config.class, null).get());
+        Minecraft.getInstance().gui.setScreen(AutoConfigClient.getConfigScreen(Config.class, null).get());
     }
 }

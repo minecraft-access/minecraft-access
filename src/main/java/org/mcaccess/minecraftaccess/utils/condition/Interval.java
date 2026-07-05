@@ -19,16 +19,8 @@ public class Interval {
      * In milliseconds.
      */
     public static Interval ms(long delay) {
-        // 1 milliseconds = 1*10^6 nanoseconds
+        // 1 millisecond = 1*10^6 nanoseconds
         return new Interval(System.nanoTime(), Unit.MILLISECOND.toNano(delay));
-    }
-
-    /**
-     * In seconds.
-     */
-    public static Interval sec(long delay) {
-        // 1 seconds = 1*10^9 nanoseconds
-        return new Interval(System.nanoTime(), Unit.SECOND.toNano(delay));
     }
 
     /**
