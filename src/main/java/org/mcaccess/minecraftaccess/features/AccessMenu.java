@@ -83,7 +83,14 @@ public class AccessMenu implements BalmClientModule {
             Optional.ofNullable(MainClass.registry(AddonRegistry.AccessMenuFunctionRegistration.DefaultKeybind.class).get(function.getKey()))
                     .ifPresent(defaultKeybind -> {
                         KeyModifiers modifiers = KeyModifiers.none();
-                        Arrays.stream(defaultKeybind.modifiers).forEach(modifiers::addCustomModifier);
+                        for (int modifier : defaultKeybind.modifiers) {
+                            switch (modifier) {
+                                case InputConstants.MOD_SHIFT -> modifiers.addModifier(KeyModifier.SHIFT);
+                                case InputConstants.MOD_CONTROL -> modifiers.addModifier(KeyModifier.CONTROL);
+                                case InputConstants.MOD_ALT -> modifiers.addModifier(KeyModifier.ALT);
+                                default -> modifiers.addCustomModifier(modifier);
+                            }
+                        }
                         mapping.withDefault(InputBinding.key(defaultKeybind.keycode, modifiers));
                     });
             mapping.build();

@@ -85,7 +85,9 @@ public final class AddonRegistry {
          * Sets the default keybind for this function.
          *
          * @param keycode The primary keycode for the binding from {@link InputConstants}.
-         * @param modifiers Additional keycodes which must also be held.
+         * @param modifiers Additional modifiers which must also be held.
+         *                  Supports {@link InputConstants#MOD_SHIFT}, {@link InputConstants#MOD_CONTROL}, {@link InputConstants#MOD_ALT}
+         *                  in addition to keycodes from {@link InputConstants}.
          * @return This
          * @see InputConstants
          * @since 1.12.0
