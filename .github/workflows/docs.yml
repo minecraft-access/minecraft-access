@@ -6,7 +6,7 @@ on:
       - dev
 
 env:
-  HUGO_VERSION: 0.163.3
+  HUGO_VERSION: 0.164.0
   JAVA_VERSION: 25
   JAVA_DISTRIBUTION: temurin
 
@@ -27,7 +27,7 @@ jobs:
         run: |
           wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${{ env.HUGO_VERSION }}/hugo_extended_${{ env.HUGO_VERSION }}_linux-amd64.deb
           sudo dpkg -i ${{ runner.temp }}/hugo.deb
-      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
+      - uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
