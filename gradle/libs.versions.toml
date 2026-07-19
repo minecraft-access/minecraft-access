@@ -3,9 +3,9 @@
 # https://fabricmc.net/develop
 
 [versions]
-balm = "26.2.0.2"
+balm = "26.2.0.4"
 clothConfig = "26.2.155"
-junit = "6.1.1"
+junit = "6.1.2"
 mockito = "5.23.0"
 
 [libraries]
@@ -15,7 +15,7 @@ balmNeoForge = { module = "net.blay09.mods:balm-neoforge", version.ref = "balm" 
 clothConfigCommon = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-fabricApi = "net.fabricmc.fabric-api:fabric-api:0.154.2+26.2"
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.155.2+"
 fabricLoader = "net.fabricmc:fabric-loader:0.19.3"
 jadeFabric = "maven.modrinth:jade:26.2.9+fabric"
 jadeNeoForge = "maven.modrinth:jade:26.2.8+neoforge"
@@ -23,7 +23,7 @@ jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 lombok = "org.projectlombok:lombok:1.18.46"
 minecraft = "com.mojang:minecraft:26.2"
 modMenu = "com.terraformersmc:modmenu:20.0.1"
-neoForge = "net.neoforged:neoforge:26.2.0.11-beta"
+neoForge = "net.neoforged:neoforge:26.2.0.25-beta"
 neoforgeFancymodloaderLoader = "net.neoforged.fancymodloader:loader:11.0.14"
 tolk = "com.davykager.tolk:Tolk:1.0.0"
 
@@ -39,4 +39,4 @@ checkstyle = "com.puppycrawl.tools:checkstyle:13.8.0"
 [plugins]
 gitVersion = { id = "com.palantir.git-version", version = "5.0.0" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
-shadow = { id = "com.gradleup.shadow", version = "9.5.1" }
+shadow = { id = "com.gradleup.shadow", version = "9.6.0" }
