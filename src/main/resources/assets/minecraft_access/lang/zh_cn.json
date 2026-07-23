@@ -1,5 +1,7 @@
 {
     "access_menu_function.minecraft_access.biome": "当前群系",
+    "access_menu_function.minecraft_access.config": "打开配置窗口",
+    "access_menu_function.minecraft_access.find_lava": "查找最近的熔岩源",
     "access_menu_function.minecraft_access.light_level": "光照等级",
     "access_menu_function.minecraft_access.weather": "天气",
     "access_menu_function.minecraft_access.xp": "经验等级",
@@ -8,6 +10,7 @@
     "dimension.minecraft.overworld": "主世界",
     "dimension.minecraft.the_end": "末地",
     "dimension.minecraft.the_nether": "下界",
+    "key.category.minecraft_access.access_menu_functions": "Minecraft Access: 访问菜单功能",
     "key.category.minecraft_access.camera_controls": "Minecraft Access: 视角控制",
     "key.category.minecraft_access.inventory_controls": "Minecraft Access: 物品栏控制",
     "key.category.minecraft_access.mouse_simulation": "Minecraft Access: 鼠标模拟",
