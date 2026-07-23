@@ -28,5 +28,5 @@ tasks.named('downloadAssets', net.neoforged.nfrtgradle.DownloadAssets) {
 }
 
 dependencies {
-    runtimeOnly rootProject
+    runtimeOnly project(':')
 }
