@@ -14,8 +14,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
@@ -80,7 +80,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
@@ -113,7 +113,7 @@ public class MinecraftAccess implements WorldNarrator {
     public @Nullable String narrate(@NotNull HitResult rayCast) {
         return switch (rayCast()) {
             case BlockHitResult blockHitResult -> {
-                String side = Config.getInstance().narrateCrosshair.narrateBlockFace
+                String side = ModConfig.getInstance().narrateCrosshair.narrateBlockFace
                         ? I18n.get(String.format("minecraft_access.direction.%s", blockHitResult.getDirection().getName()))
                         : "";
                 yield narrateBlock(blockHitResult.getBlockPos(), side);
@@ -151,7 +151,7 @@ public class MinecraftAccess implements WorldNarrator {
 
         List<String> equipments = new ArrayList<>();
 
-        if (Config.getInstance().narrateCrosshair.narrateAdditionalEntityPoses) {
+        if (ModConfig.getInstance().narrateCrosshair.narrateAdditionalEntityPoses) {
             String poseName = entity.getPose().getSerializedName().toLowerCase();
             if (!Objects.equals(poseName, "standing") && !Objects.equals(poseName, "sitting")) {
                 String poseKey = "minecraft_access.read_crosshair." + poseName;
@@ -276,8 +276,8 @@ public class MinecraftAccess implements WorldNarrator {
      * @param blockPos block position (in the client world)
      * @param side     if side is provided, then the invoker is ReadCrosshair
      * @return (narration, currentQuery):
-     *     "narration" is the actual one to be narrated through Narrator,
-     *     "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
+     * "narration" is the actual one to be narrated through Narrator,
+     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateBlock(BlockPos blockPos, String side) {
         Minecraft client = Minecraft.getInstance();
@@ -524,8 +524,8 @@ public class MinecraftAccess implements WorldNarrator {
     /**
      * @param pos fluid position (in the client world)
      * @return (narration, currentQuery):
-     *     "narration" is the actual one to be narrated through Narrator,
-     *     "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
+     * "narration" is the actual one to be narrated through Narrator,
+     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateFluidBlock(BlockPos pos) {
         assert Minecraft.getInstance().level != null;

@@ -11,8 +11,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
@@ -25,7 +25,7 @@ public class MouseSimulation implements BalmClientModule {
     private static ManagedKeyMapping keyMiddleMouseButton;
     private static ManagedKeyMapping keyRightMouseButton;
 
-    private final Config.MouseSimulation config = Config.getInstance().mouseSimulation;
+    private final ModConfig.MouseSimulation config = ModConfig.getInstance().mouseSimulation;
     private long lastScrollUpTime = 0;
     private long lastScrollDownTime = 0;
 

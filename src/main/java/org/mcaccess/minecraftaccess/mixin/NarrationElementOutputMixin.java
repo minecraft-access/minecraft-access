@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ModConfig;
 
 /**
  * The {@link ScreenNarrationCollector.Output} class is the only one implementation of {@link NarrationElementOutput}.
@@ -28,7 +28,7 @@ abstract class NarrationElementOutputMixin {
             }
         }
 
-        if (!Config.getInstance().speechSettings.narrateHints) {
+        if (!ModConfig.getInstance().speechSettings.narrateHints) {
             if (type == NarratedElementType.POSITION || type == NarratedElementType.USAGE) {
                 ci.cancel();
             }

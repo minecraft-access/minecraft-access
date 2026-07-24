@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.ModConfig;
 
 /**
  * Auto locks to the eye of ender when used.
@@ -32,7 +32,7 @@ abstract class EyeOfEnderMixin extends Entity implements ItemSupplier {
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
         if (life != 1) return;
-        if (!Config.getInstance().poi.locking.autoLockEyeOfEnderEntity) {
+        if (!ModConfig.getInstance().poiLocking.autoLockEyeOfEnderEntity) {
             return;
         }
 

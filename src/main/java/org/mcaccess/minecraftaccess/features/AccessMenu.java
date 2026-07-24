@@ -22,8 +22,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
@@ -96,8 +96,9 @@ public class AccessMenu implements BalmClientModule {
     }
 
     private static Map<Integer, AccessMenuFunction> getShortcuts() {
-        Config.AccessMenu.ShortcutBar config = Config.getInstance().accessMenu.shortcutBar;
+        ModConfig.AccessMenuShortcutBar config = ModConfig.getInstance().accessMenuShortcutBar;
         Map<Identifier, AccessMenuFunction> registry = MainClass.registry(AccessMenuFunction.class);
+
         return Map.of(
                 InputConstants.KEY_0, registry.get(config.key0),
                 InputConstants.KEY_1, registry.get(config.key1),
@@ -125,7 +126,7 @@ public class AccessMenu implements BalmClientModule {
             GridLayout grid = new GridLayout().spacing(10);
             GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
 
-            for (Identifier identifier : Config.getInstance().accessMenu.functions) {
+            for (Identifier identifier : ModConfig.getInstance().accessMenu.functions) {
                 AccessMenuFunction function = MainClass.registry(AccessMenuFunction.class).get(identifier);
                 MutableComponent label = Component.translatable(identifier.toLanguageKey("access_menu_function"));
                 getShortcuts().forEach((key, value) -> {

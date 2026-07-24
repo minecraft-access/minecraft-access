@@ -122,7 +122,6 @@ public final class MainClass {
             addon.addon().init(new AddonRegistry(addon.modid()));
         }
         frozen = true;
-        Config.init();
 
         ScreenReaderController.refreshScreenReader();
         if (getScreenReader() != null && getScreenReader().isInitialized()) {
@@ -164,7 +163,7 @@ public final class MainClass {
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        if (Config.getInstance().debugMode || Balm.platform().isDevelopmentEnvironment()) {
+        if (ModConfig.getInstance().general.debugMode || Balm.platform().isDevelopmentEnvironment()) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);
             }
