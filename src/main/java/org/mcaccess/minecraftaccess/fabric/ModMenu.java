@@ -2,13 +2,13 @@ package org.mcaccess.minecraftaccess.fabric;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import me.shedaniel.autoconfig.AutoConfigClient;
+import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreen;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.MainClass;
 
 public class ModMenu implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> AutoConfigClient.getConfigScreen(Config.class, parent).get();
+        return parent -> BalmConfigScreen.forMod(parent, MainClass.MOD_ID);
     }
 }
