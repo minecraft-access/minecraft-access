@@ -20,8 +20,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.addon.CoreAddon;
 import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
@@ -78,7 +78,7 @@ public class PlayerStatus implements BalmClientModule {
         new ServerChangeDetector<Boolean>().levelEvent(
                 (_, player, _) -> player.isCrouching(),
                 (_, player, level, _, value) -> {
-                    if (!Config.getInstance().features.crouchAndSprintCues || !value && player.isSprinting()) {
+                    if (!ModConfig.getInstance().features.crouchAndSprintCues || !value && player.isSprinting()) {
                         return;
                     }
                     level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, value ? 0.5f : 0.9f);
@@ -88,7 +88,7 @@ public class PlayerStatus implements BalmClientModule {
         new ServerChangeDetector<Boolean>().levelEvent(
                 (_, player, _) -> player.isSprinting() && !player.isCrouching(),
                 (_, _, level, _, value) -> {
-                    if (Config.getInstance().features.crouchAndSprintCues) {
+                    if (ModConfig.getInstance().features.crouchAndSprintCues) {
                         level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, value ? 2.5f : 0.9f);
                     }
                 }
@@ -98,10 +98,10 @@ public class PlayerStatus implements BalmClientModule {
             new ServerChangeDetector<>(() -> Status.WarningLevel.NONE).levelEvent(
                     (_, _, _) -> entry.getValue().warning(),
                     (_, _, level, previous, value) -> {
-                        if (!Config.getInstance().playerWarnings.enabled
-                                || !Arrays.asList(Config.getInstance().playerWarnings.statuses).contains(entry.getKey())
+                        if (!ModConfig.getInstance().playerWarnings.enabled
+                                || !Arrays.asList(ModConfig.getInstance().playerWarnings.statuses).contains(entry.getKey())
                                 || value.ordinal() <= previous.ordinal()
-                                || !Config.getInstance().playerWarnings.playSound
+                                || !ModConfig.getInstance().playerWarnings.playSound
                         ) {
                             return;
                         }
@@ -117,7 +117,7 @@ public class PlayerStatus implements BalmClientModule {
     private void narratePlayerStatus(boolean hasAltDown) {
         Minecraft client = Minecraft.getInstance();
 
-        List<Status> statuses = Arrays.stream(Config.getInstance().playerWarnings.statuses)
+        List<Status> statuses = ModConfig.getInstance().playerWarnings.statuses.stream()
                 .map(MainClass.registry(Status.class)::get)
                 .filter(status -> switch (status.visibility()) {
                     case NONE -> false;

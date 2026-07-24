@@ -6,8 +6,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -21,7 +21,7 @@ public class Biome implements AccessMenuFunction {
         String currentBiomeName = NarrationUtils.getTranslatedName(BiomeIndicator.getCurrentBiome(), "biome")
                 .orElse("");
 
-        if (Config.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
+        if (ModConfig.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
             ResourceKey<@NotNull Level> currentDimension = Minecraft.getInstance().level.dimension();
             MainClass.narrate(I18n.get("minecraft_access.other.biome_and_dimension",
                     currentBiomeName,

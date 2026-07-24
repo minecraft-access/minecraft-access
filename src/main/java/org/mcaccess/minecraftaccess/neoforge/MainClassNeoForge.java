@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import me.shedaniel.autoconfig.AutoConfigClient;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClient;
+import net.blay09.mods.balm.client.platform.config.screen.BalmConfigScreen;
 import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -17,9 +17,8 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-import org.mcaccess.minecraftaccess.BalmConfig;
-import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 
 @Slf4j
@@ -43,8 +42,8 @@ public class MainClassNeoForge {
                         }
                     });
         }
-        container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> AutoConfigClient.getConfigScreen(Config.class, parent).get());
-        Balm.config().registerConfig(BalmConfig.class);
+        container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> BalmConfigScreen.forMod(parent, MainClass.MOD_ID));
+        Balm.config().registerConfig(ModConfig.class);
         Balm.config().setPreferredConfigScreen(MainClass.MOD_ID, "balm");
         BalmClient.initializeMod(MainClass.MOD_ID, new NeoForgeLoadContext(container, modEventBus), registrars -> MainClass.init(registrars, addons));
     }

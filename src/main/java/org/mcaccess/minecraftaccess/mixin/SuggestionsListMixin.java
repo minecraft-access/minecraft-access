@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.ModConfig;
 
 /**
  * Since text modifying narrations are suppressed in {@link EditBoxMixin},
@@ -51,7 +51,7 @@ abstract class SuggestionsListMixin {
         Suggestion suggestion = suggestionList.get(current);
         Message message = suggestion.getTooltip();
 
-        String format = Config.getInstance().commandSuggestionNarratorFormat;
+        String format = ModConfig.getInstance().general.commandSuggestionNarratorFormat;
         String textNarration = format.formatted(current + 1, suggestionList.size(), suggestion.getText());
 
         if (message != null) {
