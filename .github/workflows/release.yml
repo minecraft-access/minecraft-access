@@ -209,7 +209,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-      - uses: Kir-Antipov/mc-publish@52307b03863581dec6b652b83e597aec02ebb075
+      - uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075
         with:
           modrinth-id: ${{ vars.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -221,6 +221,9 @@ jobs:
           files: ./*.jar
           name: Minecraft Access v${{ needs.prepare.outputs.version }}
           version: ${{ needs.prepare.outputs.version }}
+          loaders: |
+            fabric
+            neoforge
           changelog: ${{ needs.prepare.outputs.changelog }}
   discord-builds:
     name: Publish Build on Discord
