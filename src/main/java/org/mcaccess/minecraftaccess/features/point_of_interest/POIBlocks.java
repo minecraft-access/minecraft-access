@@ -22,8 +22,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
@@ -32,7 +32,7 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  */
 @Slf4j
 public class POIBlocks implements BalmClientModule {
-    private static final ModConfig.POIBlocks CONFIG = ModConfig.getInstance().poiBlocks;
+    private static final ClientConfig.POIBlocks CONFIG = ClientConfig.getInstance().poiBlocks;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
 
@@ -140,7 +140,7 @@ public class POIBlocks implements BalmClientModule {
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
         if (CONFIG.volume == 0.0f) return;
-        if (isMarking && ModConfig.getInstance().poiMarking.suppressOtherWhenEnabled) {
+        if (isMarking && ClientConfig.getInstance().poiMarking.suppressOtherWhenEnabled) {
             markedGroup.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
         } else if (CONFIG.playSound) {
             if (CONFIG.playSoundForOtherBlocks) {

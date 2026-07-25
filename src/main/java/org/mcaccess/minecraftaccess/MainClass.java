@@ -163,7 +163,7 @@ public final class MainClass {
      * Dynamically changing log level based on debug mode config.
      */
     private static void changeLogLevelBaseOnDebugConfig() {
-        if (ModConfig.getInstance().general.debugMode || Balm.platform().isDevelopmentEnvironment()) {
+        if (ClientConfig.getInstance().general.debugMode || Balm.platform().isDevelopmentEnvironment()) {
             if (!log.isDebugEnabled()) {
                 Configurator.setLevel("org.mcaccess.minecraftaccess", Level.DEBUG);
             }

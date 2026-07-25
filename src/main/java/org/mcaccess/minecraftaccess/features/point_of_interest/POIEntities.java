@@ -22,8 +22,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
@@ -32,7 +32,7 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  */
 @Slf4j
 public class POIEntities implements BalmClientModule {
-    private static final ModConfig.POIEntities CONFIG = ModConfig.getInstance().poiEntities;
+    private static final ClientConfig.POIEntities CONFIG = ClientConfig.getInstance().poiEntities;
     private final Interval interval = Interval.defaultDelay();
 
     private @Nullable Entity markedEntity = null;
@@ -122,7 +122,7 @@ public class POIEntities implements BalmClientModule {
     private void playerSoundAtFoundPOI(boolean isMarking) {
         if (CONFIG.volume == 0.0f) return;
         Function<Entity, Vec3> mapper = e -> Vec3.atCenterOf(e.blockPosition());
-        if (isMarking && ModConfig.getInstance().poiMarking.suppressOtherWhenEnabled) {
+        if (isMarking && ClientConfig.getInstance().poiMarking.suppressOtherWhenEnabled) {
             markedGroup.playSoundForGroupItems(mapper, CONFIG.volume);
         } else if (CONFIG.playSound) {
             for (POIGroup<Entity> group : groups) {

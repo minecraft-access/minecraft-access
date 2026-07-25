@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.ModConfig;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
@@ -33,7 +33,7 @@ public class Hunger implements Status {
         assert Minecraft.getInstance().player != null;
         double hunger = Minecraft.getInstance().player.getFoodData().getFoodLevel() / 2.0;
 
-        if (hunger <= ModConfig.getInstance().playerWarnings.hungerThreshold) {
+        if (hunger <= ClientConfig.getInstance().playerWarnings.hungerThreshold) {
             return WarningLevel.WARNING;
         }
         return WarningLevel.NONE;

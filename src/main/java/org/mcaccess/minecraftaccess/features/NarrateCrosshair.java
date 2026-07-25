@@ -23,8 +23,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
@@ -39,9 +39,9 @@ public class NarrateCrosshair implements BalmClientModule {
     private final SessionLocal<@Nullable String> previousNarration = new SessionLocal<>(() -> null);
     private final SessionLocal<@Nullable Vec3> previousSoundPos = new SessionLocal<>(() -> null);
     private final Interval repetitionInterval = Interval.defaultDelay();
-    private static final ModConfig.NarrateCrosshair CROSSHAIR_CONFIG = ModConfig.getInstance().narrateCrosshair;
-    private static final ModConfig.NarrateCrosshairFilter FILTER_CONFIG = ModConfig.getInstance().narrateCrosshairFilter;
-    private static final ModConfig.NarrateCrosshairRelativePositionSoundCue RELATIVE_POSITION_SOUND_CUE_CONFIG = ModConfig.getInstance().narrateCrosshairRelativePositionSoundCue;
+    private static final ClientConfig.NarrateCrosshair CROSSHAIR_CONFIG = ClientConfig.getInstance().narrateCrosshair;
+    private static final ClientConfig.NarrateCrosshairFilter FILTER_CONFIG = ClientConfig.getInstance().narrateCrosshairFilter;
+    private static final ClientConfig.NarrateCrosshairRelativePositionSoundCue RELATIVE_POSITION_SOUND_CUE_CONFIG = ClientConfig.getInstance().narrateCrosshairRelativePositionSoundCue;
 
     @Override
     public @NotNull Identifier getId() {

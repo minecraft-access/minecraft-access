@@ -10,8 +10,8 @@ import net.blay09.mods.balm.platform.config.reflection.NestedType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
-@Config(MainClass.MOD_ID)
-public class ModConfig {
+@Config(value = MainClass.MOD_ID, type = "client")
+public class ClientConfig {
     public enum PickedUpItemNarration implements StringRepresentable {
         ALWAYS,
         WHEN_FISHING,
@@ -63,8 +63,8 @@ public class ModConfig {
     public AccessMenuFluidDetector accessMenuFluidDetector = new AccessMenuFluidDetector();
     public AccessMenuShortcutBar accessMenuShortcutBar = new AccessMenuShortcutBar();
 
-    public static ModConfig getInstance() {
-        return Balm.config().getActiveConfig(ModConfig.class);
+    public static ClientConfig getInstance() {
+        return Balm.config().getActiveConfig(ClientConfig.class);
     }
 
     public static class General {

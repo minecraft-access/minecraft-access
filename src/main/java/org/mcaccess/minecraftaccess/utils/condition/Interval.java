@@ -1,6 +1,6 @@
 package org.mcaccess.minecraftaccess.utils.condition;
 
-import org.mcaccess.minecraftaccess.ModConfig;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.features.CameraControls;
 
 /**
@@ -27,7 +27,7 @@ public class Interval {
      * Use the value of {@link Config#multipleClickSpeedMilliseconds} as delay.
      */
     public static Interval defaultDelay() {
-        return ms(ModConfig.getInstance().general.multipleClickSpeedMilliseconds);
+        return ms(ClientConfig.getInstance().general.multipleClickSpeedMilliseconds);
     }
 
     public void reset() {

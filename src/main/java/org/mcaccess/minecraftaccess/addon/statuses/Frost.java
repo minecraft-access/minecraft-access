@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.ModConfig;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
@@ -38,7 +38,7 @@ public class Frost implements Status {
         assert Minecraft.getInstance().player != null;
         double frostExposurePercent = Minecraft.getInstance().player.getPercentFrozen() * 100.0;
 
-        if (frostExposurePercent >= ModConfig.getInstance().playerWarnings.frostThreshold) {
+        if (frostExposurePercent >= ClientConfig.getInstance().playerWarnings.frostThreshold) {
             return WarningLevel.WARNING;
         }
         return WarningLevel.NONE;

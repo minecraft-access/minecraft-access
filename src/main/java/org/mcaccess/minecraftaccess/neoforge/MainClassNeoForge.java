@@ -17,8 +17,8 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 
 @Slf4j
@@ -43,7 +43,7 @@ public class MainClassNeoForge {
                     });
         }
         container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> BalmConfigScreen.forMod(parent, MainClass.MOD_ID));
-        Balm.config().registerConfig(ModConfig.class);
+        Balm.config().registerConfig(ClientConfig.class);
         Balm.config().setPreferredConfigScreen(MainClass.MOD_ID, "balm");
         BalmClient.initializeMod(MainClass.MOD_ID, new NeoForgeLoadContext(container, modEventBus), registrars -> MainClass.init(registrars, addons));
     }

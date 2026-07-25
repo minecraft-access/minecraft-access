@@ -16,8 +16,8 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
 
@@ -52,12 +52,12 @@ public class BiomeIndicator implements BalmClientModule {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private void onChange(Minecraft client, Player player, Level level, Optional<Holder<@NotNull Biome>> previous, Optional<Holder<@NotNull Biome>> biome) {
-        if (!ModConfig.getInstance().features.biomeIndicatorEnabled || biome.isEmpty()) {
+        if (!ClientConfig.getInstance().features.biomeIndicatorEnabled || biome.isEmpty()) {
             dimension.update(Optional.of(level.dimension()));
             return;
         }
         String currentBiomeName = biome.flatMap(b -> NarrationUtils.getTranslatedName(b, "biome")).orElse("");
-        if (dimension.update(Optional.of(level.dimension())) || ModConfig.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
+        if (dimension.update(Optional.of(level.dimension())) || ClientConfig.getInstance().features.alwaysNarrateDimensionInBiomeIndicator) {
             MainClass.narrate(I18n.get("minecraft_access.biome_indicator.biome_entered",
                     I18n.get("minecraft_access.other.biome_and_dimension",
                             currentBiomeName,

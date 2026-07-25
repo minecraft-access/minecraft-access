@@ -15,8 +15,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
 import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
@@ -26,7 +26,7 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  */
 @Slf4j
 public class CameraControls implements BalmClientModule {
-    private static final ModConfig.CameraControls CONFIG = ModConfig.getInstance().cameraControls;
+    private static final ClientConfig.CameraControls CONFIG = ClientConfig.getInstance().cameraControls;
     private static final float DEGREES_PER_MOUSE_DELTA = 0.15f;
 
     @Override
@@ -245,7 +245,7 @@ public class CameraControls implements BalmClientModule {
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
-        if (ModConfig.getInstance().features.facingDirectionEnabled) {
+        if (ClientConfig.getInstance().features.facingDirectionEnabled) {
             if (direction.isRotatingHorizontal) {
                 MainClass.narrate(horizontalDirection, true);
             } else if (verticalDirection != null) {
@@ -270,7 +270,7 @@ public class CameraControls implements BalmClientModule {
 
         log.debug("Rotating camera to: {}", direction.name());
 
-        if (narrateChange && ModConfig.getInstance().features.facingDirectionEnabled) {
+        if (narrateChange && ClientConfig.getInstance().features.facingDirectionEnabled) {
             if (direction.in(Orientation.Layer.MIDDLE)) {
                 MainClass.narrate(PlayerPositionUtils.getHorizontalFacingDirectionInWords(), true);
             } else {
