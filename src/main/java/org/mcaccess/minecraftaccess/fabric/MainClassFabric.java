@@ -19,7 +19,7 @@ public class MainClassFabric implements ModInitializer {
                 .map(container -> new MainClass.Addon(container.getProvider().getMetadata().getId(), container.getEntrypoint()))
                 .toList();
         Balm.config().registerConfig(ClientConfig.class);
-        Balm.config().setPreferredConfigScreen(MainClass.MOD_ID, "balm");
+        Balm.config().setPreferredConfigScreen(MainClass.MOD_ID, "balm-nested");
         BalmClient.initializeMod(MainClass.MOD_ID, FabricLoadContext.INSTANCE, registrars -> MainClass.init(registrars, addons));
     }
 }

@@ -9,6 +9,6 @@ import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 public class OpenConfig implements AccessMenuFunction {
     @Override
     public void execute() {
-        Minecraft.getInstance().gui.setScreen(BalmConfigScreen.forMod(null, MainClass.MOD_ID));
+        Minecraft.getInstance().gui.setScreen(BalmConfigScreen.forModWithNesting(null, MainClass.MOD_ID));
     }
 }
