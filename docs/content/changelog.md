@@ -4,6 +4,40 @@ title: "Changelog"
 
 <!-- INSERT CHANGELOG HERE -->
 
+## Release v1.12.0 (2026-07)
+### New Features
+- Added a new weather status button in the access menu which will report the current weather for the biome you are in as well as the moon phase, if it is night
+- Added an announcement when it becomes day, afternoon, and night for players
+- Added an API for client-side mods to provide additional information.
+- You can now press the new fuel status key (bound to U by default) in inventories to hear fuel and processing status information if applicable
+- Updated to Minecraft version 1.21.11
+- Many more keys are now rebindable, including all key combinations, as well as some previously hard coded key values
+- Added config for narrating the built in Minecraft narration hints involving interaction and positional hints (defaulted to enabled)
+- Both Fabric and NeoForge now share a single mod jar file, reducing complexity
+- The mod now runs on game version 26.2
+
+### Others
+- Minecraft Access now uses Balm instead of Architectury API, this should hopefully lead to increase stability and faster version updates, though cloth Config is not controlled by the Balm devs, and is another dependency
+
+### Feature Updates
+- The recipe book now correctly works in all screens that have it, including smokers, blast furnaces, furnaces, and other modded screens
+- Camera Control keys were now entirely moved off of the numpad by default, and are now only on ijkl to improve laptop compatibility. They are all still rebindable, however.
+- Leveraged more BALM features internally, leading to, hopefully, better mod performance
+- Improved toggle craftable button in the Recipe Book to no longer require a simulated mouse click
+- The camera now snaps to look straight if your vertacle operation will pass it when not using modified rotation angle
+- Removed unlocking sound config
+- Made picked up item narration one option instead of having fishing harvest be a separate option
+- POI Marking now finds what to mark based on the current object tracker object at the point of marking instead of the current thing the player is looking at
+- Added config for the playing of the crouch and sprint sounds previously added (defaulted to enabled)
+- The object tracker now recognizes POIs surrounded by fluid if the player is themselves also in the fluid
+- The advancements key is now bound to X by default so as not to conflict with the friends list key (O by default)
+
+### Bug Fixes
+- Flipped show all and show available recipe book hints when pressing R to reflect the real status of the book
+- SAPI is now correctly used if no screen reader is installed on Windows
+- Fixed crash when starting game on MacOS
+- Slimes, Magma Cubes, Shulkers, and Ghasts are all now properly recognized as hostile enemies in the Object Tracker
+
 ## Release v1.11.1 (2025-10)
 ### Bug Fixes
 - Fixed a bug which caused you to always or never shift click items in inventories
