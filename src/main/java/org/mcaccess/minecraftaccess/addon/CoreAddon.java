@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.tags.FluidTags;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.ModConfig;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.addon.accessmenu.Biome;
 import org.mcaccess.minecraftaccess.addon.accessmenu.FluidDetector;
 import org.mcaccess.minecraftaccess.addon.accessmenu.LightLevel;
@@ -46,42 +46,42 @@ public class CoreAddon implements MinecraftAccessAddon {
                     assert Minecraft.getInstance().player != null;
                     return Minecraft.getInstance().player.getMainHandItem();
                 },
-                () -> ModConfig.getInstance().durabilityWarnings.enableHeldItems
+                () -> ClientConfig.getInstance().durabilityWarnings.enableHeldItems
         ));
         registry.register("durability/offhand", new Durability(
                 () -> {
                     assert Minecraft.getInstance().player != null;
                     return Minecraft.getInstance().player.getOffhandItem();
                 },
-                () -> ModConfig.getInstance().durabilityWarnings.enableHeldItems
+                () -> ClientConfig.getInstance().durabilityWarnings.enableHeldItems
         ));
         registry.register("durability/head", new Durability(
                 () -> {
                     assert Minecraft.getInstance().player != null;
                     return Minecraft.getInstance().player.getInventory().getItem(36);
                 },
-                () -> ModConfig.getInstance().durabilityWarnings.enableWornArmor
+                () -> ClientConfig.getInstance().durabilityWarnings.enableWornArmor
         ));
         registry.register("durability/chest", new Durability(
                 () -> {
                     assert Minecraft.getInstance().player != null;
                     return Minecraft.getInstance().player.getInventory().getItem(37);
                 },
-                () -> ModConfig.getInstance().durabilityWarnings.enableWornArmor
+                () -> ClientConfig.getInstance().durabilityWarnings.enableWornArmor
         ));
         registry.register("durability/legs", new Durability(
                 () -> {
                     assert Minecraft.getInstance().player != null;
                     return Minecraft.getInstance().player.getInventory().getItem(38);
                 },
-                () -> ModConfig.getInstance().durabilityWarnings.enableWornArmor
+                () -> ClientConfig.getInstance().durabilityWarnings.enableWornArmor
         ));
         registry.register("durability/feet", new Durability(
                 () -> {
                     assert Minecraft.getInstance().player != null;
                     return Minecraft.getInstance().player.getInventory().getItem(39);
                 },
-                () -> ModConfig.getInstance().durabilityWarnings.enableWornArmor
+                () -> ClientConfig.getInstance().durabilityWarnings.enableWornArmor
         ));
 
         registry.register("narrate_target", new NarrateTarget())

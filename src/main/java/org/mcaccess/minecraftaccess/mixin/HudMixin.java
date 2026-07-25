@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 
 /**
  * Narrates the currently selected hotbar item's name and the action bar.
@@ -32,7 +32,7 @@ abstract class HudMixin {
 
     @Inject(method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V", at = @At("HEAD"))
     private void narrateActionbar(Component string, boolean animate, CallbackInfo ci) {
-        ModConfig config = ModConfig.getInstance();
+        ClientConfig config = ClientConfig.getInstance();
         if (config.features.actionBarEnabled) {
             String msg = string.getString();
             boolean contentChanged = !previousActionBarContent.equals(msg);

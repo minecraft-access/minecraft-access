@@ -33,14 +33,6 @@ ordering = "BEFORE"
 side = "CLIENT"
 
 [[dependencies.minecraft_access]]
-modId = "cloth_config"
-reason = "For this mod's config menu"
-type = "required"
-versionRange = "[${cloth_config_version},)"
-ordering = "BEFORE"
-side = "CLIENT"
-
-[[dependencies.minecraft_access]]
 modId = "jade"
 type = "optional"
 reason = "Jade can be used to integrate with the built in narrator of the mod by improving support with other mods and providing more information about things you look at"
@@ -49,7 +41,6 @@ versionRange = "[${jade_neoforge_version},)"
 [mc-publish]
 dependencies = [
     "balm@${balm_version}(embedded){modrinth:MBAkmtvl}{curseforge:531761}",
-    "cloth-config@${cloth_config_version}(embedded){modrinth:9s6osm5g}{curseforge:348521}",
     "jade@${jade_neoforge_version}(optional){modrinth:nvQzSEkH}{curseforge:324717}",
 ]
 

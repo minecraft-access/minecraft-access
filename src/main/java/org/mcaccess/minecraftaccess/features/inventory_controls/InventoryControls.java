@@ -41,8 +41,8 @@ import net.minecraft.world.item.crafting.ExtendedRecipeBookCategory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.mixin.AbstractContainerScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.AbstractRecipeBookScreenAccessor;
@@ -74,7 +74,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  */
 @Slf4j
 public class InventoryControls implements BalmClientModule {
-    private ModConfig.InventoryControls config;
+    private ClientConfig.InventoryControls config;
     private final Interval interval = Interval.defaultDelay();
 
     private AbstractContainerScreenAccessor previousScreen = null;
@@ -359,7 +359,7 @@ public class InventoryControls implements BalmClientModule {
      * Load configs from config.json.
      */
     private void loadConfig() {
-        config = ModConfig.getInstance().inventoryControls;
+        config = ClientConfig.getInstance().inventoryControls;
         interval.setDelay(config.delayMilliseconds, Interval.Unit.MILLISECOND);
     }
 

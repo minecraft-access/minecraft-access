@@ -5,7 +5,7 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import lombok.extern.slf4j.Slf4j;
 
-import org.mcaccess.minecraftaccess.ModConfig;
+import org.mcaccess.minecraftaccess.ClientConfig;
 
 @Slf4j
 public class ScreenReaderMacOS implements ScreenReaderInterface {
@@ -55,7 +55,7 @@ public class ScreenReaderMacOS implements ScreenReaderInterface {
         }
 
         // Get speech rate here in case the user changes it
-        float speechRate = ModConfig.getInstance().speechSettings.speechRate / 100;
+        float speechRate = ClientConfig.getInstance().speechSettings.speechRate / 100;
 
         // Convert the text to be spoken into an NSString object
         Pointer stringObject = objcRuntimeInstance.objc_msgSend(

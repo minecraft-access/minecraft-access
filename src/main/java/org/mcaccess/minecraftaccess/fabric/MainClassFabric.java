@@ -8,8 +8,8 @@ import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 
 public class MainClassFabric implements ModInitializer {
@@ -18,7 +18,7 @@ public class MainClassFabric implements ModInitializer {
         List<MainClass.Addon> addons = FabricLoader.getInstance().getEntrypointContainers(MainClass.MOD_ID, MinecraftAccessAddon.class).stream()
                 .map(container -> new MainClass.Addon(container.getProvider().getMetadata().getId(), container.getEntrypoint()))
                 .toList();
-        Balm.config().registerConfig(ModConfig.class);
+        Balm.config().registerConfig(ClientConfig.class);
         Balm.config().setPreferredConfigScreen(MainClass.MOD_ID, "balm");
         BalmClient.initializeMod(MainClass.MOD_ID, FabricLoadContext.INSTANCE, registrars -> MainClass.init(registrars, addons));
     }

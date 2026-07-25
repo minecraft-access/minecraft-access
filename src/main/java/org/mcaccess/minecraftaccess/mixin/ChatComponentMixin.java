@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.ModConfig;
+import org.mcaccess.minecraftaccess.ClientConfig;
 
 @Mixin(ChatComponent.class)
 abstract class ChatComponentMixin {
     @Inject(method = "addMessage", at = @At("HEAD"))
     private void playChatSound(CallbackInfo ci) {
-        if (ModConfig.getInstance().features.playNewChatMessageSound) {
+        if (ClientConfig.getInstance().features.playNewChatMessageSound) {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0f));
         }
     }

@@ -15,8 +15,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.ModConfig;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 
@@ -60,10 +60,10 @@ public class POIMarking implements BalmClientModule {
         if (currentObject instanceof BlockPos pos) {
             assert Minecraft.getInstance().level != null;
             markedObject.value = Minecraft.getInstance().level.getBlockState(pos).getBlock();
-            name = MainClass.registry(WorldNarrator.class).get(ModConfig.getInstance().narrateCrosshair.narrator).narrate(pos);
+            name = MainClass.registry(WorldNarrator.class).get(ClientConfig.getInstance().narrateCrosshair.narrator).narrate(pos);
         } else if (currentObject instanceof Entity entity) {
             markedObject.value = entity;
-            name = MainClass.registry(WorldNarrator.class).get(ModConfig.getInstance().narrateCrosshair.narrator).narrate(entity);
+            name = MainClass.registry(WorldNarrator.class).get(ClientConfig.getInstance().narrateCrosshair.narrator).narrate(entity);
         } else {
             return;
         }

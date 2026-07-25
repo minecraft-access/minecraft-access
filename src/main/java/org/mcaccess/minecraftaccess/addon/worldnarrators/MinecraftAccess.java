@@ -80,7 +80,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.mcaccess.minecraftaccess.ModConfig;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
@@ -113,7 +113,7 @@ public class MinecraftAccess implements WorldNarrator {
     public @Nullable String narrate(@NotNull HitResult rayCast) {
         return switch (rayCast()) {
             case BlockHitResult blockHitResult -> {
-                String side = ModConfig.getInstance().narrateCrosshair.narrateBlockFace
+                String side = ClientConfig.getInstance().narrateCrosshair.narrateBlockFace
                         ? I18n.get(String.format("minecraft_access.direction.%s", blockHitResult.getDirection().getName()))
                         : "";
                 yield narrateBlock(blockHitResult.getBlockPos(), side);
@@ -151,7 +151,7 @@ public class MinecraftAccess implements WorldNarrator {
 
         List<String> equipments = new ArrayList<>();
 
-        if (ModConfig.getInstance().narrateCrosshair.narrateAdditionalEntityPoses) {
+        if (ClientConfig.getInstance().narrateCrosshair.narrateAdditionalEntityPoses) {
             String poseName = entity.getPose().getSerializedName().toLowerCase();
             if (!Objects.equals(poseName, "standing") && !Objects.equals(poseName, "sitting")) {
                 String poseKey = "minecraft_access.read_crosshair." + poseName;
