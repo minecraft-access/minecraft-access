@@ -33,7 +33,7 @@ pluginManagement {
 
 plugins {
     id 'com.gradle.develocity' version '4.5.0'
-    id 'net.fabricmc.fabric-loom-repositories' version '1.17.16'
+    id 'net.fabricmc.fabric-loom-repositories' version '1.17.17'
     id 'net.neoforged.moddev.repositories' version '2.0.142'
 }
 
