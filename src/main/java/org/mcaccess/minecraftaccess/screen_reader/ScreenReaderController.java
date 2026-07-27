@@ -7,6 +7,7 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.features.AutoLibrarySetup;
 
 @Slf4j
 public final class ScreenReaderController {
@@ -15,7 +16,7 @@ public final class ScreenReaderController {
 
     public static @Nullable ScreenReaderInterface getAvailable() {
         switch (Util.getPlatform()) {
-            case WINDOWS -> {
+            case Util.OS os when os == Util.OS.WINDOWS && AutoLibrarySetup.isAmd64() -> {
                 ScreenReaderWindows screenReaderWindows = new ScreenReaderWindows();
                 screenReaderWindows.initializeScreenReader();
                 return screenReaderWindows;
@@ -25,7 +26,7 @@ public final class ScreenReaderController {
                 screenReaderMacOS.initializeScreenReader();
                 return screenReaderMacOS;
             }
-            case LINUX -> {
+            case Util.OS os when os == Util.OS.LINUX && AutoLibrarySetup.isAmd64() -> {
                 ScreenReaderLinux screenReaderLinux = new ScreenReaderLinux();
                 screenReaderLinux.initializeScreenReader();
                 return screenReaderLinux;
