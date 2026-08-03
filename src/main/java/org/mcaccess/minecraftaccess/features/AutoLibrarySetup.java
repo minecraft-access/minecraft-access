@@ -34,8 +34,8 @@ public class AutoLibrarySetup {
      * Installs <a href="https://github.com/ndarilek/tolk">tolk</a> for windows and <a href="https://github.com/khanshoaib3/libspeechdwrapper">libspeechdwrapper</a> for linux.
      */
     private void downloadAndInstall() throws IOException {
-        switch (Util.getPlatform()) {
-            case Util.OS os when os == Util.OS.WINDOWS && isAmd64() -> {
+        switch (getSupportedLibArchitecture()) {
+            case WINDOWS -> {
                 log.info("Downloading latest tolk build...");
                 File tolkLatestBuildZip = new File(Paths.get("tolk-latest-build.zip").toAbsolutePath().toString());
                 FileUtils.copyURLToFile(URI.create("https://github.com/ndarilek/tolk/releases/download/refs%2Fheads%2Fmaster/tolk.zip").toURL(), tolkLatestBuildZip);
@@ -55,7 +55,7 @@ public class AutoLibrarySetup {
                 FileUtils.deleteDirectory(tempDirectoryPath);
                 log.info("tolk library downloaded and installed.");
             }
-            case Util.OS os when os == Util.OS.LINUX && isAmd64() -> {
+            case LINUX -> {
                 log.info("Downloading libspeechdwrapper.so ...");
                 FileUtils.copyURLToFile(
                         URI.create("https://github.com/khanshoaib3/libspeechdwrapper/releases/download/v1.0.0/libspeechdwrapper.so").toURL(),
@@ -95,8 +95,8 @@ public class AutoLibrarySetup {
      */
     private List<String> getRequiredLibraryNames() {
         List<String> requiredFiles = new ArrayList<>();
-        switch (Util.getPlatform()) {
-            case Util.OS os when os == Util.OS.WINDOWS && isAmd64() -> {
+        switch (getSupportedLibArchitecture()) {
+            case WINDOWS -> {
                 requiredFiles.add("Tolk.dll");
                 if (System.getProperty("os.arch").equalsIgnoreCase("X86")) {
                     requiredFiles.add("nvdaControllerClient32.dll");
@@ -107,9 +107,7 @@ public class AutoLibrarySetup {
                     requiredFiles.add("SAAPI64.dll");
                 }
             }
-            case Util.OS os when os == Util.OS.LINUX && isAmd64() -> {
-                requiredFiles.add("libspeechdwrapper.so");
-            }
+            case LINUX -> requiredFiles.add("libspeechdwrapper.so");
             default -> {
             }
         }
@@ -117,11 +115,25 @@ public class AutoLibrarySetup {
         return requiredFiles;
     }
 
-    public static boolean isAmd64() {
-        String arch = System.getProperty("os.arch").toLowerCase(Locale.ROOT);
-        return arch.contains("amd64")
+    public static Util.OS getSupportedLibArchitecture() {
+        Util.OS platform = Util.getPlatform();
+        String arch = System.getProperty("os.arch").toLowerCase(Locale.ROOT).toLowerCase(Locale.ROOT);
+
+        if (arch.contains("amd64")
                 || arch.contains("x86_64")
                 || arch.contains("x86-64")
-                || arch.equals("x64");
+                || arch.equals("x64")) {
+            if (platform == Util.OS.WINDOWS) {
+                return Util.OS.WINDOWS;
+            } else if (platform == Util.OS.LINUX) {
+                return Util.OS.LINUX;
+            }
+        }
+
+        if (platform == Util.OS.OSX) {
+            return Util.OS.OSX;
+        }
+
+        return Util.OS.UNKNOWN;
     }
 }

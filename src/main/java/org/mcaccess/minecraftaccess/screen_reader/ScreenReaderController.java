@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.screen_reader;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.MainClass;
@@ -15,8 +14,8 @@ public final class ScreenReaderController {
     }
 
     public static @Nullable ScreenReaderInterface getAvailable() {
-        switch (Util.getPlatform()) {
-            case Util.OS os when os == Util.OS.WINDOWS && AutoLibrarySetup.isAmd64() -> {
+        switch (AutoLibrarySetup.getSupportedLibArchitecture()) {
+            case WINDOWS -> {
                 ScreenReaderWindows screenReaderWindows = new ScreenReaderWindows();
                 screenReaderWindows.initializeScreenReader();
                 return screenReaderWindows;
@@ -26,7 +25,7 @@ public final class ScreenReaderController {
                 screenReaderMacOS.initializeScreenReader();
                 return screenReaderMacOS;
             }
-            case Util.OS os when os == Util.OS.LINUX && AutoLibrarySetup.isAmd64() -> {
+            case LINUX -> {
                 ScreenReaderLinux screenReaderLinux = new ScreenReaderLinux();
                 screenReaderLinux.initializeScreenReader();
                 return screenReaderLinux;

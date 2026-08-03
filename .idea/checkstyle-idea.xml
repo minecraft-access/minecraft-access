@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
     <component name="CheckStyle-IDEA" serialisationVersion="2">
-        <checkstyleVersion>10.26.0</checkstyleVersion>
+        <checkstyleVersion>13.7.0</checkstyleVersion>
         <scanScope>Everything</scanScope>
         <option name="thirdPartyClasspath"/>
         <option name="activeLocationIds">
