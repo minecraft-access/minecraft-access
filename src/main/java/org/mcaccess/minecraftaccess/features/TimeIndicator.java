@@ -13,6 +13,7 @@ import net.minecraft.world.timeline.Timeline;
 import net.minecraft.world.timeline.Timelines;
 import org.jetbrains.annotations.NotNull;
 
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
 
@@ -29,6 +30,7 @@ public class TimeIndicator implements BalmClientModule {
     }
 
     private void onChange(Minecraft client, Player player, Level level, Times previous, Times time) {
+        if (!ClientConfig.getInstance().features.timeIndicatorEnabled) return;
         if (level.dimensionType().hasFixedTime() || level.dimensionType().hasCeiling()) return;
         assert Minecraft.getInstance().player != null;
         if (!level.canSeeSky(BlockPos.containing(Minecraft.getInstance().player.getEyePosition()))) return;
