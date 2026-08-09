@@ -15,7 +15,7 @@ balmNeoForge = { module = "net.blay09.mods:balm-neoforge", version.ref = "balm" 
 clothConfigCommon = { module = "me.shedaniel.cloth:cloth-config", version.ref = "clothConfig" }
 clothConfigFabric = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "clothConfig" }
 clothConfigNeoForge = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-fabricApi = "net.fabricmc.fabric-api:fabric-api:0.155.2+26.2"
+fabricApi = "net.fabricmc.fabric-api:fabric-api:0.156.3+"
 fabricLoader = "net.fabricmc:fabric-loader:0.19.3"
 jadeFabric = "maven.modrinth:jade:26.2.9+fabric"
 jadeNeoForge = "maven.modrinth:jade:26.2.8+neoforge"
@@ -24,7 +24,7 @@ lombok = "org.projectlombok:lombok:1.18.46"
 minecraft = "com.mojang:minecraft:26.2"
 modMenu = "com.terraformersmc:modmenu:20.0.1"
 neoForge = "net.neoforged:neoforge:26.2.0.26-beta"
-neoforgeFancymodloaderLoader = "net.neoforged.fancymodloader:loader:11.0.15"
+neoforgeFancymodloaderLoader = "net.neoforged.fancymodloader:loader:11.0.16"
 tolk = "com.davykager.tolk:Tolk:1.0.0"
 
 assertjCore = "org.assertj:assertj-core:3.27.7"
@@ -34,9 +34,9 @@ junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher",
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:13.8.0"
+checkstyle = "com.puppycrawl.tools:checkstyle:13.9.0"
 
 [plugins]
 gitVersion = { id = "com.palantir.git-version", version = "5.0.0" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
-shadow = { id = "com.gradleup.shadow", version = "9.6.0" }
+shadow = { id = "com.gradleup.shadow", version = "9.6.1" }

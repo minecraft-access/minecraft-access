@@ -8,13 +8,13 @@ jobs:
     name: Checkstyle
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
           allow-unsafe-pr-checkout: true
-      - uses: dbelyaev/action-checkstyle@bb41bd6758ebb04dfb87df6afa9f577634624dc0
+      - uses: dbelyaev/action-checkstyle@203f0e85ad07e412c4f2b9bb4df1f9edfad9757f
         with:
           checkstyle_config: ./config/checkstyle/checkstyle.xml
           properties_file: ./config/checkstyle/checkstyle.properties
@@ -27,7 +27,7 @@ jobs:
     name: Translation File Sorting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
@@ -51,7 +51,7 @@ jobs:
     name: Weblate Mergeability
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
