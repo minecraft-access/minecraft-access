@@ -79,7 +79,7 @@ dependencyResolutionManagement {
                 }
             }
             filter {
-                includeGroup 'net.fabricmc'
+                includeGroupAndSubgroups 'net.fabricmc'
             }
         }
 
@@ -95,16 +95,15 @@ dependencyResolutionManagement {
             }
         }
 
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'Neoforged Releases'
-                    url = 'https://maven.neoforged.net/releases/'
-                }
-            }
-            filter {
+        maven {
+            name = 'Neoforged Releases'
+            url = 'https://maven.neoforged.net/releases/'
+            content {
+                includeGroupAndSubgroups 'net.neoforged'
                 includeGroupAndSubgroups 'net.minecraftforge'
                 includeGroupAndSubgroups 'cpw.mods'
+
+                excludeModule 'net.neoforged', 'minecraft-dependencies'
             }
         }
 

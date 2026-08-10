@@ -1,0 +1,110 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:best-practices",
+        ":disableDependencyDashboard"
+    ],
+    "nix": {
+        "enabled": true
+    },
+    "packageRules": [
+        {
+            "description": "Git submodules configuration",
+            "matchManagers": [
+                "git-submodules"
+            ],
+            "reviewers": [
+                "BrailleBennett",
+                "sgmedev"
+            ]
+        },
+        {
+            "description": "Gradle wrapper configuration",
+            "matchManagers": [
+                "gradle-wrapper"
+            ],
+            "reviewers": [
+                "BrailleBennett"
+            ]
+        },
+        {
+            "description": "Weekly grouped dependencies (GitHub Actions, Nix, Gradle)",
+            "matchManagers": [
+                "github-actions",
+                "nix",
+                "gradle"
+            ],
+            "schedule": [
+                "before 10am on sunday"
+            ],
+            "groupName": "dependencies",
+            "reviewers": [
+                "BrailleBennett"
+            ]
+        },
+        {
+            "description": "Force lockfile maintenance into the weekly dependencies group",
+            "matchUpdateTypes": [
+                "lockFileMaintenance"
+            ],
+            "groupName": "dependencies",
+            "schedule": [
+                "before 10am on sunday"
+            ],
+            "reviewers": [
+                "BrailleBennett"
+            ]
+        },
+        {
+            "description": "Ignore Minecraft dependency updates",
+            "matchPackageNames": [
+                "com.mojang:minecraft"
+            ],
+            "enabled": false
+        },
+        {
+            "description": "Enforce +fabric modifier for Jade Fabric",
+            "matchPackageNames": [
+                "maven.modrinth:jade"
+            ],
+            "matchCurrentValue": "/\\+fabric$/",
+            "allowedVersions": "/\\+fabric$/"
+        },
+        {
+            "description": "Enforce +neoforge modifier for Jade NeoForge",
+            "matchPackageNames": [
+                "maven.modrinth:jade"
+            ],
+            "matchCurrentValue": "/\\+neoforge$/",
+            "allowedVersions": "/\\+neoforge$/"
+        },
+        {
+            "description": "Ignore net.neoforged.fancymodloader:loader in version range >= 47.0 < 48.0",
+            "matchPackageNames": [
+                "net.neoforged.fancymodloader:loader"
+            ],
+            "allowedVersions": "!/^47\\./"
+        },
+        {
+            "description": "Enforce version prefix for Twelve Iterations",
+            "allowedVersions": "/^26\\.2/",
+            "matchPackageNames": [
+                "/^net\\.blay09\\.mods/"
+            ]
+        },
+        {
+            "description": "Enforce correct version suffix for Fabric API",
+            "matchPackageNames": [
+                "net.fabricmc.fabric-api:fabric-api"
+            ],
+            "allowedVersions": "/\\+26\\.2(\\.[0-9]+)?$/"
+        },
+        {
+            "description": "Enforce version prefix for Mod Menu",
+            "matchPackageNames": [
+                "com.terraformersmc:modmenu"
+            ],
+            "allowedVersions": "/^20\\./"
+        }
+    ]
+}
