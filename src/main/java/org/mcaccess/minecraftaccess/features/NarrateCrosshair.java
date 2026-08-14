@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.features;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -24,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
@@ -40,7 +39,9 @@ public class NarrateCrosshair implements BalmClientModule {
     private final SessionLocal<@Nullable String> previousNarration = new SessionLocal<>(() -> null);
     private final SessionLocal<@Nullable Vec3> previousSoundPos = new SessionLocal<>(() -> null);
     private final Interval repetitionInterval = Interval.defaultDelay();
-    private static final Config.NarrateCrosshair CONFIG = Config.getInstance().narrateCrosshair;
+    private static final ClientConfig.NarrateCrosshair CROSSHAIR_CONFIG = ClientConfig.getInstance().narrateCrosshair;
+    private static final ClientConfig.NarrateCrosshairFilter FILTER_CONFIG = ClientConfig.getInstance().narrateCrosshairFilter;
+    private static final ClientConfig.NarrateCrosshairRelativePositionSoundCue RELATIVE_POSITION_SOUND_CUE_CONFIG = ClientConfig.getInstance().narrateCrosshairRelativePositionSoundCue;
 
     @Override
     public @NotNull Identifier getId() {
@@ -54,10 +55,10 @@ public class NarrateCrosshair implements BalmClientModule {
 
     private void tick(Minecraft client, Player player, Level level) {
         if (client.gui.screen() != null) return;
-        if (!CONFIG.enabled) return;
-        repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
+        if (!CROSSHAIR_CONFIG.enabled) return;
+        repetitionInterval.setDelay(CROSSHAIR_CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
 
-        WorldNarrator narrator = MainClass.registry(WorldNarrator.class).get(CONFIG.narrator);
+        WorldNarrator narrator = MainClass.registry(WorldNarrator.class).get(CROSSHAIR_CONFIG.narrator);
         HitResult rayCast = narrator.rayCast();
         if (rayCast == null || rayCast.getType() == HitResult.Type.MISS) {
             previousTarget.value = null;
@@ -67,7 +68,7 @@ public class NarrateCrosshair implements BalmClientModule {
 
         String narration = narrator.narrate(rayCast);
         Object target = switch (rayCast) {
-            case BlockHitResult blockHitResult -> CONFIG.disableNarratingConsecutiveBlocks ? null : blockHitResult.getBlockPos();
+            case BlockHitResult blockHitResult -> CROSSHAIR_CONFIG.disableNarratingConsecutiveBlocks ? null : blockHitResult.getBlockPos();
             case EntityHitResult entityHitResult -> entityHitResult.getEntity();
             default -> rayCast;
         };
@@ -84,7 +85,7 @@ public class NarrateCrosshair implements BalmClientModule {
             return;
         }
 
-        if (CONFIG.relativePositionSoundCue.enabled) {
+        if (RELATIVE_POSITION_SOUND_CUE_CONFIG.enabled) {
             double rayCastDistance = Math.min(player.blockInteractionRange(), player.entityInteractionRange());
             Vec3 targetPosition = switch (rayCast) {
                 case BlockHitResult blockHitResult -> Vec3.atCenterOf(blockHitResult.getBlockPos());
@@ -94,23 +95,23 @@ public class NarrateCrosshair implements BalmClientModule {
             if (!Objects.equals(targetPosition, previousSoundPos.value)) {
                 playRelativePositionSoundCue(targetPosition, rayCastDistance,
                         SoundEvents.NOTE_BLOCK_HARP,
-                        CONFIG.relativePositionSoundCue.minSoundVolume,
-                        CONFIG.relativePositionSoundCue.maxSoundVolume);
+                        RELATIVE_POSITION_SOUND_CUE_CONFIG.minSoundVolume,
+                        RELATIVE_POSITION_SOUND_CUE_CONFIG.maxSoundVolume);
             }
             previousSoundPos.value = targetPosition;
         }
 
         if (!(rayCast instanceof BlockHitResult || rayCast instanceof EntityHitResult)) {
-            log.warn("Filtering only works on BlockHitResult and EntityHitResult. Using narrator {}", CONFIG.narrator);
-        } else if (CONFIG.filter.enabled) {
+            log.warn("Filtering only works on BlockHitResult and EntityHitResult. Using narrator {}", CROSSHAIR_CONFIG.narrator);
+        } else if (FILTER_CONFIG.enabled) {
             switch (rayCast) {
-                case BlockHitResult blockHitResult when CONFIG.filter.targetMode.filterBlocks() -> {
+                case BlockHitResult blockHitResult when FILTER_CONFIG.targetMode.filterBlocks() -> {
                     Identifier key = BuiltInRegistries.BLOCK.getKey(level.getBlockState(blockHitResult.getBlockPos()).getBlock());
                     if (isIgnored(key)) {
                         return;
                     }
                 }
-                case EntityHitResult entityHitResult when CONFIG.filter.targetMode.filterEntities() -> {
+                case EntityHitResult entityHitResult when FILTER_CONFIG.targetMode.filterEntities() -> {
                     Identifier key = EntityType.getKey(entityHitResult.getEntity().getType());
                     if (isIgnored(key)) {
                         return;
@@ -127,10 +128,10 @@ public class NarrateCrosshair implements BalmClientModule {
     private boolean isIgnored(Identifier identifier) {
         if (identifier == null) return false;
         String name = identifier.getPath();
-        Predicate<String> p = CONFIG.filter.fuzzy ? name::contains : name::equals;
-        return CONFIG.filter.whitelist
-                ? Arrays.stream(CONFIG.filter.targets).noneMatch(p)
-                : Arrays.stream(CONFIG.filter.targets).anyMatch(p);
+        Predicate<String> p = FILTER_CONFIG.fuzzy ? name::contains : name::equals;
+        return FILTER_CONFIG.whitelist
+                ? FILTER_CONFIG.targets.stream().noneMatch(p)
+                : FILTER_CONFIG.targets.stream().anyMatch(p);
     }
 
     // To indicate relative location between player and target.

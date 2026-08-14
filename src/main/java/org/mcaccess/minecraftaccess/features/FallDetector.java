@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
 
@@ -26,12 +26,12 @@ public class FallDetector implements BalmClientModule {
     private final Clock clock;
     private long previousTimeInMillis;
     private int count;
-    private final Config.FallDetector config;
+    private final ClientConfig.FallDetector config;
 
     public FallDetector() {
         clock = Clock.systemDefaultZone();
         previousTimeInMillis = clock.millis();
-        config = Config.getInstance().fallDetector;
+        config = ClientConfig.getInstance().fallDetector;
     }
 
     @Override

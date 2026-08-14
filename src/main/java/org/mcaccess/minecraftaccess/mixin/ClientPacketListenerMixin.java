@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 
 @Slf4j
@@ -35,9 +35,9 @@ abstract class ClientPacketListenerMixin implements TickablePacketListener, Clie
         if (player == null) return;
 
         PacketUtils.ensureRunningOnSameThread(packet, this, client.packetProcessor());
-        Config.Features config = Config.getInstance().features;
-        if (config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.ALWAYS
-                || config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.WHEN_FISHING
+        ClientConfig.Features config = ClientConfig.getInstance().features;
+        if (config.pickedUpItemNarration == ClientConfig.PickedUpItemNarration.ALWAYS
+                || config.pickedUpItemNarration == ClientConfig.PickedUpItemNarration.WHEN_FISHING
                 && player.getMainHandItem().getItem() instanceof FishingRodItem) {
             int cId = packet.getPlayerId();
             int pId = player.getId();

@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
@@ -74,7 +74,7 @@ public class NarrateHeldItem implements BalmClientModule {
 
         if (nameChanged || slotChanged) {
             MainClass.narrate(I18n.get("minecraft_access.other.selected", itemNameWithCount), true);
-        } else if (countChanged && Config.getInstance().features.narrateHeldItemsCountWhenChanged) {
+        } else if (countChanged && ClientConfig.getInstance().features.narrateHeldItemsCountWhenChanged) {
             MainClass.narrate(String.valueOf(itemCount), true);
         }
 

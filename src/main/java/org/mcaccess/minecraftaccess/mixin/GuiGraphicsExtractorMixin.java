@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
@@ -28,7 +28,7 @@ abstract class GuiGraphicsExtractorMixin {
     @Inject(method = "setTooltipForNextFrameInternal", at = @At("HEAD"))
     private void narrateTooltip(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, @Nullable Identifier style,
                                 boolean replaceExisting, CallbackInfo ci) {
-        if (Config.getInstance().inventoryControls.enabled) {
+        if (ClientConfig.getInstance().inventoryControls.enabled) {
             return;
         }
         String combined = lines.stream()

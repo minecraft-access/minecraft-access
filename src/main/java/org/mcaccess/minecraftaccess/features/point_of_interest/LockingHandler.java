@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
@@ -50,7 +50,7 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  * 2. Alt key + Locking Key = Unlocks from the currently locked entity or block<br>
  */
 public class LockingHandler implements BalmClientModule {
-    private final Config.POI.Locking config = Config.getInstance().poi.locking;
+    private final ClientConfig.POILocking config = ClientConfig.getInstance().poiLocking;
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlockPos = null;
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
@@ -306,10 +306,10 @@ public class LockingHandler implements BalmClientModule {
         lockedOnEntity = entity;
 
         StringBuilder narration = new StringBuilder(
-                MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(entity)
+                MainClass.registry(WorldNarrator.class).get(ClientConfig.getInstance().narrateCrosshair.narrator).narrate(entity)
         );
 
-        if (Config.getInstance().poi.narrateDistance) {
+        if (ClientConfig.getInstance().poi.narrateDistance) {
             narration.append(' ')
                     .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(entity.blockPosition()));
         }
@@ -334,9 +334,9 @@ public class LockingHandler implements BalmClientModule {
         lockedOnBlockPos = new BlockPos3d(position, absolutePosition);
 
         StringBuilder blockDescription = new StringBuilder(
-                MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(lockedOnBlockPos)
+                MainClass.registry(WorldNarrator.class).get(ClientConfig.getInstance().narrateCrosshair.narrator).narrate(lockedOnBlockPos)
         );
-        if (Config.getInstance().poi.narrateDistance) {
+        if (ClientConfig.getInstance().poi.narrateDistance) {
             blockDescription.append(' ')
                     .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(lockedOnBlockPos));
         }

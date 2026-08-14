@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
@@ -32,7 +32,7 @@ public class XPIndicator implements BalmClientModule {
 
     private void onChange(Minecraft client, Player player, Level level, Integer previous, Integer value) {
         assert Minecraft.getInstance().gameMode != null;
-        if (!Config.getInstance().features.xpIndicatorEnabled || !Minecraft.getInstance().gameMode.hasExperience()) {
+        if (!ClientConfig.getInstance().features.xpIndicatorEnabled || !Minecraft.getInstance().gameMode.hasExperience()) {
             return;
         }
         MainClass.narrate(I18n.get(

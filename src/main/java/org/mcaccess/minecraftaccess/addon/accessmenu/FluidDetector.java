@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -31,7 +31,7 @@ public class FluidDetector implements AccessMenuFunction {
 
     @Override
     public void execute() {
-        Config.AccessMenu.FluidDetector config = Config.getInstance().accessMenu.fluidDetector;
+        ClientConfig.AccessMenuFluidDetector config = ClientConfig.getInstance().accessMenuFluidDetector;
         if (Minecraft.getInstance().level == null) return;
         if (Minecraft.getInstance().player == null) return;
 

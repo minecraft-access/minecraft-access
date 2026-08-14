@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import me.shedaniel.autoconfig.AutoConfigClient;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClient;
 import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
 import net.neoforged.api.distmarker.Dist;
@@ -14,9 +14,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.MinecraftAccessAddon;
 
@@ -41,7 +40,8 @@ public class MainClassNeoForge {
                         }
                     });
         }
-        container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, parent) -> AutoConfigClient.getConfigScreen(Config.class, parent).get());
+        Balm.config().registerConfig(ClientConfig.class);
+        Balm.config().setPreferredConfigScreen(MainClass.MOD_ID, "balm-nested");
         BalmClient.initializeMod(MainClass.MOD_ID, new NeoForgeLoadContext(container, modEventBus), registrars -> MainClass.init(registrars, addons));
     }
 }
