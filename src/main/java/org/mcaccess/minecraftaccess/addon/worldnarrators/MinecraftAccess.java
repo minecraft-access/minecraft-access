@@ -234,6 +234,14 @@ public class MinecraftAccess implements WorldNarrator {
                 String equipmentName = equipment.getHoverName().getString();
                 equipments.add(equipmentName);
             }
+
+            if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) {
+                if (entity instanceof Cat cat) {
+                    equipments.add(I18n.get("minecraft_access.read_crosshair.collar", I18n.get("color.minecraft." + cat.getCollarColor().getName())));
+                } else if (entity instanceof Wolf wolf) {
+                    equipments.add(I18n.get("minecraft_access.read_crosshair.collar", I18n.get("color.minecraft." + wolf.getCollarColor().getName())));
+                }
+            }
         }
 
         if (!equipments.isEmpty()) {
@@ -280,8 +288,8 @@ public class MinecraftAccess implements WorldNarrator {
      * @param blockPos block position (in the client world)
      * @param side     if side is provided, then the invoker is ReadCrosshair
      * @return (narration, currentQuery):
-     *      "narration" is the actual one to be narrated through Narrator,
-     *      "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
+     * "narration" is the actual one to be narrated through Narrator,
+     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateBlock(BlockPos blockPos, String side) {
         Minecraft client = Minecraft.getInstance();
@@ -524,8 +532,8 @@ public class MinecraftAccess implements WorldNarrator {
     /**
      * @param pos fluid position (in the client world)
      * @return (narration, currentQuery):
-     *      "narration" is the actual one to be narrated through Narrator,
-     *      "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
+     * "narration" is the actual one to be narrated through Narrator,
+     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateFluidBlock(BlockPos pos) {
         assert Minecraft.getInstance().level != null;
