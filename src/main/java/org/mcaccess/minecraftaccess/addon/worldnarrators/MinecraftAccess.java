@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.addon.worldnarrators;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.locale.Language;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
@@ -168,7 +170,14 @@ public class MinecraftAccess implements WorldNarrator {
                 case USING_TONGUE -> text = I18n.get("minecraft_access.read_crosshair.using_tongue", text);
                 case STANDING -> {
                 }
-                default -> log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", entity.getPose().name());
+                default -> {
+                    String poseName = entity.getPose().getSerializedName().toLowerCase();
+                    if (Language.getInstance().has("minecraft_access.read_crosshair." + poseName)) {
+                        text = I18n.get("minecraft_access.read_crosshair." + poseName, text);
+                    } else {
+                        log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", poseName);
+                    }
+                }
             }
         }
 
