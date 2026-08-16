@@ -11,6 +11,7 @@ import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
@@ -42,6 +43,18 @@ public class NarrateHeldItem implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_held_item/mainhand"))
                 .withDefault(InputBinding.key(InputConstants.KEY_GRAVE))
                 .overrideCategory(KeyMappingCategories.OTHER)
+                .handleScreenInput(event -> {
+                    if (event.screen() instanceof AbstractContainerScreen) {
+                        ItemStack heldItem = Minecraft.getInstance().player.containerMenu.getCarried();
+                        String heldItemName = getItemName(heldItem);
+                        int heldItemCount = heldItem.getCount();
+                        heldItemName = (heldItemCount != 1 && !heldItem.isEmpty()) ? heldItemCount + " " + heldItemName : heldItemName;
+
+                        MainClass.narrate(heldItemName, false);
+                        return true;
+                    }
+                    return false;
+                })
                 .handleWorldInput(_ -> {
                     narrateHand(false);
                     return true;
