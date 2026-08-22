@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.event.callback.ClientTickCallback;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -12,6 +13,8 @@ import net.blay09.mods.kuma.api.InputBinding;
 import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -30,10 +33,13 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.dialog.Input;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -372,6 +378,8 @@ public class InventoryControls implements BalmClientModule {
         boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
                 || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
 
+        if (craftingInputKeyListener()) return true;
+
         //<editor-fold desc="When using a search box">
         //<editor-fold desc="When using a search box">
         if (currentScreen instanceof CreativeModeInventoryScreen creativeInventoryScreen) {
@@ -696,6 +704,144 @@ public class InventoryControls implements BalmClientModule {
         }
     }
 
+    public boolean craftingInputKeyListener(){
+        if (!isValidSelectableSlot()) return false;
+        if (!(currentScreen instanceof CraftingScreen) && !(currentScreen instanceof InventoryScreen)) return false;
+        if ((Screen)currentScreen instanceof InventoryScreen inventoryScreen){
+            return isAnyKeyInInventoryCraftingMenu(inventoryScreen);
+        }
+        if ((Screen)currentScreen instanceof CraftingScreen craftingScreen){
+            return isAnyKeyInCraftingMenu(craftingScreen);
+        }
+        return false;
+    }
+
+    private boolean isAnyKeyInInventoryCraftingMenu(InventoryScreen inventoryScreen){
+        Window w = Minecraft.getInstance().getWindow();
+        boolean shift = InputConstants.isKeyDown(w, InputConstants.KEY_LSHIFT)||InputConstants.isKeyDown(w, InputConstants.KEY_RSHIFT);
+        boolean result = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPADENTER);
+        boolean upLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD4);
+        boolean upRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD5);
+        boolean downLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD1);
+        boolean downRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD2);
+        int index = -1;
+        if (upLeft){
+            index = 1;
+        }else if (upRight){
+            index = 2;
+        }else if (downLeft){
+            index = 3;
+        }else if (downRight){
+            index = 4;
+        }else if (result){
+            index = 0;
+
+        }else {
+            return false;
+        }
+        putOnCraft(inventoryScreen, index, shift);
+        return true;
+    }
+
+    private boolean isAnyKeyInCraftingMenu(CraftingScreen craftingScreen){
+        Minecraft client = Minecraft.getInstance();
+                Window w = client.getWindow();
+
+        boolean shift = InputConstants.isKeyDown(w, InputConstants.KEY_LSHIFT)||InputConstants.isKeyDown(w, InputConstants.KEY_RSHIFT);
+        boolean result = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPADENTER);
+        // num 7
+        boolean upLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD7);
+        // num 4
+        boolean medLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD4);
+        // num 1
+        boolean downLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD1);
+        // num 8
+        boolean upCenter = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD8);
+        // num 5
+        boolean medCenter = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD5);
+        // num 2
+        boolean downCenter = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD2);
+        // num 9
+        boolean upRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD9);
+        // num 6
+        boolean medRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD6);
+        // num 3
+        boolean downRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD3);
+        int index = -1;
+        if (upLeft){
+            index = 1;
+        }else if (medLeft){
+            index = 4;
+        }else if (downLeft){
+            index = 7;
+        }else if (upCenter){
+            index = 2;
+        }else if (medCenter){
+            index = 5;
+        }else if (downCenter){
+            index = 8;
+        }else if (upRight){
+            index = 3;
+        }else if (medRight){
+            index= 6;
+        }else if (downRight){
+            index = 9;
+        }else if (result){
+            index = 0;
+        }else return false;
+
+        putOnCraft(craftingScreen, index, shift);
+        return true;
+    }
+
+    private void putOnCraft(Screen screen, int slotIndex, boolean shift){
+        Slot currentSlot = currentSlotItem.slot;
+        Slot target = null;
+        if (screen instanceof InventoryScreen inventoryScreen){
+            InventoryMenu menu = inventoryScreen.getMenu();
+
+            target = menu.getSlot(slotIndex);
+
+
+        }else if (screen instanceof CraftingScreen craftingScreen){
+            CraftingMenu menu = craftingScreen.getMenu();
+            target = menu.getSlot(slotIndex);
+        }else {
+            return;
+        }
+
+        if (currentSlot == null || target == null) return;
+        MouseUtils.Coordinates first = calcSlotPos(currentSlot);
+        MouseUtils.Coordinates second = calcSlotPos(target);
+        boolean clickBackOnFirst = false;
+        if (currentSlot.getItem() != null && currentSlot.getItem().count() > 1) clickBackOnFirst = true;
+        if (shift || slotIndex == 0){
+            doCraftMovement(second, first, true);
+
+        }else {
+            doCraftMovement(first, second, clickBackOnFirst);
+        }
+    }
+
+    private boolean isValidSelectableSlot(){
+
+        if (currentSlotItem == null || currentSlotItem.slot == null || currentSlotItem.slot.getItem() == null || currentSlotItem.slot.getItem().getItem() == null || currentSlotItem.slot.getItem().isEmpty()) return false;
+        return true;
+    }
+
+    private void doCraftMovement(MouseUtils.Coordinates firstPos, MouseUtils.Coordinates secondPos, boolean clickFirstPosAgain){
+        MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+        MouseUtils.move(secondPos.x(), secondPos.y());
+        MouseUtils.Key.RIGHT.click();
+        if (clickFirstPosAgain) MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+    }
+
+    private MouseUtils.Coordinates calcSlotPos(Slot s){
+        int x = currentScreen.getLeftPos();
+        int y = currentScreen.getTopPos();
+        return MouseUtils.calcRealPositionOfWidget(x+s.x, y+s.y);
+    }
+
     private enum FocusDirection {
         UP("gui.up"),
         DOWN("gui.down"),
@@ -710,6 +856,5 @@ public class InventoryControls implements BalmClientModule {
 
         String getString() {
             return value;
-        }
-    }
+        }}
 }
