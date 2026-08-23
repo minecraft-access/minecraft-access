@@ -34,7 +34,7 @@ junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher",
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:13.10.0"
+checkstyle = "com.puppycrawl.tools:checkstyle:14.0.0"
 
 [plugins]
 gitVersion = { id = "com.palantir.git-version", version = "5.0.0" }
