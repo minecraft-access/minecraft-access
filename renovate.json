@@ -43,11 +43,10 @@
             ]
         },
         {
-            "description": "Force lockfile maintenance into the weekly dependencies group",
+            "description": "Add BrailleBennett to be a reviewer on weekly lock file PRs",
             "matchUpdateTypes": [
                 "lockFileMaintenance"
             ],
-            "groupName": "dependencies",
             "schedule": [
                 "before 10am on sunday"
             ],
