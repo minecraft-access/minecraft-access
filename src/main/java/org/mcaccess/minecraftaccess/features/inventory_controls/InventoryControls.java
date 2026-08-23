@@ -375,10 +375,12 @@ public class InventoryControls implements BalmClientModule {
      */
     private boolean keyListener() {
         Minecraft client = Minecraft.getInstance();
+        if (craftingInputKeyListener()) return true;
+
         boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
                 || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
 
-        if (craftingInputKeyListener()) return true;
+
 
         //<editor-fold desc="When using a search box">
         //<editor-fold desc="When using a search box">
@@ -795,6 +797,7 @@ public class InventoryControls implements BalmClientModule {
     }
 
     private void putOnCraft(Screen screen, int slotIndex, boolean shift){
+        if (!isValidItem() && slotIndex != 0) return;
         Slot currentSlot = currentSlotItem.slot;
         Slot target = null;
         if (screen instanceof InventoryScreen inventoryScreen){
@@ -813,33 +816,69 @@ public class InventoryControls implements BalmClientModule {
         if (currentSlot == null || target == null) return;
         MouseUtils.Coordinates first = calcSlotPos(currentSlot);
         MouseUtils.Coordinates second = calcSlotPos(target);
-        boolean clickBackOnFirst = false;
-        if (currentSlot.getItem() != null && currentSlot.getItem().count() > 1) clickBackOnFirst = true;
-        if (shift || slotIndex == 0){
-            doCraftMovement(second, first, true);
+        boolean istheremore = false;
+        if (currentSlot.getItem() != null && currentSlot.getItem().count() > 1) istheremore = true;
+        if (shift){
+            doCraftMovement(second, first, movementStep.TWOLEFTCLICK);
 
+        }else if (slotIndex == 0){
+            doCraftMovement(second, first, movementStep.TWOLEFTCLICK);
         }else {
-            doCraftMovement(first, second, clickBackOnFirst);
+            movementStep sec = null;
+            if (istheremore){
+                sec = movementStep.LEFTANDRIGHTCLICKLASTCLICK;
+            }else sec = movementStep.TWOLEFTCLICK;
+            doCraftMovement(first, second, sec);
         }
     }
 
     private boolean isValidSelectableSlot(){
 
-        if (currentSlotItem == null || currentSlotItem.slot == null || currentSlotItem.slot.getItem() == null || currentSlotItem.slot.getItem().getItem() == null || currentSlotItem.slot.getItem().isEmpty()) return false;
+        if (currentSlotItem == null || currentSlotItem.slot == null) return false;
         return true;
     }
 
-    private void doCraftMovement(MouseUtils.Coordinates firstPos, MouseUtils.Coordinates secondPos, boolean clickFirstPosAgain){
-        MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
-        MouseUtils.move(secondPos.x(), secondPos.y());
-        MouseUtils.Key.RIGHT.click();
-        if (clickFirstPosAgain) MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+    private boolean isValidItem(){
+        if (!isValidSelectableSlot()) return false;
+        ItemStack stack = currentSlotItem.slot.getItem();
+        if (stack == null || stack.isEmpty()) return false;
+        return true;
+    }
+
+    private void doCraftMovement(MouseUtils.Coordinates firstPos, MouseUtils.Coordinates secondPos, movementStep sequency){
+        switch (sequency){
+            case movementStep.LEFTANDRIGHTCLICKLASTCLICK -> {
+                MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+                MouseUtils.move(secondPos.x(), secondPos.y());
+                MouseUtils.Key.RIGHT.click();
+                MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+                break;
+            }
+            case TWOLEFTCLICK -> {
+                MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+                MouseUtils.moveAndLeftClick(secondPos.x(), secondPos.y());
+                break;
+            }
+            case LEFTANDRIGHTCLICK -> {
+                MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+                MouseUtils.move(secondPos.x(), secondPos.y());
+                MouseUtils.Key.RIGHT.click();
+                break;
+            }
+        }
+
     }
 
     private MouseUtils.Coordinates calcSlotPos(Slot s){
         int x = currentScreen.getLeftPos();
         int y = currentScreen.getTopPos();
         return MouseUtils.calcRealPositionOfWidget(x+s.x, y+s.y);
+    }
+
+    private enum movementStep{
+        TWOLEFTCLICK,
+        LEFTANDRIGHTCLICK,
+        LEFTANDRIGHTCLICKLASTCLICK
     }
 
     private enum FocusDirection {
