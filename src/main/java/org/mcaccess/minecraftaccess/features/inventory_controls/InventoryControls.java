@@ -295,6 +295,136 @@ public class InventoryControls implements BalmClientModule {
                     return false;
                 })
                 .build();
+        // Crafting keys
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.up/left"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD7))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    if (!isInventoryScreen()){
+                        craftingInput(1);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.up/center"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD8))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    if (!isInventoryScreen()){
+                        craftingInput(2);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.up/right"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD9))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    if (!isInventoryScreen()){
+                        craftingInput(3);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.center/left"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD4))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    if (!isInventoryScreen()){
+                        craftingInput(4);
+                        return true;
+                    }else {
+                        craftingInput(1);
+                        return true;
+                    }
+
+                })
+                .build();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.center/center"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD5))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    if (!isInventoryScreen()){
+                        craftingInput(5);
+                        return true;
+                    }else {
+                        craftingInput(2);
+                        return true;
+                    }
+
+                })
+                .build();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.center/right"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD6))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    if (!isInventoryScreen()){
+                        craftingInput(6);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.down/left"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD1))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    if (!isInventoryScreen()){
+                        craftingInput(7);
+                        return true;
+                    }else {
+                        craftingInput(3);
+                        return true;
+                    }
+
+                })
+                .build();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.down/center"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD2))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    if (!isInventoryScreen()){
+                        craftingInput(8);
+                        return true;
+                    }else {
+                        craftingInput(4);
+                        return true;
+                    }
+
+                })
+                .build();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.down/right"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD3))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    if (!isInventoryScreen()){
+                        craftingInput(9);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.result"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPADENTER))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (!isValidScreen()) return false;
+                    craftingInput(0);
+                    return true;
+                })
+                .build();
     }
 
     private void tick(Minecraft client) {
@@ -375,7 +505,7 @@ public class InventoryControls implements BalmClientModule {
      */
     private boolean keyListener() {
         Minecraft client = Minecraft.getInstance();
-        if (craftingInputKeyListener()) return true;
+
 
         boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
                 || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
@@ -706,95 +836,19 @@ public class InventoryControls implements BalmClientModule {
         }
     }
 
-    public boolean craftingInputKeyListener(){
-        if (!isValidSelectableSlot()) return false;
-        if (!(currentScreen instanceof CraftingScreen) && !(currentScreen instanceof InventoryScreen)) return false;
-        if ((Screen)currentScreen instanceof InventoryScreen inventoryScreen){
-            return isAnyKeyInInventoryCraftingMenu(inventoryScreen);
+    private void craftingInput(int index){
+        if (!isValidSelectableSlot()) return;
+        if (!isValidScreen()) return;
+        boolean shift = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_LSHIFT) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_RSHIFT);
+        if ((Screen)currentScreen instanceof InventoryScreen inventoryScreen) {
+            putOnCraft(inventoryScreen, index, shift);
+        }else if ((Screen)currentScreen instanceof CraftingScreen craftingScreen){
+            putOnCraft(craftingScreen, index, shift);
         }
-        if ((Screen)currentScreen instanceof CraftingScreen craftingScreen){
-            return isAnyKeyInCraftingMenu(craftingScreen);
-        }
-        return false;
+
     }
 
-    private boolean isAnyKeyInInventoryCraftingMenu(InventoryScreen inventoryScreen){
-        Window w = Minecraft.getInstance().getWindow();
-        boolean shift = InputConstants.isKeyDown(w, InputConstants.KEY_LSHIFT)||InputConstants.isKeyDown(w, InputConstants.KEY_RSHIFT);
-        boolean result = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPADENTER);
-        boolean upLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD4);
-        boolean upRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD5);
-        boolean downLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD1);
-        boolean downRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD2);
-        int index = -1;
-        if (upLeft){
-            index = 1;
-        }else if (upRight){
-            index = 2;
-        }else if (downLeft){
-            index = 3;
-        }else if (downRight){
-            index = 4;
-        }else if (result){
-            index = 0;
 
-        }else {
-            return false;
-        }
-        putOnCraft(inventoryScreen, index, shift);
-        return true;
-    }
-
-    private boolean isAnyKeyInCraftingMenu(CraftingScreen craftingScreen){
-        Minecraft client = Minecraft.getInstance();
-                Window w = client.getWindow();
-
-        boolean shift = InputConstants.isKeyDown(w, InputConstants.KEY_LSHIFT)||InputConstants.isKeyDown(w, InputConstants.KEY_RSHIFT);
-        boolean result = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPADENTER);
-        // num 7
-        boolean upLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD7);
-        // num 4
-        boolean medLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD4);
-        // num 1
-        boolean downLeft = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD1);
-        // num 8
-        boolean upCenter = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD8);
-        // num 5
-        boolean medCenter = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD5);
-        // num 2
-        boolean downCenter = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD2);
-        // num 9
-        boolean upRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD9);
-        // num 6
-        boolean medRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD6);
-        // num 3
-        boolean downRight = InputConstants.isKeyDown(w, InputConstants.KEY_NUMPAD3);
-        int index = -1;
-        if (upLeft){
-            index = 1;
-        }else if (medLeft){
-            index = 4;
-        }else if (downLeft){
-            index = 7;
-        }else if (upCenter){
-            index = 2;
-        }else if (medCenter){
-            index = 5;
-        }else if (downCenter){
-            index = 8;
-        }else if (upRight){
-            index = 3;
-        }else if (medRight){
-            index= 6;
-        }else if (downRight){
-            index = 9;
-        }else if (result){
-            index = 0;
-        }else return false;
-
-        putOnCraft(craftingScreen, index, shift);
-        return true;
-    }
 
     private void putOnCraft(Screen screen, int slotIndex, boolean shift){
         if (!isValidItem() && slotIndex != 0) return;
@@ -844,6 +898,18 @@ public class InventoryControls implements BalmClientModule {
         if (stack == null || stack.isEmpty()) return false;
         return true;
     }
+
+    private boolean isValidScreen(){
+        if (!(currentScreen instanceof CraftingScreen) && !(currentScreen instanceof InventoryScreen)) return false;
+        return true;
+    }
+
+    private boolean isInventoryScreen(){
+        if ((Screen)currentScreen instanceof InventoryScreen) return true;
+        return false;
+    }
+
+
 
     private void doCraftMovement(MouseUtils.Coordinates firstPos, MouseUtils.Coordinates secondPos, movementStep sequency){
         switch (sequency){
