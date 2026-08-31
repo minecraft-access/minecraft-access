@@ -79,6 +79,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
+import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.mixin.WolfAccessor;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -211,14 +212,8 @@ public class MinecraftAccess implements WorldNarrator {
                 Block ghostBlock = blockDisplay.blockRenderState().blockState().getBlock();
                 yield I18n.get("minecraft_access.point_of_interest.locking.display_block", ghostBlock.getName().getString());
             }
-            case ItemFrame frame -> {
-                ItemStack item = frame.getItem();
-                if (!item.isEmpty()) {
-                    String itemName = item.getItemName().getString();
-                    yield I18n.get("minecraft_access.other.entity_with_equipments", Map.of("entity", text, "equipments", itemName));
-                }
-                yield text;
-            }
+            case ItemFrame frame -> I18n.get("minecraft_access.other.entity_with_equipments",
+                    Map.of("entity", text, "equipments", NarrateHeldItem.getItemName(frame.getItem(), true)));
             default -> {
                 if (isDroppedItem) {
                     yield I18n.get("minecraft_access.point_of_interest.locking.dropped_item", text);
@@ -280,8 +275,8 @@ public class MinecraftAccess implements WorldNarrator {
      * @param blockPos block position (in the client world)
      * @param side     if side is provided, then the invoker is ReadCrosshair
      * @return (narration, currentQuery):
-     *      "narration" is the actual one to be narrated through Narrator,
-     *      "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
+     * "narration" is the actual one to be narrated through Narrator,
+     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateBlock(BlockPos blockPos, String side) {
         Minecraft client = Minecraft.getInstance();
@@ -524,8 +519,8 @@ public class MinecraftAccess implements WorldNarrator {
     /**
      * @param pos fluid position (in the client world)
      * @return (narration, currentQuery):
-     *      "narration" is the actual one to be narrated through Narrator,
-     *      "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
+     * "narration" is the actual one to be narrated through Narrator,
+     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateFluidBlock(BlockPos pos) {
         assert Minecraft.getInstance().level != null;

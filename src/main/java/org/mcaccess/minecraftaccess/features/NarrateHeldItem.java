@@ -89,7 +89,7 @@ public class NarrateHeldItem implements BalmClientModule {
         previousSelectedSlot.value = selectedSlot;
     }
 
-    private String getItemName(ItemStack itemStack, boolean addCount) {
+    public static String getItemName(ItemStack itemStack, boolean addCount) {
         if (itemStack.isEmpty()) {
             return I18n.get("minecraft_access.inventory_controls.empty_slot", "");
         }
