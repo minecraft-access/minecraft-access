@@ -373,35 +373,35 @@ public class MinecraftAccess implements WorldNarrator {
         boolean isReceivingPower = world.hasNeighborSignal(blockPos);
 
         return switch (block) {
-            case PistonBaseBlock ignored -> {
+            case PistonBaseBlock _ -> {
                 String facing = blockState.getValue(PistonBaseBlock.FACING).getName();
                 String narration = I18n.get("minecraft_access.read_crosshair.facing", currentNarration, I18n.get("minecraft_access.direction." + facing));
                 yield isReceivingPower ? I18n.get("minecraft_access.read_crosshair.powered", narration) : narration;
             }
-            case RedStoneWireBlock ignored -> getRedstoneWireInfo(blockState, blockPos, currentNarration);
-            case HopperBlock ignored -> {
+            case RedStoneWireBlock _ -> getRedstoneWireInfo(blockState, blockPos, currentNarration);
+            case HopperBlock _ -> {
                 String facing = blockState.getValue(HopperBlock.FACING).getName();
                 String narration = I18n.get("minecraft_access.read_crosshair.facing", currentNarration, I18n.get("minecraft_access.direction." + facing));
                 yield isReceivingPower ? I18n.get("minecraft_access.read_crosshair.locked", narration) : narration;
             }
-            case ObserverBlock ignored -> {
+            case ObserverBlock _ -> {
                 String facing = blockState.getValue(ObserverBlock.FACING).getName();
                 String narration = I18n.get("minecraft_access.read_crosshair.facing", currentNarration, I18n.get("minecraft_access.direction." + facing));
                 yield isEmittingPower ? I18n.get("minecraft_access.read_crosshair.powered", narration) : narration;
             }
-            case DispenserBlock ignored -> {
+            case DispenserBlock _ -> {
                 String facing = blockState.getValue(DispenserBlock.FACING).getName();
                 String narration = I18n.get("minecraft_access.read_crosshair.facing", currentNarration, I18n.get("minecraft_access.direction." + facing));
                 yield isReceivingPower ? I18n.get("minecraft_access.read_crosshair.powered", narration) : narration;
             }
-            case ComparatorBlock ignored -> {
+            case ComparatorBlock _ -> {
                 ComparatorMode mode = blockState.getValue(ComparatorBlock.MODE);
                 Direction facing = blockState.getValue(ComparatorBlock.FACING);
                 String correctFacing = I18n.get("minecraft_access.direction." + Orientation.getOppositeDirectionKey(facing.getName()).toLowerCase());
                 String narration = I18n.get("minecraft_access.read_crosshair.comparator_info", currentNarration, correctFacing, mode);
                 yield isReceivingPower ? I18n.get("minecraft_access.read_crosshair.powered", narration) : narration;
             }
-            case RepeaterBlock ignored -> {
+            case RepeaterBlock _ -> {
                 boolean locked = blockState.getValue(RepeaterBlock.LOCKED);
                 int delay = blockState.getValue(RepeaterBlock.DELAY);
                 Direction facing = blockState.getValue(RepeaterBlock.FACING);

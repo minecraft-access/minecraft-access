@@ -323,11 +323,11 @@ public class LockingHandler implements BalmClientModule {
         entriesOfLockedOnBlock = blockState.getValues().collect(Collectors.toSet());
 
         Vec3 absolutePosition = switch (blockState.getBlock()) {
-            case DoorBlock ignored -> NonCubeBlockAbsolutePositions.getDoorPos(Vec3.atCenterOf(position));
-            case TrapDoorBlock ignored -> NonCubeBlockAbsolutePositions.getTrapDoorPos(Vec3.atCenterOf(position));
-            case ButtonBlock ignored -> NonCubeBlockAbsolutePositions.getButtonPos(Vec3.atCenterOf(position));
-            case LadderBlock ignored -> NonCubeBlockAbsolutePositions.getLadderPos(Vec3.atCenterOf(position));
-            case LeverBlock ignored -> NonCubeBlockAbsolutePositions.getLeverPos(Vec3.atCenterOf(position));
+            case DoorBlock _ -> NonCubeBlockAbsolutePositions.getDoorPos(Vec3.atCenterOf(position));
+            case TrapDoorBlock _ -> NonCubeBlockAbsolutePositions.getTrapDoorPos(Vec3.atCenterOf(position));
+            case ButtonBlock _ -> NonCubeBlockAbsolutePositions.getButtonPos(Vec3.atCenterOf(position));
+            case LadderBlock _ -> NonCubeBlockAbsolutePositions.getLadderPos(Vec3.atCenterOf(position));
+            case LeverBlock _ -> NonCubeBlockAbsolutePositions.getLeverPos(Vec3.atCenterOf(position));
             default -> Vec3.atCenterOf(position);
         };
 

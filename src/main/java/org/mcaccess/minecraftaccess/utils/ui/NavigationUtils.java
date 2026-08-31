@@ -18,7 +18,7 @@ public final class NavigationUtils {
      * @return true if Tab backward or Arrow up, otherwise false
      */
     public static boolean isDirectionBackward(FocusNavigationEvent event) {
-        if (event instanceof FocusNavigationEvent.ArrowNavigation(ScreenDirection direction, ScreenRectangle ignored)) {
+        if (event instanceof FocusNavigationEvent.ArrowNavigation(ScreenDirection direction, ScreenRectangle _)) {
             return direction == ScreenDirection.UP;
         } else if (event instanceof FocusNavigationEvent.TabNavigation(boolean forward)) {
             return !forward;

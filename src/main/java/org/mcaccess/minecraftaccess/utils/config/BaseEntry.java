@@ -60,7 +60,8 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int index, int y, int x,
+                                   int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
         super.extractRenderState(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
         resetButton.active = isEditable() && !Objects.deepEquals(getValue(), defaultValue);
         resetButton.setY(y);
