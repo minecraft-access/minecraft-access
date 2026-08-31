@@ -44,16 +44,9 @@ public class NarrateHeldItem implements BalmClientModule {
                 .withDefault(InputBinding.key(InputConstants.KEY_GRAVE))
                 .overrideCategory(KeyMappingCategories.OTHER)
                 .handleScreenInput(event -> {
-                    if (event.screen() instanceof AbstractContainerScreen) {
-                        ItemStack heldItem = Minecraft.getInstance().player.containerMenu.getCarried();
-                        String heldItemName = getItemName(heldItem);
-                        int heldItemCount = heldItem.getCount();
-                        heldItemName = (heldItemCount != 1 && !heldItem.isEmpty()) ? heldItemCount + " " + heldItemName : heldItemName;
-
-                        MainClass.narrate(heldItemName, false);
-                        return true;
-                    }
-                    return false;
+                    if (!(event.screen() instanceof AbstractContainerScreen)) return false;
+                    MainClass.narrate(getItemName(Minecraft.getInstance().player.containerMenu.getCarried(), true), false);
+                    return true;
                 })
                 .handleWorldInput(_ -> {
                     narrateHand(false);
@@ -75,20 +68,20 @@ public class NarrateHeldItem implements BalmClientModule {
         if (player.isSpectator()) return;
 
         ItemStack currentItemStack = player.getMainHandItem();
+        String baseItemName = getItemName(currentItemStack, false);
         int selectedSlot = player.getInventory().getSelectedSlot();
-        String baseItemName = getItemName(currentItemStack);
         int itemCount = currentItemStack.getCount();
-
-        String itemNameWithCount = (currentItemStack.getCount() != 1 && !currentItemStack.isEmpty()) ? itemCount + " " + baseItemName : baseItemName;
 
         boolean nameChanged = !Objects.equals(baseItemName, previousItemName.value);
         boolean countChanged = !Objects.equals(itemCount, previousItemCount.value);
         boolean slotChanged = !Objects.equals(selectedSlot, previousSelectedSlot.value);
 
         if (nameChanged || slotChanged) {
-            MainClass.narrate(I18n.get("minecraft_access.other.selected", itemNameWithCount), true);
+            MainClass.narrate(I18n.get("minecraft_access.other.selected", getItemName(currentItemStack, true)), true);
         } else if (countChanged && Config.getInstance().features.narrateHeldItemsCountWhenChanged) {
             MainClass.narrate(String.valueOf(itemCount), true);
+        } else {
+            return;
         }
 
         previousItemName.value = baseItemName;
@@ -96,7 +89,7 @@ public class NarrateHeldItem implements BalmClientModule {
         previousSelectedSlot.value = selectedSlot;
     }
 
-    private String getItemName(ItemStack itemStack) {
+    private String getItemName(ItemStack itemStack, boolean addCount) {
         if (itemStack.isEmpty()) {
             return I18n.get("minecraft_access.inventory_controls.empty_slot", "");
         }
@@ -108,7 +101,8 @@ public class NarrateHeldItem implements BalmClientModule {
                 .flatMap(jukeboxPlayable -> jukeboxPlayable.song().unwrapKey())
                 .ifPresent(discNumber -> itemName.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.identifier().getPath())));
 
-        return itemName.toString();
+        int heldItemCount = itemStack.getCount();
+        return (addCount && heldItemCount != 1 && !itemStack.isEmpty()) ? heldItemCount + " " + itemName.toString() : itemName.toString();
     }
 
     private void narrateHand(boolean hasAltDown) {
@@ -116,21 +110,17 @@ public class NarrateHeldItem implements BalmClientModule {
 
         LocalPlayer player = Minecraft.getInstance().player;
         String hand;
-        ItemStack heldItem;
+        String heldItemName;
 
         if (!hasAltDown) {
             hand = I18n.get("options.mainHand");
             assert player != null;
-            heldItem = player.getMainHandItem();
+            heldItemName = getItemName(player.getMainHandItem(), true);
         } else {
             hand = I18n.get("minecraft_access.other.offhand");
             assert player != null;
-            heldItem = player.getOffhandItem();
+            heldItemName = getItemName(player.getOffhandItem(), true);
         }
-
-        String heldItemName = getItemName(heldItem);
-        int heldItemCount = heldItem.getCount();
-        heldItemName = (heldItemCount != 1 && !heldItem.isEmpty()) ? heldItemCount + " " + heldItemName : heldItemName;
 
         MainClass.narrate("%s: %s".formatted(hand, heldItemName), false);
     }
