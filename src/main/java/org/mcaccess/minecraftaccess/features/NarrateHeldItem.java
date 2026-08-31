@@ -19,6 +19,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LightBlock;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -100,6 +101,10 @@ public class NarrateHeldItem implements BalmClientModule {
         Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
                 .flatMap(jukeboxPlayable -> jukeboxPlayable.song().unwrapKey())
                 .ifPresent(discNumber -> itemName.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.identifier().getPath())));
+
+        Optional.ofNullable(itemStack.get(DataComponents.BLOCK_STATE))
+                .map(blockState -> blockState.get(LightBlock.LEVEL))
+                .ifPresent(level -> itemName.append(' ').append(level));
 
         int heldItemCount = itemStack.getCount();
         return (addCount && heldItemCount != 1 && !itemStack.isEmpty()) ? heldItemCount + " " + itemName.toString() : itemName.toString();
