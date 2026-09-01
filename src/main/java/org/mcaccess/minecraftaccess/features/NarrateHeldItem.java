@@ -50,7 +50,8 @@ public class NarrateHeldItem implements BalmClientModule {
                 .overrideCategory(KeyMappingCategories.OTHER)
                 .handleScreenInput(event -> {
                     if (!(event.screen() instanceof AbstractContainerScreen)) return false;
-                    MainClass.narrate(getItemName(Minecraft.getInstance().player.containerMenu.getCarried(), true), false);
+                    MainClass.narrate(I18n.get("minecraft_access.inventory_controls.dragging",
+                            getItemName(Minecraft.getInstance().player.containerMenu.getCarried(), true)), false);
                     return true;
                 })
                 .handleWorldInput(_ -> {
