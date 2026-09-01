@@ -13,14 +13,13 @@ import com.demonwav.mcdev.annotations.Translatable;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
+import net.minecraft.locale.Language;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import org.mcaccess.minecraftaccess.mixin.I18NAccessor;
 
 @Slf4j
 @ApiStatus.Internal
@@ -78,7 +77,7 @@ public class Translation implements Narratable {
 
     @Contract(pure = true)
     public boolean exists() {
-        return I18NAccessor.getLanguage().has(getKey());
+        return Language.getInstance().has(getKey());
     }
 
     @Contract(value = "_ -> this", mutates = "this")
@@ -115,7 +114,7 @@ public class Translation implements Narratable {
         if (!exists() && fallback == null) {
             log.warn("Untranslated key: {}", getKey());
         }
-        return PLACEHOLDER_REGEX.matcher(I18NAccessor.getLanguage().getOrDefault(getKey(), fallback != null ? fallback : getKey()))
+        return PLACEHOLDER_REGEX.matcher(Language.getInstance().getOrDefault(getKey(), fallback != null ? fallback : getKey()))
                 .replaceAll(match -> {
                     String placeholder = match.group("placeholder");
                     if (!variables.containsKey(placeholder)) {
