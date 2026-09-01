@@ -351,7 +351,7 @@ public class InventoryControls implements BalmClientModule {
 
     private @Nullable RecipeBookComponent<?> getRecipeBookWidget(Screen screen) {
         if (screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen) {
-            return ((AbstractRecipeBookScreenAccessor) recipeBookScreen).getRecipeBookComponent();
+            return ((AbstractRecipeBookScreenAccessor) recipeBookScreen).minecraft_access$getRecipeBookComponent();
         }
         return null;
     }
