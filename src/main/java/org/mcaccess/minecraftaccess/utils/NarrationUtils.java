@@ -136,7 +136,7 @@ public final class NarrationUtils {
     @Contract(pure = true)
     public static @NotNull String formattedCharSequenceToString(@NotNull FormattedCharSequence charSequence) {
         StringBuilder builder = new StringBuilder();
-        charSequence.accept((index, style, codePoint) -> {
+        charSequence.accept((_, _, codePoint) -> {
             builder.appendCodePoint(codePoint);
             return true;
         });

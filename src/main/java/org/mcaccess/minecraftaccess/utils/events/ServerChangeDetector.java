@@ -15,7 +15,7 @@ public class ServerChangeDetector<T> extends ChangeDetector<T> {
 
     public ServerChangeDetector(Supplier<T> reset) {
         super(reset.get());
-        ClientLifecycleCallback.ConnectedToServer.EVENT.register(client -> previous = reset.get());
+        ClientLifecycleCallback.ConnectedToServer.EVENT.register(_ -> previous = reset.get());
     }
 
     public void levelEvent(Update<T> update, Callback<T> callback) {

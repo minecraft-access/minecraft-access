@@ -26,8 +26,6 @@ public class Weather implements AccessMenuFunction {
         Biome.Precipitation currentPrecipitation = currentBiome.value()
                 .getPrecipitationAt(Minecraft.getInstance().player.getOnPos(), level.getSeaLevel());
 
-        Minecraft.getInstance().player.clientSideCloseContainer();
-
         Translation.Delimited narration = new Translation.Delimited()
                 .put(new Translation("minecraft_access.weather")
                     .variant(switch (currentPrecipitation) {

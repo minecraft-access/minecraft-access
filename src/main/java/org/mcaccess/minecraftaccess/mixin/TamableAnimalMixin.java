@@ -12,16 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Mixin(TamableAnimal.class)
-abstract class TamableAnimalMixin extends Animal {
-    TamableAnimalMixin(EntityType<? extends Animal> entityType, Level level) {
-        super(entityType, level);
-    }
-
-    @Inject(at = @At("HEAD"), method = "spawnTamingParticles")
-    private void narrateEmotion(boolean positive, CallbackInfo ci) {
+abstract class TamableAnimalMixin {
+    @Inject(method = "spawnTamingParticles", at = @At("HEAD"))
+    private void narrateEmotion(boolean success, CallbackInfo ci) {
+        String name = ((EntityAccessor) this).callGetName().getString();
         new Translation("minecraft_access.read_crosshair.tamable_emotion")
                 .variant(positive ? "positive" : "negative")
-                .variable("name").put(getName())
+                .variable("name").put(name)
                 .narrate(true);
     }
 }

@@ -10,9 +10,9 @@ Setting up NeoForge is a more advanced process. This guide is only recommended f
 > It's like installing a driver on your computer to use a certain piece of hardware.
 
 The NeoForge installer requires Java to be installed on your PC to run it.
-You should use the latest LTS (long-term support) version of Java, currently 21,
+You should consult the NeoForge documentation to find the recommended version of Java to install
 to ensure maximum compatibility and future support.
-[Here is the download page for Java 21](https://adoptium.net/temurin/releases/?os=any&arch=x64&version=21&package=jdk).
+[Here is the download page for our recommended Java distribution][adoptium].
 Run the installer and keep clicking Next, there's nothing to say.
 You must restart your computer after the Java installation is completed.
 
@@ -27,7 +27,7 @@ If you still want to download the latest version of NeoForge for some reason,
 [here is the download page for that version of NeoForge][neoforge].
 Select the `Installer` button under the `Download Recommended` section.
 An executable jar file will be downloaded with the name format `neoforge-<neoforge-version>-installer.jar`,
-for example `neoforge-21.1.4-installer.jar`.
+for example `neoforge-26.1.2.68-beta-installer.jar`.
 
 Before running the installer, download and run the patch file from [here] so that you can run the jar file directly in
 Windows File Explorer. If you downloaded the installer for Windows, skip this step.
@@ -75,5 +75,6 @@ but also its own worlds, screenshots, resource packs, etc. folders.
 12. launch the game to create all the files and folders.
 
 [releases page]: https://github.com/minecraft-access/minecraft-access/releases/latest
+[adoptium]: https://adoptium.net/temurin/releases/?os=any&arch=x64&package=jdk
 [neoforge]: https://neoforged.net/
 [jarfix]: https://johann.loefflmann.net/en/software/jarfix/index.html

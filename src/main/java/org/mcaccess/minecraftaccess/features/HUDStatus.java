@@ -40,7 +40,7 @@ public class HUDStatus implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbar/next"))
                 .withDefault(InputBinding.key(InputConstants.KEY_U))
                 .overrideCategory(KeyMappingCategories.OTHER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     narrateBossBars(false);
                     return true;
                 })
@@ -49,24 +49,24 @@ public class HUDStatus implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_bossbar/previous"))
                 .withDefault(InputBinding.key(InputConstants.KEY_U, KeyModifiers.of(KeyModifier.SHIFT)))
                 .overrideCategory(KeyMappingCategories.OTHER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     narrateBossBars(true);
                     return true;
                 })
                 .build();
 
         new ChangeDetector<Boolean>().clientEvent(
-                client -> client.options.hideGui,
-                (client, previous, value) -> new Translation("minecraft_access.hud_status.announce")
+                client -> client.gui.hud.isHidden(),
+                (_, _, value) -> new Translation("minecraft_access.hud_status.announce")
                         .variant(value ? "hidden" : "shown")
                         .narrate(true)
         );
 
-        new ServerChangeDetector<>(() -> false).levelEvent((client, player, level) -> player.getAttackStrengthScale(0) >= 1, this::attackIndicator);
+        new ServerChangeDetector<>(() -> false).levelEvent((_, player, _) -> player.getAttackStrengthScale(0) >= 1, this::attackIndicator);
     }
 
     private void attackIndicator(Minecraft client, Player player, Level level, Boolean previous, Boolean value) {
-        if (!value || client.options.hideGui || client.options.attackIndicator().get() == AttackIndicatorStatus.OFF || player.isSpectator()) {
+        if (!value || client.gui.hud.isHidden() || client.options.attackIndicator().get() == AttackIndicatorStatus.OFF || player.isSpectator()) {
             return;
         }
         level.playPlayerSound(SoundEvents.NOTE_BLOCK_HAT.value(), SoundSource.PLAYERS, 0.6f, 1.0f);
@@ -74,7 +74,7 @@ public class HUDStatus implements BalmClientModule {
 
     private void narrateBossBars(boolean isShiftDown) {
         List<LerpingBossEvent> bosses = new ArrayList<>(
-                ((BossHealthOverlayAccessor) Minecraft.getInstance().gui.getBossOverlay()).getEvents().values()
+                ((BossHealthOverlayAccessor) Minecraft.getInstance().gui.hud.getBossOverlay()).getEvents().values()
         );
 
         if (bosses.isEmpty()) {

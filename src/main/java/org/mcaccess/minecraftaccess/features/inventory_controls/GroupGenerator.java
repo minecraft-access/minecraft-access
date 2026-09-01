@@ -116,21 +116,25 @@ public final class GroupGenerator {
             int index = ((SlotAccessor) s).getSlot();
 
             //<editor-fold desc="Group player inventory slot items">
-            if (s.container instanceof Inventory && index >= 0 && index <= 8) {
-                hotbarGroup.slotItems.add(new SlotItem(s));
-                continue;
-            }
-            if (s.container instanceof Inventory && index >= 9 && index <= 35) {
-                playerInventoryGroup.slotItems.add(new SlotItem(s));
-                continue;
-            }
-            if (s.container instanceof Inventory && index >= 36 && index <= 39) {
-                armourGroup.slotItems.add(new SlotItem(s));
-                continue;
-            }
-            if (s.container instanceof Inventory && index == 40) {
-                offHandGroup.slotItems.add(new SlotItem(s));
-                continue;
+            switch (s.container) {
+                case Inventory _ when index >= 0 && index <= 8 -> {
+                    hotbarGroup.slotItems.add(new SlotItem(s));
+                    continue;
+                }
+                case Inventory _ when index >= 9 && index <= 35 -> {
+                    playerInventoryGroup.slotItems.add(new SlotItem(s));
+                    continue;
+                }
+                case Inventory _ when index >= 36 && index <= 39 -> {
+                    armourGroup.slotItems.add(new SlotItem(s));
+                    continue;
+                }
+                case Inventory _ when index == 40 -> {
+                    offHandGroup.slotItems.add(new SlotItem(s));
+                    continue;
+                }
+                default -> {
+                }
             }
             //</editor-fold>
 

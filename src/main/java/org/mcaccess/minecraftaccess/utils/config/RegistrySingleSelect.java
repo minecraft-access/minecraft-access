@@ -33,9 +33,7 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
 
     @Override
     protected Button initWidget() {
-        return Button.builder(Component.empty(), b -> {
-            Minecraft.getInstance().setScreen(new SelectionScreen(Minecraft.getInstance().screen));
-        }).build();
+        return Button.builder(Component.empty(), _ -> Minecraft.getInstance().gui.setScreen(new SelectionScreen(Minecraft.getInstance().gui.screen()))).build();
     }
 
     @Override
@@ -56,13 +54,12 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
 
         @Override
         protected void init() {
-            assert minecraft != null;
             layout = new HeaderAndFooterLayout(this);
             layout.addTitleHeader(title, minecraft.font);
             selectionList = layout.addToContents(new SelectionList());
             LinearLayout footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
-            footer.addChild(Button.builder(Component.translatable("gui.cancel"), b -> onClose()).build());
-            doneButton = footer.addChild(Button.builder(Component.translatable("gui.done"), b -> {
+            footer.addChild(Button.builder(Component.translatable("gui.cancel"), _ -> onClose()).build());
+            doneButton = footer.addChild(Button.builder(Component.translatable("gui.done"), _ -> {
                 if (selectionList.getSelected() != null) {
                     value = selectionList.getSelected().value;
                 }
@@ -74,13 +71,13 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
 
         @Override
         public void onClose() {
-            Minecraft.getInstance().screen = previous;
+            Minecraft.getInstance().gui.setScreen(previous);
         }
 
         @Override
-        public void extractRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+        public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
             doneButton.active = selectionList.getSelected() != null;
-            super.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
+            super.extractRenderState(guiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
         private final class SelectionList extends ObjectSelectionList<SelectionList.RegistryEntry> {
@@ -109,8 +106,8 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
                 }
 
                 @Override
-                public void extractContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-                    GuiGraphicsExtractor.text(minecraft.font, getNarration(), getContentX() + 5, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
+                public void extractContent(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+                    guiGraphicsExtractor.text(minecraft.font, getNarration(), getContentX() + 5, getContentYMiddle() - minecraft.font.lineHeight / 2, -1);
                 }
 
                 @Override

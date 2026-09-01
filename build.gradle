@@ -31,6 +31,8 @@ loom {
         remove client
         remove server
     }
+
+    nestJars tasks.named('shadowJar', Jar), processIncludeJars.outputDirectory.asFileTree
 }
 
 dependencies {
@@ -83,9 +85,22 @@ compileJava {
     options.release = 25
 }
 
+jar.enabled = false
 shadowJar {
     archiveClassifier = null
     configurations = [project.configurations.shadow]
+    from tasks.jarJar
+}
+
+configurations {
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact shadowJar
+    }
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact shadowJar
+    }
 }
 
 processResources {

@@ -53,7 +53,7 @@ public class NarrateCrosshair implements BalmClientModule {
     }
 
     private void tick(Minecraft client, Player player, Level level) {
-        if (client.screen != null) return;
+        if (client.gui.screen() != null) return;
         if (!CONFIG.enabled) return;
         repetitionInterval.setDelay(CONFIG.repetitionInterval, Interval.Unit.MILLISECOND);
 
@@ -87,7 +87,7 @@ public class NarrateCrosshair implements BalmClientModule {
         if (CONFIG.relativePositionSoundCue.enabled) {
             double rayCastDistance = Math.min(player.blockInteractionRange(), player.entityInteractionRange());
             Vec3 targetPosition = switch (rayCast) {
-                case BlockHitResult blockHitResult -> blockHitResult.getBlockPos().getCenter();
+                case BlockHitResult blockHitResult -> Vec3.atCenterOf(blockHitResult.getBlockPos());
                 case EntityHitResult entityHitResult -> entityHitResult.getEntity().position();
                 default -> rayCast.getLocation();
             };
@@ -154,6 +154,15 @@ public class NarrateCrosshair implements BalmClientModule {
         float volume = (float) (minVolume + (maxDistance - distance) * volumeDeltaPerBlock);
 
         assert Minecraft.getInstance().level != null;
-        Minecraft.getInstance().level.playLocalSound(targetPosition.x, targetPosition.y, targetPosition.z, sound.value(), SoundSource.BLOCKS, volume, pitch, true);
+        Minecraft.getInstance().level.playLocalSound(
+                targetPosition.x,
+                targetPosition.y,
+                targetPosition.z,
+                sound.value(),
+                SoundSource.BLOCKS,
+                volume,
+                pitch,
+                true
+        );
     }
 }

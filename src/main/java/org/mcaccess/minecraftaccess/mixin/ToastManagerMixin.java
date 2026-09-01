@@ -16,7 +16,7 @@ import org.mcaccess.minecraftaccess.utils.i18n.Untranslated;
 
 @Mixin(ToastManager.class)
 abstract class ToastManagerMixin {
-    @Inject(at = @At("TAIL"), method = "addToast")
+    @Inject(method = "addToast", at = @At("TAIL"))
     private void narrateToast(Toast toast, CallbackInfo ci) {
         Translation.Delimited toastTextBuilder = new Translation.Delimited()
                 .put(new Translation("minecraft_access.toast.shown"));
@@ -30,10 +30,12 @@ abstract class ToastManagerMixin {
                     .put(new Translation.Vanilla("recipe.toast.title"))
                     .put(new Translation.Vanilla("recipe.toast.description")));
             case SystemToast systemToast -> {
+                Translation.Delimited titleLines = new Translation.Delimited(' ');
+                ((SystemToastAccessor) systemToast).getTitleLines().forEach(titleLines::put);
                 Translation.Delimited messageLines = new Translation.Delimited(' ');
                 ((SystemToastAccessor) systemToast).getMessageLines().forEach(messageLines::put);
                 toastTextBuilder.put(new Translation.Delimited(Untranslated.FORMATTER.put(". "))
-                        .put(((SystemToastAccessor) systemToast).getTitle())
+                        .put(titleLines)
                         .put(messageLines));
             }
             case TutorialToast tutorialToast -> {

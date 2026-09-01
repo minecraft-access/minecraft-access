@@ -96,7 +96,7 @@ public class POIGroup<T> {
             }
             case BlockPos blockPos -> {
                 assert player != null;
-                yield player.getEyePosition().distanceTo(blockPos.getCenter());
+                yield player.getEyePosition().distanceTo(Vec3.atCenterOf(blockPos));
             }
             default -> Double.MAX_VALUE;
         };

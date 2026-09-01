@@ -19,8 +19,8 @@ abstract class MinecraftMixin {
      * no screen opened and alt key with number key are pressed.
      * We need to suppress original hotbar slot selecting feature.
      */
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z"),
-            method = "handleKeybinds",
+    @Inject(method = "handleKeybinds",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z"),
             cancellable = true)
     private void suppressHotbarSlotSelecting(CallbackInfo ci) {
         if (hasAltDown()) {

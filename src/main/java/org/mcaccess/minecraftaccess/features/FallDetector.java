@@ -47,7 +47,7 @@ public class FallDetector implements BalmClientModule {
     private void tick(Minecraft client, Player player, Level level) {
         if (!config.enabled) return;
 
-        if (client.screen != null) return;
+        if (client.gui.screen() != null) return;
         if (!player.onGround()) return;
         if (player.isUnderWater()) return;
         if (player.isSwimming()) return;
@@ -77,7 +77,7 @@ public class FallDetector implements BalmClientModule {
 
         while (!toSearch.isEmpty()) {
             BlockPos item = toSearch.poll();
-            checkForFall(item);
+            playOnFall(item);
 
             for (int i = 0; i < 4; i++) {
                 BlockPos dir = new BlockPos(item.getX() + dirX[i], item.getY(), item.getZ() + dirZ[i]);
@@ -107,7 +107,7 @@ public class FallDetector implements BalmClientModule {
         return true;
     }
 
-    private void checkForFall(BlockPos toCheck) {
+    private void playOnFall(BlockPos toCheck) {
         assert Minecraft.getInstance().level != null;
         if (!Minecraft.getInstance().level.getBlockState(toCheck).isAir()) return;
 

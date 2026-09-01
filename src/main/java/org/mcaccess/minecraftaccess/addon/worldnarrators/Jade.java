@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import snownee.jade.JadeClient;
@@ -40,8 +41,8 @@ public class Jade implements WorldNarrator {
                 .blockState(Minecraft.getInstance().level.getBlockState(block))
                 .blockEntity(Minecraft.getInstance().level.getBlockEntity(block))
                 .hit(BlockHitResult.miss(
-                        block.getCenter(),
-                        Direction.getApproximateNearest(Minecraft.getInstance().player.position().subtract(block.getCenter())),
+                        Vec3.atCenterOf(block),
+                        Direction.getApproximateNearest(Minecraft.getInstance().player.position().subtract(Vec3.atCenterOf(block))),
                         block
                 ))
                 .requireVerification()
@@ -49,7 +50,7 @@ public class Jade implements WorldNarrator {
         Tooltip tooltip = new Tooltip();
         WailaClientRegistration.instance()
                 .getAccessorHandler(accessor.getAccessorType())
-                .gatherComponents(accessor, provider -> tooltip);
+                .gatherComponents(accessor, _ -> tooltip);
         return tooltip.getNarration();
     }
 
@@ -63,7 +64,7 @@ public class Jade implements WorldNarrator {
         Tooltip tooltip = new Tooltip();
         WailaClientRegistration.instance()
                 .getAccessorHandler(accessor.getAccessorType())
-                .gatherComponents(accessor, provider -> tooltip);
+                .gatherComponents(accessor, _ -> tooltip);
         return tooltip.getNarration();
     }
 }

@@ -35,7 +35,7 @@ public class POIMarking implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.poi_marking/mark"))
                 .withDefault(InputBinding.key(InputConstants.KEY_Y, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.OTHER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     mark();
                     return true;
                 })
@@ -44,7 +44,7 @@ public class POIMarking implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.poi_marking/unmark"))
                 .withDefault(InputBinding.key(InputConstants.KEY_Y, KeyModifiers.of(KeyModifier.CONTROL, KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.OTHER)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     unmark();
                     return true;
                 })

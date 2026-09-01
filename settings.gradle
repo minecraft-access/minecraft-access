@@ -32,9 +32,9 @@ pluginManagement {
 }
 
 plugins {
-    id 'com.gradle.develocity' version '4.4.0'
-    id 'net.fabricmc.fabric-loom-repositories' version '1.16-SNAPSHOT'
-    id 'net.neoforged.moddev.repositories' version '2.0.141'
+    id 'com.gradle.develocity' version '4.5.0'
+    id 'net.fabricmc.fabric-loom-repositories' version '1.17.19'
+    id 'net.neoforged.moddev.repositories' version '2.0.144'
 }
 
 develocity {
@@ -79,7 +79,7 @@ dependencyResolutionManagement {
                 }
             }
             filter {
-                includeGroup 'net.fabricmc'
+                includeGroupAndSubgroups 'net.fabricmc'
             }
         }
 
@@ -95,16 +95,15 @@ dependencyResolutionManagement {
             }
         }
 
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'Neoforged Releases'
-                    url = 'https://maven.neoforged.net/releases/'
-                }
-            }
-            filter {
+        maven {
+            name = 'Neoforged Releases'
+            url = 'https://maven.neoforged.net/releases/'
+            content {
+                includeGroupAndSubgroups 'net.neoforged'
                 includeGroupAndSubgroups 'net.minecraftforge'
                 includeGroupAndSubgroups 'cpw.mods'
+
+                excludeModule 'net.neoforged', 'minecraft-dependencies'
             }
         }
 

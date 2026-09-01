@@ -30,13 +30,15 @@ import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 abstract class SuggestionsListMixin {
     @Shadow
     private int lastNarratedEntry;
+
     @Shadow
     private int current;
+
     @Shadow
     @Final
     private List<Suggestion> suggestionList;
 
-    @Inject(at = @At("HEAD"), method = "getNarrationMessage", cancellable = true)
+    @Inject(method = "getNarrationMessage", at = @At("HEAD"), cancellable = true)
     private void simplifySuggestionNarration(CallbackInfoReturnable<Component> cir) {
         // Don't know why they update this value here
         lastNarratedEntry = current;
@@ -58,13 +60,13 @@ abstract class SuggestionsListMixin {
                 .variable("item").put(item);
     }
 
-    @Inject(at = @At("HEAD"), method = "useSuggestion")
+    @Inject(method = "useSuggestion", at = @At("HEAD"))
     private void narrateCompletion(CallbackInfo ci) {
         String selected = suggestionList.get(current).getText();
         MainClass.narrate(selected, true);
     }
 
-    @Inject(at = @At("RETURN"), method = "<init>")
+    @Inject(method = "<init>", at = @At("RETURN"))
     private void narrateFirstSuggestionWhenSuggestionsAreShown(CallbackInfo ci) {
         getSuggestionTextNarration().narrate(true);
     }

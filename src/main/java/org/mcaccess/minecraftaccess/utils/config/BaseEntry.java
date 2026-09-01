@@ -35,7 +35,7 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
         defaultValue = ConfigExtension.getField(defaults, field);
         value = ConfigExtension.getField(config, field);
         label = new StringWidget(getDisplayedFieldName(), Minecraft.getInstance().font);
-        resetButton = Button.builder(Component.translatable("text.cloth-config.reset_value"), b -> value = defaultValue)
+        resetButton = Button.builder(Component.translatable("text.cloth-config.reset_value"), _ -> value = defaultValue)
                 .width(Minecraft.getInstance().font.width(Component.translatable("text.cloth-config.reset_value")) + 6)
                 .build();
     }
@@ -60,7 +60,8 @@ abstract class BaseEntry<T, W extends AbstractWidget> extends AbstractConfigList
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int index, int y, int x,
+                                   int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
         super.extractRenderState(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
         resetButton.active = isEditable() && !Objects.deepEquals(getValue(), defaultValue);
         resetButton.setY(y);

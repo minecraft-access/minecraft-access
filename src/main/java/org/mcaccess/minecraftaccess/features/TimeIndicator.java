@@ -25,7 +25,7 @@ public class TimeIndicator implements BalmClientModule {
 
     @Override
     public void initialize() {
-        new ServerChangeDetector<Times>().levelEvent((client, player, level) -> Times.of(getCurrentTime()), this::onChange);
+        new ServerChangeDetector<Times>().levelEvent((_, _, _) -> Times.of(getCurrentTime()), this::onChange);
     }
 
     private void onChange(Minecraft client, Player player, Level level, Times previous, Times time) {
@@ -34,11 +34,7 @@ public class TimeIndicator implements BalmClientModule {
         if (!level.canSeeSky(BlockPos.containing(Minecraft.getInstance().player.getEyePosition()))) return;
 
         new Translation("minecraft_access.time")
-                .variant(switch (time) {
-                    case AFTERNOON -> "afternoon";
-                    case DAY -> "day";
-                    case NIGHT -> "night";
-                })
+                .variant(time.toString())
                 .narrate(false);
     }
 
@@ -49,13 +45,19 @@ public class TimeIndicator implements BalmClientModule {
         long current = timeline.getCurrentTicks(clockManager);
         Integer total = timeline.periodTicks().orElseThrow();
 
-        return ((current + (total / 4)) % total / (double) total) * 24.0;
+        return ((current + ((double) total / 4)) % total / (double) total) * 24.0;
     }
 
     private enum Times {
-        DAY,
-        AFTERNOON,
-        NIGHT;
+        DAY("day"),
+        AFTERNOON("afternoon"),
+        NIGHT("night");
+
+        private final String keySuffix;
+
+        Times(String keySuffix) {
+            this.keySuffix = keySuffix;
+        }
 
         private static Times of(double time) {
             if (time >= 12.00 && time < 19.00) {
@@ -65,6 +67,11 @@ public class TimeIndicator implements BalmClientModule {
             } else {
                 return DAY;
             }
+        }
+
+        @Override
+        public String toString() {
+            return keySuffix;
         }
     }
 }

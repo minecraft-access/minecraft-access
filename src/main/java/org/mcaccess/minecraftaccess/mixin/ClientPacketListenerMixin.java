@@ -27,7 +27,7 @@ abstract class ClientPacketListenerMixin implements TickablePacketListener, Clie
     @Shadow
     private ClientLevel level;
 
-    @Inject(at = @At("HEAD"), method = "handleTakeItemEntity")
+    @Inject(method = "handleTakeItemEntity", at = @At("HEAD"))
     private void handleTakeItemEntity(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.player;
@@ -36,7 +36,8 @@ abstract class ClientPacketListenerMixin implements TickablePacketListener, Clie
         PacketUtils.ensureRunningOnSameThread(packet, this, client.packetProcessor());
         Config.Features config = Config.getInstance().features;
         if (config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.ALWAYS
-                || config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.WHEN_FISHING && player.getMainHandItem().getItem() instanceof FishingRodItem) {
+                || config.pickedUpItemNarration == Config.Features.PickedUpItemNarration.WHEN_FISHING
+                && player.getMainHandItem().getItem() instanceof FishingRodItem) {
             int cId = packet.getPlayerId();
             int pId = player.getId();
             // Is this item picked by "me" or other players?

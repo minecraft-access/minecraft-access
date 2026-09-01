@@ -222,10 +222,8 @@ public class MinecraftAccess implements WorldNarrator {
                 String itemName = itemDisplay.itemRenderState().itemStack().getItemName().getString();
                 yield new Translation("minecraft_access.display_entity.item").variable("item").put(itemName).getString();
             }
-            case Display.TextDisplay textDisplay when textDisplay.textRenderState() != null -> {
-                //noinspection DataFlowIssue
-                yield textDisplay.textRenderState().text().getString();
-            }
+            case Display.TextDisplay textDisplay when textDisplay.textRenderState() != null -> //noinspection DataFlowIssue
+                    textDisplay.textRenderState().text().getString();
             case Display.BlockDisplay blockDisplay when blockDisplay.blockRenderState() != null -> {
                 @SuppressWarnings("DataFlowIssue")
                 Block ghostBlock = blockDisplay.blockRenderState().blockState().getBlock();
@@ -417,7 +415,7 @@ public class MinecraftAccess implements WorldNarrator {
         boolean isReceivingPower = world.hasNeighborSignal(blockPos);
 
         return switch (block) {
-            case PistonBaseBlock ignored -> {
+            case PistonBaseBlock _ -> {
                 String facing = blockState.getValue(PistonBaseBlock.FACING).getName();
                 Translation narration = new Translation("minecraft_access.block.property.facing")
                         .variable("block").put(currentNarration)
@@ -427,8 +425,8 @@ public class MinecraftAccess implements WorldNarrator {
                 }
                 yield narration;
             }
-            case RedStoneWireBlock ignored -> getRedstoneWireInfo(blockState, blockPos, currentNarration);
-            case HopperBlock ignored -> {
+            case RedStoneWireBlock _ -> getRedstoneWireInfo(blockState, blockPos, currentNarration);
+            case HopperBlock _ -> {
                 String facing = blockState.getValue(HopperBlock.FACING).getName();
                 Translation narration = new Translation("minecraft_access.block.property.facing")
                         .variable("block").put(currentNarration)
@@ -438,7 +436,7 @@ public class MinecraftAccess implements WorldNarrator {
                 }
                 yield narration;
             }
-            case ObserverBlock ignored -> {
+            case ObserverBlock _ -> {
                 String facing = blockState.getValue(ObserverBlock.FACING).getName();
                 Translation narration = new Translation("minecraft_access.block.property.facing")
                         .variable("block").put(currentNarration)
@@ -448,7 +446,7 @@ public class MinecraftAccess implements WorldNarrator {
                 }
                 yield narration;
             }
-            case DispenserBlock ignored -> {
+            case DispenserBlock _ -> {
                 String facing = blockState.getValue(DispenserBlock.FACING).getName();
                 Translation narration = new Translation("minecraft_access.block.property.facing")
                         .variable("block").put(currentNarration)
@@ -458,7 +456,7 @@ public class MinecraftAccess implements WorldNarrator {
                 }
                 yield narration;
             }
-            case ComparatorBlock ignored -> {
+            case ComparatorBlock _ -> {
                 ComparatorMode mode = blockState.getValue(ComparatorBlock.MODE);
                 Direction facing = blockState.getValue(ComparatorBlock.FACING);
                 Translation narration = new Translation("minecraft_access.block.comparator")
@@ -471,7 +469,7 @@ public class MinecraftAccess implements WorldNarrator {
                 }
                 yield narration;
             }
-            case RepeaterBlock ignored -> {
+            case RepeaterBlock _ -> {
                 boolean locked = blockState.getValue(RepeaterBlock.LOCKED);
                 int delay = blockState.getValue(RepeaterBlock.DELAY);
                 Direction facing = blockState.getValue(RepeaterBlock.FACING);

@@ -1,8 +1,11 @@
 {
     "required": true,
     "minVersion": "0.8",
+    "mixinextras": {
+        "minVersion": "0.5.4"
+    },
     "package": "org.mcaccess.minecraftaccess.mixin",
-    "compatibilityLevel": "JAVA_21",
+    "compatibilityLevel": "JAVA_25",
     "client": [
         "AbstractContainerScreenAccessor",
         "AbstractRecipeBookScreenAccessor",
@@ -31,8 +34,7 @@
         "GameNarratorAccessor",
         "GameNarratorMixin",
         "GuiGraphicsExtractorMixin",
-        "GuiMixin",
-        "I18NAccessor",
+        "HudMixin",
         "InputMixin",
         "ItemStackMixin",
         "LivingEntityMixin",

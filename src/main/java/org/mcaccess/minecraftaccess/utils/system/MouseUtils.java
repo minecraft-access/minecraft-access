@@ -47,10 +47,6 @@ public final class MouseUtils {
         getMouseHandler().invokeOnMove(getWindowPointer(), x, y);
     }
 
-    public static void move(Coordinates coordinates) {
-        move(coordinates.x(), coordinates.y());
-    }
-
     public static void moveAfterDelay(int x, int y, int delayInMillSecs) {
         new Timer().schedule(new TimerTask() {
             @Override

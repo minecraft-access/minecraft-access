@@ -40,7 +40,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.narrate_facing_direction/horizontal"))
                 .withDefault(InputBinding.key(InputConstants.KEY_H))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     new Translation("minecraft_access.other.facing_direction")
                             .variable("direction").put(PlayerPositionUtils.getHorizontalFacingDirectionInWords())
                             .narrate(true);
@@ -51,7 +51,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.narrate_facing_direction/vertical"))
                 .withDefault(InputBinding.key(InputConstants.KEY_H, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     new Translation("minecraft_access.other.facing_direction")
                             .variable("direction").put(PlayerPositionUtils.getVerticalFacingDirectionInWords())
                             .narrate(true);
@@ -63,7 +63,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look/up"))
                 .withDefault(InputBinding.key(InputConstants.KEY_I))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraBy(RotatingDirection.UP, false);
                     return true;
                 })
@@ -72,7 +72,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look/left"))
                 .withDefault(InputBinding.key(InputConstants.KEY_J))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraBy(RotatingDirection.LEFT, false);
                     return true;
                 })
@@ -81,7 +81,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look/down"))
                 .withDefault(InputBinding.key(InputConstants.KEY_K))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraBy(RotatingDirection.DOWN, false);
                     return true;
                 })
@@ -90,7 +90,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look/right"))
                 .withDefault(InputBinding.key(InputConstants.KEY_L))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraBy(RotatingDirection.RIGHT, false);
                     return true;
                 })
@@ -100,7 +100,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_modified/up"))
                 .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraBy(RotatingDirection.UP, true);
                     return true;
                 })
@@ -109,7 +109,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_modified/left"))
                 .withDefault(InputBinding.key(InputConstants.KEY_J, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraBy(RotatingDirection.LEFT, true);
                     return true;
                 })
@@ -118,7 +118,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_modified/down"))
                 .withDefault(InputBinding.key(InputConstants.KEY_K, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraBy(RotatingDirection.DOWN, true);
                     return true;
                 })
@@ -127,7 +127,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_modified/right"))
                 .withDefault(InputBinding.key(InputConstants.KEY_L, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraBy(RotatingDirection.RIGHT, true);
                     return true;
                 })
@@ -137,7 +137,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/north"))
                 .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraTo(Orientation.NORTH, true);
                     return true;
                 })
@@ -146,7 +146,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/east"))
                 .withDefault(InputBinding.key(InputConstants.KEY_L, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraTo(Orientation.EAST, true);
                     return true;
                 })
@@ -155,7 +155,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/south"))
                 .withDefault(InputBinding.key(InputConstants.KEY_K, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraTo(Orientation.SOUTH, true);
                     return true;
                 })
@@ -164,7 +164,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_direction/west"))
                 .withDefault(InputBinding.key(InputConstants.KEY_J, KeyModifiers.of(KeyModifier.CONTROL)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraTo(Orientation.WEST, true);
                     return true;
                 })
@@ -174,7 +174,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/forward"))
                 .withDefault(InputBinding.key(InputConstants.KEY_COMMA))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     centerCamera(false);
                     return true;
                 })
@@ -183,7 +183,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/behind"))
                 .withDefault(InputBinding.key(InputConstants.KEY_COMMA, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     centerCamera(true);
                     return true;
                 })
@@ -192,7 +192,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/down"))
                 .withDefault(InputBinding.key(InputConstants.KEY_PERIOD))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraTo(Orientation.DOWN, true);
                     return true;
                 })
@@ -201,7 +201,7 @@ public class CameraControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "camera_controls.look_straight/up"))
                 .withDefault(InputBinding.key(InputConstants.KEY_PERIOD, KeyModifiers.of(KeyModifier.ALT)))
                 .overrideCategory(KeyMappingCategories.CAMERA_CONTROLS)
-                .handleWorldInput(event -> {
+                .handleWorldInput(_ -> {
                     rotateCameraTo(Orientation.UP, true);
                     return true;
                 })

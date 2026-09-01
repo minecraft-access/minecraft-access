@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Validate Input
         id: version
-        uses: actions/github-script@v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           # language=javascript
           script: |
@@ -82,7 +82,7 @@ jobs:
           result-encoding: string
       - name: Collate Changelog
         id: changelog
-        uses: actions/github-script@v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           # language=javascript
           script: |
@@ -152,7 +152,7 @@ jobs:
             core.summary.write();
             return changelog.trim();
           result-encoding: string
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }}
@@ -208,8 +208,8 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v8
-      - uses: Kir-Antipov/mc-publish@v3.3
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      - uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
         with:
           modrinth-id: ${{ vars.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -221,6 +221,9 @@ jobs:
           files: ./*.jar
           name: Minecraft Access v${{ needs.prepare.outputs.version }}
           version: ${{ needs.prepare.outputs.version }}
+          loaders: |
+            fabric
+            neoforge
           changelog: ${{ needs.prepare.outputs.changelog }}
   discord-builds:
     name: Publish Build on Discord

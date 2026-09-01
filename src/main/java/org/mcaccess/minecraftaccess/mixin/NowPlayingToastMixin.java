@@ -15,11 +15,11 @@ import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 @Mixin(NowPlayingToast.class)
 abstract class NowPlayingToastMixin {
     @Shadow
-    private static Component getNowPlayingString(@Nullable String string) {
+    private static Component getNowPlayingString(@Nullable String currentSongKey) {
         throw new AssertionError();
     }
 
-    @Inject(at = @At("TAIL"), method = "showToast")
+    @Inject(method = "showToast", at = @At("TAIL"))
     private void narrateSong(CallbackInfo ci) {
         new Translation.Delimited()
                 .put(new Translation("minecraft_access.toast.shown"))

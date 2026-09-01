@@ -8,12 +8,13 @@ jobs:
     name: Checkstyle
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
-      - uses: dbelyaev/action-checkstyle@v3
+          allow-unsafe-pr-checkout: true
+      - uses: dbelyaev/action-checkstyle@53cc62a6210f59d6424ef3cc9a34091ad497af29 # v4.0.0
         with:
           checkstyle_config: ./config/checkstyle/checkstyle.xml
           properties_file: ./config/checkstyle/checkstyle.properties
@@ -26,11 +27,12 @@ jobs:
     name: Translation File Sorting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
+          allow-unsafe-pr-checkout: true
       - name: Check Translation Sorting
         # language=bash
         run: |
@@ -49,11 +51,12 @@ jobs:
     name: Weblate Mergeability
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
+          allow-unsafe-pr-checkout: true
       - name: Setup Git
         # language=bash
         run: |

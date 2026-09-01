@@ -23,7 +23,7 @@ abstract class AnvilScreenMixin {
      * Let the original logic build the text, we don't want to repeat that.
      */
     @Inject(method = "extractLabels", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(IIIII)V"))
-    private void narrateCost(GuiGraphicsExtractor context, int mouseX, int mouseY, CallbackInfo ci, @Local Component line) {
+    private void narrateCost(GuiGraphicsExtractor graphics, int xm, int ym, CallbackInfo ci, @Local(name = "line") Component line) {
         if (line instanceof Component component) {
             String lineString = component.getString();
             if (!lineString.equals(previousLine)) {
@@ -34,7 +34,7 @@ abstract class AnvilScreenMixin {
     }
 
     @Inject(method = "extractLabels", at = @At("RETURN"))
-    private void resetWhenCostDisappears(GuiGraphicsExtractor context, int mouseX, int mouseY, CallbackInfo ci, @Local(ordinal = 2) int cost) {
+    private void resetWhenCostDisappears(GuiGraphicsExtractor graphics, int xm, int ym, CallbackInfo ci, @Local(name = "cost") int cost) {
         if (cost <= 0) {
             previousLine = null;
         }
