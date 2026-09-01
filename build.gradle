@@ -58,6 +58,7 @@ dependencies {
     jarJar libs.clothConfigNeoForge
 
     compileOnly libs.jsr305
+    compileOnly libs.mcdevAnnotations
 
     compileOnly libs.lombok
     annotationProcessor libs.lombok

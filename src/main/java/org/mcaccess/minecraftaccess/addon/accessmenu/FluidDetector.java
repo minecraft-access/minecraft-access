@@ -6,7 +6,6 @@ import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -17,9 +16,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Slf4j
 public class FluidDetector implements AccessMenuFunction {
@@ -56,10 +55,10 @@ public class FluidDetector implements AccessMenuFunction {
                 Minecraft.getInstance().level.playSound(Minecraft.getInstance().player, pos, SoundEvents.ITEM_PICKUP,
                         SoundSource.BLOCKS, config.volume, 1.0f);
 
-                String posDifference = NarrationUtils.narrateRelativePositionOfPlayerAnd(pos);
-                String name = blockState.getBlock().getName().getString();
-
-                MainClass.narrate(name + I18n.get("minecraft_access.other.words_connection") + posDifference, true);
+                new Translation.Delimited()
+                    .put(blockState.getBlock().getName())
+                    .put(NarrationUtils.narrateRelativePositionOfPlayerAnd(pos))
+                    .narrate(true);
                 return;
             }
             if (!blockState.isAir() && !fluidState.is(fluid)) {
@@ -73,6 +72,7 @@ public class FluidDetector implements AccessMenuFunction {
             queue.add(pos.west());
         }
         log.debug("Unable to find closest fluid source");
-        MainClass.narrate(I18n.get("minecraft_access.other.not_found"), true);
+        new Translation("minecraft_access.other.not_found")
+                .narrate(true);
     }
 }

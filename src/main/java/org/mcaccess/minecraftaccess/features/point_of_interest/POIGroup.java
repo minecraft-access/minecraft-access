@@ -9,10 +9,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.demonwav.mcdev.annotations.Translatable;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -24,27 +24,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.i18n.Narratable;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Slf4j
 public class POIGroup<T> {
-    private final String nameTranslateKey;
+    public final Narratable name;
     private final Sound sound;
 
     private final Predicate<T> predicate;
     private final List<T> items = new ArrayList<>();
 
-    public POIGroup(String nameTranslateKey, Sound sound, Predicate<T> predicate) {
-        this.nameTranslateKey = nameTranslateKey;
+    public POIGroup(Narratable name, Sound sound, Predicate<T> predicate) {
+        this.name = name;
         this.sound = sound;
         this.predicate = predicate;
     }
 
-    public POIGroup(String nameTranslateKey, Predicate<T> predicate) {
-        this(nameTranslateKey, new Sound(null, 0), predicate);
+    public POIGroup(@Translatable String name, Sound sound, Predicate<T> predicate) {
+        this(new Translation(name), sound, predicate);
     }
 
-    public String getTranslatedName() {
-        return I18n.get(nameTranslateKey);
+    public POIGroup(Narratable name, Predicate<T> predicate) {
+        this(name, new Sound(null, 0), predicate);
+    }
+
+    public POIGroup(@Translatable String name, Predicate<T> predicate) {
+        this(new Translation(name), predicate);
     }
 
     /**
@@ -54,7 +60,7 @@ public class POIGroup<T> {
         if (!MainClass.poiManager.objectTracker.isObjectValid(item)) return false;
 
         if (predicate.test(item)) {
-            log.debug("[{}] Add POI item [{}]", getTranslatedName(), item);
+            log.debug("[{}] Add POI item [{}]", name.getString(), item);
             items.add(item);
             return true;
         }

@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.TickablePacketListener;
 import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -20,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Slf4j
 @Mixin(ClientPacketListener.class)
@@ -46,11 +45,11 @@ abstract class ClientPacketListenerMixin implements TickablePacketListener, Clie
                 Entity entity = level.getEntity(packet.getItemId());
                 // This item might be an ExperienceOrbEntity and we don't want to narrate this sort of thing.
                 if (entity instanceof ItemEntity itemEntity) {
-                    String name = I18n.get(itemEntity.getItem().getItem().getDescriptionId());
-                    log.debug("Fishing harvest: {}", name);
                     // Have observed this narrate will interrupt adventure achievement, level up notification or so,
                     // it should be at low priority.
-                    MainClass.narrate(I18n.get("minecraft_access.other.picked_up_item", name), false);
+                    new Translation("minecraft_access.other.picked_up_item")
+                            .variable("item").put(new Translation.Vanilla(itemEntity.getItem().getItem().getDescriptionId()))
+                            .narrate(false);
                 }
             }
         }

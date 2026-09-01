@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,6 +22,6 @@ abstract class ItemStackMixin {
 
         int totalDurability = itemStack.getMaxDamage();
         int remainingDurability = totalDurability - itemStack.getDamageValue();
-        list.add(1, Component.nullToEmpty(I18n.get("item.durability", remainingDurability, totalDurability).formatted(ChatFormatting.GREEN)));
+        list.add(1, Component.translatable("item.durability", remainingDurability, totalDurability).withStyle(ChatFormatting.GREEN));
     }
 }

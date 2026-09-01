@@ -1,23 +1,27 @@
 package org.mcaccess.minecraftaccess.mixin;
 
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Mixin(TamableAnimal.class)
-abstract class TamableAnimalMixin {
+abstract class TamableAnimalMixin extends Entity {
+    TamableAnimalMixin(EntityType<?> type, Level level) {
+        super(type, level);
+    }
+
     @Inject(method = "spawnTamingParticles", at = @At("HEAD"))
     private void narrateEmotion(boolean success, CallbackInfo ci) {
-        String name = ((EntityAccessor) this).callGetName().getString();
-        if (success) {
-            MainClass.narrate(I18n.get("minecraft_access.read_crosshair.like_your_behavior", name), true);
-        } else {
-            MainClass.narrate(I18n.get("minecraft_access.read_crosshair.dislike_your_behavior", name), true);
-        }
+        new Translation("minecraft_access.read_crosshair.tamable_emotion")
+                .variant(success ? "positive" : "negative")
+                .variable("name").put(getName())
+                .narrate(true);
     }
 }

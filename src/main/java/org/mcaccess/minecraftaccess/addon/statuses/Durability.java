@@ -2,12 +2,12 @@ package org.mcaccess.minecraftaccess.addon.statuses;
 
 import java.util.function.Supplier;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.Status;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class Durability implements Status {
     private final Supplier<ItemStack> itemStack;
@@ -21,12 +21,11 @@ public class Durability implements Status {
     @Override
     public @NotNull String message() {
         ItemStack item = itemStack.get();
-        return I18n.get(
-                "minecraft_access.player_status.durability",
-                item.getItemName().getString(),
-                item.getMaxDamage() - item.getDamageValue(),
-                item.getMaxDamage()
-        );
+        return new Translation("minecraft_access.player_status.durability")
+                .variable("item").put(item.getItemName())
+                .variable("remaining").put(item.getMaxDamage() - item.getDamageValue())
+                .variable("max").put(item.getMaxDamage())
+                .getString();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package org.mcaccess.minecraftaccess.mixin;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
@@ -15,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 /**
  * Auto locks to the eye of ender when used.
@@ -38,6 +38,6 @@ abstract class EyeOfEnderMixin extends Entity implements ItemSupplier {
 
         log.debug("Auto locking on eye of ender entity");
         MainClass.poiManager.lockingHandler.lockOnEntity(this);
-        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.locking.tracking_eye_of_ender"), true);
+        new Translation("minecraft_access.point_of_interest.locking.tracking_eye_of_ender").narrate(true);
     }
 }

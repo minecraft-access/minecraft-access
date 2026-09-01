@@ -7,7 +7,6 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.i18n.Narratable;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 /**
  * Since text modifying narrations are suppressed in {@link EditBoxMixin},
@@ -41,25 +42,22 @@ abstract class SuggestionsListMixin {
     private void simplifySuggestionNarration(CallbackInfoReturnable<Component> cir) {
         // Don't know why they update this value here
         lastNarratedEntry = current;
-        String textNarration = getSuggestionTextNarration();
-        cir.setReturnValue(Component.nullToEmpty(textNarration));
+        cir.setReturnValue(getSuggestionTextNarration().toComponent());
         cir.cancel();
     }
 
     @Unique
-    private String getSuggestionTextNarration() {
-        Suggestion suggestion = suggestionList.get(current);
-        Message message = suggestion.getTooltip();
+    private Narratable getSuggestionTextNarration() {
+        Message message = suggestionList.get(current).getTooltip();
 
         String format = Config.getInstance().commandSuggestionNarratorFormat;
-        String textNarration = format.formatted(current + 1, suggestionList.size(), suggestion.getText());
-
+        Translation.Delimited item = new Translation.Delimited(' ')
+                .put(format.formatted(current + 1, suggestionList.size(), suggestionList.get(current).getText()));
         if (message != null) {
-            textNarration = I18n.get("minecraft_access.other.selected", textNarration + ' ' + message.getString());
-        } else {
-            textNarration = I18n.get("minecraft_access.other.selected", textNarration);
+            item.put(message.getString());
         }
-        return textNarration;
+        return new Translation("minecraft_access.other.selected")
+                .variable("item").put(item);
     }
 
     @Inject(method = "useSuggestion", at = @At("HEAD"))
@@ -70,7 +68,6 @@ abstract class SuggestionsListMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void narrateFirstSuggestionWhenSuggestionsAreShown(CallbackInfo ci) {
-        String first = getSuggestionTextNarration();
-        MainClass.narrate(first, true);
+        getSuggestionTextNarration().narrate(true);
     }
 }

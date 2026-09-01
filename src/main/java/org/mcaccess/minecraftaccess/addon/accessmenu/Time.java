@@ -2,12 +2,11 @@ package org.mcaccess.minecraftaccess.addon.accessmenu;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.resources.language.I18n;
 
 import org.mcaccess.minecraftaccess.Config;
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.features.TimeIndicator;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class Time implements AccessMenuFunction {
     @Override
@@ -15,7 +14,8 @@ public class Time implements AccessMenuFunction {
         ClientLevel level = Minecraft.getInstance().level;
         assert level != null;
         if (level.dimensionType().hasFixedTime()) {
-            MainClass.narrate(I18n.get(level.dimension().identifier().toLanguageKey("dimension")), true);
+            new Translation("dimension", level.dimension())
+                    .narrate(true);
             return;
         }
 
@@ -23,22 +23,10 @@ public class Time implements AccessMenuFunction {
         int hours = (int) daytime;
         int minutes = (int) ((daytime % 1.0) * 60);
 
-        StringBuilder translationKey = new StringBuilder("minecraft_access.access_menu.time_of_day");
-        if (Config.getInstance().use12HourTimeFormat) {
-            if (hours == 0) {
-                hours = 12;
-                translationKey.append("_am");
-            } else if (hours > 12) {
-                hours -= 12;
-                translationKey.append("_pm");
-            } else if (hours == 12) {
-                translationKey.append("_pm");
-            } else {
-                translationKey.append("_am");
-            }
-        }
-
-        String narration = I18n.get(translationKey.toString(), String.format("%02d:%02d", hours, minutes));
-        MainClass.narrate(narration, true);
+        new Translation("minecraft_access.access_menu.time_of_day")
+                .variant(hours >= 12 ? "pm" : "am", Config.getInstance().use12HourTimeFormat)
+                .variable("hours").put(Config.getInstance().use12HourTimeFormat ? (hours + 11) % 12 + 1 : hours)
+                .variable("minutes").put(minutes)
+                .narrate(true);
     }
 }

@@ -14,12 +14,12 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
     private final Class<?> registry;
@@ -84,7 +84,7 @@ public class RegistrySingleSelect extends BaseEntry<Identifier, Button> {
             private SelectionList() {
                 super(SelectionScreen.this.minecraft, layout.getWidth(), layout.getContentHeight(), layout.getHeaderHeight(), 16);
                 MainClass.registry(registry).keySet().stream()
-                        .sorted(Comparator.comparing(key -> I18n.get(key.toLanguageKey(registryI18n))))
+                        .sorted(Comparator.comparing(key -> new Translation(registryI18n, key).getString()))
                         .map(RegistryEntry::new)
                         .forEachOrdered(this::addEntry);
                 children().stream()

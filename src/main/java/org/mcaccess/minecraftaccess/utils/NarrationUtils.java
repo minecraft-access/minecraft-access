@@ -2,20 +2,21 @@ package org.mcaccess.minecraftaccess.utils;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import org.mcaccess.minecraftaccess.utils.i18n.Narratable;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
+import org.mcaccess.minecraftaccess.utils.i18n.Untranslated;
 
 /**
  * Translate input objects to narration text.
@@ -27,14 +28,19 @@ public final class NarrationUtils {
     private NarrationUtils() {
     }
 
-    public static String narrateNumber(double num) {
+    public static Narratable narrateNumber(double num) {
         DecimalFormat df = new DecimalFormat();
         double rounded = Math.round(num * 10.0) / 10.0;
-        return rounded >= 0 ? String.valueOf(df.format(rounded)) : I18n.get("minecraft_access.other.negative", df.format(-rounded));
+        return num >= 0
+                ? Untranslated.FORMATTER.put(df.format(rounded))
+                : new Translation("minecraft_access.other.negative").variable("number").put(df.format(-rounded));
     }
 
-    public static String narrateNumber(int num) {
-        return num >= 0 ? String.valueOf(num) : I18n.get("minecraft_access.other.negative", -num);
+    @SuppressWarnings("ConditionalCanBePushedInsideExpression")
+    public static Narratable narrateNumber(int num) {
+        return num >= 0
+                ? Untranslated.FORMATTER.put(String.valueOf(num))
+                : new Translation("minecraft_access.other.negative").variable("number").put(String.valueOf(num));
     }
 
     public static String narrateRelativePositionOfPlayerAnd(BlockPos blockPos) {
@@ -86,30 +92,33 @@ public final class NarrationUtils {
     }
 
     public static String getDifferenceString(int blocks, String key1, String key2) {
-        return I18n.get("minecraft_access.util.position_difference_" + (blocks < 0 ? key1 : key2), Math.abs(blocks));
+        return new Translation("minecraft_access.util.position_difference")
+                .variant(blocks < 0 ? key1 : key2)
+                .variable("blocks").put(Math.abs(blocks))
+                .getString();
     }
 
     public static String narrateCoordinatesOf(BlockPos blockPos) {
-        String posX = narrateNumber(blockPos.getX());
-        String posY = narrateNumber(blockPos.getY());
-        String posZ = narrateNumber(blockPos.getZ());
+        String posX = narrateNumber(blockPos.getX()).getString();
+        String posY = narrateNumber(blockPos.getY()).getString();
+        String posZ = narrateNumber(blockPos.getZ()).getString();
         return String.format("%s x %s y %s z", posX, posY, posZ);
     }
 
     /**
      * @return {EffectName} {Amplifier} {Duration}
      */
-    public static String narrateEffect(MobEffectInstance effect) {
-        StringBuilder result = new StringBuilder();
-        result.append(I18n.get(effect.getDescriptionId())).append(' ');
+    public static Narratable narrateEffect(MobEffectInstance effect) {
+        Translation.Delimited result = new Translation.Delimited(' ')
+                .put(new Translation.Vanilla(effect.getDescriptionId()));
 
         int amplifier = effect.getAmplifier();
         if (amplifier > 1) {
-            result.append(amplifier).append(' ');
+            result.put(amplifier);
         }
 
         if (effect.isInfiniteDuration()) {
-            result.append(I18n.get("effect.duration.infinite"));
+            result.put(new Translation.Vanilla("effect.duration.infinite"));
         } else {
             // StatusEffectInstance#getDuration returns ticks, so we divide by 20 in order to convert to seconds
             // 1 second = 20 ticks
@@ -118,25 +127,10 @@ public final class NarrationUtils {
             // while the formatting below is based on a clock instant.
             // It's tolerable rather than introducing several time related I18N keys.
             String fmt = d.toHoursPart() == 0 ? "mm':'ss" : "HH':'mm':'ss";
-            result.append(DurationFormatUtils.formatDuration(d.toMillis(), fmt));
+            result.put(DurationFormatUtils.formatDuration(d.toMillis(), fmt));
         }
 
-        return result.toString();
-    }
-
-    /**
-     * Gets the translated name from registry entry.
-     *
-     * @param holder the holder's registry entry
-     * @param type   the type of holder you want the translated name for
-     * @return the holder's human-readable name as an Optional
-     */
-    public static Optional<String> getTranslatedName(Holder<?> holder, String type) {
-        Optional<String> translatedName = holder.unwrapKey().map(key -> I18n.get(key.identifier().toLanguageKey(type)));
-        if (translatedName.isEmpty()) {
-            log.error("Failed to get a valid translation of the {} name", type);
-        }
-        return translatedName;
+        return result;
     }
 
     @Contract(pure = true)

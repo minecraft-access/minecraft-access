@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.addon.accessmenu;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -11,6 +10,7 @@ import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class NarrateTarget implements AccessMenuFunction {
     @Override
@@ -18,16 +18,13 @@ public class NarrateTarget implements AccessMenuFunction {
         HitResult hit = PlayerUtils.crosshairTarget(20.0);
         if (hit == null) return;
         switch (hit.getType()) {
-            case MISS, ENTITY -> MainClass.narrate(I18n.get("minecraft_access.access_menu.target_missed"), true);
+            case MISS, ENTITY -> new Translation("minecraft_access.access_menu.target_missed").narrate(true);
             case BLOCK -> {
-                BlockHitResult blockHit = (BlockHitResult) hit;
-                BlockPos blockPos = blockHit.getBlockPos();
-                String narration = new StringBuilder()
-                        .append(MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(blockPos))
-                        .append(I18n.get("minecraft_access.other.words_connection"))
-                        .append(NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos))
-                        .toString();
-                MainClass.narrate(narration, true);
+                BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
+                new Translation.Delimited()
+                        .put(MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(blockPos))
+                        .put(NarrationUtils.narrateRelativePositionOfPlayerAnd(blockPos))
+                        .narrate(true);
             }
         }
     }

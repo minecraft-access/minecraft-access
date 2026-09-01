@@ -18,10 +18,8 @@ import net.minecraft.client.gui.screens.inventory.StonecutterScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
@@ -59,6 +57,7 @@ import org.mcaccess.minecraftaccess.mixin.RecipeBookComponentAccessor;
 import org.mcaccess.minecraftaccess.mixin.RecipeBookPageAccessor;
 import org.mcaccess.minecraftaccess.mixin.SlotAccessor;
 import org.mcaccess.minecraftaccess.mixin.StonecutterScreenAccessor;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public final class GroupGenerator {
 
@@ -411,22 +410,21 @@ public final class GroupGenerator {
                         .get(enchantmentId);
                 if (enchantment.isEmpty()) break;
 
-                // this breaks when using I18n.get() for some reason so Component.translatable() is being used instead
-                StringBuilder clueText = new StringBuilder(Component.translatable("container.enchant.clue", Enchantment.getFullname(enchantment.get(), level)).getString());
+                StringBuilder clueText = new StringBuilder(new Translation.Vanilla("container.enchant.clue").put(Enchantment.getFullname(enchantment.get(), level)).getString());
                 assert Minecraft.getInstance().gameMode != null;
                 if (Minecraft.getInstance().gameMode.getPlayerMode() != GameType.CREATIVE) {
                     if (Minecraft.getInstance().player.experienceLevel < requiredLevel) {
-                        clueText.append(I18n.get("container.enchant.level.requirement", requiredLevel));
+                        clueText.append(new Translation("container.enchant.level.requirement").variable("level").put(requiredLevel).getString());
                     } else {
-                        String lapisCostText = cost == 1 ? I18n.get("container.enchant.lapis.one") : I18n.get("container.enchant.lapis.many", cost);
+                        String lapisCostText = new Translation("container.enchant.lapis").variant(cost == 1 ? "one" : "many").variable("cost").put(cost).getString();
                         if (enchantmentScreenHandler.getGoldCount() < cost) {
-                            lapisCostText = String.format("(%s) %s", I18n.get("minecraft_access.other.missing"), lapisCostText);
+                            lapisCostText = String.format("(%s) %s", new Translation("minecraft_access.other.missing").getString(), lapisCostText);
                         }
                         clueText.append(lapisCostText);
 
-                        String xpCostText = cost == 1 ? I18n.get("container.enchant.level.one") : I18n.get("container.enchant.level.many", cost);
+                        String xpCostText = new Translation("container.enchant.level").variant(cost == 1 ? "one" : "many").variable("cost").put(cost).getString();
                         if (Minecraft.getInstance().player.experienceLevel < cost) {
-                            xpCostText = String.format("(%s) %s", I18n.get("minecraft_access.other.missing"), xpCostText);
+                            xpCostText = String.format("(%s) %s", new Translation("minecraft_access.other.missing").getString(), xpCostText);
                         }
                         clueText.append(xpCostText);
                     }

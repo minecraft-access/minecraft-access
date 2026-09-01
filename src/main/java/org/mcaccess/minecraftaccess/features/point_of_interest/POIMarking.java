@@ -9,7 +9,7 @@ import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +19,7 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class POIMarking implements BalmClientModule {
     @Getter
@@ -68,12 +69,14 @@ public class POIMarking implements BalmClientModule {
             return;
         }
 
-        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.marking.marked", name), true);
+        new Translation("minecraft_access.point_of_interest.marking.marked")
+                .variable("object").put(name)
+                .narrate(true);
     }
 
     private void unmark() {
         if (markedObject.value == null) return;
         markedObject.value = null;
-        MainClass.narrate(I18n.get("minecraft_access.point_of_interest.marking.unmarked"), true);
+        new Translation("minecraft_access.point_of_interest.marking.unmarked").narrate(true);
     }
 }

@@ -15,7 +15,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.input.MouseButtonInfo;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +26,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.mixin.ScreenAccessor;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 /**
  * remap=false: suppress warnings since cloth isn't part of original game.
@@ -80,7 +79,9 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
 
     @Override
     public @NotNull Component getNarrationMessage() {
-        return super.getNarrationMessage().copy().append(I18n.get("minecraft_access.other.words_connection")).append(getSelectedCategory());
+        return super.getNarrationMessage().copy()
+                .append(new Translation("minecraft_access.other.words_connection").getString())
+                .append(getSelectedCategory());
     }
 
     /**
@@ -100,7 +101,7 @@ abstract class ClothConfigScreenMixin extends AbstractTabbedConfigScreen {
     private void switchCategory(boolean forward) {
         int nextIndex = selectedCategoryIndex + (forward ? 1 : -1);
         if (nextIndex < 0 || nextIndex >= tabButtons.size()) {
-            MainClass.narrate(I18n.get("minecraft_access.other.reached_the_border"), true);
+            new Translation("minecraft_access.other.reached_the_border").narrate(true);
             return;
         }
 

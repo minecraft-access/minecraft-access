@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.locale.Language;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class SlotsGroup {
     private final @NotNull String groupKey;
@@ -134,7 +133,7 @@ public class SlotsGroup {
 
     public String getGroupName() {
         String key = String.format("minecraft_access.slot_group.%s", groupKey);
-        String translation = groupName == null || Language.getInstance().has(key) ? I18n.get(key) : groupName;
+        String translation = new Translation(key).fallback(groupName).getString();
         return index == null ? translation : String.format("%s %d", translation, index);
     }
 }

@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.minecraft.client.ClientClockManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Slf4j
 public class TimeIndicator implements BalmClientModule {
@@ -33,7 +33,9 @@ public class TimeIndicator implements BalmClientModule {
         assert Minecraft.getInstance().player != null;
         if (!level.canSeeSky(BlockPos.containing(Minecraft.getInstance().player.getEyePosition()))) return;
 
-        MainClass.narrate(I18n.get("minecraft_access.time." + time.toString()), false);
+        new Translation("minecraft_access.time")
+                .variant(time.toString())
+                .narrate(false);
     }
 
     public static double getCurrentTime() {

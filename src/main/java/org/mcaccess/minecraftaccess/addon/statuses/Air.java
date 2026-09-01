@@ -1,22 +1,20 @@
 package org.mcaccess.minecraftaccess.addon.statuses;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.Status;
-import org.mcaccess.minecraftaccess.utils.NarrationUtils;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 public class Air implements Status {
     @Override
     public @NotNull String message() {
         assert Minecraft.getInstance().player != null;
-        return I18n.get(
-                "minecraft_access.player_status.air",
-                NarrationUtils.narrateNumber(Math.max(Minecraft.getInstance().player.getAirSupply() / 20.0, 0.0)),
-                NarrationUtils.narrateNumber(Minecraft.getInstance().player.getMaxAirSupply() / 20.0)
-        );
+        return new Translation("minecraft_access.player_status.air")
+                .variable("current").put(Math.max(Minecraft.getInstance().player.getAirSupply() / 20.0, 0.0))
+                .variable("max").put(Minecraft.getInstance().player.getMaxAirSupply() / 20.0)
+                .getString();
     }
 
     @Override

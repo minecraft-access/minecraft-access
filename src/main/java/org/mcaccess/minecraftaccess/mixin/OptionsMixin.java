@@ -8,14 +8,13 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.NarratorStatus;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
-import net.minecraft.client.resources.language.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Mixin(Options.class)
 abstract class OptionsMixin {
@@ -35,8 +34,8 @@ abstract class OptionsMixin {
 
     @Inject(at = @At("HEAD"), method = "setCameraType")
     private void narratePerspectiveWhenSet(CameraType cameraType, CallbackInfo ci) {
-        String keyword = cameraType.toString().toLowerCase();
-        String translated = I18n.get("minecraft_access.perspective." + keyword);
-        MainClass.narrate(I18n.get("minecraft_access.set_perspective", translated), true);
+        new Translation("minecraft_access.set_perspective")
+                .variable("perspective").put(new Translation("minecraft_access.perspective").variant(cameraType.toString().toLowerCase()))
+                .narrate(true);
     }
 }

@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.features;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -12,7 +11,6 @@ import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
@@ -24,11 +22,15 @@ import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
+import org.mcaccess.minecraftaccess.utils.events.ServerChangeDetector;
+import org.mcaccess.minecraftaccess.utils.i18n.Narratable;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
+import org.mcaccess.minecraftaccess.utils.i18n.Untranslated;
 
 public class NarrateHeldItem implements BalmClientModule {
-    private final SessionLocal<String> previousItemName = new SessionLocal<>(() -> null);
-    private final SessionLocal<Integer> previousItemCount = new SessionLocal<>(() -> null);
-    private final SessionLocal<Integer> previousSelectedSlot = new SessionLocal<>(() -> null);
+    private ServerChangeDetector<String> previousItemName = new ServerChangeDetector<>();
+    private ServerChangeDetector<Integer> previousItemCount = new ServerChangeDetector<>();
+    private ServerChangeDetector<Integer> previousSelectedSlot = new ServerChangeDetector<>();
 
     @Override
     public @NotNull Identifier getId() {
@@ -63,62 +65,75 @@ public class NarrateHeldItem implements BalmClientModule {
 
         ItemStack currentItemStack = player.getMainHandItem();
         int selectedSlot = player.getInventory().getSelectedSlot();
-        String baseItemName = getItemName(currentItemStack);
+        Narratable baseItemName = getItemName(currentItemStack);
         int itemCount = currentItemStack.getCount();
 
-        String itemNameWithCount = (currentItemStack.getCount() != 1 && !currentItemStack.isEmpty()) ? itemCount + " " + baseItemName : baseItemName;
+        Narratable itemNameWithCount;
+        if (currentItemStack.getCount() != 1 && !currentItemStack.isEmpty()) {
+            itemNameWithCount = new Translation.Delimited(' ')
+                    .put(currentItemStack.getCount())
+                    .put(baseItemName);
+        } else {
+            itemNameWithCount = baseItemName;
+        }
 
-        boolean nameChanged = !Objects.equals(baseItemName, previousItemName.value);
-        boolean countChanged = !Objects.equals(itemCount, previousItemCount.value);
-        boolean slotChanged = !Objects.equals(selectedSlot, previousSelectedSlot.value);
+        boolean nameChanged = previousItemName.update(baseItemName.getString());
+        boolean countChanged = previousItemCount.update(itemCount);
+        boolean slotChanged = previousSelectedSlot.update(selectedSlot);
 
         if (nameChanged || slotChanged) {
-            MainClass.narrate(I18n.get("minecraft_access.other.selected", itemNameWithCount), true);
+            new Translation("minecraft_access.other.selected")
+                    .variable("item").put(itemNameWithCount)
+                    .narrate(true);
         } else if (countChanged && Config.getInstance().features.narrateHeldItemsCountWhenChanged) {
-            MainClass.narrate(String.valueOf(itemCount), true);
+            Untranslated.FORMATTER.put(itemCount).narrate(true);
         }
-
-        previousItemName.value = baseItemName;
-        previousItemCount.value = itemCount;
-        previousSelectedSlot.value = selectedSlot;
     }
 
-    private String getItemName(ItemStack itemStack) {
+    private Narratable getItemName(ItemStack itemStack) {
         if (itemStack.isEmpty()) {
-            return I18n.get("minecraft_access.inventory_controls.empty_slot", "");
+            return new Translation("minecraft_access.inventory_controls.empty_slot").variable("item").put("");
         }
 
-        StringBuilder itemName = new StringBuilder();
-        itemName.append(itemStack.getHoverName().getString());
+        Translation.Delimited itemName = new Translation.Delimited();
+        itemName.put(itemStack.getHoverName());
 
         Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
                 .flatMap(jukeboxPlayable -> jukeboxPlayable.song().unwrapKey())
-                .ifPresent(discNumber -> itemName.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.identifier().getPath())));
+                .ifPresent(discNumber -> itemName.put("jukebox_song", discNumber));
 
-        return itemName.toString();
+        return itemName;
     }
 
     private void narrateHand(boolean hasAltDown) {
+        assert Minecraft.getInstance().player != null;
         if (Minecraft.getInstance().player.isSpectator()) return;
 
         LocalPlayer player = Minecraft.getInstance().player;
-        String hand;
+        Translation.Vanilla hand;
         ItemStack heldItem;
 
         if (!hasAltDown) {
-            hand = I18n.get("options.mainHand");
+            hand = new Translation.Vanilla("options.mainHand");
             assert player != null;
             heldItem = player.getMainHandItem();
         } else {
-            hand = I18n.get("minecraft_access.other.offhand");
+            hand = new Translation.Vanilla("minecraft_access.other.offhand");
             assert player != null;
             heldItem = player.getOffhandItem();
         }
 
-        String heldItemName = getItemName(heldItem);
+        Narratable heldItemName = getItemName(heldItem);
         int heldItemCount = heldItem.getCount();
-        heldItemName = (heldItemCount != 1 && !heldItem.isEmpty()) ? heldItemCount + " " + heldItemName : heldItemName;
+        if (heldItemCount != 1 && !heldItem.isEmpty()) {
+            heldItemName = new Translation.Delimited(' ')
+                    .put(heldItemCount)
+                    .put(heldItemName);
+        }
 
-        MainClass.narrate("%s: %s".formatted(hand, heldItemName), false);
+        new Translation.Delimited(Untranslated.FORMATTER.put(": "))
+                .put(hand)
+                .put(heldItemName)
+                .narrate(false);
     }
 }

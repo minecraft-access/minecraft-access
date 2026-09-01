@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.addon.accessmenu;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.Level;
@@ -10,9 +9,9 @@ import net.minecraft.world.level.MoonPhase;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.DimensionType;
 
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.features.BiomeIndicator;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 
 @Slf4j
 public class Weather implements AccessMenuFunction {
@@ -27,31 +26,26 @@ public class Weather implements AccessMenuFunction {
         Biome.Precipitation currentPrecipitation = currentBiome.value()
                 .getPrecipitationAt(Minecraft.getInstance().player.getOnPos(), level.getSeaLevel());
 
-        String weather;
-        if (level.isRaining()) {
-            String currentPrecipitationStatus = switch (currentPrecipitation) {
-                case NONE -> "clear";
-                case RAIN -> {
-                    if (level.isThundering()) {
-                        yield "thunder";
-                    } else {
-                        yield "rain";
-                    }
-                }
-                case SNOW -> "snow";
-            };
-
-            weather = I18n.get("minecraft_access.weather." + currentPrecipitationStatus);
-        } else {
-            weather = I18n.get("minecraft_access.weather.clear");
-        }
+        Translation.Delimited narration = new Translation.Delimited()
+                .put(new Translation("minecraft_access.weather")
+                    .variant(switch (currentPrecipitation) {
+                        case Biome.Precipitation ignored when !level.isRaining() -> "clear";
+                        case NONE -> "clear";
+                        case RAIN -> level.isThundering() ? "thunder" : "rain";
+                        case SNOW -> "snow";
+                        default -> {
+                            log.warn("Unexpected Precipitation type in weather status.");
+                            yield null;
+                        }
+                    })
+                );
 
         float moonAngle = level.environmentAttributes().getValue(EnvironmentAttributes.MOON_ANGLE, Minecraft.getInstance().player.position()) % 360;
         if ((moonAngle >= 270 || moonAngle <= 90) && level.dimensionType().skybox() == DimensionType.Skybox.OVERWORLD) {
             MoonPhase moonPhase = level.environmentAttributes().getValue(EnvironmentAttributes.MOON_PHASE, Minecraft.getInstance().player.getEyePosition());
-            weather += I18n.get("minecraft_access.other.words_connection") + I18n.get("minecraft_access.weather.moon_phase." + moonPhase.getSerializedName());
+            narration.put(new Translation("minecraft_access.weather.moon_phase").variant(moonPhase.getSerializedName()));
         }
 
-        MainClass.narrate(weather, false);
+        narration.narrate(false);
     }
 }

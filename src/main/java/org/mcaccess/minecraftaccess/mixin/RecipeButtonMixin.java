@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.mixin;
 
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -11,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
+import org.mcaccess.minecraftaccess.utils.i18n.Translation;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 @Mixin(RecipeButton.class)
@@ -36,10 +35,10 @@ abstract class RecipeButtonMixin {
 
         boolean sameItem = itemName.equalsIgnoreCase(previousItemName);
         if (!sameItem || interval.isReady()) {
-            String craftable = collection.hasCraftable() ? "craftable" : "not_craftable";
-            craftable = I18n.get("minecraft_access.other." + craftable);
-            String narration = "%s %d %s".formatted(craftable, itemStack.getCount(), itemName);
-            MainClass.narrate(narration, true);
+            new Translation.Delimited(' ')
+                    .put(new Translation("minecraft_access.other.craftable").variant(collection.hasCraftable() ? "craftable" : "not_craftable"))
+                    .put(itemStack.getCount())
+                    .put(itemName);
         }
 
         // update the states
