@@ -124,25 +124,16 @@ public class NarrateHeldItem implements BalmClientModule {
         }
 
         int heldItemCount = itemStack.getCount();
-        return (addCount && heldItemCount != 1) ? heldItemCount + " " + itemName.toString() : itemName.toString();
+        return (addCount && heldItemCount != 1) ? heldItemCount + " " + itemName : itemName.toString();
     }
 
     private void narrateHand(boolean hasAltDown) {
         if (Minecraft.getInstance().player.isSpectator()) return;
 
         LocalPlayer player = Minecraft.getInstance().player;
-        String hand;
-        String heldItemName;
-
-        if (!hasAltDown) {
-            hand = I18n.get("options.mainHand");
-            assert player != null;
-            heldItemName = getItemName(player.getMainHandItem(), true);
-        } else {
-            hand = I18n.get("minecraft_access.other.offhand");
-            assert player != null;
-            heldItemName = getItemName(player.getOffhandItem(), true);
-        }
+        String hand = I18n.get(hasAltDown ? "minecraft_access.other.offhand" : "options.mainHand");
+        assert player != null;
+        String heldItemName = getItemName(hasAltDown ? player.getOffhandItem() : player.getMainHandItem(), true);
 
         MainClass.narrate("%s: %s".formatted(hand, heldItemName), false);
     }
