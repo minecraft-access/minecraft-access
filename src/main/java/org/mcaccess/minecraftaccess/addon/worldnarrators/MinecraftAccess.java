@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.addon.worldnarrators;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -131,7 +130,6 @@ public class MinecraftAccess implements WorldNarrator {
         // When the entity is named, this value is its custom name,
         // otherwise it is its type.
         String nameOrType = entity.getName().getString();
-        boolean entityIsSitting = false;
         String type = entity.hasCustomName() ? I18n.get(entity.getType().getDescriptionId()) : nameOrType;
         boolean isDroppedItem = entity instanceof ItemEntity itemEntity && itemEntity.onGround()
                 || entity instanceof AbstractArrow abstractArrow && abstractArrow.pickup == AbstractArrow.Pickup.ALLOWED;
@@ -151,46 +149,24 @@ public class MinecraftAccess implements WorldNarrator {
         List<String> equipments = new ArrayList<>();
 
         if (Config.getInstance().narrateCrosshair.narrateAdditionalEntityPoses) {
-            switch (entity.getPose()) {
-                case SLEEPING -> text = I18n.get("minecraft_access.read_crosshair.sleeping", text);
-                case DYING -> text = I18n.get("minecraft_access.read_crosshair.dying", text);
-                case DIGGING -> text = I18n.get("minecraft_access.read_crosshair.digging", text);
-                case FALL_FLYING -> text = I18n.get("minecraft_access.read_crosshair.fall_flying", text);
-                case ROARING -> text = I18n.get("minecraft_access.read_crosshair.roaring", text);
-                case SLIDING -> text = I18n.get("minecraft_access.read_crosshair.sliding", text);
-                case SWIMMING -> text = I18n.get("minecraft_access.read_crosshair.swimming", text);
-                case SITTING -> entityIsSitting = true;
-                case CROAKING -> text = I18n.get("minecraft_access.read_crosshair.croaking", text);
-                case EMERGING -> text = I18n.get("minecraft_access.read_crosshair.emerging", text);
-                case SHOOTING -> text = I18n.get("minecraft_access.read_crosshair.shooting", text);
-                case INHALING -> text = I18n.get("minecraft_access.read_crosshair.inhaling", text);
-                case SNIFFING -> text = I18n.get("minecraft_access.read_crosshair.sniffing", text);
-                case CROUCHING -> text = I18n.get("minecraft_access.read_crosshair.crouching", text);
-                case LONG_JUMPING -> text = I18n.get("minecraft_access.read_crosshair.long_jumping", text);
-                case USING_TONGUE -> text = I18n.get("minecraft_access.read_crosshair.using_tongue", text);
-                case STANDING -> {
-                }
-                default -> {
-                    String poseName = entity.getPose().getSerializedName().toLowerCase();
-                    if (Language.getInstance().has("minecraft_access.read_crosshair." + poseName)) {
-                        text = I18n.get("minecraft_access.read_crosshair." + poseName, text);
-                    } else {
-                        log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", poseName);
-                    }
+            String poseName = entity.getPose().getSerializedName().toLowerCase();
+            if (!Objects.equals(poseName, "standing") && !Objects.equals(poseName, "sitting")) {
+                String poseKey = "minecraft_access.read_crosshair." + poseName;
+                if (Language.getInstance().has(poseKey)) {
+                    text = I18n.get(poseKey, text);
+                } else {
+                    log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", poseName);
                 }
             }
         }
 
-        if (!entityIsSitting) {
-            switch (entity) {
-                case Fox fox -> entityIsSitting = fox.isSitting();
-                case Panda panda -> entityIsSitting = panda.isSitting();
-                case Camel camel -> entityIsSitting = camel.isCamelSitting();
-                case TamableAnimal tamableAnimal -> entityIsSitting = tamableAnimal.isInSittingPose();
-                default -> {
-                }
-            }
-        }
+        boolean entityIsSitting = switch (entity) {
+            case Fox fox -> fox.isSitting();
+            case Panda panda -> panda.isSitting();
+            case Camel camel -> camel.isCamelSitting();
+            case TamableAnimal tamableAnimal -> tamableAnimal.isInSittingPose();
+            default -> Objects.equals(entity.getPose().getSerializedName().toLowerCase(), "sitting");
+        };
 
         if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) {
             text = I18n.get("minecraft_access.read_crosshair.tamed", text);
@@ -297,8 +273,8 @@ public class MinecraftAccess implements WorldNarrator {
      * @param blockPos block position (in the client world)
      * @param side     if side is provided, then the invoker is ReadCrosshair
      * @return (narration, currentQuery):
-     * "narration" is the actual one to be narrated through Narrator,
-     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
+     *      "narration" is the actual one to be narrated through Narrator,
+     *      "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateBlock(BlockPos blockPos, String side) {
         Minecraft client = Minecraft.getInstance();
@@ -541,8 +517,8 @@ public class MinecraftAccess implements WorldNarrator {
     /**
      * @param pos fluid position (in the client world)
      * @return (narration, currentQuery):
-     * "narration" is the actual one to be narrated through Narrator,
-     * "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
+     *      "narration" is the actual one to be narrated through Narrator,
+     *      "currentQuery" is kind of shortened "narration" that is used for checking if target is changed compared to previous.
      */
     private static String narrateFluidBlock(BlockPos pos) {
         assert Minecraft.getInstance().level != null;
