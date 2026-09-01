@@ -74,17 +74,17 @@ public class NarrateHeldItem implements BalmClientModule {
         if (player.isSpectator()) return;
 
         ItemStack currentItemStack = player.getMainHandItem();
-        String baseItemName = getItemName(currentItemStack, false);
         int selectedSlot = player.getInventory().getSelectedSlot();
+        String baseItemName = getItemName(currentItemStack, false);
         int itemCount = currentItemStack.getCount();
 
         boolean nameChanged = !Objects.equals(baseItemName, previousItemName.value);
-        boolean countChanged = !Objects.equals(itemCount, previousItemCount.value);
+        boolean countChanged = Config.getInstance().features.narrateHeldItemsCountWhenChanged && !Objects.equals(itemCount, previousItemCount.value);
         boolean slotChanged = !Objects.equals(selectedSlot, previousSelectedSlot.value);
 
         if (nameChanged || slotChanged) {
             MainClass.narrate(I18n.get("minecraft_access.other.selected", getItemName(currentItemStack, true)), true);
-        } else if (countChanged && Config.getInstance().features.narrateHeldItemsCountWhenChanged) {
+        } else if (countChanged) {
             MainClass.narrate(String.valueOf(itemCount), true);
         } else {
             return;
@@ -124,7 +124,7 @@ public class NarrateHeldItem implements BalmClientModule {
         }
 
         int heldItemCount = itemStack.getCount();
-        return (addCount && heldItemCount != 1 && !itemStack.isEmpty()) ? heldItemCount + " " + itemName.toString() : itemName.toString();
+        return (addCount && heldItemCount != 1) ? heldItemCount + " " + itemName.toString() : itemName.toString();
     }
 
     private void narrateHand(boolean hasAltDown) {
