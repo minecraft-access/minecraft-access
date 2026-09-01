@@ -17,13 +17,13 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.TestBlock;
 import net.minecraft.world.level.block.state.properties.TestBlockMode;
+import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.NotNull;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -79,15 +79,13 @@ public class NarrateHeldItem implements BalmClientModule {
         int itemCount = currentItemStack.getCount();
 
         boolean nameChanged = !Objects.equals(baseItemName, previousItemName.value);
-        boolean countChanged = Config.getInstance().features.narrateHeldItemsCountWhenChanged && !Objects.equals(itemCount, previousItemCount.value);
+        boolean countChanged = !Objects.equals(itemCount, previousItemCount.value);
         boolean slotChanged = !Objects.equals(selectedSlot, previousSelectedSlot.value);
 
         if (nameChanged || slotChanged) {
             MainClass.narrate(I18n.get("minecraft_access.other.selected", getItemName(currentItemStack, true)), true);
-        } else if (countChanged) {
+        } else if (Config.getInstance().features.narrateHeldItemsCountWhenChanged && countChanged) {
             MainClass.narrate(String.valueOf(itemCount), true);
-        } else {
-            return;
         }
 
         previousItemName.value = baseItemName;
@@ -119,8 +117,10 @@ public class NarrateHeldItem implements BalmClientModule {
         }
 
         if (itemStack.has(DataComponents.BUNDLE_CONTENTS)) {
-            int weight = Math.round(BundleItem.getFullnessDisplay(itemStack) * 64);
-            itemName.append(' ').append(weight).append("/64");
+            itemStack.get(DataComponents.BUNDLE_CONTENTS).weight().result().ifPresent(fraction ->
+                    itemName.append(' ')
+                            .append(fraction.multiplyBy(Fraction.getFraction(64, 1)).getNumerator())
+                            .append("/64"));
         }
 
         int heldItemCount = itemStack.getCount();
@@ -128,11 +128,11 @@ public class NarrateHeldItem implements BalmClientModule {
     }
 
     private void narrateHand(boolean hasAltDown) {
-        if (Minecraft.getInstance().player.isSpectator()) return;
-
         LocalPlayer player = Minecraft.getInstance().player;
-        String hand = I18n.get(hasAltDown ? "minecraft_access.other.offhand" : "options.mainHand");
         assert player != null;
+        if (player.isSpectator()) return;
+
+        String hand = I18n.get(hasAltDown ? "minecraft_access.other.offhand" : "options.mainHand");
         String heldItemName = getItemName(hasAltDown ? player.getOffhandItem() : player.getMainHandItem(), true);
 
         MainClass.narrate("%s: %s".formatted(hand, heldItemName), false);
