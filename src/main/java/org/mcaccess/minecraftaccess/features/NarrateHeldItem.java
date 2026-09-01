@@ -17,6 +17,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -114,6 +115,11 @@ public class NarrateHeldItem implements BalmClientModule {
                     .map(blockState -> blockState.get(TestBlock.MODE))
                     .orElse(TestBlockMode.START);
             itemName.append(' ').append(mode.getDisplayName().getString());
+        }
+
+        if (itemStack.has(DataComponents.BUNDLE_CONTENTS)) {
+            int weight = Math.round(BundleItem.getFullnessDisplay(itemStack) * 64);
+            itemName.append(' ').append(weight).append("/64");
         }
 
         int heldItemCount = itemStack.getCount();
