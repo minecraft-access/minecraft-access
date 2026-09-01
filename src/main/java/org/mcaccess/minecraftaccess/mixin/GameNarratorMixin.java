@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import org.mcaccess.minecraftaccess.MainClass;
-import org.mcaccess.minecraftaccess.utils.NarratorDummy;
 
-@Mixin(GameNarrator.class)
+import org.mcaccess.minecraftaccess.utils.NarratorDummy;
+@Mixin(value = GameNarrator.class, priority = 990)
 abstract class GameNarratorMixin {
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/text2speech/Narrator;getNarrator()Lcom/mojang/text2speech/Narrator;"))
     private Narrator redirectGetNarrator() {
