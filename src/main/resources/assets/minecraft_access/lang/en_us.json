@@ -221,6 +221,7 @@
     "minecraft_access.read_crosshair.bee_hive_facing": "%s Facing: %s",
     "minecraft_access.read_crosshair.bee_hive_honey_level": "%s Honey Level: %d",
     "minecraft_access.read_crosshair.bee_hive_smoked": "Smoked %s",
+    "minecraft_access.read_crosshair.collar": "%s collar",
     "minecraft_access.read_crosshair.comparator_info": "%s, Facing %s, Mode %s",
     "minecraft_access.read_crosshair.croaking": "%s, croaking",
     "minecraft_access.read_crosshair.crouching": "crouching %s",
