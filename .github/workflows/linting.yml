@@ -14,7 +14,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           allow-unsafe-pr-checkout: true
-      - uses: dbelyaev/action-checkstyle@53cc62a6210f59d6424ef3cc9a34091ad497af29 # v4.0.0
+      - uses: dbelyaev/action-checkstyle@515ce3f1f5a92c30bb695f06675856eb01eb6a63 # v4.0.1
         with:
           checkstyle_config: ./config/checkstyle/checkstyle.xml
           properties_file: ./config/checkstyle/checkstyle.properties
