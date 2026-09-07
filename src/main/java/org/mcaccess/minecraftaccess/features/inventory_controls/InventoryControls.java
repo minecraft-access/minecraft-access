@@ -18,7 +18,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
-import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -40,9 +39,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item.TooltipContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.ExtendedRecipeBookCategory;
-import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -279,11 +276,14 @@ public class InventoryControls implements BalmClientModule {
                                 Math.round(furnace.getLitProgress() * 100),
                                 Math.round(furnace.getBurnProgress() * 100)), true);
                         return true;
-                    } else if (currentScreen instanceof BrewingStandScreen brewingStand) {
-                        BrewingStandMenu menu = brewingStand.getMenu();
-                        MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status",
-                                (menu.getFuel() * 100) / BrewingStandBlockEntity.FUEL_USES,
-                                (menu.getBrewingTicks() * 100) / PotionBrewing.BREWING_TIME_SECONDS * 20), true);
+                    } else if (currentScreen.getMenu() instanceof BrewingStandMenu brewingStand) {
+                        int fuelPercent = brewingStand.getTotalFuel() > 0 ? (brewingStand.getFuel() * 100) / brewingStand.getTotalFuel() : 0;
+                        int brewingTicks = brewingStand.getBrewingTicks();
+                        int totalBrewingTicks = brewingStand.getTotalBrewingTicks();
+                        int brewPercent = (brewingTicks > 0 && totalBrewingTicks > 0)
+                                ? ((totalBrewingTicks - brewingTicks) * 100) / totalBrewingTicks
+                                : 0;
+                        MainClass.narrate(I18n.get("minecraft_access.inventory_controls.fuel_status", fuelPercent, brewPercent), true);
                         return true;
                     }
                     return false;
