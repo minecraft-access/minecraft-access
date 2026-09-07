@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.features;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -44,7 +45,7 @@ public class AccessMenu implements BalmClientModule {
                 .handleWorldInput(_ -> {
                     Minecraft client = Minecraft.getInstance();
                     if (keyAccessMenu.getBinding().key().getValue() == InputConstants.KEY_F4
-                            && InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_F3)) {
+                            && InputConstants.isKeyDown(InputConstants.KEY_F3)) {
                         return false;
                     } else {
                         client.gui.setScreen(new GUI());
@@ -154,14 +155,19 @@ public class AccessMenu implements BalmClientModule {
                 onClose();
                 return true;
             }
-            if (event.getDigit() != -1) {
-                AccessMenuFunction function = getShortcuts()[event.getDigit()];
-                if (function.enabled()) {
-                    onClose();
-                    function.execute();
-                    return true;
+
+            if (event.modifiers() == 0) {
+                OptionalInt numericKey = InputConstants.getKey(event).getNumericKeyValue();
+                if (numericKey.isPresent()) {
+                    AccessMenuFunction function = getShortcuts()[numericKey.getAsInt()];
+                    if (function != null && function.enabled()) {
+                        onClose();
+                        function.execute();
+                        return true;
+                    }
                 }
             }
+
             return super.keyPressed(event);
         }
     }
