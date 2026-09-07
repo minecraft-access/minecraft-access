@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.util.Util;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
 
@@ -43,7 +43,7 @@ public final class MouseUtils {
 
     public static void move(int x, int y) {
         log.debug("Move mouse to x:{} y:{}", x, y);
-        GLFW.glfwSetCursorPos(getWindowPointer(), x, y);
+        SDLMouse.SDL_WarpMouseInWindow(getWindowPointer(), x, y);
         getMouseHandler().invokeOnMove(getWindowPointer(), x, y);
     }
 
