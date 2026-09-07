@@ -368,9 +368,8 @@ public class InventoryControls implements BalmClientModule {
      * Handles the key inputs.
      */
     private boolean keyListener() {
-        Minecraft client = Minecraft.getInstance();
-        boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
-                || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
+        boolean isEnterPressed = InputConstants.isKeyDown(InputConstants.KEY_RETURN)
+                || InputConstants.isKeyDown(InputConstants.KEY_NUMPADENTER);
 
         //<editor-fold desc="When using a search box">
         //<editor-fold desc="When using a search box">
