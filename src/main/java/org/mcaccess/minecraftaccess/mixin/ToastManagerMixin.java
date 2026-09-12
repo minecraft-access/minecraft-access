@@ -31,7 +31,7 @@ abstract class ToastManagerMixin {
                             .append(display.getType().getDisplayName().getString())
                             .append(' ')
                             .append(display.getTitle().getString()));
-            case RecipeToast ignored -> toastTextBuilder.append(I18n.get("recipe.toast.title"))
+            case RecipeToast _ -> toastTextBuilder.append(I18n.get("recipe.toast.title"))
                     .append(". ")
                     .append(I18n.get("recipe.toast.description"));
             case SystemToast systemToast -> toastTextBuilder.append(((SystemToastAccessor) systemToast).getTitleLines().stream()

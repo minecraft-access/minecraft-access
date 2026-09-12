@@ -1,7 +1,5 @@
 package org.mcaccess.minecraftaccess.compat.mixin.clothconfig;
 
-import java.util.stream.IntStream;
-
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarrationThunk;
