@@ -79,6 +79,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
+import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.mixin.WolfAccessor;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -201,7 +202,7 @@ public class MinecraftAccess implements WorldNarrator {
                     I18n.get("minecraft_access.read_crosshair.zombie_villager_is_curing", text);
             case Display.ItemDisplay itemDisplay when itemDisplay.itemRenderState() != null -> {
                 @SuppressWarnings("DataFlowIssue")
-                String itemName = itemDisplay.itemRenderState().itemStack().getItemName().getString();
+                String itemName = NarrateHeldItem.getItemName(itemDisplay.itemRenderState().itemStack(), true);
                 yield I18n.get("minecraft_access.point_of_interest.locking.display_item", itemName);
             }
             case Display.TextDisplay textDisplay when textDisplay.textRenderState() != null -> //noinspection DataFlowIssue
@@ -211,17 +212,17 @@ public class MinecraftAccess implements WorldNarrator {
                 Block ghostBlock = blockDisplay.blockRenderState().blockState().getBlock();
                 yield I18n.get("minecraft_access.point_of_interest.locking.display_block", ghostBlock.getName().getString());
             }
-            case ItemFrame frame -> {
-                ItemStack item = frame.getItem();
-                if (!item.isEmpty()) {
-                    String itemName = item.getItemName().getString();
-                    yield I18n.get("minecraft_access.other.entity_with_equipments", Map.of("entity", text, "equipments", itemName));
-                }
-                yield text;
-            }
+            case ItemFrame frame -> I18n.get("minecraft_access.other.entity_with_equipments",
+                    Map.of("entity", text, "equipments", NarrateHeldItem.getItemName(frame.getItem(), true)));
             default -> {
                 if (isDroppedItem) {
-                    yield I18n.get("minecraft_access.point_of_interest.locking.dropped_item", text);
+                    if (entity instanceof ItemEntity item) {
+                        yield I18n.get("minecraft_access.point_of_interest.locking.dropped_item",
+                                NarrateHeldItem.getItemName(item.getItem(), true));
+                    } else if (entity instanceof AbstractArrow arrow) {
+                        yield I18n.get("minecraft_access.point_of_interest.locking.dropped_item",
+                                NarrateHeldItem.getItemName(arrow.getPickupItemStackOrigin(), true));
+                    }
                 }
                 yield text;
             }
