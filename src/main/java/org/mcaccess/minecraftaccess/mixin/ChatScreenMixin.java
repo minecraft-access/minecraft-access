@@ -3,7 +3,6 @@ package org.mcaccess.minecraftaccess.mixin;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -40,22 +39,21 @@ abstract class ChatScreenMixin {
      */
     @Unique
     private static boolean repeatPreviousChatMessage(int keyCode) {
-        Window window = Minecraft.getInstance().getWindow();
         int numMessages = ((ChatComponentAccessor) Minecraft.getInstance().gui.hud.getChat()).getAllMessages().size();
         int newChatMessagePage = currentChatMessagePage;
         if (Minecraft.getInstance().hasAltDown()) {
-            if (InputConstants.isKeyDown(window, InputConstants.KEY_GRAVE) || InputConstants.isKeyDown(window, InputConstants.KEY_MULTIPLY)) {
+            if (InputConstants.isKeyDown(InputConstants.KEY_GRAVE) || InputConstants.isKeyDown(InputConstants.KEY_MULTIPLY)) {
                 if (Minecraft.getInstance().hasControlDown()) {
                     newChatMessagePage = numMessages / 10;
                 } else {
                     newChatMessagePage = 0;
                 }
-            } else if (InputConstants.isKeyDown(window, InputConstants.KEY_EQUALS) || InputConstants.isKeyDown(window, InputConstants.KEY_ADD)) {
+            } else if (InputConstants.isKeyDown(InputConstants.KEY_EQUALS) || InputConstants.isKeyDown(InputConstants.KEY_ADD)) {
                 newChatMessagePage -= 1;
                 if (Minecraft.getInstance().hasControlDown()) {
                     newChatMessagePage -= 4;
                 }
-            } else if (InputConstants.isKeyDown(window, InputConstants.KEY_MINUS) || InputConstants.isKeyDown(window, InputConstants.KEY_MINUS)) {
+            } else if (InputConstants.isKeyDown(InputConstants.KEY_MINUS) || InputConstants.isKeyDown(InputConstants.KEY_MINUS)) {
                 newChatMessagePage += 1;
                 if (Minecraft.getInstance().hasControlDown()) {
                     newChatMessagePage += 4;
@@ -78,7 +76,7 @@ abstract class ChatScreenMixin {
                     return true;
                 }
             }
-            if (InputConstants.isKeyDown(window, InputConstants.KEY_0) || InputConstants.isKeyDown(window, InputConstants.KEY_NUMPAD0)) {
+            if (InputConstants.isKeyDown(InputConstants.KEY_0) || InputConstants.isKeyDown(InputConstants.KEY_NUMPAD0)) {
                 narratePreviousChatAtIndex(10 + currentChatMessagePage * 10 - 1);
             }
         }

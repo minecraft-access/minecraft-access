@@ -81,7 +81,7 @@ public class PlayerStatus implements BalmClientModule {
                     if (!Config.getInstance().features.crouchAndSprintCues || !value && player.isSprinting()) {
                         return;
                     }
-                    level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, value ? 0.5f : 0.9f);
+                    level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN.value(), SoundSource.PLAYERS, 1.0f, value ? 0.5f : 0.9f);
                 }
         );
 
@@ -89,7 +89,7 @@ public class PlayerStatus implements BalmClientModule {
                 (_, player, _) -> player.isSprinting() && !player.isCrouching(),
                 (_, _, level, _, value) -> {
                     if (Config.getInstance().features.crouchAndSprintCues) {
-                        level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN, SoundSource.PLAYERS, 1.0f, value ? 2.5f : 0.9f);
+                        level.playPlayerSound(SoundEvents.SHOVEL_FLATTEN.value(), SoundSource.PLAYERS, 1.0f, value ? 2.5f : 0.9f);
                     }
                 }
         );
