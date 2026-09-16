@@ -34,6 +34,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -289,6 +291,139 @@ public class InventoryControls implements BalmClientModule {
                     return false;
                 })
                 .build();
+
+        // Crafting keys
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.up/left"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD7))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (screenInputEvent.screen() instanceof CraftingScreen) {
+                        craftingInput(1);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.up/center"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD8))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (screenInputEvent.screen() instanceof CraftingScreen) {
+                        craftingInput(2);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.up/right"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD9))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (screenInputEvent.screen() instanceof CraftingScreen){
+                        craftingInput(3);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.center/left"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD4))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (screenInputEvent.screen() instanceof CraftingScreen) {
+                        craftingInput(4);
+                        return true;
+                    } else if (screenInputEvent.screen() instanceof InventoryScreen) {
+                        craftingInput(1);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.center/center"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD5))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (screenInputEvent.screen() instanceof CraftingScreen) {
+                        craftingInput(5);
+                        return true;
+                    } else if (screenInputEvent.screen() instanceof InventoryScreen) {
+                        craftingInput(2);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.center/right"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD6))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (screenInputEvent.screen() instanceof CraftingScreen) {
+                        craftingInput(6);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.down/left"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD1))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (screenInputEvent.screen() instanceof CraftingScreen) {
+                        craftingInput(7);
+                        return true;
+                    } else if (screenInputEvent.screen() instanceof InventoryScreen) {
+                        craftingInput(3);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.down/center"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD2))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (screenInputEvent.screen() instanceof CraftingScreen) {
+                        craftingInput(8);
+                        return true;
+                    } else if (screenInputEvent.screen() instanceof InventoryScreen) {
+                        craftingInput(4);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.down/right"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPAD3))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if (screenInputEvent.screen() instanceof CraftingScreen) {
+                        craftingInput(9);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
+
+        Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "crafting_input.result"))
+                .withDefault(InputBinding.key(InputConstants.KEY_NUMPADENTER))
+                .overrideCategory(KeyMappingCategories.CRAFTING_INPUT)
+                .handleScreenInput(screenInputEvent -> {
+                    if ((screenInputEvent.screen() instanceof CraftingScreen) || (screenInputEvent.screen() instanceof InventoryScreen)) {
+                        craftingInput(0);
+                        return true;
+                    }
+                    return false;
+                })
+                .build();
     }
 
     private void tick(Minecraft client) {
@@ -369,8 +504,11 @@ public class InventoryControls implements BalmClientModule {
      */
     private boolean keyListener() {
         Minecraft client = Minecraft.getInstance();
+
+
         boolean isEnterPressed = InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_RETURN)
                 || InputConstants.isKeyDown(client.getWindow(), InputConstants.KEY_NUMPADENTER);
+
 
         //<editor-fold desc="When using a search box">
         //<editor-fold desc="When using a search box">
@@ -694,6 +832,84 @@ public class InventoryControls implements BalmClientModule {
             w.setFocused(false);
             w.setCanLoseFocus(origin);
         }
+    }
+
+    private void craftingInput(int index) {
+        if (currentSlotItem == null || currentSlotItem.slot == null) return;
+        boolean shift = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_LSHIFT) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_RSHIFT);
+        if ((Screen) currentScreen instanceof InventoryScreen inventoryScreen) {
+            putOnCraft(inventoryScreen, index, shift);
+        } else if ((Screen) currentScreen instanceof CraftingScreen craftingScreen) {
+            putOnCraft(craftingScreen, index, shift);
+        }
+    }
+
+    private void putOnCraft(Screen screen, int slotIndex, boolean shift) {
+        if (!currentSlotItem.slot.hasItem() && slotIndex != 0) return;
+        Slot currentSlot = currentSlotItem.slot;
+        Slot target = null;
+        if (screen instanceof InventoryScreen inventoryScreen) {
+            InventoryMenu menu = inventoryScreen.getMenu();
+            target = menu.getSlot(slotIndex);
+        } else if (screen instanceof CraftingScreen craftingScreen) {
+            CraftingMenu menu = craftingScreen.getMenu();
+            target = menu.getSlot(slotIndex);
+        } else {
+            return;
+        }
+
+        if (currentSlot == null || target == null) return;
+        MouseUtils.Coordinates first = calcSlotPos(currentSlot);
+        MouseUtils.Coordinates second = calcSlotPos(target);
+        boolean isThereMore = false;
+        if (currentSlot.getItem() != null && currentSlot.getItem().count() > 1) isThereMore = true;
+        if (shift) {
+            doCraftMovement(second, first, mouseMovement.DOUBLE_LEFT_CLICK);
+        } else if (slotIndex == 0) {
+            doCraftMovement(second, first, mouseMovement.DOUBLE_LEFT_CLICK);
+        } else {
+            mouseMovement sec = null;
+            if (isThereMore) {
+                sec = mouseMovement.LEFT_AND_RIGHT_CLICK_LAST_CLICK;
+            } else sec = mouseMovement.DOUBLE_LEFT_CLICK;
+            doCraftMovement(first, second, sec);
+        }
+    }
+
+    private void doCraftMovement(MouseUtils.Coordinates firstPos, MouseUtils.Coordinates secondPos, mouseMovement movement) {
+        switch (movement) {
+            case LEFT_AND_RIGHT_CLICK_LAST_CLICK -> {
+                MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+                MouseUtils.move(secondPos.x(), secondPos.y());
+                MouseUtils.Key.RIGHT.click();
+                MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+                break;
+            }
+            case DOUBLE_LEFT_CLICK -> {
+                MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+                MouseUtils.moveAndLeftClick(secondPos.x(), secondPos.y());
+                break;
+            }
+            case LEFT_AND_RIGHT_CLICK -> {
+                MouseUtils.moveAndLeftClick(firstPos.x(), firstPos.y());
+                MouseUtils.move(secondPos.x(), secondPos.y());
+                MouseUtils.Key.RIGHT.click();
+                break;
+            }
+        }
+
+    }
+
+    private MouseUtils.Coordinates calcSlotPos(Slot s) {
+        int x = currentScreen.getLeftPos();
+        int y = currentScreen.getTopPos();
+        return MouseUtils.calcRealPositionOfWidget(x + s.x, y + s.y);
+    }
+
+    private enum mouseMovement {
+        DOUBLE_LEFT_CLICK,
+        LEFT_AND_RIGHT_CLICK,
+        LEFT_AND_RIGHT_CLICK_LAST_CLICK
     }
 
     private enum FocusDirection {
