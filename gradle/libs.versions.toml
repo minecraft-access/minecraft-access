@@ -24,7 +24,7 @@ lombok = "org.projectlombok:lombok:1.18.48"
 minecraft = "com.mojang:minecraft:26.2"
 modMenu = "com.terraformersmc:modmenu:20.0.1"
 neoForge = "net.neoforged:neoforge:26.2.0.77"
-neoforgeFancymodloaderLoader = "net.neoforged.fancymodloader:loader:11.0.17"
+neoforgeFancymodloaderLoader = "net.neoforged.fancymodloader:loader:12.0.0"
 tolk = "com.davykager.tolk:Tolk:1.0.0"
 
 assertjCore = "org.assertj:assertj-core:3.27.7"
