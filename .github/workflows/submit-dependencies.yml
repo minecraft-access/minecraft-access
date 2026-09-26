@@ -2,7 +2,7 @@ name: Submit Dependencies
 
 on:
   workflow_run:
-    workflows: [ 'generate-dependency-graph' ]
+    workflows: [ 'Dependency Graph Generation' ]
     types: [ completed ]
 
 permissions:
