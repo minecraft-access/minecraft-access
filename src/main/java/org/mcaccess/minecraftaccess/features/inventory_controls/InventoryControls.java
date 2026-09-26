@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.features.inventory_controls;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,6 @@ import net.minecraft.client.gui.screens.recipebook.SearchRecipeBookCategory;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
@@ -48,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.mixin.AbstractContainerScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.AbstractRecipeBookScreenAccessor;
 import org.mcaccess.minecraftaccess.mixin.AnvilScreenAccessor;
@@ -580,23 +579,44 @@ public class InventoryControls implements BalmClientModule {
         }
 
         ItemStack itemStack = slot.getItem();
-        // <slot row col prefix> <count>
-        String info = "%s %s".formatted(currentGroup.getSlotPrefix(slot),
-                (itemStack.getCount() != 1 && !itemStack.isEmpty()) ? String.valueOf(itemStack.getCount()) : "");
-
-        // <name> <description>
-        StringBuilder toolTipString = new StringBuilder();
-        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, Minecraft.getInstance().player, TooltipFlag.NORMAL);
-        for (Component line : toolTipList) {
-            toolTipString.append(line.getString()).append(' ');
+        StringBuilder narration = new StringBuilder();
+        String prefix = currentGroup.getSlotPrefix(slot);
+        if (!prefix.isEmpty()) {
+            narration.append(prefix).append(' ');
         }
 
-        Optional.ofNullable(itemStack.get(DataComponents.JUKEBOX_PLAYABLE))
-                .flatMap(jukeboxPlayable -> jukeboxPlayable.song().unwrapKey())
-                .ifPresent(discNumber -> toolTipString.append(' ').append(I18n.get("jukebox_song.minecraft." + discNumber.identifier().getPath())));
+        int count = itemStack.getCount();
+        if (count != 1 && !itemStack.isEmpty()) {
+            narration.append(count).append(' ');
+        }
 
-        // <slot row col prefix> <count> <name> <description>
-        return "%s %s".formatted(info, toolTipString.toString());
+        String baseItemName = NarrateHeldItem.getItemName(itemStack, false);
+
+        List<Component> toolTipList = itemStack.getTooltipLines(TooltipContext.EMPTY, Minecraft.getInstance().player, TooltipFlag.NORMAL);
+        StringBuilder toolTipBuilder = new StringBuilder();
+        for (Component line : toolTipList) {
+            String text = line.getString();
+            if (!text.isEmpty()) {
+                toolTipBuilder.append(text).append(' ');
+            }
+        }
+        String toolTipText = toolTipBuilder.toString().trim();
+
+        if (toolTipText.contains(baseItemName)) {
+            narration.append(toolTipText);
+        } else if (toolTipText.isEmpty()) {
+            narration.append(baseItemName);
+        } else {
+            narration.append(baseItemName);
+            for (Component line : toolTipList) {
+                String text = line.getString();
+                if (!baseItemName.contains(text)) {
+                    narration.append(' ').append(text);
+                }
+            }
+        }
+
+        return narration.toString().trim();
     }
 
     /**

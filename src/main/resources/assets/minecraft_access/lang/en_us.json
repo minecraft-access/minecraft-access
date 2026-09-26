@@ -143,6 +143,7 @@
     "minecraft_access.inventory_controls.Unknown": "Unknown",
     "minecraft_access.inventory_controls.direction_left": "Left",
     "minecraft_access.inventory_controls.direction_right": "Right",
+    "minecraft_access.inventory_controls.dragging": "Dragging %s",
     "minecraft_access.inventory_controls.empty_slot": "%s Empty Slot",
     "minecraft_access.inventory_controls.fuel_status": "Fuel: %d%%, output processing: %d%%",
     "minecraft_access.inventory_controls.group_selected": "%s %s Group selected",
