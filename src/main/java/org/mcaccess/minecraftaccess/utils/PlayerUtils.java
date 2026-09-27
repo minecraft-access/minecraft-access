@@ -9,7 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,7 +35,7 @@ public final class PlayerUtils {
         Vec3 playerEyePos = CLIENT.player.getEyePosition();
 
         // Try to look at entity's eyes or Enderman's stomach first.
-        boolean targetIsEnderman = entity instanceof EnderMan;
+        boolean targetIsEnderman = entity instanceof Enderman;
         Vec3 firstPos = targetIsEnderman ? Vec3.atCenterOf(entity.blockPosition()) : entity.getEyePosition();
         if (isVisibleToPlayer(playerEyePos, firstPos, entity)) {
             CLIENT.player.lookAt(EntityAnchorArgument.Anchor.EYES, firstPos);

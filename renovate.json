@@ -62,20 +62,27 @@
             "enabled": false
         },
         {
-            "description": "Enforce +fabric modifier for Jade Fabric",
+            "description": "Enforce version prefix for Jade Fabric",
             "matchPackageNames": [
                 "maven.modrinth:jade"
             ],
             "matchCurrentValue": "/\\+fabric$/",
-            "allowedVersions": "/\\+fabric$/"
+            "allowedVersions": "/^26\\.3.*\\+fabric$/"
         },
         {
-            "description": "Enforce +neoforge modifier for Jade NeoForge",
+            "description": "Enforce version prefix for Jade NeoForge",
             "matchPackageNames": [
                 "maven.modrinth:jade"
             ],
             "matchCurrentValue": "/\\+neoforge$/",
-            "allowedVersions": "/\\+neoforge$/"
+            "allowedVersions": "/^26\\.3.*\\+neoforge$/"
+        },
+        {
+            "description": "Enforce version prefix for NeoForge",
+            "matchPackageNames": [
+                "net.neoforged:neoforge"
+            ],
+            "allowedVersions": "/^26\\.3/"
         },
         {
             "description": "Ignore net.neoforged.fancymodloader:loader in version range >= 47.0 < 48.0",
@@ -86,7 +93,7 @@
         },
         {
             "description": "Enforce version prefix for Twelve Iterations",
-            "allowedVersions": "/^26\\.2/",
+            "allowedVersions": "/^26\\.3/",
             "matchPackageNames": [
                 "/^net\\.blay09\\.mods/"
             ]
@@ -96,14 +103,14 @@
             "matchPackageNames": [
                 "net.fabricmc.fabric-api:fabric-api"
             ],
-            "allowedVersions": "/\\+26\\.2(\\.[0-9]+)?$/"
+            "allowedVersions": "/\\+26\\.3(\\.[0-9]+)?$/"
         },
         {
             "description": "Enforce version prefix for Mod Menu",
             "matchPackageNames": [
                 "com.terraformersmc:modmenu"
             ],
-            "allowedVersions": "/^20\\./"
+            "allowedVersions": "/^21\\./"
         }
     ]
 }

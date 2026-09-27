@@ -9,31 +9,23 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.util.Util;
-import org.lwjgl.glfw.GLFW;
-
-import org.mcaccess.minecraftaccess.mixin.MouseHandlerAccessor;
+import org.lwjgl.sdl.SDLMouse;
 
 /**
  * Contains functions to simulate mouse events.
  */
 @Slf4j
 public final class MouseUtils {
-    /**
-     * The {@link Minecraft} is singleton and {@link Minecraft#window} only be initialized once in constructor,
-     * so this is safe to cache it.
-     */
     private static long windowPointer = 0;
 
     private MouseUtils() {
     }
 
-    public static void moveAndLeftClick(int x, int y) {
-        move(x, y);
+    public static void moveAndLeftClick(double xpos, double ypos) {
+        move(xpos, ypos);
         // fix the https://github.com/minecraft-access/minecraft-access/issues/65
         if (Util.getPlatform() == Util.OS.WINDOWS) {
             try {
-                // with a little bit of waiting, everything is ok now.
-                // I've tried to set the value to 10, and it doesn't always work, 20 is fine.
                 TimeUnit.MILLISECONDS.sleep(20);
             } catch (InterruptedException ignored) {
             }
@@ -41,30 +33,26 @@ public final class MouseUtils {
         Key.LEFT.click();
     }
 
-    public static void move(int x, int y) {
-        log.debug("Move mouse to x:{} y:{}", x, y);
-        GLFW.glfwSetCursorPos(getWindowPointer(), x, y);
-        getMouseHandler().invokeOnMove(getWindowPointer(), x, y);
+    public static void move(double xpos, double ypos) {
+        log.debug("Move mouse to x:{} y:{}", xpos, ypos);
+        SDLMouse.SDL_WarpMouseInWindow(getWindowPointer(), (float) xpos, (float) ypos);
+        Minecraft.getInstance().mouseHandler.onMove(getWindowPointer(), xpos, ypos, 0.0, 0.0);
     }
 
-    public static void moveAfterDelay(int x, int y, int delayInMillSecs) {
+    public static void moveAfterDelay(double xpos, double ypos, int delayInMillSecs) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                move(x, y);
+                move(xpos, ypos);
             }
         }, delayInMillSecs);
     }
 
-    public static Coordinates calcRealPositionOfWidget(int x, int y) {
+    public static Coordinates calcRealPositionOfWidget(double x, double y) {
         double scale = Minecraft.getInstance().getWindow().getGuiScale();
-        int realX = (int) (x * scale);
-        int realY = (int) (y * scale);
+        double realX = x * scale;
+        double realY = y * scale;
         return new Coordinates(realX, realY);
-    }
-
-    private static MouseHandlerAccessor getMouseHandler() {
-        return (MouseHandlerAccessor) Minecraft.getInstance().mouseHandler;
     }
 
     private static long getWindowPointer() {
@@ -74,7 +62,7 @@ public final class MouseUtils {
         return windowPointer;
     }
 
-    public record Coordinates(int x, int y) {
+    public record Coordinates(double x, double y) {
     }
 
     public enum Key {
@@ -103,12 +91,9 @@ public final class MouseUtils {
         }
 
         private static void operate(Key key, int action) {
-            // basing on MouseHandler.onPress():
-            // if Minecraft.ON_OSX && button == 0
-            // run macOS related logic
             int modifiers = Minecraft.getInstance().hasShiftDown() ? 1 : 0;
             MouseButtonInfo mouseButtonInfo = new MouseButtonInfo(key.id, modifiers);
-            getMouseHandler().invokeOnButton(getWindowPointer(), mouseButtonInfo, action);
+            Minecraft.getInstance().mouseHandler.onButton(getWindowPointer(), mouseButtonInfo, action);
         }
     }
 
@@ -118,9 +103,8 @@ public final class MouseUtils {
 
         public void scroll() {
             log.debug("Mouse {} scrolled", this);
-            // captured real mouse scrolling always results in x=0, y=1/-1
-            int offset = this == UP ? 1 : -1;
-            getMouseHandler().invokeOnScroll(getWindowPointer(), 0, offset);
+            double offset = this == UP ? 1.0 : -1.0;
+            Minecraft.getInstance().mouseHandler.onScroll(getWindowPointer(), 0.0, offset);
         }
     }
 }

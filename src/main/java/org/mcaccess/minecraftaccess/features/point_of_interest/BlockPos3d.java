@@ -24,7 +24,7 @@ public class BlockPos3d extends BlockPos {
     }
 
     public BlockPos3d(BlockPos position, Vec3 accuratePosition) {
-        super(position);
+        super(position.getX(), position.getY(), position.getZ());
         this.accuratePosition = accuratePosition;
     }
 
