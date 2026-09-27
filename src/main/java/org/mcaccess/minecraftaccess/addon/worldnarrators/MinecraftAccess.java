@@ -15,6 +15,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.locale.Language;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
@@ -81,6 +82,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
+import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
 import org.mcaccess.minecraftaccess.mixin.WolfAccessor;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
@@ -131,7 +133,6 @@ public class MinecraftAccess implements WorldNarrator {
         // When the entity is named, this value is its custom name,
         // otherwise it is its type.
         String nameOrType = entity.getName().getString();
-        boolean entityIsSitting = false;
         String type = entity.hasCustomName() ? I18n.get(entity.getType().getDescriptionId()) : nameOrType;
         boolean isDroppedItem = entity instanceof ItemEntity itemEntity && itemEntity.onGround()
                 || entity instanceof AbstractArrow abstractArrow && abstractArrow.pickup == AbstractArrow.Pickup.ALLOWED;
@@ -151,39 +152,24 @@ public class MinecraftAccess implements WorldNarrator {
         List<String> equipments = new ArrayList<>();
 
         if (Config.getInstance().narrateCrosshair.narrateAdditionalEntityPoses) {
-            switch (entity.getPose()) {
-                case SLEEPING -> text = I18n.get("minecraft_access.read_crosshair.sleeping", text);
-                case DYING -> text = I18n.get("minecraft_access.read_crosshair.dying", text);
-                case DIGGING -> text = I18n.get("minecraft_access.read_crosshair.digging", text);
-                case FALL_FLYING -> text = I18n.get("minecraft_access.read_crosshair.fall_flying", text);
-                case ROARING -> text = I18n.get("minecraft_access.read_crosshair.roaring", text);
-                case SLIDING -> text = I18n.get("minecraft_access.read_crosshair.sliding", text);
-                case SWIMMING -> text = I18n.get("minecraft_access.read_crosshair.swimming", text);
-                case SITTING -> entityIsSitting = true;
-                case CROAKING -> text = I18n.get("minecraft_access.read_crosshair.croaking", text);
-                case EMERGING -> text = I18n.get("minecraft_access.read_crosshair.emerging", text);
-                case SHOOTING -> text = I18n.get("minecraft_access.read_crosshair.shooting", text);
-                case INHALING -> text = I18n.get("minecraft_access.read_crosshair.inhaling", text);
-                case SNIFFING -> text = I18n.get("minecraft_access.read_crosshair.sniffing", text);
-                case CROUCHING -> text = I18n.get("minecraft_access.read_crosshair.crouching", text);
-                case LONG_JUMPING -> text = I18n.get("minecraft_access.read_crosshair.long_jumping", text);
-                case USING_TONGUE -> text = I18n.get("minecraft_access.read_crosshair.using_tongue", text);
-                case STANDING -> {
+            String poseName = entity.getPose().getSerializedName().toLowerCase();
+            if (!Objects.equals(poseName, "standing") && !Objects.equals(poseName, "sitting")) {
+                String poseKey = "minecraft_access.read_crosshair." + poseName;
+                if (Language.getInstance().has(poseKey)) {
+                    text = I18n.get(poseKey, text);
+                } else {
+                    log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", poseName);
                 }
-                default -> log.warn("Unhandled pose found: {} for additional pose narration in Narration Utils", entity.getPose().name());
             }
         }
 
-        if (!entityIsSitting) {
-            switch (entity) {
-                case Fox fox -> entityIsSitting = fox.isSitting();
-                case Panda panda -> entityIsSitting = panda.isSitting();
-                case Camel camel -> entityIsSitting = camel.isCamelSitting();
-                case TamableAnimal tamableAnimal -> entityIsSitting = tamableAnimal.isInSittingPose();
-                default -> {
-                }
-            }
-        }
+        boolean entityIsSitting = switch (entity) {
+            case Fox fox -> fox.isSitting();
+            case Panda panda -> panda.isSitting();
+            case Camel camel -> camel.isCamelSitting();
+            case TamableAnimal tamableAnimal -> tamableAnimal.isInSittingPose();
+            default -> Objects.equals(entity.getPose().getSerializedName().toLowerCase(), "sitting");
+        };
 
         if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) {
             text = I18n.get("minecraft_access.read_crosshair.tamed", text);
@@ -203,7 +189,7 @@ public class MinecraftAccess implements WorldNarrator {
                     I18n.get("minecraft_access.read_crosshair.zombie_villager_is_curing", text);
             case Display.ItemDisplay itemDisplay when itemDisplay.itemRenderState() != null -> {
                 @SuppressWarnings("DataFlowIssue")
-                String itemName = itemDisplay.itemRenderState().itemStack().getItemName().getString();
+                String itemName = NarrateHeldItem.getItemName(itemDisplay.itemRenderState().itemStack(), true);
                 yield I18n.get("minecraft_access.point_of_interest.locking.display_item", itemName);
             }
             case Display.TextDisplay textDisplay when textDisplay.textRenderState() != null -> //noinspection DataFlowIssue
@@ -213,17 +199,17 @@ public class MinecraftAccess implements WorldNarrator {
                 Block ghostBlock = blockDisplay.blockRenderState().blockState().getBlock();
                 yield I18n.get("minecraft_access.point_of_interest.locking.display_block", ghostBlock.getName().getString());
             }
-            case ItemFrame frame -> {
-                ItemStack item = frame.getItem();
-                if (!item.isEmpty()) {
-                    String itemName = item.getItemName().getString();
-                    yield I18n.get("minecraft_access.other.entity_with_equipments", Map.of("entity", text, "equipments", itemName));
-                }
-                yield text;
-            }
+            case ItemFrame frame -> I18n.get("minecraft_access.other.entity_with_equipments",
+                    Map.of("entity", text, "equipments", NarrateHeldItem.getItemName(frame.getItem(), true)));
             default -> {
                 if (isDroppedItem) {
-                    yield I18n.get("minecraft_access.point_of_interest.locking.dropped_item", text);
+                    if (entity instanceof ItemEntity item) {
+                        yield I18n.get("minecraft_access.point_of_interest.locking.dropped_item",
+                                NarrateHeldItem.getItemName(item.getItem(), true));
+                    } else if (entity instanceof AbstractArrow arrow) {
+                        yield I18n.get("minecraft_access.point_of_interest.locking.dropped_item",
+                                NarrateHeldItem.getItemName(arrow.getPickupItemStackOrigin(), true));
+                    }
                 }
                 yield text;
             }
@@ -235,6 +221,14 @@ public class MinecraftAccess implements WorldNarrator {
                 if (equipment.isEmpty()) continue;
                 String equipmentName = equipment.getHoverName().getString();
                 equipments.add(equipmentName);
+            }
+
+            if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) {
+                if (entity instanceof Cat cat) {
+                    equipments.add(I18n.get("minecraft_access.read_crosshair.collar", I18n.get("color.minecraft." + cat.getCollarColor().getName())));
+                } else if (entity instanceof Wolf wolf) {
+                    equipments.add(I18n.get("minecraft_access.read_crosshair.collar", I18n.get("color.minecraft." + wolf.getCollarColor().getName())));
+                }
             }
         }
 
