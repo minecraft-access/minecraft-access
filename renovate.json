@@ -78,28 +78,7 @@
             "allowedVersions": "/^26\\.3.*\\+neoforge$/"
         },
         {
-            "description": "Enforce version prefix for NeoForge",
-            "matchPackageNames": [
-                "net.neoforged:neoforge"
-            ],
-            "allowedVersions": "/^26\\.3/"
-        },
-        {
-            "description": "Ignore net.neoforged.fancymodloader:loader in version range >= 47.0 < 48.0",
-            "matchPackageNames": [
-                "net.neoforged.fancymodloader:loader"
-            ],
-            "allowedVersions": "!/^47\\./"
-        },
-        {
-            "description": "Enforce version prefix for Twelve Iterations",
-            "allowedVersions": "/^26\\.3/",
-            "matchPackageNames": [
-                "/^net\\.blay09\\.mods/"
-            ]
-        },
-        {
-            "description": "Enforce correct version suffix for Fabric API",
+            "description": "Enforce game-version suffix for Fabric API",
             "matchPackageNames": [
                 "net.fabricmc.fabric-api:fabric-api"
             ],
@@ -111,6 +90,22 @@
                 "com.terraformersmc:modmenu"
             ],
             "allowedVersions": "/^21\\./"
+        },
+        {
+            "description": "Enforce game-version prefix for NeoForge, Twelve Iterations, and Cloth Config",
+            "matchPackageNames": [
+                "net.neoforged:neoforge",
+                "/^net\\.blay09\\.mods/",
+                "/^me\\.shedaniel\\.cloth\\:cloth-config/"
+            ],
+            "allowedVersions": "/^26\\.3/"
+        },
+        {
+            "description": "Ignore net.neoforged.fancymodloader:loader in version range >= 47.0 < 48.0",
+            "matchPackageNames": [
+                "net.neoforged.fancymodloader:loader"
+            ],
+            "allowedVersions": "!/^47\\./"
         }
     ]
 }
