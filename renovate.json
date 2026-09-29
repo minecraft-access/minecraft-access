@@ -9,6 +9,21 @@
     },
     "packageRules": [
         {
+            "description": "Weekly grouped dependencies",
+            "matchManagers": [
+                "github-actions",
+                "gradle",
+                "nix"
+            ],
+            "schedule": [
+                "before 10am on sunday"
+            ],
+            "groupName": "dependencies",
+            "reviewers": [
+                "BrailleBennett"
+            ]
+        },
+        {
             "description": "Git submodules configuration",
             "matchManagers": [
                 "git-submodules"
@@ -23,21 +38,6 @@
             "matchManagers": [
                 "gradle-wrapper"
             ],
-            "reviewers": [
-                "BrailleBennett"
-            ]
-        },
-        {
-            "description": "Weekly grouped dependencies (GitHub Actions, Nix, Gradle)",
-            "matchManagers": [
-                "github-actions",
-                "nix",
-                "gradle"
-            ],
-            "schedule": [
-                "before 10am on sunday"
-            ],
-            "groupName": "dependencies",
             "reviewers": [
                 "BrailleBennett"
             ]
@@ -78,28 +78,7 @@
             "allowedVersions": "/^26\\.3.*\\+neoforge$/"
         },
         {
-            "description": "Enforce version prefix for NeoForge",
-            "matchPackageNames": [
-                "net.neoforged:neoforge"
-            ],
-            "allowedVersions": "/^26\\.3/"
-        },
-        {
-            "description": "Ignore net.neoforged.fancymodloader:loader in version range >= 47.0 < 48.0",
-            "matchPackageNames": [
-                "net.neoforged.fancymodloader:loader"
-            ],
-            "allowedVersions": "!/^47\\./"
-        },
-        {
-            "description": "Enforce version prefix for Twelve Iterations",
-            "allowedVersions": "/^26\\.3/",
-            "matchPackageNames": [
-                "/^net\\.blay09\\.mods/"
-            ]
-        },
-        {
-            "description": "Enforce correct version suffix for Fabric API",
+            "description": "Enforce game-version suffix for Fabric API",
             "matchPackageNames": [
                 "net.fabricmc.fabric-api:fabric-api"
             ],
@@ -111,6 +90,44 @@
                 "com.terraformersmc:modmenu"
             ],
             "allowedVersions": "/^21\\./"
+        },
+        {
+            "description": "Enforce game-version prefix for NeoForge, Twelve Iterations, and Cloth Config",
+            "matchPackageNames": [
+                "net.neoforged:neoforge",
+                "/^net\\.blay09\\.mods/",
+                "/^me\\.shedaniel\\.cloth\\:cloth-config/"
+            ],
+            "allowedVersions": "/^26\\.3/"
+        },
+        {
+            "description": "Ignore net.neoforged.fancymodloader:loader in version range >= 47.0 < 48.0",
+            "matchPackageNames": [
+                "net.neoforged.fancymodloader:loader"
+            ],
+            "allowedVersions": "!/^47\\./"
+        },
+        {
+            "description": "Add Hugo to the Dependencies group",
+            "matchPackageNames": [
+                "gohugoio/hugo"
+            ],
+            "groupName": "dependencies"
+        }
+    ],
+    "customManagers": [
+        {
+            "customType": "jsonata",
+            "fileFormat": "yaml",
+            "fileMatch": [
+                "\\.github/workflows/docs\\.yml$"
+            ],
+            "datasourceTemplate": "github-releases",
+            "depNameTemplate": "gohugoio/hugo",
+            "versioningTemplate": "semver",
+            "matchStrings": [
+                "{\"currentValue\": env.HUGO_VERSION}"
+            ]
         }
     ]
 }
