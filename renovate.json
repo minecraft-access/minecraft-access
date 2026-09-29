@@ -119,8 +119,8 @@
         {
             "customType": "jsonata",
             "fileFormat": "yaml",
-            "fileMatch": [
-                "\\.github/workflows/docs\\.yml$"
+            "managerFilePatterns": [
+                "/\\.github/workflows/docs\\.yml$/"
             ],
             "datasourceTemplate": "github-releases",
             "depNameTemplate": "gohugoio/hugo",
