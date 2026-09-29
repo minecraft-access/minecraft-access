@@ -9,6 +9,21 @@
     },
     "packageRules": [
         {
+            "description": "Weekly grouped dependencies",
+            "matchManagers": [
+                "github-actions",
+                "gradle",
+                "nix"
+            ],
+            "schedule": [
+                "before 10am on sunday"
+            ],
+            "groupName": "dependencies",
+            "reviewers": [
+                "BrailleBennett"
+            ]
+        },
+        {
             "description": "Git submodules configuration",
             "matchManagers": [
                 "git-submodules"
@@ -23,21 +38,6 @@
             "matchManagers": [
                 "gradle-wrapper"
             ],
-            "reviewers": [
-                "BrailleBennett"
-            ]
-        },
-        {
-            "description": "Weekly grouped dependencies (GitHub Actions, Nix, Gradle)",
-            "matchManagers": [
-                "github-actions",
-                "nix",
-                "gradle"
-            ],
-            "schedule": [
-                "before 10am on sunday"
-            ],
-            "groupName": "dependencies",
             "reviewers": [
                 "BrailleBennett"
             ]
@@ -106,6 +106,28 @@
                 "net.neoforged.fancymodloader:loader"
             ],
             "allowedVersions": "!/^47\\./"
+        },
+        {
+            "description": "Add Hugo to the Dependencies group",
+            "matchPackageNames": [
+                "gohugoio/hugo"
+            ],
+            "groupName": "dependencies"
+        }
+    ],
+    "customManagers": [
+        {
+            "customType": "jsonata",
+            "fileFormat": "yaml",
+            "fileMatch": [
+                "\\.github/workflows/docs\\.yml$"
+            ],
+            "datasourceTemplate": "github-releases",
+            "depNameTemplate": "gohugoio/hugo",
+            "versioningTemplate": "semver",
+            "matchStrings": [
+                "{\"currentValue\": env.HUGO_VERSION}"
+            ]
         }
     ]
 }
