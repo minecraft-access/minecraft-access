@@ -4,6 +4,20 @@ title: "Changelog"
 
 <!-- INSERT CHANGELOG HERE -->
 
+## Release v1.12.1 (2026-10)
+### New Features
+- Using the narrate held item key in your inventory now narrates items which are currently being carried by your cursor.
+- Light block light level is now narrated in the inventory.
+- Test block mode is now narrated in the inventory.
+- Bundle fullness progress is now narrated in the inventory.
+- Item narration is now shared across the entire mod for consistency.
+- The collars which tamed cats and wolfs wear are now narrated as equipment instead of being ignored.
+- Updated mod to game version 26.3.
+
+### Feature Updates
+- Added the ability to narrate translations for additional entity poses added by other mods if those developers implement a translation key.
+- Sign narration is now no longer capped to 4 lines arbitrarily. This may add better compatibility for modded signs.
+
 ## Release v1.12.0 (2026-07)
 ### New Features
 - Added a new weather status button in the access menu which will report the current weather for the biome you are in as well as the moon phase, if it is night
