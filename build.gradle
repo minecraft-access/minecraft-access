@@ -32,6 +32,7 @@ loom {
         remove server
     }
 
+    uncompressNestedJars = true
     nestJars tasks.named('shadowJar', Jar), processIncludeJars.outputDirectory.asFileTree
 }
 
