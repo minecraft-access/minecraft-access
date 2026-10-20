@@ -10,18 +10,20 @@ import org.mcaccess.minecraftaccess.screen_reader.android.AndroidPlatform;
 import org.mcaccess.minecraftaccess.screen_reader.android.AndroidTtsNative;
 
 /**
- * Narration through the text to speech engine of Android itself.
+ * Narration through the accessibility APIs of Android itself.
  *
- * <p>This is used when Minecraft runs inside an Android launcher, where the
- * system engine is the only speech output that works without shipping a speech
- * synthesiser. The rate and pitch sliders of the speech settings are applied
- * here, so the voice can be tuned from inside the game.
+ * <p>This is used when Minecraft runs inside an Android launcher. A screen
+ * reader that is already running speaks the narration, and otherwise the text
+ * to speech engine of the system does; either way the mod ships no speech
+ * synthesiser of its own. The rate and pitch sliders of the speech settings
+ * only reach the text to speech engine, a screen reader keeps its own values.
  */
 @Slf4j
 public class ScreenReaderAndroid implements ScreenReaderInterface {
     private boolean initialized;
 
     @Override
+    @SuppressWarnings("checkstyle:IllegalCatch")
     public void initializeScreenReader() {
         if (!AndroidPlatform.isAndroid()) {
             log.error("The Android screen reader interface was requested outside an Android environment");
@@ -29,16 +31,17 @@ public class ScreenReaderAndroid implements ScreenReaderInterface {
         }
 
         String language = languageTag();
-        log.info("Initializing the Android text to speech engine, language={}", language);
+        log.info("Initializing Android narration, language={}", language);
         try {
             initialized = AndroidTtsNative.start(language);
         } catch (RuntimeException e) {
-            // Narration is an accessibility feature, a problem here must not stop the game
-            log.error("Unable to initialize the Android text to speech engine", e);
+            // Narration is an accessibility feature and this runs from the mod initialiser,
+            // where an exception would abort the entrypoint and crash the game
+            log.error("Unable to initialize Android narration", e);
             initialized = false;
         }
         if (!initialized) {
-            log.error("Unable to initialize the Android text to speech engine: {}", AndroidTtsNative.error());
+            log.error("Unable to initialize Android narration: {}", AndroidTtsNative.error());
         }
     }
 
@@ -58,7 +61,7 @@ public class ScreenReaderAndroid implements ScreenReaderInterface {
         float rate = settings.androidSpeechRate / 100f;
         float pitch = settings.androidSpeechPitch / 100f;
         if (!AndroidTtsNative.narrate(narration, rate, pitch, interrupt)) {
-            log.warn("Unable to narrate using the Android text to speech engine: {}", AndroidTtsNative.error());
+            log.warn("Unable to narrate through Android: {}", AndroidTtsNative.error());
         } else {
             log.debug("Narrating(interrupt:{}) = {}", interrupt, narration);
         }
@@ -70,7 +73,7 @@ public class ScreenReaderAndroid implements ScreenReaderInterface {
 
         AndroidTtsNative.shutdown();
         initialized = false;
-        log.info("Closed the Android text to speech engine");
+        log.info("Closed Android narration");
     }
 
     /**
