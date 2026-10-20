@@ -351,6 +351,10 @@
     "text.autoconfig.minecraft-access.option.poi.marking": "标记功能",
     "text.autoconfig.minecraft-access.option.poi.marking.suppressOtherWhenEnabled": "标记生效过程中，关闭其他兴趣点朗读与锁定",
     "text.autoconfig.minecraft-access.option.poi.narrateDistance": "朗读与方块/实体间的相对位置",
+    "text.autoconfig.minecraft-access.option.speechSettings.androidSpeechPitch": "安卓语音音高（百分比）",
+    "text.autoconfig.minecraft-access.option.speechSettings.androidSpeechPitch.@Tooltip": "安卓系统语音的音高，百分比。50 为自然音高。",
+    "text.autoconfig.minecraft-access.option.speechSettings.androidSpeechRate": "安卓语音速度（百分比）",
+    "text.autoconfig.minecraft-access.option.speechSettings.androidSpeechRate.@Tooltip": "安卓系统语音的语速，百分比。50 为自然语速。",
     "text.autoconfig.minecraft-access.option.speechSettings.speechRate": "语音速度（百分比）（macOS）",
     "text.autoconfig.minecraft-access.option.use12HourTimeFormat": "使用十二小时制格式朗读时间",
     "text.autoconfig.minecraft-access.title": "Minecraft Access 设置"
