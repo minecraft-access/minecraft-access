@@ -401,7 +401,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_stopSpe
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_isSpeaking(
+Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_stillSpeaking(
         JNIEnv *env, jclass clazz) {
     (void) clazz;
     (void) env;
