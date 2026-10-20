@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.screen_reader;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.LanguageManager;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.Config;
@@ -29,7 +30,13 @@ public class ScreenReaderAndroid implements ScreenReaderInterface {
 
         String language = languageTag();
         log.info("Initializing the Android text to speech engine, language={}", language);
-        initialized = AndroidTtsNative.start(language);
+        try {
+            initialized = AndroidTtsNative.start(language);
+        } catch (RuntimeException e) {
+            // Narration is an accessibility feature, a problem here must not stop the game
+            log.error("Unable to initialize the Android text to speech engine", e);
+            initialized = false;
+        }
         if (!initialized) {
             log.error("Unable to initialize the Android text to speech engine: {}", AndroidTtsNative.error());
         }
@@ -74,7 +81,11 @@ public class ScreenReaderAndroid implements ScreenReaderInterface {
         Minecraft client = Minecraft.getInstance();
         if (client == null) return null;
 
-        String selected = client.getLanguageManager().getSelected();
+        // The screen reader is refreshed from the mod initialiser, before the client has built
+        // its language manager, and the system default is a fine fallback in that case
+        LanguageManager manager = client.getLanguageManager();
+        if (manager == null) return null;
+        String selected = manager.getSelected();
         if (selected == null || selected.isBlank()) return null;
         return selected.replace('_', '-');
     }
