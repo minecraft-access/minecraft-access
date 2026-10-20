@@ -9,86 +9,115 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Thin JNI binding to the Android text to speech engine.
+ * Thin JNI binding for speaking on Android.
  *
  * <p>The library only reaches the Android runtime; the speech logic and the
  * threading live in the dex that ships next to it (see {@code android/README.md}).
  * This class makes sure both files are on disk, loads the library and forwards
  * the calls.
+ *
+ * <p>Narration takes one of two paths. When a spoken accessibility service is
+ * running, the text is handed to it as an announcement and the user keeps their
+ * own voice, rate, pitch and language; that is prism's Android screen reader
+ * backend. Otherwise the system text to speech engine synthesises the speech.
  */
 @Slf4j
 public final class AndroidTtsNative {
-    private static boolean available;
+    private enum SpeechPath {
+        NONE,
+        SCREEN_READER,
+        TEXT_TO_SPEECH
+    }
+
+    private static SpeechPath path = SpeechPath.NONE;
     private static boolean loaded;
 
     private AndroidTtsNative() {
     }
 
     /**
-     * Loads the native library and starts the engine inside the Android runtime.
+     * Loads the native library and picks the way narration reaches the user.
      *
      * @param languageTag the language the game is running in, for instance {@code zh-CN}
-     * @return true when the engine accepted the request
+     * @return true when narration is ready
      */
     public static synchronized boolean start(@Nullable String languageTag) {
-        if (available) return true;
+        if (path != SpeechPath.NONE) return true;
         if (!loaded && !load()) return false;
 
-        Path dex = AndroidPlatform.extractDex();
+        byte[] dex = readDex();
         if (dex == null) return false;
-        byte[] dexBytes;
-        try {
-            dexBytes = Files.readAllBytes(dex);
-        } catch (IOException e) {
-            log.error("Unable to read the Android text to speech bridge dex {}", dex, e);
-            return false;
+
+        // A running screen reader already speaks with the user's own settings,
+        // and a speech engine of our own would talk over it.
+        if (hasSystemScreenReader(dex)) {
+            path = SpeechPath.SCREEN_READER;
+            log.info("Android narration goes through the system screen reader {}", screenReaderName());
+            return true;
         }
 
-        available = startEngine(dexBytes, languageTag) != 0;
-        if (available) {
+        if (startEngine(dex, languageTag) != 0) {
+            path = SpeechPath.TEXT_TO_SPEECH;
             log.info("Android text to speech engine started, language={}", languageTag);
-        } else {
-            log.error("Android text to speech engine failed to start: {}", lastError());
+            return true;
         }
-        return available;
+        log.error("Android text to speech engine failed to start: {}", lastError());
+        return false;
     }
 
     /**
      * Queues a narration.
      *
      * @param text the narration text
-     * @param rate a 0..1 speech rate position, 0.5 is the natural speed
-     * @param pitch a 0..1 pitch position, 0.5 is the natural pitch
+     * @param rate a 0..1 speech rate position, 0.5 is the natural speed; only the
+     *     text to speech path uses it, a screen reader keeps its own setting
+     * @param pitch a 0..1 pitch position, 0.5 is the natural pitch; only the text
+     *     to speech path uses it
      * @param interrupt whether speech that is still queued has to be dropped
      * @return true when the text was accepted
      */
     public static boolean narrate(String text, float rate, float pitch, boolean interrupt) {
-        if (!available) return false;
-        return speak(text.getBytes(StandardCharsets.UTF_8), rate, pitch, interrupt) == 0;
+        byte[] utf8 = text.getBytes(StandardCharsets.UTF_8);
+        if (path == SpeechPath.SCREEN_READER) {
+            return announce(utf8, interrupt) == 0;
+        }
+        if (path == SpeechPath.TEXT_TO_SPEECH) {
+            return speak(utf8, rate, pitch, interrupt) == 0;
+        }
+        return false;
     }
 
     /** @return true when the engine is currently producing speech */
     public static boolean isSpeaking() {
-        return available && stillSpeaking();
+        // A screen reader announces through a one way event, there is no state
+        // to ask about, and a wrong answer only costs an interruption.
+        return path == SpeechPath.TEXT_TO_SPEECH && stillSpeaking();
     }
 
-    /** Drops everything the engine has queued. */
+    /** Drops everything that has been queued. */
     public static void stop() {
-        if (!available) return;
-        stopSpeaking();
+        if (path == SpeechPath.SCREEN_READER) {
+            stopAnnouncement();
+        } else if (path == SpeechPath.TEXT_TO_SPEECH) {
+            stopSpeaking();
+        }
     }
 
     /** @return the last problem the bridge ran into */
     public static String error() {
-        if (!loaded) return "the Android text to speech library is not loaded";
+        if (!loaded) return "the Android narration library is not loaded";
+        if (path == SpeechPath.SCREEN_READER) return screenReaderLastError();
         return lastError();
     }
 
     /** Releases the engine. */
     public static synchronized void shutdown() {
-        if (!available) return;
-        shutdownEngine();
-        available = false;
+        if (path == SpeechPath.SCREEN_READER) {
+            stopAnnouncement();
+        } else if (path == SpeechPath.TEXT_TO_SPEECH) {
+            shutdownEngine();
+        }
+        path = SpeechPath.NONE;
     }
 
     private static boolean load() {
@@ -97,11 +126,23 @@ public final class AndroidTtsNative {
         try {
             System.load(library.toAbsolutePath().toString());
             loaded = true;
-            log.info("Loaded the Android text to speech library from {}", library);
+            log.info("Loaded the Android narration library from {}", library);
             return true;
         } catch (UnsatisfiedLinkError e) {
-            log.error("Unable to load the Android text to speech library from {}", library, e);
+            log.error("Unable to load the Android narration library from {}", library, e);
             return false;
+        }
+    }
+
+    @Nullable
+    private static byte[] readDex() {
+        Path dex = AndroidPlatform.extractDex();
+        if (dex == null) return null;
+        try {
+            return Files.readAllBytes(dex);
+        } catch (IOException e) {
+            log.error("Unable to read the Android narration bridge dex {}", dex, e);
+            return null;
         }
     }
 
@@ -114,6 +155,16 @@ public final class AndroidTtsNative {
     private static native boolean stillSpeaking();
 
     private static native void shutdownEngine();
+
+    private static native boolean hasSystemScreenReader(byte[] dex);
+
+    private static native String screenReaderName();
+
+    private static native int announce(byte[] utf8, boolean interrupt);
+
+    private static native void stopAnnouncement();
+
+    private static native String screenReaderLastError();
 
     private static native String lastError();
 }

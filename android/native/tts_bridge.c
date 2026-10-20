@@ -14,6 +14,12 @@
  *      a dex (InMemoryDexClassLoader, Android 8.0+) and
  *   4. it forwards narration, rate, pitch, interruption and state queries to it.
  *
+ * Two ways of speaking are offered. When a spoken accessibility service is
+ * running (TalkBack and friends), narration is handed to it as an
+ * AccessibilityEvent so that the user keeps their own voice and settings; that
+ * is prism's Android screen reader backend. Otherwise the system text to speech
+ * engine synthesises the speech itself.
+ *
  * The threading model (looper thread inside ART) and the speech semantics live
  * in that bridge class, which is a port of prism's AndroidTextToSpeechBackend.
  */
@@ -46,8 +52,14 @@ static jmethodID mid_stop;
 static jmethodID mid_is_speaking;
 static jmethodID mid_shutdown;
 static jmethodID mid_last_error;
+static jmethodID mid_sr_start;
+static jmethodID mid_sr_name;
+static jmethodID mid_sr_announce;
+static jmethodID mid_sr_stop;
+static jmethodID mid_sr_last_error;
 static void *dex_copy;
 static int bridge_ready;
+static int tts_started;
 static char error_message[ERROR_MESSAGE_BYTES];
 static pthread_mutex_t callback_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -169,6 +181,25 @@ static void capture_bridge_error(JNIEnv *env) {
     }
 }
 
+static void capture_screen_reader_error(JNIEnv *env) {
+    if (mid_sr_last_error == NULL || bridge_class == NULL) {
+        return;
+    }
+    jstring message = (jstring) (*env)->CallStaticObjectMethod(env, bridge_class, mid_sr_last_error);
+    if ((*env)->ExceptionCheck(env)) {
+        (*env)->ExceptionClear(env);
+        return;
+    }
+    if (message == NULL) {
+        return;
+    }
+    const char *utf = (*env)->GetStringUTFChars(env, message, NULL);
+    if (utf != NULL) {
+        set_error("the screen reader reported: %s", utf);
+        (*env)->ReleaseStringUTFChars(env, message, utf);
+    }
+}
+
 static int load_bridge(JNIEnv *env, const jbyte *dex, jsize length, jobject context) {
     void *copy = malloc((size_t) length);
     if (copy == NULL) {
@@ -239,6 +270,14 @@ static int load_bridge(JNIEnv *env, const jbyte *dex, jsize length, jobject cont
     mid_is_speaking = (*env)->GetStaticMethodID(env, bridge, "isSpeaking", "()Z");
     mid_shutdown = (*env)->GetStaticMethodID(env, bridge, "shutdown", "()V");
     mid_last_error = (*env)->GetStaticMethodID(env, bridge, "lastError", "()Ljava/lang/String;");
+    mid_sr_start = (*env)->GetStaticMethodID(
+            env, bridge, "startScreenReader", "(Landroid/content/Context;)Z");
+    mid_sr_name = (*env)->GetStaticMethodID(
+            env, bridge, "screenReaderName", "()Ljava/lang/String;");
+    mid_sr_announce = (*env)->GetStaticMethodID(env, bridge, "announce", "([BZ)I");
+    mid_sr_stop = (*env)->GetStaticMethodID(env, bridge, "stopScreenReader", "()V");
+    mid_sr_last_error = (*env)->GetStaticMethodID(
+            env, bridge, "screenReaderLastError", "()Ljava/lang/String;");
     if ((*env)->ExceptionCheck(env)) {
         (*env)->ExceptionClear(env);
         set_error("the bridge class is missing one of its entry points");
@@ -256,30 +295,30 @@ static int load_bridge(JNIEnv *env, const jbyte *dex, jsize length, jobject cont
     return 1;
 }
 
-JNIEXPORT jint JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_startEngine(
-        JNIEnv *env, jclass clazz, jbyteArray dex, jstring language_tag) {
-    (void) clazz;
+/* Loads the bridge class once and hands back the Android context as a local
+ * reference of the Android runtime, which the caller releases. */
+static jobject ensure_bridge(JNIEnv *env, jbyteArray dex) {
     pthread_mutex_lock(&callback_lock);
     if (bridge_ready) {
         pthread_mutex_unlock(&callback_lock);
-        return 1;
+        JNIEnv *loaded = android_env();
+        return loaded == NULL ? NULL : android_context(loaded);
     }
     pthread_mutex_unlock(&callback_lock);
 
     if (dex == NULL) {
         set_error("no bridge dex was given");
-        return 0;
+        return NULL;
     }
     jsize length = (*env)->GetArrayLength(env, dex);
     if (length <= 0) {
         set_error("the bridge dex is empty");
-        return 0;
+        return NULL;
     }
     jbyte *bytes = malloc((size_t) length);
     if (bytes == NULL) {
         set_error("out of memory reading the bridge dex");
-        return 0;
+        return NULL;
     }
     (*env)->GetByteArrayRegion(env, dex, 0, length, bytes);
 
@@ -289,25 +328,48 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_startEn
     if (art_vm == NULL) {
         free(bytes);
         set_error("no Android runtime found in this process");
-        return 0;
+        return NULL;
     }
     JNIEnv *android = android_env();
     if (android == NULL) {
         free(bytes);
-        return 0;
+        return NULL;
     }
     jobject context = android_context(android);
     if (context == NULL) {
         free(bytes);
         set_error("unable to obtain an Android context");
-        return 0;
+        return NULL;
     }
     if (!load_bridge(android, bytes, length, context)) {
         (*android)->DeleteLocalRef(android, context);
         free(bytes);
-        return 0;
+        return NULL;
     }
     free(bytes);
+    return context;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_startEngine(
+        JNIEnv *env, jclass clazz, jbyteArray dex, jstring language_tag) {
+    (void) clazz;
+    pthread_mutex_lock(&callback_lock);
+    if (tts_started) {
+        pthread_mutex_unlock(&callback_lock);
+        return 1;
+    }
+    pthread_mutex_unlock(&callback_lock);
+
+    jobject context = ensure_bridge(env, dex);
+    if (context == NULL) {
+        return 0;
+    }
+    JNIEnv *android = android_env();
+    if (android == NULL) {
+        (*env)->DeleteLocalRef(env, context);
+        return 0;
+    }
 
     jstring android_tag = NULL;
     if (language_tag != NULL) {
@@ -324,7 +386,9 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_startEn
         set_error("the bridge start() call threw");
         started = JNI_FALSE;
     }
-    if (!started) {
+    if (started) {
+        tts_started = 1;
+    } else {
         capture_bridge_error(android);
     }
     (*android)->DeleteLocalRef(android, context);
@@ -448,4 +512,154 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_lastErr
     snprintf(snapshot, sizeof(snapshot), "%s", error_message);
     pthread_mutex_unlock(&callback_lock);
     return (*env)->NewStringUTF(env, snapshot);
+}
+
+JNIEXPORT jboolean JNICALL
+Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_hasSystemScreenReader(
+        JNIEnv *env, jclass clazz, jbyteArray dex) {
+    (void) clazz;
+    jobject context = ensure_bridge(env, dex);
+    if (context == NULL) {
+        return JNI_FALSE;
+    }
+    JNIEnv *android = android_env();
+    if (android == NULL) {
+        return JNI_FALSE;
+    }
+    jboolean available = (*android)->CallStaticBooleanMethod(
+            android, bridge_class, mid_sr_start, context);
+    if ((*android)->ExceptionCheck(android)) {
+        (*android)->ExceptionClear(android);
+        set_error("the bridge startScreenReader() call threw");
+        available = JNI_FALSE;
+    } else if (available != JNI_TRUE) {
+        capture_screen_reader_error(android);
+    }
+    (*android)->DeleteLocalRef(android, context);
+    return available;
+}
+
+JNIEXPORT jstring JNICALL
+Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_screenReaderName(
+        JNIEnv *env, jclass clazz) {
+    (void) clazz;
+    if (!bridge_ready || mid_sr_name == NULL) {
+        return NULL;
+    }
+    JNIEnv *android = android_env();
+    if (android == NULL) {
+        return NULL;
+    }
+    jstring name = (jstring) (*android)->CallStaticObjectMethod(android, bridge_class, mid_sr_name);
+    if ((*android)->ExceptionCheck(android)) {
+        (*android)->ExceptionClear(android);
+        return NULL;
+    }
+    if (name == NULL) {
+        return NULL;
+    }
+    jstring result = NULL;
+    const char *utf = (*android)->GetStringUTFChars(android, name, NULL);
+    if (utf != NULL) {
+        result = (*env)->NewStringUTF(env, utf);
+        (*android)->ReleaseStringUTFChars(android, name, utf);
+    }
+    (*android)->DeleteLocalRef(android, name);
+    return result;
+}
+
+JNIEXPORT jint JNICALL
+Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_announce(
+        JNIEnv *env, jclass clazz, jbyteArray utf8, jboolean interrupt) {
+    (void) clazz;
+    if (!bridge_ready || mid_sr_announce == NULL) {
+        set_error("an announcement was requested before the bridge was loaded");
+        return -1;
+    }
+    JNIEnv *android = android_env();
+    if (android == NULL) {
+        return -1;
+    }
+    jsize length = (*env)->GetArrayLength(env, utf8);
+    if (length <= 0) {
+        return -1;
+    }
+    jbyte scratch[STARTUP_SCRATCH_BYTES];
+    jbyte *bytes = length <= (jsize) STARTUP_SCRATCH_BYTES
+            ? scratch
+            : (jbyte *) malloc((size_t) length);
+    if (bytes == NULL) {
+        set_error("out of memory copying the announcement text");
+        return -1;
+    }
+    (*env)->GetByteArrayRegion(env, utf8, 0, length, bytes);
+    jbyteArray android_text = (*android)->NewByteArray(android, length);
+    if (android_text == NULL) {
+        if (bytes != scratch) {
+            free(bytes);
+        }
+        set_error("unable to allocate the announcement text inside the Android runtime");
+        return -1;
+    }
+    (*android)->SetByteArrayRegion(android, android_text, 0, length, bytes);
+    if (bytes != scratch) {
+        free(bytes);
+    }
+    jint result = (*android)->CallStaticIntMethod(
+            android, bridge_class, mid_sr_announce, android_text, interrupt);
+    if ((*android)->ExceptionCheck(android)) {
+        (*android)->ExceptionClear(android);
+        set_error("the bridge announce() call threw");
+        result = -1;
+    }
+    (*android)->DeleteLocalRef(android, android_text);
+    return result;
+}
+
+JNIEXPORT void JNICALL
+Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_stopAnnouncement(
+        JNIEnv *env, jclass clazz) {
+    (void) clazz;
+    if (!bridge_ready || mid_sr_stop == NULL) {
+        return;
+    }
+    JNIEnv *android = android_env();
+    if (android == NULL) {
+        return;
+    }
+    (*android)->CallStaticVoidMethod(android, bridge_class, mid_sr_stop);
+    if ((*android)->ExceptionCheck(android)) {
+        (*android)->ExceptionClear(android);
+        set_error("the bridge stopScreenReader() call threw");
+    }
+}
+
+JNIEXPORT jstring JNICALL
+Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_screenReaderLastError(
+        JNIEnv *env, jclass clazz) {
+    (void) clazz;
+    if (!bridge_ready || mid_sr_last_error == NULL) {
+        return (*env)->NewStringUTF(env, "the screen reader bridge is not loaded");
+    }
+    JNIEnv *android = android_env();
+    if (android == NULL) {
+        return NULL;
+    }
+    jstring message = (jstring) (*android)->CallStaticObjectMethod(
+            android, bridge_class, mid_sr_last_error);
+    if ((*android)->ExceptionCheck(android)) {
+        (*android)->ExceptionClear(android);
+        return NULL;
+    }
+    if (message == NULL) {
+        return NULL;
+    }
+    jstring result = NULL;
+    const char *utf = (*android)->GetStringUTFChars(android, message, NULL);
+    if (utf != NULL) {
+        result = (*env)->NewStringUTF(env, utf);
+        (*android)->ReleaseStringUTFChars(android, message, utf);
+    }
+    (*android)->DeleteLocalRef(android, message);
+    return result;
 }

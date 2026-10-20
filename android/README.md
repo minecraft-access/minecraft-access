@@ -43,6 +43,21 @@ bridge can work at all:
 Failures never throw into the game: the bridge records the reason, the mod logs
 it, and narration is silently disabled.
 
+## Two ways of speaking
+
+On startup the bridge asks Android whether a spoken accessibility service is
+running. If one is, narration is sent to it as a `TYPE_ANNOUNCEMENT`
+`AccessibilityEvent`, and the screen reader speaks with the voice, rate, pitch
+and language the user chose for it; nothing is synthesised here, so the speed and
+pitch settings below only apply to the other path. That path is prism's Android
+screen reader backend: the availability check, the service naming and the trick
+that keeps Android from dropping a repeated announcement all come from
+`AndroidScreenReaderBackend.java`.
+
+When no spoken accessibility service is enabled, the system text to speech
+engine is used instead, through a `TextToSpeech` instance that belongs to the
+launcher's process.
+
 ## Speech settings
 
 The `speechSettings` category of the mod configuration has two Android only
@@ -75,7 +90,8 @@ mod build itself has no dependency on the Android toolchain.
 ## Licence
 
 The Android backend of [prism](https://github.com/ethindp/prism) (MPL-2.0) was
-the reference for all of it. `art/src/.../TextChunker.java` and
+the reference for all of it. `art/src/.../AndroidScreenReaderBridge.java` ports
+prism's `AndroidScreenReaderBackend.java`, `art/src/.../TextChunker.java` and
 `art/src/.../Utils.java` are ports of prism's `TextChunker.java` and `utils.java`
 and keep their MPL-2.0 header; `AndroidTtsBridge.java` reimplements the speech
 semantics of prism's `AndroidTextToSpeechBackend.java` for this API. As with the

@@ -458,6 +458,44 @@ public final class AndroidTtsBridge {
         return parsed;
     }
 
+    /**
+     * Binds to the screen reader that is already running inside Android, if there
+     * is one, so that narration goes through it and not through a speech engine
+     * of our own.
+     *
+     * @param androidContext application context of the launcher
+     * @return true when a spoken accessibility service is enabled
+     */
+    public static boolean startScreenReader(Context androidContext) {
+        return AndroidScreenReaderBridge.start(androidContext);
+    }
+
+    /** @return the screen reader narration is going through, for the log */
+    public static String screenReaderName() {
+        return AndroidScreenReaderBridge.name();
+    }
+
+    /**
+     * Queues an announcement for the screen reader.
+     *
+     * @param utf8 narration text encoded as UTF-8
+     * @param interrupt whether the screen reader has to drop what it is saying
+     * @return 0 when the text was accepted, -1 otherwise
+     */
+    public static int announce(byte[] utf8, boolean interrupt) {
+        return AndroidScreenReaderBridge.announce(utf8, interrupt);
+    }
+
+    /** Asks the screen reader to stop talking. */
+    public static void stopScreenReader() {
+        AndroidScreenReaderBridge.stop();
+    }
+
+    /** @return the last problem the screen reader bridge ran into */
+    public static String screenReaderLastError() {
+        return AndroidScreenReaderBridge.lastError();
+    }
+
     private static String describe(String engineName) {
         return engineName == null ? "default" : engineName;
     }
