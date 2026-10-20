@@ -34,7 +34,7 @@ public class ScreenReaderAndroid implements ScreenReaderInterface {
         log.info("Initializing Android narration, language={}", language);
         try {
             initialized = AndroidTtsNative.start(language);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | LinkageError e) {
             // Narration is an accessibility feature and this runs from the mod initialiser,
             // where an exception would abort the entrypoint and crash the game
             log.error("Unable to initialize Android narration", e);

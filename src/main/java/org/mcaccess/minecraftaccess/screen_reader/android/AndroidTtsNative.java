@@ -50,7 +50,7 @@ public final class AndroidTtsNative {
 
         // A running screen reader already speaks with the user's own settings,
         // and a speech engine of our own would talk over it.
-        if (hasSystemScreenReader(dex)) {
+        if (systemScreenReaderAvailable(dex)) {
             path = SpeechPath.SCREEN_READER;
             log.info("Android narration goes through the system screen reader {}", screenReaderName());
             return true;
@@ -118,6 +118,22 @@ public final class AndroidTtsNative {
             shutdownEngine();
         }
         path = SpeechPath.NONE;
+    }
+
+    /**
+     * @param dex the bridge dex
+     * @return true when a spoken accessibility service is running, false also when
+     *     the library that got loaded predates the screen reader support
+     */
+    private static boolean systemScreenReaderAvailable(byte[] dex) {
+        try {
+            return hasSystemScreenReader(dex);
+        } catch (UnsatisfiedLinkError e) {
+            // The loaded library and this class come from different builds, so
+            // it can speak but knows nothing about announcements.
+            log.warn("The loaded Android narration library has no screen reader support: {}", e.getMessage());
+            return false;
+        }
     }
 
     private static boolean load() {
