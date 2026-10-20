@@ -87,6 +87,14 @@ compiles the Java sources against the newest installed `android.jar` and
 converts them with `d8 --min-api 26`. Both artifacts are committed because the
 mod build itself has no dependency on the Android toolchain.
 
+## Symbol names
+
+An underscore in a package name is mangled in the symbols the C bridge
+exports. The package is called `screen_reader`, and the JNI specification
+spells `.` as `_` and `_` as `_1`, so the JVM looks for
+`Java_org_mcaccess_minecraftaccess_screen_1reader_android_...`. The literal
+name does not resolve: the library loads and every method in it is missing.
+
 ## Licence
 
 The Android backend of [prism](https://github.com/ethindp/prism) (MPL-2.0) was

@@ -351,7 +351,7 @@ static jobject ensure_bridge(JNIEnv *env, jbyteArray dex) {
 }
 
 JNIEXPORT jint JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_startEngine(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_startEngine(
         JNIEnv *env, jclass clazz, jbyteArray dex, jstring language_tag) {
     (void) clazz;
     pthread_mutex_lock(&callback_lock);
@@ -399,7 +399,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_startEn
 }
 
 JNIEXPORT jint JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_speak(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_speak(
         JNIEnv *env, jclass clazz, jbyteArray utf8, jfloat rate, jfloat pitch, jboolean interrupt) {
     (void) clazz;
     if (!bridge_ready) {
@@ -447,7 +447,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_speak(
 }
 
 JNIEXPORT void JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_stopSpeaking(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_stopSpeaking(
         JNIEnv *env, jclass clazz) {
     (void) clazz;
     if (!bridge_ready) {
@@ -465,7 +465,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_stopSpe
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_stillSpeaking(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_stillSpeaking(
         JNIEnv *env, jclass clazz) {
     (void) clazz;
     (void) env;
@@ -485,7 +485,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_stillSp
 }
 
 JNIEXPORT void JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_shutdownEngine(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_shutdownEngine(
         JNIEnv *env, jclass clazz) {
     (void) clazz;
     (void) env;
@@ -504,7 +504,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_shutdow
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_lastError(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_lastError(
         JNIEnv *env, jclass clazz) {
     (void) clazz;
     pthread_mutex_lock(&callback_lock);
@@ -515,7 +515,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_lastErr
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_hasSystemScreenReader(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_hasSystemScreenReader(
         JNIEnv *env, jclass clazz, jbyteArray dex) {
     (void) clazz;
     jobject context = ensure_bridge(env, dex);
@@ -540,7 +540,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_hasSyst
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_screenReaderName(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_screenReaderName(
         JNIEnv *env, jclass clazz) {
     (void) clazz;
     if (!bridge_ready || mid_sr_name == NULL) {
@@ -569,7 +569,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_screenR
 }
 
 JNIEXPORT jint JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_announce(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_announce(
         JNIEnv *env, jclass clazz, jbyteArray utf8, jboolean interrupt) {
     (void) clazz;
     if (!bridge_ready || mid_sr_announce == NULL) {
@@ -617,7 +617,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_announc
 }
 
 JNIEXPORT void JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_stopAnnouncement(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_stopAnnouncement(
         JNIEnv *env, jclass clazz) {
     (void) clazz;
     if (!bridge_ready || mid_sr_stop == NULL) {
@@ -635,7 +635,7 @@ Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_stopAnn
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_mcaccess_minecraftaccess_screen_reader_android_AndroidTtsNative_screenReaderLastError(
+Java_org_mcaccess_minecraftaccess_screen_1reader_android_AndroidTtsNative_screenReaderLastError(
         JNIEnv *env, jclass clazz) {
     (void) clazz;
     if (!bridge_ready || mid_sr_last_error == NULL) {
