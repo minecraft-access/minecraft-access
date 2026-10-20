@@ -8,11 +8,6 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CoderResult;
-import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -25,6 +20,12 @@ import java.util.List;
  * <a href="https://github.com/ethindp/prism">prism</a> (MPL-2.0): the same
  * {@code AccessibilityManager} availability check, the same
  * {@code TYPE_ANNOUNCEMENT} event and the same service naming.
+ *
+ * <p>This class lives in the launcher's process and is reached from the game's
+ * JVM over JNI, so it follows two rules. Nothing may throw back into C, where
+ * an exception is at best cleared and the call lost. And work posted to the
+ * thread below has to catch everything itself: that thread belongs to the
+ * launcher, and an exception that escapes from it ends the whole application.
  */
 public final class AndroidScreenReaderBridge {
     private static final String TAG = "mcaccess-tts";
@@ -34,7 +35,6 @@ public final class AndroidScreenReaderBridge {
     private static AccessibilityManager manager;
     private static HandlerThread thread;
     private static Handler handler;
-    private static CharsetDecoder decoder;
     private static String lastError = "";
     /**
      * Android drops an announcement whose text is identical to the previous
@@ -82,15 +82,16 @@ public final class AndroidScreenReaderBridge {
                 Log.i(TAG, lastError);
                 return false;
             }
-            context = app;
-            manager = accessible;
-            decoder = StandardCharsets.UTF_8.newDecoder()
-                    .onMalformedInput(CodingErrorAction.REPORT)
-                    .onUnmappableCharacter(CodingErrorAction.REPORT);
+            // Build everything first and publish it afterwards, so that a
+            // failure half way through cannot leave the bridge marked as
+            // running with no thread behind it.
             HandlerThread looperThread = new HandlerThread("mcaccess-screen-reader");
             looperThread.start();
+            Handler looperHandler = new Handler(looperThread.getLooper());
+            context = app;
+            manager = accessible;
             thread = looperThread;
-            handler = new Handler(looperThread.getLooper());
+            handler = looperHandler;
         }
         Log.i(TAG, "speaking through the system screen reader " + name());
         return true;
@@ -133,9 +134,18 @@ public final class AndroidScreenReaderBridge {
         if (ctx == null || accessible == null || target == null) return -1;
         final byte[] copy = utf8.clone();
         target.post(() -> {
-            String text = decode(copy);
-            if (text == null || text.trim().isEmpty()) return;
-            send(ctx, accessible, text, interrupt);
+            try {
+                // Decoded afresh for every announcement, because a decoder that
+                // has been flushed cannot be used again.
+                String text = new String(copy, StandardCharsets.UTF_8);
+                if (text.trim().isEmpty()) return;
+                send(ctx, accessible, text, interrupt);
+            } catch (Throwable e) {
+                // The thread belongs to the launcher, and an exception that
+                // escapes from here takes the whole application down.
+                lastError = "announcing failed: " + e;
+                Log.e(TAG, lastError, e);
+            }
         });
         return 0;
     }
@@ -187,31 +197,9 @@ public final class AndroidScreenReaderBridge {
             handler = null;
             manager = null;
             context = null;
-            decoder = null;
             duplicateSpeechHack = "";
         }
         if (looperThread != null) looperThread.quitSafely();
     }
 
-    private static String decode(byte[] utf8) {
-        CharsetDecoder utf8Decoder = decoder;
-        if (utf8Decoder == null) return new String(utf8, StandardCharsets.UTF_8);
-        ByteBuffer input = ByteBuffer.wrap(utf8);
-        CharBuffer output = CharBuffer.allocate(
-                (int) Math.ceil(utf8.length * utf8Decoder.maxCharsPerByte()));
-        CoderResult result = utf8Decoder.decode(input, output, true);
-        if (result.isError() || result.isOverflow()) {
-            // Leave the decoder usable for the next announcement.
-            utf8Decoder.reset();
-            lastError = "the narration text is not valid UTF-8";
-            Log.e(TAG, lastError);
-            return null;
-        }
-        if (utf8Decoder.flush(output).isOverflow()) {
-            utf8Decoder.reset();
-            return null;
-        }
-        output.flip();
-        return output.toString();
-    }
 }

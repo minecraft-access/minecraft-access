@@ -95,6 +95,11 @@ spells `.` as `_` and `_` as `_1`, so the JVM looks for
 `Java_org_mcaccess_minecraftaccess_screen_1reader_android_...`. The literal
 name does not resolve: the library loads and every method in it is missing.
 
+The bridge runs inside the launcher's process and is called over JNI, so
+nothing may throw back into C, and the work it posts to its own thread has to
+catch everything: an exception on the launcher's handler thread ends the whole
+launcher.
+
 ## Licence
 
 The Android backend of [prism](https://github.com/ethindp/prism) (MPL-2.0) was
