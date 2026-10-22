@@ -34,11 +34,11 @@ abstract class ChatScreenMixin {
      * If it does, it calls the {@link #narratePreviousChatAtIndex(int)}
      * method with the corresponding index and returns true.
      *
-     * @param keyCode the key code of the input event.
+     * @param key the key of the input event.
      * @return true if the input was handled, false otherwise.
      */
     @Unique
-    private static boolean repeatPreviousChatMessage(int keyCode) {
+    private static boolean repeatPreviousChatMessage(InputConstants.Key key) {
         int numMessages = ((ChatComponentAccessor) Minecraft.getInstance().gui.hud.getChat()).getAllMessages().size();
         int newChatMessagePage = currentChatMessagePage;
         if (Minecraft.getInstance().hasAltDown()) {
@@ -70,14 +70,11 @@ abstract class ChatScreenMixin {
                 );
             }
 
-            for (int i = 1; i <= 9; i++) {
-                if (keyCode == InputConstants.KEY_0 + i || keyCode == InputConstants.KEY_NUMPAD0 + i) {
-                    narratePreviousChatAtIndex(i + currentChatMessagePage * 10 - 1);
-                    return true;
-                }
-            }
-            if (InputConstants.isKeyDown(InputConstants.KEY_0) || InputConstants.isKeyDown(InputConstants.KEY_NUMPAD0)) {
-                narratePreviousChatAtIndex(10 + currentChatMessagePage * 10 - 1);
+            var numericKey = key.getNumericKeyValue();
+            if (numericKey.isPresent()) {
+                int num = (numericKey.getAsInt() == 0) ? 10 : numericKey.getAsInt();
+                narratePreviousChatAtIndex(num + (currentChatMessagePage * 10) - 1);
+                return true;
             }
         }
         return false;
@@ -111,7 +108,7 @@ abstract class ChatScreenMixin {
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void keyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (!repeatPreviousChatMessage(event.key())) return;
+        if (!repeatPreviousChatMessage(InputConstants.getKey(event))) return;
 
         // Method executes to here means one of custom keystroke handling above is triggered,
         // so we want to cancel the logic in injected original method,
