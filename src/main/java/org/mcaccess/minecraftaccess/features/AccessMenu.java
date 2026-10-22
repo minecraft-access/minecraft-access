@@ -56,8 +56,9 @@ public class AccessMenu implements BalmClientModule {
 
         for (byte i = 0; i < 10; i++) {
             byte index = i;
+            int keyCode = (i == 0) ? InputConstants.KEY_0 : (InputConstants.KEY_1 + (i - 1));
             Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "access_menu.shortcuts_bar/" + index))
-                    .withDefault(InputBinding.key(InputConstants.KEY_0 + i, KeyModifiers.of(KeyModifier.ALT)))
+                    .withDefault(InputBinding.key(keyCode, KeyModifiers.of(KeyModifier.ALT)))
                     .skipRegistration()
                     .handleWorldInput(_ -> {
                         AccessMenuFunction function = getShortcuts()[index];
