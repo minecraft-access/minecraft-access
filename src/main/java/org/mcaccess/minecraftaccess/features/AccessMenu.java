@@ -2,7 +2,6 @@ package org.mcaccess.minecraftaccess.features;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -54,20 +53,19 @@ public class AccessMenu implements BalmClientModule {
                 })
                 .build();
 
-        for (byte i = 0; i < 10; i++) {
-            byte index = i;
-            Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "access_menu.shortcuts_bar/" + index))
-                    .withDefault(InputBinding.key(InputConstants.KEY_0 + i, KeyModifiers.of(KeyModifier.ALT)))
-                    .skipRegistration()
-                    .handleWorldInput(_ -> {
-                        AccessMenuFunction function = getShortcuts()[index];
-                        if (function.enabled()) {
-                            function.execute();
-                        }
-                        return true;
-                    })
-                    .build();
-        }
+        getShortcuts().forEach((key, value) -> Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(
+                        MainClass.MOD_ID,
+                        "access_menu.shortcuts_bar/" + InputConstants.Type.KEYBOARD.getOrCreate(key).getNumericKeyValue().orElse(-1)
+                ))
+                .withDefault(InputBinding.key(key, KeyModifiers.of(KeyModifier.ALT)))
+                .skipRegistration()
+                .handleWorldInput(_ -> {
+                    if (value.enabled()) {
+                        value.execute();
+                    }
+                    return true;
+                })
+                .build());
 
         for (Map.Entry<Identifier, AccessMenuFunction> function : MainClass.registry(AccessMenuFunction.class).entrySet()) {
             ManagedKeyMapping.RegistrationBuilder mapping = Kuma.createKeyMapping(function.getKey())
@@ -97,21 +95,21 @@ public class AccessMenu implements BalmClientModule {
         }
     }
 
-    private static AccessMenuFunction[] getShortcuts() {
+    private static Map<Integer, AccessMenuFunction> getShortcuts() {
         Config.AccessMenu.ShortcutBar config = Config.getInstance().accessMenu.shortcutBar;
         Map<Identifier, AccessMenuFunction> registry = MainClass.registry(AccessMenuFunction.class);
-        return new AccessMenuFunction[]{
-                registry.get(config.key0),
-                registry.get(config.key1),
-                registry.get(config.key2),
-                registry.get(config.key3),
-                registry.get(config.key4),
-                registry.get(config.key5),
-                registry.get(config.key6),
-                registry.get(config.key7),
-                registry.get(config.key8),
-                registry.get(config.key9),
-        };
+        return Map.of(
+                InputConstants.KEY_0, registry.get(config.key0),
+                InputConstants.KEY_1, registry.get(config.key1),
+                InputConstants.KEY_2, registry.get(config.key2),
+                InputConstants.KEY_3, registry.get(config.key3),
+                InputConstants.KEY_4, registry.get(config.key4),
+                InputConstants.KEY_5, registry.get(config.key5),
+                InputConstants.KEY_6, registry.get(config.key6),
+                InputConstants.KEY_7, registry.get(config.key7),
+                InputConstants.KEY_8, registry.get(config.key8),
+                InputConstants.KEY_9, registry.get(config.key9)
+        );
     }
 
     public static class GUI extends Screen {
@@ -127,14 +125,15 @@ public class AccessMenu implements BalmClientModule {
             GridLayout grid = new GridLayout().spacing(10);
             GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
 
-            for (Identifier key : Config.getInstance().accessMenu.functions) {
-                AccessMenuFunction function = MainClass.registry(AccessMenuFunction.class).get(key);
-                MutableComponent label = Component.translatable(key.toLanguageKey("access_menu_function"));
-                for (byte i = 0; i < 10; i++) {
-                    if (getShortcuts()[i] == function) {
-                        label.append(Component.literal(String.format(" [%d]", i)).withColor(0xbbbbbb));
+            for (Identifier identifier : Config.getInstance().accessMenu.functions) {
+                AccessMenuFunction function = MainClass.registry(AccessMenuFunction.class).get(identifier);
+                MutableComponent label = Component.translatable(identifier.toLanguageKey("access_menu_function"));
+                getShortcuts().forEach((key, value) -> {
+                    if (value == function) {
+                        label.append(Component.literal(String.format(" [%d]",
+                                InputConstants.Type.KEYBOARD.getOrCreate(key).getNumericKeyValue().orElse(-1))).withColor(0xbbbbbb));
                     }
-                }
+                });
                 Button button = Button.builder(label, _ -> {
                     onClose();
                     function.execute();
@@ -157,14 +156,11 @@ public class AccessMenu implements BalmClientModule {
             }
 
             if (event.modifiers() == 0) {
-                OptionalInt numericKey = InputConstants.getKey(event).getNumericKeyValue();
-                if (numericKey.isPresent()) {
-                    AccessMenuFunction function = getShortcuts()[numericKey.getAsInt()];
-                    if (function != null && function.enabled()) {
-                        onClose();
-                        function.execute();
-                        return true;
-                    }
+                AccessMenuFunction function = getShortcuts().get(event.key());
+                if (function != null && function.enabled()) {
+                    onClose();
+                    function.execute();
+                    return true;
                 }
             }
 
