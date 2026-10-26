@@ -7,6 +7,7 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import org.mcaccess.minecraftaccess.MainClass;
+import org.mcaccess.minecraftaccess.screen_reader.android.AndroidPlatform;
 
 @Slf4j
 public final class ScreenReaderController {
@@ -26,6 +27,12 @@ public final class ScreenReaderController {
                 return screenReaderMacOS;
             }
             case LINUX -> {
+                // An Android launcher reports itself as Linux, but it provides its own text to speech engine
+                if (AndroidPlatform.isAndroid()) {
+                    ScreenReaderAndroid screenReaderAndroid = new ScreenReaderAndroid();
+                    screenReaderAndroid.initializeScreenReader();
+                    return screenReaderAndroid;
+                }
                 ScreenReaderLinux screenReaderLinux = new ScreenReaderLinux();
                 screenReaderLinux.initializeScreenReader();
                 return screenReaderLinux;
