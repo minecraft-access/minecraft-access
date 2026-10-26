@@ -4,6 +4,14 @@ title: "Changelog"
 
 <!-- INSERT CHANGELOG HERE -->
 
+## Release v1.12.2 (2026-10)
+### Feature Updates
+- suppress the screen narration hint that tells you to use the mouse or tab key to navigate as it is redundant and not useful.
+- the mods file is now about 11% smaller due to removing the double compression of our nested mods like Balm and cloth config.
+
+### Bug Fixes
+- Fixed a bug that resulted in keys being incorrectly bound for the chat message narration and access menu shortcut bar.
+
 ## Release v1.12.1 (2026-10)
 ### New Features
 - Using the narrate held item key in your inventory now narrates items which are currently being carried by your cursor.
