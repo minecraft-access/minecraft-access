@@ -266,7 +266,7 @@ public class ClientConfig {
         public boolean enabled = true;
         @CustomControl("world_narrator")
         @ValidateWith(WorldNarratorValidator.class)
-        public Identifier narrator = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, Balm.platform().isModLoaded("jade") ? "jade" : "minecraft_access");
+        public Identifier narrator = Identifier.fromNamespaceAndPath(MainClass.MOD_ID, (Balm.platform().isModLoaded("jade") && !Balm.platform().isDevelopmentEnvironment()) ? "jade" : "minecraft_access");
         public boolean narrateBlockFace = true;
         public boolean disableNarratingConsecutiveBlocks = false;
         public long repetitionInterval = 0;
