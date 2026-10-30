@@ -31,5 +31,4 @@ dependencies {
     runtimeOnly libs.jadeFabric
     runtimeOnly libs.balmFabric
     runtimeOnly libs.fabricApi
-    runtimeOnly libs.clothConfigFabric
 }

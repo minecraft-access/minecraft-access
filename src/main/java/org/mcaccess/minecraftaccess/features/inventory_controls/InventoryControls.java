@@ -41,7 +41,7 @@ import net.minecraft.world.item.crafting.ExtendedRecipeBookCategory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
 import org.mcaccess.minecraftaccess.mixin.AbstractContainerScreenAccessor;
@@ -74,7 +74,7 @@ import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
  */
 @Slf4j
 public class InventoryControls implements BalmClientModule {
-    private Config.InventoryControls config;
+    private ClientConfig.InventoryControls config;
     private final Interval interval = Interval.defaultDelay();
 
     private AbstractContainerScreenAccessor previousScreen = null;
@@ -303,11 +303,11 @@ public class InventoryControls implements BalmClientModule {
             return;
         }
         if (!(client.gui.screen() instanceof AbstractContainerScreen)) return;
+        loadConfig();
         if (!config.enabled) {
             return;
         }
 
-        loadConfig();
         currentScreen = (AbstractContainerScreenAccessor) client.gui.screen();
         currentRecipeBookWidget = getRecipeBookWidget(client.gui.screen());
         currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);
@@ -359,7 +359,7 @@ public class InventoryControls implements BalmClientModule {
      * Load configs from config.json.
      */
     private void loadConfig() {
-        config = Config.getInstance().inventoryControls;
+        config = ClientConfig.getInstance().inventoryControls;
         interval.setDelay(config.delayMilliseconds, Interval.Unit.MILLISECOND);
     }
 

@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
@@ -32,7 +32,6 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  */
 @Slf4j
 public class POIEntities implements BalmClientModule {
-    private static final Config.POI.Entities CONFIG = Config.getInstance().poi.entities;
     private final Interval interval = Interval.defaultDelay();
 
     private @Nullable Entity markedEntity = null;
@@ -56,7 +55,7 @@ public class POIEntities implements BalmClientModule {
     private List<Entity> lastScanResults = new ArrayList<>();
 
     POIEntities() {
-        interval.setDelay(CONFIG.delay, Interval.Unit.MILLISECOND);
+        interval.setDelay(ClientConfig.getInstance().poiEntities.delay, Interval.Unit.MILLISECOND);
     }
 
     @Override
@@ -81,9 +80,10 @@ public class POIEntities implements BalmClientModule {
             markedEntity = null;
         }
 
-        interval.setDelay(CONFIG.delay, Interval.Unit.MILLISECOND);
+        ClientConfig.POIEntities config = ClientConfig.getInstance().poiEntities;
+        interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
 
-        if (!CONFIG.enabled) return;
+        if (!config.enabled) return;
         if (!interval.isReady()) return;
 
         if (client.gui.screen() != null) return; //Prevent running if any screen is opened
@@ -103,7 +103,8 @@ public class POIEntities implements BalmClientModule {
 
         LocalPlayer player = Minecraft.getInstance().player;
         assert player != null;
-        AABB scanBox = player.getBoundingBox().inflate(CONFIG.range, CONFIG.range, CONFIG.range);
+        int range = ClientConfig.getInstance().poiEntities.range;
+        AABB scanBox = player.getBoundingBox().inflate(range, range, range);
         assert Minecraft.getInstance().level != null;
         List<Entity> entities = Minecraft.getInstance().level.getEntities(player, scanBox);
 
@@ -120,13 +121,14 @@ public class POIEntities implements BalmClientModule {
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (CONFIG.volume == 0.0f) return;
+        ClientConfig.POIEntities config = ClientConfig.getInstance().poiEntities;
+        if (config.volume == 0.0f) return;
         Function<Entity, Vec3> mapper = e -> Vec3.atCenterOf(e.blockPosition());
-        if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
-            markedGroup.playSoundForGroupItems(mapper, CONFIG.volume);
-        } else if (CONFIG.playSound) {
+        if (isMarking && ClientConfig.getInstance().poiMarking.suppressOtherWhenEnabled) {
+            markedGroup.playSoundForGroupItems(mapper, config.volume);
+        } else if (config.playSound) {
             for (POIGroup<Entity> group : groups) {
-                group.playSoundForGroupItems(mapper, CONFIG.volume);
+                group.playSoundForGroupItems(mapper, config.volume);
             }
         }
     }

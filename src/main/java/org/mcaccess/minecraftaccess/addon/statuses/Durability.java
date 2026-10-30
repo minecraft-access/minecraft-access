@@ -6,7 +6,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.api.Status;
 
 public class Durability implements Status {
@@ -51,10 +51,10 @@ public class Durability implements Status {
         if (item.nextDamageWillBreak()) {
             return WarningLevel.FINAL;
         }
-        if (durability <= Config.getInstance().playerWarnings.durabilityWarnings.secondThreshold) {
+        if (durability <= ClientConfig.getInstance().durabilityWarnings.secondThreshold) {
             return WarningLevel.CRITICAL;
         }
-        if (durability <= Config.getInstance().playerWarnings.durabilityWarnings.firstThreshold) {
+        if (durability <= ClientConfig.getInstance().durabilityWarnings.firstThreshold) {
             return WarningLevel.WARNING;
         }
         return WarningLevel.NONE;

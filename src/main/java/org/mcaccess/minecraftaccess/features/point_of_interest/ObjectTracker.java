@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
@@ -176,11 +176,11 @@ public class ObjectTracker implements BalmClientModule {
             return;
         }
 
-        boolean narrateDistance = Config.getInstance().poi.narrateDistance;
+        boolean narrateDistance = ClientConfig.getInstance().poi.narrateDistance;
 
         if (currentObject instanceof Entity entity) {
             StringBuilder narration = new StringBuilder(
-                    MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(entity)
+                    MainClass.registry(WorldNarrator.class).get(ClientConfig.getInstance().narrateCrosshair.narrator).narrate(entity)
             );
             if (narrateDistance) {
                 narration.append(' ')
@@ -203,7 +203,7 @@ public class ObjectTracker implements BalmClientModule {
 
         if (currentObject instanceof BlockPos blockPos) {
             StringBuilder narration = new StringBuilder(
-                    MainClass.registry(WorldNarrator.class).get(Config.getInstance().narrateCrosshair.narrator).narrate(blockPos)
+                    MainClass.registry(WorldNarrator.class).get(ClientConfig.getInstance().narrateCrosshair.narrator).narrate(blockPos)
             );
             if (narrateDistance) {
                 narration.append(' ')

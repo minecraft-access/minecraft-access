@@ -40,8 +40,7 @@
     "depends": {
         "fabricloader": "^${fabric_loader_version}",
         "minecraft": "${fabric_minecraft_version_range}",
-        "balm": "^${balm_version}",
-        "cloth-config": "^${cloth_config_version}"
+        "balm": "^${balm_version}"
     },
     "suggests": {
         "jade": "^${jade_fabric_version}"
@@ -59,7 +58,6 @@
             "dependencies": [
                 "fabric-api@${fabric_api_version}(embedded){modrinth:P7dR8mSH}{curseforge:306612}",
                 "balm@${balm_version}(embedded){modrinth:MBAkmtvl}{curseforge:531761}",
-                "cloth-config@${cloth_config_version}(embedded){modrinth:9s6osm5g}{curseforge:348521}",
                 "jade@${jade_fabric_version}(optional){modrinth:nvQzSEkH}{curseforge:324717}"
             ]
         }

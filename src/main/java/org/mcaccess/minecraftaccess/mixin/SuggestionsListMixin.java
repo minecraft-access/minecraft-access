@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 
 /**
@@ -51,7 +51,7 @@ abstract class SuggestionsListMixin {
         Suggestion suggestion = suggestionList.get(current);
         Message message = suggestion.getTooltip();
 
-        String format = Config.getInstance().commandSuggestionNarratorFormat;
+        String format = ClientConfig.getInstance().general.commandSuggestionNarratorFormat;
         String textNarration = format.formatted(current + 1, suggestionList.size(), suggestion.getText());
 
         if (message != null) {

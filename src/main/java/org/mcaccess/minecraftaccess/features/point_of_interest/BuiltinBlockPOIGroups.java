@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 
 public enum BuiltinBlockPOIGroups {
     ORE(new POIGroup<>(
@@ -76,7 +76,7 @@ public enum BuiltinBlockPOIGroups {
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
                 Level level = Minecraft.getInstance().level;
-                boolean configEnabled = Config.getInstance().poi.blocks.detectFluidBlocks;
+                boolean configEnabled = ClientConfig.getInstance().poiBlocks.detectFluidBlocks;
                 assert level != null;
                 boolean isSource = level.getFluidState(pos).getAmount() == 8;
                 boolean isLiquid = level.getBlockState(pos).getBlock() instanceof LiquidBlock;
