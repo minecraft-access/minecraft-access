@@ -50,7 +50,6 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  * 2. Alt key + Locking Key = Unlocks from the currently locked entity or block<br>
  */
 public class LockingHandler implements BalmClientModule {
-    private final ClientConfig.POILocking config = ClientConfig.getInstance().poiLocking;
     private Entity lockedOnEntity = null;
     private BlockPos3d lockedOnBlockPos = null;
     private boolean isLockedOnWhereEyeOfEnderDisappears = false;
@@ -162,6 +161,8 @@ public class LockingHandler implements BalmClientModule {
     private void bowAimingAssist() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
+
+        ClientConfig.POILocking config = ClientConfig.getInstance().poiLocking;
 
         // Check if player is using a bow
         if (config.aimAssistEnabled && !aimAssistActive && player.isUsingItem() && player.getUseItem().getItem() instanceof BowItem) {

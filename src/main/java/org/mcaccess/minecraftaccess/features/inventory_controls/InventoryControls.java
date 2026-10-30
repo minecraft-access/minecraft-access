@@ -303,11 +303,11 @@ public class InventoryControls implements BalmClientModule {
             return;
         }
         if (!(client.gui.screen() instanceof AbstractContainerScreen)) return;
+        loadConfig();
         if (!config.enabled) {
             return;
         }
 
-        loadConfig();
         currentScreen = (AbstractContainerScreenAccessor) client.gui.screen();
         currentRecipeBookWidget = getRecipeBookWidget(client.gui.screen());
         currentSlotsGroupList = GroupGenerator.generateGroupsFromSlots(currentScreen);

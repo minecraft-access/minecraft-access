@@ -25,7 +25,6 @@ public class MouseSimulation implements BalmClientModule {
     private static ManagedKeyMapping keyMiddleMouseButton;
     private static ManagedKeyMapping keyRightMouseButton;
 
-    private final ClientConfig.MouseSimulation config = ClientConfig.getInstance().mouseSimulation;
     private long lastScrollUpTime = 0;
     private long lastScrollDownTime = 0;
 
@@ -129,6 +128,6 @@ public class MouseSimulation implements BalmClientModule {
      * Check if enough time has passed for scrolling.
      */
     private boolean canScroll(long lastScrollTime) {
-        return System.currentTimeMillis() - lastScrollTime >= config.scrollDelayMilliseconds;
+        return System.currentTimeMillis() - lastScrollTime >= ClientConfig.getInstance().mouseSimulation.scrollDelayMilliseconds;
     }
 }

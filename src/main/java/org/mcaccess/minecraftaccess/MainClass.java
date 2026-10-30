@@ -122,6 +122,7 @@ public final class MainClass {
             addon.addon().init(new AddonRegistry(addon.modid()));
         }
         frozen = true;
+        ClientConfig.init(registrars);
 
         ScreenReaderController.refreshScreenReader();
         if (getScreenReader() != null && getScreenReader().isInitialized()) {

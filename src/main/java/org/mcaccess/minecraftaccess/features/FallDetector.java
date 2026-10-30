@@ -26,12 +26,10 @@ public class FallDetector implements BalmClientModule {
     private final Clock clock;
     private long previousTimeInMillis;
     private int count;
-    private final ClientConfig.FallDetector config;
 
     public FallDetector() {
         clock = Clock.systemDefaultZone();
         previousTimeInMillis = clock.millis();
-        config = ClientConfig.getInstance().fallDetector;
     }
 
     @Override
@@ -45,6 +43,7 @@ public class FallDetector implements BalmClientModule {
     }
 
     private void tick(Minecraft client, Player player, Level level) {
+        ClientConfig.FallDetector config = ClientConfig.getInstance().fallDetector;
         if (!config.enabled) return;
 
         if (client.gui.screen() != null) return;
@@ -91,11 +90,12 @@ public class FallDetector implements BalmClientModule {
     }
 
     private boolean isValid(BlockPos dir, BlockPos center, Set<BlockPos> searched) {
-        if (Math.abs(dir.getX() - center.getX()) > config.range) {
+        int range = ClientConfig.getInstance().fallDetector.range;
+        if (Math.abs(dir.getX() - center.getX()) > range) {
             return false;
         }
 
-        if (Math.abs(dir.getZ() - center.getZ()) > config.range) {
+        if (Math.abs(dir.getZ() - center.getZ()) > range) {
             return false;
         }
 
@@ -111,6 +111,7 @@ public class FallDetector implements BalmClientModule {
         assert Minecraft.getInstance().level != null;
         if (!Minecraft.getInstance().level.getBlockState(toCheck).isAir()) return;
 
+        ClientConfig.FallDetector config = ClientConfig.getInstance().fallDetector;
         if (getDepth(toCheck, config.depth) < config.depth) return;
 
         ++count;

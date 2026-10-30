@@ -1,6 +1,5 @@
 package org.mcaccess.minecraftaccess.features;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +98,7 @@ public class PlayerStatus implements BalmClientModule {
                     (_, _, _) -> entry.getValue().warning(),
                     (_, _, level, previous, value) -> {
                         if (!ClientConfig.getInstance().playerWarnings.enabled
-                                || !Arrays.asList(ClientConfig.getInstance().playerWarnings.statuses).contains(entry.getKey())
+                                || !ClientConfig.getInstance().playerWarnings.statuses.contains(entry.getKey())
                                 || value.ordinal() <= previous.ordinal()
                                 || !ClientConfig.getInstance().playerWarnings.playSound
                         ) {

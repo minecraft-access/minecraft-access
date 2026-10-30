@@ -26,7 +26,6 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  */
 @Slf4j
 public class CameraControls implements BalmClientModule {
-    private static final ClientConfig.CameraControls CONFIG = ClientConfig.getInstance().cameraControls;
     private static final float DEGREES_PER_MOUSE_DELTA = 0.15f;
 
     @Override
@@ -228,7 +227,8 @@ public class CameraControls implements BalmClientModule {
      * @param isModified Whether to use normal rotating angle or modified angle
      */
     private static void rotateCameraBy(RotatingDirection direction, boolean isModified) {
-        float angle = (isModified ? CONFIG.modifiedRotatingAngle : CONFIG.normalRotatingAngle) / DEGREES_PER_MOUSE_DELTA;
+        ClientConfig.CameraControls config = ClientConfig.getInstance().cameraControls;
+        float angle = (isModified ? config.modifiedRotatingAngle : config.normalRotatingAngle) / DEGREES_PER_MOUSE_DELTA;
 
         if (handleLocking()) return;
         float horizontalAngleDelta = angle * direction.horizontalWight;
