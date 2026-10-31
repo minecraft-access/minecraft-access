@@ -23,8 +23,8 @@ jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 lombok = "org.projectlombok:lombok:1.18.48"
 minecraft = "com.mojang:minecraft:26.3"
 modMenu = "com.terraformersmc:modmenu:21.0.0"
-neoForge = "net.neoforged:neoforge:26.3.0.99"
-neoforgeFancymodloaderLoader = "net.neoforged.fancymodloader:loader:12.0.12"
+neoForge = "net.neoforged:neoforge:26.3.0.100"
+neoforgeFancymodloaderLoader = "net.neoforged.fancymodloader:loader:12.0.13"
 tolk = "com.davykager.tolk:Tolk:1.0.0"
 
 assertjCore = "org.assertj:assertj-core:3.27.7"
@@ -34,7 +34,7 @@ junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher",
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockitoJunitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
-checkstyle = "com.puppycrawl.tools:checkstyle:14.3.0"
+checkstyle = "com.puppycrawl.tools:checkstyle:14.4.0"
 
 [plugins]
 gitVersion = { id = "com.palantir.git-version", version = "5.1.0" }
