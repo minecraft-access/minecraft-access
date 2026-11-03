@@ -87,7 +87,7 @@ public class ClientConfig {
     public AccessMenuShortcutBar accessMenuShortcutBar = new AccessMenuShortcutBar();
 
     public static ClientConfig getInstance() {
-        return Balm.config().getActiveConfig(ClientConfig.class);
+        return Objects.requireNonNullElseGet(Balm.config().getActiveConfig(ClientConfig.class), ClientConfig::new);
     }
 
     static void init(BalmClientRegistrars registrars) {
