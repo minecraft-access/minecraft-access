@@ -218,7 +218,6 @@ public class ClientConfig {
         public boolean suppressOtherWhenEnabled = true;
     }
 
-    @Config(MainClass.MOD_ID)
     public static class PlayerWarnings {
         public boolean enabled = true;
         public boolean playSound = true;
@@ -261,7 +260,6 @@ public class ClientConfig {
         public int delay = 2500;
     }
 
-    @Config(MainClass.MOD_ID)
     public static class NarrateCrosshair {
         public boolean enabled = true;
         @CustomControl("world_narrator")
@@ -288,7 +286,6 @@ public class ClientConfig {
         public float maxSoundVolume = 0.4f;
     }
 
-    @Config(MainClass.MOD_ID)
     public static class AccessMenu {
         public boolean enabled = true;
         @NestedType(Identifier.class)
@@ -314,7 +311,6 @@ public class ClientConfig {
         public int range = 100;
     }
 
-    @Config(MainClass.MOD_ID)
     public static class AccessMenuShortcutBar {
         @CustomControl("access_menu_function")
         @ValidateWith(AccessMenuFunctionValidator.class)
