@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.language.I18n;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.features.TimeIndicator;
@@ -24,7 +24,7 @@ public class Time implements AccessMenuFunction {
         int minutes = (int) ((daytime % 1.0) * 60);
 
         StringBuilder translationKey = new StringBuilder("minecraft_access.access_menu.time_of_day");
-        if (Config.getInstance().use12HourTimeFormat) {
+        if (ClientConfig.getInstance().general.use12HourTimeFormat) {
             if (hours == 0) {
                 hours = 12;
                 translationKey.append("_am");

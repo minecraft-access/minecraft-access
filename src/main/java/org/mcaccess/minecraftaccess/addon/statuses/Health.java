@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.api.Status;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
@@ -43,10 +43,10 @@ public class Health implements Status {
         assert Minecraft.getInstance().player != null;
         double health = Minecraft.getInstance().player.getHealth() / 2.0;
 
-        if (health <= Config.getInstance().playerWarnings.secondHealthThreshold) {
+        if (health <= ClientConfig.getInstance().playerWarnings.secondHealthThreshold) {
             return WarningLevel.CRITICAL;
         }
-        if (health <= Config.getInstance().playerWarnings.firstHealthThreshold) {
+        if (health <= ClientConfig.getInstance().playerWarnings.firstHealthThreshold) {
             return WarningLevel.WARNING;
         }
         return WarningLevel.NONE;

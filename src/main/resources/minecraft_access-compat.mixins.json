@@ -3,6 +3,7 @@
     "minVersion": "0.8",
     "package": "org.mcaccess.minecraftaccess.compat.mixin",
     "compatibilityLevel": "JAVA_25",
+    "plugin": "org.mcaccess.minecraftaccess.compat.mixin.clothconfig.ClothConfigMixinPlugin",
     "client": [
         "clothconfig.AbstractConfigListEntryMixin",
         "clothconfig.CategoryLabelWidgetMixin",

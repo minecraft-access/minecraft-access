@@ -15,7 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
@@ -26,7 +26,6 @@ import org.mcaccess.minecraftaccess.utils.position.PlayerPositionUtils;
  */
 @Slf4j
 public class CameraControls implements BalmClientModule {
-    private static final Config.CameraControls CONFIG = Config.getInstance().cameraControls;
     private static final float DEGREES_PER_MOUSE_DELTA = 0.15f;
 
     @Override
@@ -228,7 +227,8 @@ public class CameraControls implements BalmClientModule {
      * @param isModified Whether to use normal rotating angle or modified angle
      */
     private static void rotateCameraBy(RotatingDirection direction, boolean isModified) {
-        float angle = (isModified ? CONFIG.modifiedRotatingAngle : CONFIG.normalRotatingAngle) / DEGREES_PER_MOUSE_DELTA;
+        ClientConfig.CameraControls config = ClientConfig.getInstance().cameraControls;
+        float angle = (isModified ? config.modifiedRotatingAngle : config.normalRotatingAngle) / DEGREES_PER_MOUSE_DELTA;
 
         if (handleLocking()) return;
         float horizontalAngleDelta = angle * direction.horizontalWight;
@@ -245,7 +245,7 @@ public class CameraControls implements BalmClientModule {
 
         String horizontalDirection = PlayerPositionUtils.getHorizontalFacingDirectionInWords();
         String verticalDirection = PlayerPositionUtils.getVerticalFacingDirectionInWords();
-        if (Config.getInstance().features.facingDirectionEnabled) {
+        if (ClientConfig.getInstance().features.facingDirectionEnabled) {
             if (direction.isRotatingHorizontal) {
                 MainClass.narrate(horizontalDirection, true);
             } else if (verticalDirection != null) {
@@ -270,7 +270,7 @@ public class CameraControls implements BalmClientModule {
 
         log.debug("Rotating camera to: {}", direction.name());
 
-        if (narrateChange && Config.getInstance().features.facingDirectionEnabled) {
+        if (narrateChange && ClientConfig.getInstance().features.facingDirectionEnabled) {
             if (direction.in(Orientation.Layer.MIDDLE)) {
                 MainClass.narrate(PlayerPositionUtils.getHorizontalFacingDirectionInWords(), true);
             } else {

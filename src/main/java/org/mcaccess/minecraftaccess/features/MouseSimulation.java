@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
@@ -25,7 +25,6 @@ public class MouseSimulation implements BalmClientModule {
     private static ManagedKeyMapping keyMiddleMouseButton;
     private static ManagedKeyMapping keyRightMouseButton;
 
-    private final Config.MouseSimulation config = Config.getInstance().mouseSimulation;
     private long lastScrollUpTime = 0;
     private long lastScrollDownTime = 0;
 
@@ -129,6 +128,6 @@ public class MouseSimulation implements BalmClientModule {
      * Check if enough time has passed for scrolling.
      */
     private boolean canScroll(long lastScrollTime) {
-        return System.currentTimeMillis() - lastScrollTime >= config.scrollDelayMilliseconds;
+        return System.currentTimeMillis() - lastScrollTime >= ClientConfig.getInstance().mouseSimulation.scrollDelayMilliseconds;
     }
 }

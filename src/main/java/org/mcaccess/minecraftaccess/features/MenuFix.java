@@ -34,10 +34,9 @@ import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.KeyMappingCategories;
-import org.mcaccess.minecraftaccess.utils.config.RegistrySingleSelect;
 import org.mcaccess.minecraftaccess.utils.system.MouseUtils;
 
 /**
@@ -67,8 +66,7 @@ public final class MenuFix implements BalmClientModule {
             EditWorldScreen.class,
             JoinMultiplayerScreen.class,
             DirectJoinServerScreen.class,
-            ManageServerScreen.class,
-            RegistrySingleSelect.SelectionScreen.class
+            ManageServerScreen.class
     );
 
     @Override
@@ -101,7 +99,7 @@ public final class MenuFix implements BalmClientModule {
 
         previous = client.gui.screen();
 
-        if (!Config.getInstance().menuFixEnabled || client.gui.screen() == null) {
+        if (!ClientConfig.getInstance().general.menuFixEnabled || client.gui.screen() == null) {
             return;
         }
 

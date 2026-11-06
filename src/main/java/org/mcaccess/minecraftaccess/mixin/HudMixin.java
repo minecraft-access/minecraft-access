@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 
 /**
@@ -32,7 +32,7 @@ abstract class HudMixin {
 
     @Inject(method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V", at = @At("HEAD"))
     private void narrateActionbar(Component string, boolean animate, CallbackInfo ci) {
-        Config config = Config.getInstance();
+        ClientConfig config = ClientConfig.getInstance();
         if (config.features.actionBarEnabled) {
             String msg = string.getString();
             boolean contentChanged = !previousActionBarContent.equals(msg);

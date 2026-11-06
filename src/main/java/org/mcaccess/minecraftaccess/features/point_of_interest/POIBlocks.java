@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.condition.Interval;
 import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
@@ -32,7 +32,6 @@ import org.mcaccess.minecraftaccess.utils.events.ClientPlayingTick;
  */
 @Slf4j
 public class POIBlocks implements BalmClientModule {
-    private static final Config.POI.Blocks CONFIG = Config.getInstance().poi.blocks;
     private final Interval interval = Interval.defaultDelay();
     private @Nullable Block markedBlock = null;
 
@@ -72,7 +71,7 @@ public class POIBlocks implements BalmClientModule {
     private List<BlockPos> lastScanResults = new ArrayList<>();
 
     POIBlocks() {
-        interval.setDelay(CONFIG.delay, Interval.Unit.MILLISECOND);
+        interval.setDelay(ClientConfig.getInstance().poiBlocks.delay, Interval.Unit.MILLISECOND);
     }
 
     @Override
@@ -97,9 +96,10 @@ public class POIBlocks implements BalmClientModule {
             markedBlock = null;
         }
 
-        interval.setDelay(CONFIG.delay, Interval.Unit.MILLISECOND);
+        ClientConfig.POIBlocks config = ClientConfig.getInstance().poiBlocks;
+        interval.setDelay(config.delay, Interval.Unit.MILLISECOND);
 
-        if (!CONFIG.enabled) return;
+        if (!config.enabled) return;
         if (!interval.isReady()) return;
 
         if (client.gui.screen() != null) return; //Prevent running if any screen is opened
@@ -130,25 +130,27 @@ public class POIBlocks implements BalmClientModule {
         // where player's leg be
         assert Minecraft.getInstance().player != null;
         BlockPos pos = Minecraft.getInstance().player.blockPosition();
+        int range = ClientConfig.getInstance().poiBlocks.range;
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.below(), 0);
         scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(2), 0);
-        scanner.scanAndQualifyBlocksExposedInAirAround(pos, CONFIG.range);
-        scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(), CONFIG.range);
+        scanner.scanAndQualifyBlocksExposedInAirAround(pos, range);
+        scanner.scanAndQualifyBlocksExposedInAirAround(pos.above(), range);
 
         lastScanResults = currentScanResults;
     }
 
     private void playerSoundAtFoundPOI(boolean isMarking) {
-        if (CONFIG.volume == 0.0f) return;
-        if (isMarking && Config.getInstance().poi.marking.suppressOtherWhenEnabled) {
-            markedGroup.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
-        } else if (CONFIG.playSound) {
-            if (CONFIG.playSoundForOtherBlocks) {
+        ClientConfig.POIBlocks config = ClientConfig.getInstance().poiBlocks;
+        if (config.volume == 0.0f) return;
+        if (isMarking && ClientConfig.getInstance().poiMarking.suppressOtherWhenEnabled) {
+            markedGroup.playSoundForGroupItems(Vec3::atCenterOf, config.volume);
+        } else if (config.playSound) {
+            if (config.playSoundForOtherBlocks) {
                 for (POIGroup<BlockPos> group : groups) {
-                    group.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
+                    group.playSoundForGroupItems(Vec3::atCenterOf, config.volume);
                 }
             } else {
-                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(Vec3::atCenterOf, CONFIG.volume);
+                BuiltinBlockPOIGroups.ORE.group.playSoundForGroupItems(Vec3::atCenterOf, config.volume);
             }
         }
     }

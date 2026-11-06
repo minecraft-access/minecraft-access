@@ -22,7 +22,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import org.mcaccess.minecraftaccess.Config;
+import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.api.AccessMenuFunction;
 import org.mcaccess.minecraftaccess.api.AddonRegistry;
@@ -53,13 +53,14 @@ public class AccessMenu implements BalmClientModule {
                 })
                 .build();
 
-        getShortcuts().forEach((key, value) -> Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(
+        getShortcuts().keySet().forEach(key -> Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(
                         MainClass.MOD_ID,
                         "access_menu.shortcuts_bar/" + InputConstants.Type.KEYBOARD.getOrCreate(key).getNumericKeyValue().orElse(-1)
                 ))
                 .withDefault(InputBinding.key(key, KeyModifiers.of(KeyModifier.ALT)))
                 .skipRegistration()
                 .handleWorldInput(_ -> {
+                    AccessMenuFunction value = getShortcuts().get(key);
                     if (value.enabled()) {
                         value.execute();
                     }
@@ -96,8 +97,9 @@ public class AccessMenu implements BalmClientModule {
     }
 
     private static Map<Integer, AccessMenuFunction> getShortcuts() {
-        Config.AccessMenu.ShortcutBar config = Config.getInstance().accessMenu.shortcutBar;
+        ClientConfig.AccessMenuShortcutBar config = ClientConfig.getInstance().accessMenuShortcutBar;
         Map<Identifier, AccessMenuFunction> registry = MainClass.registry(AccessMenuFunction.class);
+
         return Map.of(
                 InputConstants.KEY_0, registry.get(config.key0),
                 InputConstants.KEY_1, registry.get(config.key1),
@@ -125,7 +127,7 @@ public class AccessMenu implements BalmClientModule {
             GridLayout grid = new GridLayout().spacing(10);
             GridLayout.RowHelper rowHelper = grid.createRowHelper(2);
 
-            for (Identifier identifier : Config.getInstance().accessMenu.functions) {
+            for (Identifier identifier : ClientConfig.getInstance().accessMenu.functions) {
                 AccessMenuFunction function = MainClass.registry(AccessMenuFunction.class).get(identifier);
                 MutableComponent label = Component.translatable(identifier.toLanguageKey("access_menu_function"));
                 getShortcuts().forEach((key, value) -> {
