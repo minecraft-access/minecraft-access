@@ -2,24 +2,18 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.Level;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.EndPortalFrameBlock;
-import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.LeverBlock;
-import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.Portal;
-import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -30,58 +24,58 @@ public enum BuiltinBlockPOIGroups {
     ORE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.ore",
             new POIGroup.Sound(SoundEvents.ITEM_PICKUP, -5.0f),
-            pos -> Ore.PREDICATE.test(getBlockState(pos).getBlock())
+            pos -> getBlockState(pos).is(BlockTags.ORES)
     )),
     FUNCTIONAL(new POIGroup<>(
             "minecraft_access.point_of_interest.group.functional",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                Block block = getBlockState(pos).getBlock();
-                return block instanceof ButtonBlock || block instanceof LeverBlock || Functional.PREDICATE.test(block);
+                BlockState state = getBlockState(pos);
+                Block block = state.getBlock();
+                return state.is(BlockTags.BUTTONS)
+                        || state.is(BlockTags.BEEHIVES)
+                        || state.is(BlockTags.CAMPFIRES)
+                        || block instanceof LeverBlock
+                        || Functional.FUNCTION_BLOCKS.contains(block);
             }
     )),
     DOOR(new POIGroup<>(
             "minecraft_access.point_of_interest.group.door",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                assert Minecraft.getInstance().level != null;
-                BlockState doorState = Minecraft.getInstance().level.getBlockState(pos);
-                if (doorState.getBlock() instanceof DoorBlock) {
-                    // Only match upper part of doors
+                BlockState doorState = getBlockState(pos);
+                if (doorState.is(BlockTags.DOORS)) {
                     return doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER;
                 } else {
-                    return doorState.getBlock() instanceof TrapDoorBlock;
+                    return doorState.is(BlockTags.TRAPDOORS) || doorState.is(BlockTags.FENCE_GATES);
                 }
             }
     )),
     PORTAL(new POIGroup<>(
             "minecraft_access.point_of_interest.group.portal",
-            pos -> {
-                assert Minecraft.getInstance().level != null;
-                Block block = Minecraft.getInstance().level.getBlockState(pos).getBlock();
-                return block instanceof Portal || block instanceof EndPortalFrameBlock;
-            }
+            pos -> getBlockState(pos).is(BlockTags.PORTALS)
     )),
     LADDER(new POIGroup<>(
             "minecraft_access.point_of_interest.group.ladder",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                assert Minecraft.getInstance().level != null;
-                Block block = Minecraft.getInstance().level.getBlockState(pos).getBlock();
-                return block instanceof LadderBlock;
+                if (!getBlockState(pos).is(BlockTags.CLIMBABLE)) {
+                    return false;
+                }
+
+                return getBlockState(pos.above()).is(BlockTags.CLIMBABLE)
+                        || getBlockState(pos.below()).is(BlockTags.CLIMBABLE);
             }
     )),
     FLUID(new POIGroup<>(
             "minecraft_access.point_of_interest.group.fluid",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                Level level = Minecraft.getInstance().level;
-                boolean configEnabled = Config.getInstance().poi.blocks.detectFluidBlocks;
-                assert level != null;
-                boolean isSource = level.getFluidState(pos).getAmount() == 8;
-                boolean isLiquid = level.getBlockState(pos).getBlock() instanceof LiquidBlock;
+                assert Minecraft.getInstance().level != null;
                 assert Minecraft.getInstance().player != null;
-                return configEnabled && isLiquid && !Minecraft.getInstance().player.isInLiquid() && isSource;
+                return Config.getInstance().poi.blocks.detectFluidBlocks
+                        && Minecraft.getInstance().level.getFluidState(pos).isFull()
+                        && !isPlayerInOrOnFluid();
             }
     )),
     HAVE_INTERFACE(new POIGroup<>(
@@ -91,7 +85,6 @@ public enum BuiltinBlockPOIGroups {
                 BlockState state = getBlockState(pos);
                 if (state.getBlock() instanceof ChestBlock) {
                     ChestType chestType = state.getValue(ChestBlock.TYPE);
-                    // intentionally ignore LEFT so two-blocks-size big chest can be detected as single chest
                     return chestType == ChestType.SINGLE || chestType == ChestType.RIGHT;
                 } else {
                     assert Minecraft.getInstance().level != null;
@@ -101,8 +94,6 @@ public enum BuiltinBlockPOIGroups {
     ));
 
     public static final List<POIGroup<BlockPos>> ALL = Arrays.stream(values()).map(bg -> bg.group).toList();
-    public static final Function<Block[], Predicate<Block>> BLOCK_PREDICATE_BUILDER =
-            blocks -> b -> Arrays.stream(blocks).anyMatch(valid -> valid == b);
 
     public final POIGroup<BlockPos> group;
 
@@ -115,34 +106,23 @@ public enum BuiltinBlockPOIGroups {
         return Minecraft.getInstance().level.getBlockState(pos);
     }
 
-    private static final class Ore {
-        private static final Block[] ORE_BLOCKS = new Block[]{
-                Blocks.DEEPSLATE_COAL_ORE,
-                Blocks.COAL_ORE,
-                Blocks.COPPER_ORE,
-                Blocks.DEEPSLATE_COPPER_ORE,
-                Blocks.DIAMOND_ORE,
-                Blocks.DEEPSLATE_DIAMOND_ORE,
-                Blocks.EMERALD_ORE,
-                Blocks.DEEPSLATE_EMERALD_ORE,
-                Blocks.GOLD_ORE,
-                Blocks.DEEPSLATE_GOLD_ORE,
-                Blocks.NETHER_GOLD_ORE,
-                Blocks.IRON_ORE,
-                Blocks.DEEPSLATE_IRON_ORE,
-                Blocks.LAPIS_ORE,
-                Blocks.DEEPSLATE_LAPIS_ORE,
-                Blocks.REDSTONE_ORE,
-                Blocks.DEEPSLATE_REDSTONE_ORE,
-                Blocks.NETHER_QUARTZ_ORE,
-                Blocks.ANCIENT_DEBRIS,
-        };
+    private static boolean isPlayerInOrOnFluid() {
+        assert Minecraft.getInstance().player != null;
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player.isInLiquid()) {
+            return true;
+        }
 
-        public static final Predicate<Block> PREDICATE = BLOCK_PREDICATE_BUILDER.apply(ORE_BLOCKS);
+        BlockPos pos = player.blockPosition();
+        if (!player.level().getFluidState(pos).isEmpty()) {
+            return true;
+        }
+
+        return !player.level().getFluidState(pos.below()).isEmpty();
     }
 
     private static final class Functional {
-        private static final Block[] FUNCTION_BLOCKS = new Block[]{
+        public static final Set<Block> FUNCTION_BLOCKS = Set.of(
                 Blocks.PISTON,
                 Blocks.STICKY_PISTON,
                 Blocks.RESPAWN_ANCHOR,
@@ -151,9 +131,7 @@ public enum BuiltinBlockPOIGroups {
                 Blocks.DAYLIGHT_DETECTOR,
                 Blocks.JUKEBOX,
                 Blocks.LODESTONE,
-                Blocks.BEE_NEST,
                 Blocks.COMPOSTER,
-                Blocks.OBSERVER,
                 Blocks.SCULK_SHRIEKER,
                 Blocks.SCULK_CATALYST,
                 Blocks.CALIBRATED_SCULK_SENSOR,
@@ -161,9 +139,7 @@ public enum BuiltinBlockPOIGroups {
                 Blocks.VAULT,
                 Blocks.TRIAL_SPAWNER,
                 Blocks.SPAWNER,
-                Blocks.CREAKING_HEART,
-        };
-
-        public static final Predicate<Block> PREDICATE = BLOCK_PREDICATE_BUILDER.apply(FUNCTION_BLOCKS);
+                Blocks.CREAKING_HEART
+        );
     }
 }
