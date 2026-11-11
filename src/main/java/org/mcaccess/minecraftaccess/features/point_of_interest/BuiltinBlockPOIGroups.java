@@ -7,6 +7,7 @@ import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
@@ -14,6 +15,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignText;
+import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -37,6 +41,22 @@ public enum BuiltinBlockPOIGroups {
                         || state.is(BlockTags.CAMPFIRES)
                         || block instanceof LeverBlock
                         || Functional.FUNCTION_BLOCKS.contains(block);
+            }
+    )),
+    SIGN(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.sign",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
+            pos -> {
+                if (!getBlockState(pos).is(BlockTags.ALL_SIGNS)) {
+                    return false;
+                }
+
+                assert Minecraft.getInstance().level != null;
+                if (Minecraft.getInstance().level.getBlockEntity(pos) instanceof SignBlockEntity sign) {
+                    return hasText(sign.getText(SignTextSlot.FRONT)) || hasText(sign.getText(SignTextSlot.BACK));
+                }
+
+                return false;
             }
     )),
     DOOR(new POIGroup<>(
@@ -104,6 +124,15 @@ public enum BuiltinBlockPOIGroups {
     private static BlockState getBlockState(BlockPos pos) {
         assert Minecraft.getInstance().level != null;
         return Minecraft.getInstance().level.getBlockState(pos);
+    }
+
+    private static boolean hasText(SignText signText) {
+        for (Component line : signText.getMessages(false)) {
+            if (!line.getString().trim().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isPlayerInOrOnFluid() {
