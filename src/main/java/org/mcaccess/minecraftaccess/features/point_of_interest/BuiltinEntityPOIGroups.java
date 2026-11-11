@@ -67,7 +67,7 @@ public enum BuiltinEntityPOIGroups {
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0.0f),
             entity -> (entity instanceof AgeableMob || entity instanceof WaterAnimal || entity instanceof NeutralMob
                     || entity instanceof Allay || entity instanceof CopperGolem || entity instanceof SnowGolem)
-                    && !(entity.getPassengers().contains(Minecraft.getInstance().player))
+                    && !(entity.hasPassenger(Minecraft.getInstance().player))
     )),
     PLAYER(new POIGroup<>(// Players
             "minecraft_access.point_of_interest.group.player",
@@ -77,15 +77,18 @@ public enum BuiltinEntityPOIGroups {
     VEHICLE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.vehicle",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1.0f),
-            entity -> entity instanceof VehicleEntity vehicle && !(vehicle.getPassengers().contains(Minecraft.getInstance().player))
+            entity -> entity instanceof VehicleEntity vehicle && !(vehicle.hasPassenger(Minecraft.getInstance().player))
     )),
     ITEM(new POIGroup<>(
             "minecraft_access.point_of_interest.group.item",
             new POIGroup.Sound(SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, 2.0f),
             entity -> {
-                boolean itemOnGround = entity instanceof ItemEntity itemEntity && itemEntity.onGround();
-                boolean pickupAllowedProjectile = entity instanceof AbstractArrow projectile && projectile.pickup == AbstractArrow.Pickup.ALLOWED;
-                return itemOnGround || pickupAllowedProjectile;
+                if (entity instanceof ItemEntity item) {
+                    return item.onGround();
+                } else if (entity instanceof AbstractArrow projectile) {
+                    return projectile.pickup == AbstractArrow.Pickup.ALLOWED;
+                }
+                return false;
             }
     )),
     DISPLAY(new POIGroup<>(
