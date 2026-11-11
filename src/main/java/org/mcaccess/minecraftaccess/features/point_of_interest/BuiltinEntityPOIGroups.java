@@ -6,10 +6,14 @@ import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.allay.Allay;
@@ -27,6 +31,15 @@ import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 
 public enum BuiltinEntityPOIGroups {
+    BOSS(new POIGroup<>(
+            "minecraft_access.point_of_interest.group.boss",
+            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_PLING.value(), 2.0f),
+            entity -> entity instanceof EnderDragon
+                    || entity instanceof WitherBoss
+                    || entity instanceof ElderGuardian
+                    || entity instanceof Warden
+                    || checkIsBossTagged(entity)
+    )),
     HOSTILE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.hostile",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 2.0f),
@@ -57,17 +70,15 @@ public enum BuiltinEntityPOIGroups {
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_COW_BELL.value(), 1.0f),
             entity -> entity instanceof TamableAnimal pet && pet.isTame()
     )),
-    BOSS(new POIGroup<>(
-            "minecraft_access.point_of_interest.group.boss",
-            new POIGroup.Sound(SoundEvents.NOTE_BLOCK_PLING.value(), 2.0f),
-            entity -> entity instanceof EnderDragon || entity instanceof WitherBoss || entity instanceof ElderGuardian || entity instanceof Warden
-    )),
     PASSIVE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.passive",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BELL.value(), 0.0f),
-            entity -> (entity instanceof AgeableMob || entity instanceof WaterAnimal || entity instanceof NeutralMob
-                    || entity instanceof Allay || entity instanceof CopperGolem || entity instanceof SnowGolem)
-                    && !(entity.hasPassenger(Minecraft.getInstance().player))
+            entity -> {
+                assert Minecraft.getInstance().player != null;
+                return (entity instanceof AgeableMob || entity instanceof WaterAnimal || entity instanceof NeutralMob
+                        || entity instanceof Allay || entity instanceof CopperGolem || entity instanceof SnowGolem)
+                        && !(entity.hasPassenger(Minecraft.getInstance().player));
+            }
     )),
     PLAYER(new POIGroup<>(// Players
             "minecraft_access.point_of_interest.group.player",
@@ -77,7 +88,10 @@ public enum BuiltinEntityPOIGroups {
     VEHICLE(new POIGroup<>(
             "minecraft_access.point_of_interest.group.vehicle",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1.0f),
-            entity -> entity instanceof VehicleEntity vehicle && !(vehicle.hasPassenger(Minecraft.getInstance().player))
+            entity -> {
+                assert Minecraft.getInstance().player != null;
+                return entity instanceof VehicleEntity vehicle && !(vehicle.hasPassenger(Minecraft.getInstance().player));
+            }
     )),
     ITEM(new POIGroup<>(
             "minecraft_access.point_of_interest.group.item",
@@ -99,8 +113,13 @@ public enum BuiltinEntityPOIGroups {
 
     public static final List<POIGroup<Entity>> ALL = Arrays.stream(values()).map(bg -> bg.group).toList();
     public final POIGroup<Entity> group;
+    private static final TagKey<EntityType<?>> BOSSES_TAG = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("c", "bosses"));
 
     BuiltinEntityPOIGroups(POIGroup<Entity> group) {
         this.group = group;
+    }
+
+    private static boolean checkIsBossTagged(Entity entity) {
+        return entity.is(BOSSES_TAG);
     }
 }
