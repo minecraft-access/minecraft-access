@@ -38,11 +38,11 @@ jobs:
           fetch-tags: true
           persist-credentials: false
           allow-unsafe-pr-checkout: true
-      - uses: actions/setup-java@v6.1.0
+      - uses: actions/setup-java@v6.3.0
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
-      - uses: gradle/actions/setup-gradle@v6.4.0
+      - uses: gradle/actions/setup-gradle@v6.4.1
         with:
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
