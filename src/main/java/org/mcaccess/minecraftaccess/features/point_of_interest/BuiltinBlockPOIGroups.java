@@ -7,7 +7,6 @@ import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
@@ -47,13 +45,11 @@ public enum BuiltinBlockPOIGroups {
             "minecraft_access.point_of_interest.group.sign",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                if (!getBlockState(pos).is(BlockTags.ALL_SIGNS)) {
-                    return false;
-                }
-
                 assert Minecraft.getInstance().level != null;
                 if (Minecraft.getInstance().level.getBlockEntity(pos) instanceof SignBlockEntity sign) {
-                    return hasText(sign.getText(SignTextSlot.FRONT)) || hasText(sign.getText(SignTextSlot.BACK));
+                    boolean isTextFilteringEnabled = Minecraft.getInstance().isTextFilteringEnabled();
+                    return sign.getText(SignTextSlot.FRONT).hasMessage(isTextFilteringEnabled)
+                            || sign.getText(SignTextSlot.BACK).hasMessage(isTextFilteringEnabled);
                 }
 
                 return false;
@@ -63,11 +59,11 @@ public enum BuiltinBlockPOIGroups {
             "minecraft_access.point_of_interest.group.door",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
             pos -> {
-                BlockState doorState = getBlockState(pos);
-                if (doorState.is(BlockTags.DOORS)) {
-                    return doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER;
+                BlockState state = getBlockState(pos);
+                if (state.is(BlockTags.DOORS)) {
+                    return state.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER;
                 } else {
-                    return doorState.is(BlockTags.TRAPDOORS) || doorState.is(BlockTags.FENCE_GATES);
+                    return state.is(BlockTags.TRAPDOORS) || state.is(BlockTags.FENCE_GATES);
                 }
             }
     )),
@@ -78,14 +74,9 @@ public enum BuiltinBlockPOIGroups {
     LADDER(new POIGroup<>(
             "minecraft_access.point_of_interest.group.ladder",
             new POIGroup.Sound(SoundEvents.NOTE_BLOCK_BIT.value(), 2.0f),
-            pos -> {
-                if (!getBlockState(pos).is(BlockTags.CLIMBABLE)) {
-                    return false;
-                }
-
-                return getBlockState(pos.above()).is(BlockTags.CLIMBABLE)
-                        || getBlockState(pos.below()).is(BlockTags.CLIMBABLE);
-            }
+            pos -> getBlockState(pos).is(BlockTags.CLIMBABLE)
+                    && (getBlockState(pos.above()).is(BlockTags.CLIMBABLE)
+                    || getBlockState(pos.below()).is(BlockTags.CLIMBABLE))
     )),
     FLUID(new POIGroup<>(
             "minecraft_access.point_of_interest.group.fluid",
@@ -126,28 +117,12 @@ public enum BuiltinBlockPOIGroups {
         return Minecraft.getInstance().level.getBlockState(pos);
     }
 
-    private static boolean hasText(SignText signText) {
-        for (Component line : signText.getMessages(false)) {
-            if (!line.getString().trim().isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private static boolean isPlayerInOrOnFluid() {
         assert Minecraft.getInstance().player != null;
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player.isInLiquid()) {
-            return true;
-        }
-
-        BlockPos pos = player.blockPosition();
-        if (!player.level().getFluidState(pos).isEmpty()) {
-            return true;
-        }
-
-        return !player.level().getFluidState(pos.below()).isEmpty();
+        return player.isInLiquid()
+                || !player.level().getFluidState(player.blockPosition()).isEmpty()
+                || !player.level().getFluidState(player.blockPosition().below()).isEmpty();
     }
 
     private static final class Functional {
