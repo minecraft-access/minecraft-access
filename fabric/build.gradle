@@ -27,8 +27,8 @@ dependencies {
     minecraft libs.minecraft
     runtimeOnly project(':')
     runtimeOnly libs.fabricLoader
-    runtimeOnly libs.modMenu
-    runtimeOnly libs.jadeFabric
+    //runtimeOnly libs.modMenu
+    //runtimeOnly libs.jadeFabric
     runtimeOnly libs.balmFabric
     runtimeOnly libs.fabricApi
 }
