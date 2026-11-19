@@ -1,5 +1,7 @@
 package org.mcaccess.minecraftaccess.features;
 
+import java.util.Objects;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
@@ -293,7 +295,8 @@ public class CameraControls implements BalmClientModule {
     private static boolean handleLocking() {
         assert Minecraft.getInstance().getCameraEntity() != null;
         assert Minecraft.getInstance().player != null;
-        if (!(MainClass.poiManager.lockingHandler.isPlayerLocked() || !Minecraft.getInstance().getCameraEntity().is(Minecraft.getInstance().player))) {
+        if (!MainClass.poiManager.lockingHandler.isPlayerLocked()
+                && Objects.equals(Minecraft.getInstance().getCameraEntity(), Minecraft.getInstance().player)) {
             return false;
         }
         MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);

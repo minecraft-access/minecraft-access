@@ -2,6 +2,7 @@ package org.mcaccess.minecraftaccess.features.point_of_interest;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -88,7 +89,7 @@ public class LockingHandler implements BalmClientModule {
                     Minecraft client = Minecraft.getInstance();
                     assert client.getCameraEntity() != null;
                     assert client.player != null;
-                    if (client.getCameraEntity().is(client.player)) {
+                    if (Objects.equals(client.getCameraEntity(), client.player)) {
                         relock();
                     } else {
                         MainClass.narrate(I18n.get("minecraft_access.other.camera_locked"), true);
@@ -123,7 +124,7 @@ public class LockingHandler implements BalmClientModule {
         Minecraft client = Minecraft.getInstance();
         assert client.getCameraEntity() != null;
         assert client.player != null;
-        if (!client.getCameraEntity().is(client.player)) {
+        if (!Objects.equals(client.getCameraEntity(), client.player)) {
             unlock(true, true);
             return;
         }

@@ -7,10 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.blay09.mods.balm.client.platform.module.BalmClientModule;
 import net.blay09.mods.balm.client.platform.util.SessionLocal;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -93,7 +91,6 @@ public class NarrateCrosshair implements BalmClientModule {
             };
             if (!Objects.equals(targetPosition, previousSoundPos.value)) {
                 playRelativePositionSoundCue(targetPosition, rayCastDistance,
-                        SoundEvents.NOTE_BLOCK_HARP,
                         soundCueConfig.minSoundVolume,
                         soundCueConfig.maxSoundVolume);
             }
@@ -136,7 +133,7 @@ public class NarrateCrosshair implements BalmClientModule {
     }
 
     // To indicate relative location between player and target.
-    private static void playRelativePositionSoundCue(Vec3 targetPosition, double maxDistance, Holder.Reference<SoundEvent> sound, double minVolume, double maxVolume) {
+    private static void playRelativePositionSoundCue(Vec3 targetPosition, double maxDistance, double minVolume, double maxVolume) {
         assert Minecraft.getInstance().player != null;
         Vec3 playerPos = Minecraft.getInstance().player.position();
 
@@ -160,7 +157,7 @@ public class NarrateCrosshair implements BalmClientModule {
                 targetPosition.x,
                 targetPosition.y,
                 targetPosition.z,
-                sound.value(),
+                SoundEvents.NOTE_BLOCK_HARP.value(),
                 SoundSource.BLOCKS,
                 volume,
                 pitch,

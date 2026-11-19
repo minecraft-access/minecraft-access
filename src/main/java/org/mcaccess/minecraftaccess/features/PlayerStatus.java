@@ -104,9 +104,8 @@ public class PlayerStatus implements BalmClientModule {
                         ) {
                             return;
                         }
-                        level.playPlayerSound(value.ordinal() >= Status.WarningLevel.CRITICAL.ordinal()
-                                ? SoundEvents.ANVIL_PLACE
-                                : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.PLAYERS, 1.0f, 1.0f);
+                        level.playPlayerSound((value.ordinal() >= Status.WarningLevel.CRITICAL.ordinal() ? SoundEvents.ANVIL.placeSound().orElseThrow()
+                                : SoundEvents.RESPAWN_ANCHOR_DEPLETE).value(), SoundSource.PLAYERS, 1.0f, 1.0f);
                         MainClass.narrate(I18n.get("minecraft_access.player_status.warning", entry.getValue().message()), true);
                     }
             );

@@ -116,7 +116,7 @@ public class FallDetector implements BalmClientModule {
 
         ++count;
         log.debug("{}) Found qualified fall position: x:{} y:{} z:{}", count, toCheck.getX(), toCheck.getY(), toCheck.getZ());
-        Minecraft.getInstance().level.playLocalSound(toCheck, SoundEvents.ANVIL_HIT, SoundSource.BLOCKS, config.volume, 1.0f, true);
+        Minecraft.getInstance().level.playLocalSound(toCheck, SoundEvents.ANVIL.hitSound().orElseThrow(), SoundSource.BLOCKS, config.volume, 1.0f, true);
     }
 
     private int getDepth(BlockPos blockPos, int maxDepth) {

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.minecraft.client.InputType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -16,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.MainClass;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 
@@ -28,7 +29,7 @@ abstract class GuiGraphicsExtractorMixin {
     @Inject(method = "setTooltipForNextFrameInternal", at = @At("HEAD"))
     private void narrateTooltip(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, @Nullable Identifier style,
                                 boolean replaceExisting, CallbackInfo ci) {
-        if (ClientConfig.getInstance().inventoryControls.enabled) {
+        if (Minecraft.getInstance().getLastInputType() != InputType.MOUSE) {
             return;
         }
         String combined = lines.stream()
