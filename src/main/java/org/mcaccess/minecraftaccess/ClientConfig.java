@@ -69,7 +69,6 @@ public class ClientConfig {
     public Features features = new Features();
     public SpeechSettings speechSettings = new SpeechSettings();
     public CameraControls cameraControls = new CameraControls();
-    public InventoryControls inventoryControls = new InventoryControls();
     public MouseSimulation mouseSimulation = new MouseSimulation();
     public POI poi = new POI();
     public POIBlocks poiBlocks = new POIBlocks();
@@ -138,7 +137,6 @@ public class ClientConfig {
     }
 
     public static class General {
-        public boolean menuFixEnabled = true;
         @Comment("Format: '%d', '%d', '%s'")
         @ValidateWith(CommandSuggestionFormatValidator.class)
         public String commandSuggestionNarratorFormat = "%dx%d %s";
@@ -169,16 +167,6 @@ public class ClientConfig {
     public static class CameraControls {
         public float normalRotatingAngle = 22.5f;
         public float modifiedRotatingAngle = 11.25f;
-    }
-
-    public static class InventoryControls {
-        public boolean enabled = true;
-        public boolean autoOpenRecipeBook = true;
-        @Comment("Format: '%d', '%d'")
-        @ValidateWith(RowAndColumnFormatValidator.class)
-        public String rowAndColumnFormat = "%dx%d";
-        public boolean narrateFocusedSlotChanges = true;
-        public int delayMilliseconds = 150;
     }
 
     public static class MouseSimulation {
@@ -370,12 +358,6 @@ public class ClientConfig {
     public static class CommandSuggestionFormatValidator extends FormatStringValidator {
         public CommandSuggestionFormatValidator() {
             super('d', 'd', 's');
-        }
-    }
-
-    public static class RowAndColumnFormatValidator extends FormatStringValidator {
-        public RowAndColumnFormatValidator() {
-            super('d', 'd');
         }
     }
 
