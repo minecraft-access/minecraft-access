@@ -97,6 +97,12 @@ public final class Config implements ConfigData {
     public static final class SpeechSettings {
         public float speechRate = 50;
         public boolean narrateHints = true;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        @ConfigEntry.Gui.Tooltip
+        public int androidSpeechRate = 50;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        @ConfigEntry.Gui.Tooltip
+        public int androidSpeechPitch = 50;
 
         private SpeechSettings() {
         }

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.util.Util;
 import org.apache.commons.io.FileUtils;
 
+import org.mcaccess.minecraftaccess.screen_reader.android.AndroidPlatform;
 import org.mcaccess.minecraftaccess.utils.UnzipUtility;
 
 /**
@@ -23,6 +24,10 @@ public class AutoLibrarySetup {
     }
 
     public void initialize() {
+        if (AndroidPlatform.isAndroid()) {
+            log.info("Android provides its own text to speech engine, skipping the library download");
+            return;
+        }
         try {
             if (checkInstalled()) return;
             downloadAndInstall();
