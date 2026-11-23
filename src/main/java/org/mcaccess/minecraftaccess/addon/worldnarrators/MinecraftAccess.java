@@ -14,6 +14,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -83,8 +85,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mcaccess.minecraftaccess.ClientConfig;
 import org.mcaccess.minecraftaccess.api.WorldNarrator;
 import org.mcaccess.minecraftaccess.features.NarrateHeldItem;
-import org.mcaccess.minecraftaccess.mixin.BaseSpawnerAccessor;
-import org.mcaccess.minecraftaccess.mixin.WolfAccessor;
 import org.mcaccess.minecraftaccess.utils.NarrationUtils;
 import org.mcaccess.minecraftaccess.utils.PlayerUtils;
 import org.mcaccess.minecraftaccess.utils.position.Orientation;
@@ -253,7 +253,8 @@ public class MinecraftAccess implements WorldNarrator {
                             .orElse("other")
             ));
             case Wolf wolf -> I18n.get(String.format("minecraft_access.wolf_variant.%s",
-                    ((WolfAccessor) wolf).callGetVariant().unwrapKey()
+                    Optional.ofNullable(wolf.get(DataComponents.WOLF_VARIANT))
+                            .flatMap(Holder::unwrapKey)
                             .map(ResourceKey::identifier)
                             .map(Identifier::toShortLanguageKey)
                             .orElse("other")
@@ -301,7 +302,7 @@ public class MinecraftAccess implements WorldNarrator {
                 switch (blockEntity) {
                     case BeehiveBlockEntity beehiveBlockEntity -> narration = getBeehiveInfo(beehiveBlockEntity, blockState, narration);
                     case SpawnerBlockEntity spawner -> {
-                        Entity entity = ((BaseSpawnerAccessor) spawner.getSpawner()).getDisplayEntity();
+                        Entity entity = spawner.getSpawner().getOrCreateDisplayEntity(client.level, blockPos);
                         String entityName = I18n.get("minecraft_access.read_crosshair.spawner_empty");
                         if (entity != null) {
                             entityName = Objects.requireNonNull(entity.getDisplayName()).getString();

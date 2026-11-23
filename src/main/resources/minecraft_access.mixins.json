@@ -9,7 +9,6 @@
     "client": [
         "AccessibilityOnboardingScreenMixin",
         "AdvancementToastAccessor",
-        "BaseSpawnerAccessor",
         "BookEditScreenAccessor",
         "BookViewScreenMixin",
         "BossHealthOverlayAccessor",
@@ -20,7 +19,6 @@
         "ClientPacketListenerMixin",
         "ClientTextTooltipAccessor",
         "EditBoxMixin",
-        "EntityAccessor",
         "EyeOfEnderMixin",
         "GameModeIconAccessor",
         "GameModeSwitcherScreenMixin",
@@ -45,8 +43,7 @@
         "ToastManagerMixin",
         "TolkMixin",
         "TutorialToastAccessor",
-        "WinScreenMixin",
-        "WolfAccessor"
+        "WinScreenMixin"
     ],
     "injectors": {
         "defaultRequire": 1
