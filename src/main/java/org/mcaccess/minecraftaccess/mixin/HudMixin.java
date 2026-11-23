@@ -3,6 +3,8 @@ package org.mcaccess.minecraftaccess.mixin;
 import java.util.Arrays;
 import java.util.List;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.Hud;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +31,14 @@ abstract class HudMixin {
 
     @Unique
     private String previousActionBarContent = "";
+
+    @WrapWithCondition(
+            method = "setNowPlaying",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/GameNarrator;saySystemNow(Lnet/minecraft/network/chat/Component;)V")
+    )
+    private boolean avoidDoubleNowPlayingNarration(GameNarrator instance, Component message) {
+        return !ClientConfig.getInstance().features.actionBarEnabled;
+    }
 
     @Inject(method = "setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V", at = @At("HEAD"))
     private void narrateActionbar(Component string, boolean animate, CallbackInfo ci) {

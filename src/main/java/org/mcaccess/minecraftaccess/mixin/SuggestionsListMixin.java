@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -39,15 +38,7 @@ abstract class SuggestionsListMixin {
 
     @Inject(method = "getNarrationMessage", at = @At("HEAD"), cancellable = true)
     private void simplifySuggestionNarration(CallbackInfoReturnable<Component> cir) {
-        // Don't know why they update this value here
         lastNarratedEntry = current;
-        String textNarration = getSuggestionTextNarration();
-        cir.setReturnValue(Component.nullToEmpty(textNarration));
-        cir.cancel();
-    }
-
-    @Unique
-    private String getSuggestionTextNarration() {
         Suggestion suggestion = suggestionList.get(current);
         Message message = suggestion.getTooltip();
 
@@ -59,7 +50,9 @@ abstract class SuggestionsListMixin {
         } else {
             textNarration = I18n.get("minecraft_access.other.selected", textNarration);
         }
-        return textNarration;
+
+        cir.setReturnValue(Component.nullToEmpty(textNarration));
+        cir.cancel();
     }
 
     @Inject(method = "useSuggestion", at = @At("HEAD"))
@@ -68,9 +61,11 @@ abstract class SuggestionsListMixin {
         MainClass.narrate(selected, true);
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"))
+    @Inject(
+            method = "<init>",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/CommandSuggestions$SuggestionsList;select(I)V")
+    )
     private void narrateFirstSuggestionWhenSuggestionsAreShown(CallbackInfo ci) {
-        String first = getSuggestionTextNarration();
-        MainClass.narrate(first, true);
+        lastNarratedEntry = -1;
     }
 }
