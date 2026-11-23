@@ -33,6 +33,7 @@ public class BlockScanner {
         int nextStepRange = range - 1;
         assert Minecraft.getInstance().level != null;
         BlockState currentBlockState = Minecraft.getInstance().level.getBlockState(blockPos);
+        assert Minecraft.getInstance().player != null;
         if ((currentBlockState.isAir()
                 || !currentBlockState.getFluidState().isEmpty() && Minecraft.getInstance().player.isInLiquid())
                 && nextStepRange >= 0) {

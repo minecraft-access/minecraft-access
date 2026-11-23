@@ -164,7 +164,7 @@ public class ObjectTracker implements BalmClientModule {
 
         if (currentGroup != null && currentGroup.isEmpty()) currentGroupIndex = -1;
         if (!groups.isEmpty() && currentGroupIndex == -1) currentGroup = groups.getFirst();
-        if (groups.isEmpty() && currentGroupIndex != -1) currentGroup = null;
+        if (groups.isEmpty()) currentGroup = null;
     }
 
     private void narrateCurrentObject(boolean interrupt) {
@@ -282,13 +282,16 @@ public class ObjectTracker implements BalmClientModule {
                     yield !(Minecraft.getInstance().level.getBlockState(pos).getBlock() instanceof AirBlock);
                 }
             }
-            default -> false;
+            case null, default -> false;
         };
     }
 
     private void moveObject(int step) {
         if (checkAndNarrateIfAllGroupsEmpty()) return;
-        if (currentGroup != null && currentGroup.isEmpty()) clearCurrentObject();
+        if (currentGroup == null || currentGroup.isEmpty()) {
+            clearCurrentObject();
+            if (checkAndNarrateIfAllGroupsEmpty() || currentGroup == null) return;
+        }
 
         List<?> objects = currentGroup.sortByDistance();
         int currentObjectIndex = objects.indexOf(currentObject);
