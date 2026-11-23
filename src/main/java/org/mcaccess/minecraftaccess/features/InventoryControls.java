@@ -26,6 +26,7 @@ public class InventoryControls implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "inventory_controls.fuel_status"))
                 .withDefault(InputBinding.key(InputConstants.KEY_U))
                 .overrideCategory(KeyMappingCategories.INVENTORY_CONTROLS)
+                .ignoreScreenFocus()
                 .handleScreenInput(e -> {
                     if (e.screen() instanceof MenuAccess<?> menuAccess) {
                         AbstractContainerMenu menu = menuAccess.getMenu();

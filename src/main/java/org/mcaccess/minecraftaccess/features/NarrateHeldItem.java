@@ -48,6 +48,7 @@ public class NarrateHeldItem implements BalmClientModule {
         Kuma.createKeyMapping(Identifier.fromNamespaceAndPath(MainClass.MOD_ID, "other.narrate_held_item/mainhand"))
                 .withDefault(InputBinding.key(InputConstants.KEY_GRAVE))
                 .overrideCategory(KeyMappingCategories.OTHER)
+                .ignoreScreenFocus()
                 .handleScreenInput(event -> {
                     if (!(event.screen() instanceof AbstractContainerScreen)) return false;
                     MainClass.narrate(I18n.get("minecraft_access.inventory_controls.dragging",
