@@ -41,7 +41,7 @@
     "key.minecraft_access.camera_controls.look_straight/up": "Look Straight Up",
     "key.minecraft_access.camera_controls.narrate_facing_direction/horizontal": "Narrate horizontal facing direction",
     "key.minecraft_access.camera_controls.narrate_facing_direction/vertical": "Narrate vertical facing direction",
-    "key.minecraft_access.inventory_controls.fuel_status": "Fuel Status",
+    "key.minecraft_access.inventory_controls.narrate_menu_info": "Narrate menu info",
     "key.minecraft_access.mouse_simulation.button/left": "Left Mouse Simulation",
     "key.minecraft_access.mouse_simulation.button/middle": "Middle Mouse Simulation",
     "key.minecraft_access.mouse_simulation.button/right": "Right Mouse Simulation",
